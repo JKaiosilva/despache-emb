@@ -14,11 +14,11 @@ const Formulario = new Schema({
         type: String,
         require: true
     },
-    dataSaida: {
+    dsaida: {
         type: String,
         require: true
     },
-    dataVolta: {
+    dvolta: {
         type: String,
         require: true
     },

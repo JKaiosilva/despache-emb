@@ -69,6 +69,9 @@ router.post('/formulario/novo', (req, res) => {
 })
 
 
+//    router.get('/posform', (req, res) => {
+//        res.render('formulario/posform')
+//    })
 
 
 module.exports = router
