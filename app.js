@@ -11,8 +11,8 @@ require('./models/Formulario');
 const Formulario = mongoose.model('formularios');
 const passport = require('passport');
 const db = require('./config/bancodados');
-//const sendMail = require('./config/mail')
-
+const usuarios = require('./routes/usuario')
+require('./config/auth')(passport)
 
 // Configurações
 
@@ -71,11 +71,10 @@ const db = require('./config/bancodados');
             res.render('index')
         })
 
-        app.get('/formulario', (req, res) => {
-            res.render('formulario/preform')
-    })
+
         app.use('/formulario', formulario)
-        
+        app.use('/usuarios', usuarios)
+
 
 
 

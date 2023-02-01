@@ -1,0 +1,20 @@
+<ul class="nav nav-pills nav-fill bg-dark">
+  <li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="/">DespEmb</a>
+  </li>
+  {{#if user}}
+  <li class="nav-item">
+    <a class="nav-link" href="/formulario/formulario">Formularios</a>
+  </li>
+    <li class="nav-item">
+    <a class="nav-link" href="/usuarios/logout">Sair</a>
+  </li>
+  {{else}}
+  <li class="nav-item">
+    <a class="nav-link" href="/usuarios/login">Login</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/usuarios/cadastro">Cadastro</a>
+  </li>
+  {{/if}}
+</ul>
