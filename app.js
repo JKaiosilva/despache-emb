@@ -13,7 +13,6 @@ const passport = require('passport');
 const db = require('./config/bancodados');
 const usuarios = require('./routes/usuario')
 require('./config/auth')(passport)
-require('./func/mNiveis')
 
 // Configurações
 
@@ -75,6 +74,8 @@ require('./func/mNiveis')
 
         app.use('/formulario', formulario)
         app.use('/usuarios', usuarios)
+
+
 
 
 

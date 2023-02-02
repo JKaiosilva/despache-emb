@@ -1,8 +1,8 @@
 setInterval(carregar_info, 5000)
 
 
-async function carregar_info(){
-await fetch("./niveis.json")
+ function carregar_info(){
+ fecth("./niveis.json")
 .then(response => {
         return response.json();
 })

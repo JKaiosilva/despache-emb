@@ -119,10 +119,9 @@ async function getNivel() {
         console.log("Dados transmitidos com sucesso!");
     });
 
-    console.log('teste')
+   
 
 }
 
 getNivel()
 
-console.log(getNivel())
