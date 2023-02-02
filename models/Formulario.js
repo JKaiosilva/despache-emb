@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
-const app = express()
+
 
 const Formulario = new Schema({
     nome: {
@@ -27,9 +27,9 @@ const Formulario = new Schema({
         type: Date,
         default: Date.now()
     },
-    CPF: {
-        type: Number,
-        require: true
+    idUsuario: {
+        type: String,
+        default: {}
     }
 })
 

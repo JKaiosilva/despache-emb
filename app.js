@@ -13,6 +13,7 @@ const passport = require('passport');
 const db = require('./config/bancodados');
 const usuarios = require('./routes/usuario')
 require('./config/auth')(passport)
+require('./func/mNiveis')
 
 // Configurações
 

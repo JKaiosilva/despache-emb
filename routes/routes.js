@@ -11,7 +11,14 @@ const {euser} = require('../helpers/euser')
 // Novo Formulário
 
         router.get('/formulario', euser, (req, res) => {
-            res.render('formulario/preform')
+            Formulario.find({idUsuario: req.user._id}).lean().sort({data: 'desc'}).then((formularios) => {
+                res.render('formulario/preform', {formularios: formularios})
+            }).catch((err) => {
+                console.log(err)
+                req.flash('error_msg', 'Não foi possivel mostrar os formularios')
+                res.redirect('/')
+            })
+           
         })
 
         router.get('/novo', euser, (req, res) => {
@@ -36,12 +43,14 @@ const {euser} = require('../helpers/euser')
                 console.log(erros)
                 res.render('/', {erros: erros})
             }else{
+                
                 const novoFormulario = {
                     nome: req.body.nome,
                     codigo: req.body.codigo,
                     email: req.body.email,
                     dsaida: req.body.dsaida,
                     dvolta: req.body.dvolta,
+                    idUsuario: req.user._id
                 }
                 new Formulario(novoFormulario).save().then(() => {
                     

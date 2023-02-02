@@ -1,10 +1,39 @@
+
+
+
 <div class="card">
     <div class="card-body">
-        <h3>Recomendações: </h3>
+        <div class="text-center">
+            <h2>Realizar novo Despacho</h2>
+        </div>
+        <br>
+        <h6>Recomendações: </h6>
         <ul>
             <li>Confirme suas infomações antes de enviar.</li>
             <li>Não passe as suas informações pessoais para outra pessoa.</li>
             <li>confira se os seus documentos estão atualizados no banco de dados.</li>
+            <br>
+                <div class="text-center">
+                    <a href="/formulario/novo"><button class="btn btn-success mt-4">Novo despacho</button></a>
+                </div>
         </ul>
     </div>
 </div>
+<br>
+    <h4>Minhas ultimas requisições de despacho.</h4>
+
+{{#each formularios}}
+    <div class="card mt-4">
+        <div class="card-body">
+            <p>Nome: {{nome}}</p>
+            <p>Email: {{email}}</p>
+            <p>Codigo: {{codigo}}</p>
+            <p>Data de saída: {{dsaida}}</p>
+            <p>Data de volta: {{dvolta}}</p>
+            <p>Data de requisição: {{data}}</p>
+        </div>
+    </div>
+
+{{else}}
+    <p>Nenhum formulário para ser exibido</p>
+{{/each}}

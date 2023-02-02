@@ -6,12 +6,14 @@
 
 <br>
 <br>
-<div class="card">
-    <h1 class="label-control mt-4">Formulário de despache de embarcações</h1>
-
+<div class="card"> 
+        <div class="text-center">
+             <h2 class="label-control mt-4">Formulário de despache de embarcações</h2>
+        </div>
     <div class="card-body">
         <form action="formulario/novo" method="POST">
             <div class="mb-3">
+                <input type="hidden" name="idUsuario" value="%= req.user._id %">
                 <label for="nome" class="input-group-text mt-4">Nome: </label>
                 <input type="text" class="form-control" name="nome" placeholder="Seu nome" required>
                 <div id="nomeDica" class="form-text">Insira o nome do responsável pela embarcação.</div>
