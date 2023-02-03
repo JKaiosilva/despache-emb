@@ -1,10 +1,9 @@
-
 module.exports = {
-    euser: function(req, res, next) {
-        if(req.isAuthenticated() && req.user.euser == 1) {
+    eUser: function(req, res, next) {
+        if(req.isAuthenticated() && req.user.eUser == 1) {
             return next();
         }
-        req.flash('error_msg', 'É preciso estar logado para acessar esta página')
+        req.flash('error_msg', 'Você precisa estar logado para acessar esta página!')
         res.redirect('/')
     }
 }

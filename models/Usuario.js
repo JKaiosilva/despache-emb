@@ -14,7 +14,11 @@ const Usuario = new Schema({
         type: Number,
         require: true
     },
-    euser: {
+    eAdmin: {
+        type: Number,
+        default: 1
+    },
+    eUser: {
         type: Number,
         default: 1
     },

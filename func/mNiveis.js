@@ -1,12 +1,22 @@
-setInterval(carregar_info, 5000)
+const fs = require('fs')
+
+const mNiveis = (
+
+//setInterval(carregar_info, 5000)
 
 
- function carregar_info(){
- fecth("./niveis.json")
-.then(response => {
-        return response.json();
-})
-.then(jsondata => {
+fs.readFile("func/niveis.json", function(err, data) {
+    if(err) throw err;
+    const users = JSON.parse(data)
+    console.log(users);
+
+
+
+}
+
+))
+/* 
+
     document.getElementById('nome_cuiaba').innerHTML = jsondata[1];
     document.getElementById('nivel_cuiaba').innerHTML = jsondata[2];
     document.getElementById('att_cuiaba').innerHTML = jsondata[0];
@@ -38,5 +48,7 @@ setInterval(carregar_info, 5000)
 
 }).catch((err) => {
     console.log(err)
-});
-}
+})
+) */
+
+module.exports = mNiveis

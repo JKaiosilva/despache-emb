@@ -1,8 +1,12 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('fs');
-//process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
+const express = require('express')
+const router = express.Router()
+const mongoose = require('mongoose');
+const { use } = require('passport');
+require('../models/Medicao')
+const Medicao = mongoose.model('medicaos')
 
 const url = 'https://www.marinha.mil.br/chn-6/';
 
@@ -15,6 +19,7 @@ async function getNivel() {
     $('.table-responsive table tbody').each((i, elem) => {
        var data_ladario = $(elem).find('tr[class="even"] td[class="views-field views-field-title"]').last().text().replace('\n            ', '').replace('          ', '');
        dados_ladario.push(data_ladario)
+       
     });
     $('.table-responsive table tbody').each((i, elem) => {
         var nome_ladario = $(elem).find('tr[class="even"] td[class="views-field views-field-field-esta-o"]').last().text().replace('\n            ', '').replace('          ', '');
@@ -110,6 +115,19 @@ async function getNivel() {
 
 
 
+    const novaMedicao = {
+        nomeCidade: dados_ladario.nome_ladario +'teste',
+        nivelCidade: dados_ladario.medida_ladaio,
+        dataAtu: dados_ladario.data_ladario,
+        nomeAgencia: dados_ladario.fonte_ladario
+    }
+    new Medicao(novaMedicao).update().then(()=> {
+        console.log('dados cadastrados')
+    }).catch((err) => {
+        console.log(err)
+    })
+    
+/* 
     const dados_cidades = dados_cuiaba.concat(dados_caceres, dados_ladario, dados_fcoimbra, dados_pmurtinho)
 
     const enviar_dados = require("./niveis");
@@ -119,9 +137,9 @@ async function getNivel() {
         console.log("Dados transmitidos com sucesso!");
     });
 
-   
+    */
 
 }
 
-getNivel()
 
+getNivel()

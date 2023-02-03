@@ -13,6 +13,11 @@ const passport = require('passport');
 const db = require('./config/bancodados');
 const usuarios = require('./routes/usuario')
 require('./config/auth')(passport)
+const admin = require('./routes/admin')
+const {eAdmin} = require('./helpers/eAdmin')
+
+
+
 
 // Configurações
 
@@ -74,6 +79,9 @@ require('./config/auth')(passport)
 
         app.use('/formulario', formulario)
         app.use('/usuarios', usuarios)
+        app.get('/admin', eAdmin, (req, res) => {
+            res.render('admin/painel')
+        })
 
 
 

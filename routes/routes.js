@@ -6,11 +6,11 @@ require('../models/Formulario')
 require('../models/Usuario')
 const Formulario = mongoose.model('formularios')
 const transporter = require('../config/mail')
-const {euser} = require('../helpers/euser')
+const {eUser} = require('../helpers/eUser')
 
 // Novo Formulário
 
-        router.get('/formulario', euser, (req, res) => {
+        router.get('/formulario', eUser, (req, res) => {
             Formulario.find({idUsuario: req.user._id}).lean().sort({data: 'desc'}).then((formularios) => {
                 res.render('formulario/preform', {formularios: formularios})
             }).catch((err) => {
@@ -21,7 +21,7 @@ const {euser} = require('../helpers/euser')
            
         })
 
-        router.get('/novo', euser, (req, res) => {
+        router.get('/novo', eUser, (req, res) => {
             res.render('formulario/formulario')
         })
 

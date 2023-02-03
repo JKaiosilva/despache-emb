@@ -1,0 +1,14 @@
+<h1>Avisos</h1>
+
+{{#each avisos}}
+    <div class="card">
+        <div class="card-body">
+            <h4>{{titulo}}</h4>
+            <h4>{{descricao}}</h4>
+            <h4>{{eudontco}}</h4>
+            <h4>{{data}}</h4>
+        </div>
+    </div>
+{{else}}
+    <h3>Nenhum aviso postado</h3>
+{{/each}}
