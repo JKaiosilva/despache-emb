@@ -15,8 +15,8 @@ const Usuario = new Schema({
         require: true
     },
     eAdmin: {
-        type: Number,
-        default: 1
+        type: Boolean,
+        default: false
     },
     eUser: {
         type: Number,

@@ -17,4 +17,10 @@
     <a class="nav-link" href="/usuarios/cadastro">Cadastro</a>
   </li>
   {{/if}}
+    {{#ifAdmin user}}
+      <li class="nav-item">
+          <a class="nav-link" href="/admin/painel">Painel</a>
+      </li>
+    {{/ifAdmin}}
+
 </ul>

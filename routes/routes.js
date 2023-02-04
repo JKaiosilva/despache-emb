@@ -7,6 +7,7 @@ require('../models/Usuario')
 const Formulario = mongoose.model('formularios')
 const transporter = require('../config/mail')
 const {eUser} = require('../helpers/eUser')
+const moment = require('moment')
 
 // Novo Formulário
 
@@ -50,6 +51,7 @@ const {eUser} = require('../helpers/eUser')
                     email: req.body.email,
                     dsaida: req.body.dsaida,
                     dvolta: req.body.dvolta,
+                    data: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
                     idUsuario: req.user._id
                 }
                 new Formulario(novoFormulario).save().then(() => {
@@ -66,7 +68,7 @@ const {eUser} = require('../helpers/eUser')
                         'codigo: ' + req.body.codigo + '<br>' +
                         'Data de Saída: ' + req.body.dsaida + '<br>' +
                         'Data de Volta: ' + req.body.dvolta + '<br>' +
-                        'Data da Solicitação: ' + Date.now(),
+                        'Data da Solicitação: ' + moment(Date.now()).format('DD/MM/YYYY HH:mm'),
                     }).then((message) => {
                         req.flash('success_msg', 'Formulário enviado com sucesso')
                         console.log(message)
@@ -85,5 +87,13 @@ const {eUser} = require('../helpers/eUser')
         })
 
 
+
+
+        router.get('/sobrenos', (req, res) => {
+            res.render('pages/sobrenos')
+        })
+        router.get('/sobrenos/teste', (req, res) => {
+            res.render('pages/teste')
+        })
 
 module.exports = router

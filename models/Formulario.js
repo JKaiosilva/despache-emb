@@ -1,5 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
+const moment = require('moment')
+
+
 
 
 const Formulario = new Schema({
@@ -24,8 +27,8 @@ const Formulario = new Schema({
         require: true
     },
     data: {
-        type: Date,
-        default: Date.now()
+        type: String,
+        default: []
     },
     idUsuario: {
         type: String,

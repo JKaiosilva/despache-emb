@@ -14,7 +14,11 @@ const db = require('./config/bancodados');
 const usuarios = require('./routes/usuario')
 require('./config/auth')(passport)
 const admin = require('./routes/admin')
-const {eAdmin} = require('./helpers/eAdmin')
+const {Admin} = require('./helpers/eAdmin')
+const pages = require('./routes/routes')
+const Handlebars = require('handlebars')
+const Usuario = mongoose.model('usuarios')
+
 
 
 
@@ -41,9 +45,16 @@ const {eAdmin} = require('./helpers/eAdmin')
             res.locals.error_msg = req.flash('error_msg')
             res.locals.error = req.flash('error')
             res.locals.user = req.user || null;
+
             next()
         })
-
+        Handlebars.registerHelper("ifAdmin", function(user, options) {
+            if (user && user.eAdmin) {
+              return options.fn(this);
+            } else {
+              return options.inverse(this);
+            }
+          });
     // Body Parser
 
         app.use(express.json())
@@ -53,6 +64,10 @@ const {eAdmin} = require('./helpers/eAdmin')
 
         app.engine('handlebars', handlebars.engine({defaultLayout: 'main'}))
         app.set('view engine', 'handlebars')
+        
+
+
+
 
     // Mongoose
 
@@ -79,10 +94,8 @@ const {eAdmin} = require('./helpers/eAdmin')
 
         app.use('/formulario', formulario)
         app.use('/usuarios', usuarios)
-        app.get('/admin', eAdmin, (req, res) => {
-            res.render('admin/painel')
-        })
-
+        app.use('/admin', admin)
+        app.use('/pages', pages)
 
 
 

@@ -1,0 +1,13 @@
+<h2>Lista de usuários</h2>
+<hr>
+{{#each usuarios}}
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4>Nome: {{nome}}</h4>
+            <h5>Email: {{email}}</h5>
+            <small>Acesso de administrador: {{eAdmin}}</small>
+        </div>
+    </div>
+{{else}}
+    <h4>Nenhum usuário cadastrado</h4>
+{{/each}}
