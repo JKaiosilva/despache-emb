@@ -68,6 +68,14 @@ router.post('/avisos/novo', Admin, (req, res) => {
     })
 })
 
-
+router.post('/avisos/deletar', Admin, (req, res) => {
+    Aviso.deleteOne({_id: req.body.id}).then(() => {
+        req.flash('success_msg', 'Aviso deletado com sucesso!')
+        res.redirect('/admin/avisos')
+    }).catch((err) => {
+        req.flash('error_msg', 'Erro ao excluier aviso')
+        res.redirect('/admin/avisos')
+    })
+})
 
 module.exports = router

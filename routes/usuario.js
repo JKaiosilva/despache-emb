@@ -50,7 +50,7 @@ const bcrypt = require('bcryptjs')
                                 novoUsuario.senha = hash
                                 novoUsuario.save().then(() => {
                                     req.flash('success_msg', 'Usuario criado com sucesso')
-                                    res.redirect('/')
+                                    res.redirect('/usuarios/login')
                                 }).catch((err) => {
                                     req.flash('error_msg', 'Houve um erro ao salvar usuario')
                                     res.redirect('/usuarios/cadastro')

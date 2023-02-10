@@ -95,5 +95,8 @@ const moment = require('moment')
         router.get('/sobrenos/teste', (req, res) => {
             res.render('pages/teste')
         })
+        router.get('/termosUso', (req, res) => {
+            res.render('pages/termosUso')
+        })
 
 module.exports = router

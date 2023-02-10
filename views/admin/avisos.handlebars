@@ -8,6 +8,11 @@
             <h4>{{descricao}}</h4>
             <h4>{{eudontco}}</h4>
             <h4>{{data}}</h4>
+            <br>
+            <form action="/admin/avisos/deletar" method="POST">
+                <input type="hidden" name="id" value="{{_id}}">
+                <button type="submit" class="btn btn-danger mt-2">Deletar aviso</button>
+            </form>
         </div>
     </div>
 {{else}}

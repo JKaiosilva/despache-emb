@@ -5,5 +5,21 @@
   <p></p>
   <a class="btn btn-primary btn-lg" href="/pages/sobrenos" role="button">Sobre nos.</a>
 </div>
+<br>
+<br>
+<br>
 
-	
+<h2>Avisos: </h2>
+{{#each avisos}}
+      <div class="card">
+        <div class="card-body">
+          <h3>{{titulo}}</h3>
+          <h5>{{descricao}}</h5>
+          <label>{{conteudo}}</label>
+          <hr>
+          <label>{{data}}</label>
+        </div>
+      </div>
+{{else}}
+      <h5>Nenhuma aviso postado</h5>
+{{/each}}

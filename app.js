@@ -89,7 +89,10 @@ const Aviso = mongoose.model('avisos')
 
 // Rota
         app.get('/', (req, res) => {
-            res.render('index')
+            Aviso.find().lean().sort({data: 'desc'}).then((avisos) => {
+                res.render('index', {avisos: avisos})
+            })
+            
         })
 
 
