@@ -1,6 +1,3 @@
-const express = require('express')
-const handlebars = require('express-handlebars')
-const app = express()
 const canvas = document.getElementById('renderCanvas');
 const engine = new 	BABYLON.Engine(canvas, true);
 

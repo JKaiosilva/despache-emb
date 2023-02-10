@@ -15,8 +15,8 @@ const Aviso = new Schema({
         require: true
     },
     data: {
-        type: Date,
-        default: Date.now()
+        type: String,
+        default: []
     }
 })
 

@@ -1,7 +1,8 @@
 <h1>Avisos</h1>
+<a href="avisos/novo"><button class="btn btn-success mt-4">Novo aviso</button></a>
 
 {{#each avisos}}
-    <div class="card">
+    <div class="card mt-4">
         <div class="card-body">
             <h4>{{titulo}}</h4>
             <h4>{{descricao}}</h4>
@@ -10,5 +11,7 @@
         </div>
     </div>
 {{else}}
-    <h3>Nenhum aviso postado</h3>
+    <div class="mt-4">
+        <h3>Nenhum aviso postado</h3>
+    </div>
 {{/each}}

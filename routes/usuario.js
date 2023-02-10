@@ -8,8 +8,6 @@ const passport = require('passport')
 const bcrypt = require('bcryptjs')
 
 
-
-
 // Cadatro de usuário
 
         router.get('/cadastro', (req, res) => {

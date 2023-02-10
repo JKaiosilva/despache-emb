@@ -1,0 +1,20 @@
+<h3>Adicionar novo Aviso:</h3>
+<div class="card">
+    <div class="card-body">
+        <form action="/admin/avisos/novo" method="POST">
+        <div class="mb-3">
+                <label for="titulo" class="input-group-text mt-4">titulo do aviso: </label>
+                <input type="text" class="form-control" name="titulo" placeholder="" required>
+            </div>
+            <div class="mb-3">
+                <label for="descricao" class="input-group-text mt-4">Descrição: </label>
+                <input type="text" class="form-control" name="descricao" placeholder="" required>
+            </div>
+            <div class="mb-3">
+                <label for="conteudo" class="input-group-text mt-4">conteúdo: </label>
+                <input type="text" class="form-control" name="conteudo" placeholder="" required>
+            </div>
+            <button type="submit" class="btn btn-success" required>Postar aviso</button>
+        </form>
+    </div>
+</div>

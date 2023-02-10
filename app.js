@@ -1,6 +1,5 @@
 const express = require('express');
 const handlebars = require('express-handlebars');
-const bodyParse = require('body-parser');
 const app = express();
 const formulario = require('./routes/routes')
 const path = require('path');
@@ -18,6 +17,8 @@ const {Admin} = require('./helpers/eAdmin')
 const pages = require('./routes/routes')
 const Handlebars = require('handlebars')
 const Usuario = mongoose.model('usuarios')
+const Aviso = mongoose.model('avisos')
+
 
 
 
@@ -94,10 +95,9 @@ const Usuario = mongoose.model('usuarios')
 
         app.use('/formulario', formulario)
         app.use('/usuarios', usuarios)
+        app.use('/aviso', Aviso)
         app.use('/admin', admin)
         app.use('/pages', pages)
-
-
 
 
 
