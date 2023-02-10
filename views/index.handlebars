@@ -9,13 +9,17 @@
 <br>
 <br>
 
-<h2>Avisos: </h2>
+<div class="card">
+  <div class="card-body">
+
+<h1>Avisos: </h1>
+<hr>
 {{#each avisos}}
-      <div class="card">
+      <div class="card mt-4">
         <div class="card-body">
-          <h3>{{titulo}}</h3>
-          <h5>{{descricao}}</h5>
-          <label>{{conteudo}}</label>
+          <h4 class="card-title">{{titulo}}</h4>
+          <h6>{{descricao}}</h6>
+          <p class="card-text">{{conteudo}}</p>
           <hr>
           <label>{{data}}</label>
         </div>
@@ -23,3 +27,5 @@
 {{else}}
       <h5>Nenhuma aviso postado</h5>
 {{/each}}
+</div>
+</div>
