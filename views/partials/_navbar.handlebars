@@ -7,6 +7,15 @@
   <li class="nav-item">
     <a class="nav-link" href="/formulario/formulario">Formularios</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/usuarios/perfil">Minha conta</a>
+  </li>
+     {{#ifAdmin user}}
+      <li class="nav-item">
+          <a class="nav-link" href="/admin/painel">Painel ADM</a>
+      </li>
+    {{/ifAdmin}}
+
     <li class="nav-item">
     <a class="nav-link" href="/usuarios/logout">Sair</a>
   </li>
@@ -18,10 +27,5 @@
     <a class="nav-link" href="/usuarios/cadastro">Cadastro</a>
   </li>
   {{/if}}
-    {{#ifAdmin user}}
-      <li class="nav-item">
-          <a class="nav-link" href="/admin/painel">Painel</a>
-      </li>
-    {{/ifAdmin}}
 
 </ul>

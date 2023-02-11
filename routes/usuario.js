@@ -93,4 +93,13 @@ const bcrypt = require('bcryptjs')
             })
 
 
+            router.get('/perfil', (req, res) => {
+                res.render('usuarios/perfil')
+            })
+
+
+        
+
+
+
 module.exports = router

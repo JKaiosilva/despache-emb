@@ -99,4 +99,16 @@ const moment = require('moment')
             res.render('pages/termosUso')
         })
 
+        router.get('/avisoSaida', (req, res) => {
+            res.render('formulario/avisoSaida')
+        })
+
+        router.get('/avisoEntrada', (req, res) => {
+            res.render('formulario/avisoEntrada')
+        })
+
+        router.get('/despacho', (req, res) => {
+            res.render('formulario/despacho')
+        })
+
 module.exports = router
