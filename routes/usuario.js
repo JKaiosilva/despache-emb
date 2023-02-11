@@ -6,6 +6,7 @@ require('../models/Usuario')
 const Usuario = mongoose.model('usuarios')
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
+const {eUser} = require('../helpers/eUser')
 
 
 // Cadatro de usuário
@@ -21,6 +22,8 @@ const bcrypt = require('bcryptjs')
                 erros.push({texto: 'Nome inválido'})
             }if(!req.body.email || typeof req.body.email == undefined || req.body.email == null) {
                 erros.push({texto: 'Email inválido'})
+            }if(!req.body.CPF || typeof req.body.CPF == undefined || req.body.CPF == null || req.body.CPF.length < 11) {
+                erros.push({texto: 'CPF inválido'})
             }if(!req.body.senha || typeof req.body.senha == undefined || req.body.senha == null) {
                 erros.push({texto: "Senha inválida"})
             }if(req.body.senha.length < 6) {
@@ -38,6 +41,7 @@ const bcrypt = require('bcryptjs')
                         const novoUsuario = new Usuario({
                             nome: req.body.nome,
                             email: req.body.email,
+                            CPF: req.body.CPF,
                             senha: req.body.senha
                         })
 
@@ -93,8 +97,13 @@ const bcrypt = require('bcryptjs')
             })
 
 
-            router.get('/perfil', (req, res) => {
-                res.render('usuarios/perfil')
+            router.get('/perfil', eUser, (req, res) => {
+                Usuario.find({_id: req.user._id}).lean().sort().then((usuarios) => {
+                    res.render('usuarios/perfil', {usuarios: usuarios})
+                }).catch((err) => {
+                    req.flash('error_msg', 'Não foi possivel obter seus dados')
+                    res.redirect('/')
+                })
             })
 
 

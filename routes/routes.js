@@ -22,11 +22,11 @@ const moment = require('moment')
            
         })
 
-        router.get('/novo', eUser, (req, res) => {
+        router.get('/novo', (req, res) => {
             res.render('formulario/formulario')
         })
 
-        router.post('/formulario/novo', (req, res) => {
+        router.post('/formulario/novo', eUser, (req, res) => {
             var erros = []
             if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
                 erros.push({texto: 'Nome inválido!'})
@@ -92,22 +92,20 @@ const moment = require('moment')
         router.get('/sobrenos', (req, res) => {
             res.render('pages/sobrenos')
         })
-        router.get('/sobrenos/teste', (req, res) => {
-            res.render('pages/teste')
-        })
+
         router.get('/termosUso', (req, res) => {
             res.render('pages/termosUso')
         })
 
-        router.get('/avisoSaida', (req, res) => {
+        router.get('/avisoSaida', eUser, (req, res) => {
             res.render('formulario/avisoSaida')
         })
 
-        router.get('/avisoEntrada', (req, res) => {
+        router.get('/avisoEntrada', eUser, (req, res) => {
             res.render('formulario/avisoEntrada')
         })
 
-        router.get('/despacho', (req, res) => {
+        router.get('/despacho', eUser, (req, res) => {
             res.render('formulario/despacho')
         })
 

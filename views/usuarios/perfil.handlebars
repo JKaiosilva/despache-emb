@@ -1,1 +1,24 @@
-<h1> teste</h1>
+<h3>Meu Perfil</h3>
+
+{{#each usuarios}}
+<div class="card">
+    <div class="card-body">
+        <div class="input-group">
+            <label class="input-group-text">Nome:</label>
+            <input class="form-control" value="{{nome}}" disabled>            
+        </div>
+        <div class="input-group">
+            <label class="input-group-text">Email:</label>
+            <input class="form-control" value="{{email}}" disabled>            
+        </div>
+        <div class="input-group">
+            <label class="input-group-text">CPF/CNPJ:</label>
+            <input class="form-control" value="{{CPF}}" disabled>            
+        </div>
+    </div>
+</div>
+
+
+{{else}}
+ <h1>err</h1>
+{{/each}}
