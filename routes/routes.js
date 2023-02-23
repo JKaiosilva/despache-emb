@@ -8,12 +8,14 @@ const Formulario = mongoose.model('formularios')
 const transporter = require('../config/mail')
 const {eUser} = require('../helpers/eUser')
 const moment = require('moment')
+require('../models/Despacho')
+const Despacho = mongoose.model('despachos')
 
 // Novo Formulário
 
         router.get('/formulario', eUser, (req, res) => {
-            Formulario.find({idUsuario: req.user._id}).lean().sort({data: 'desc'}).then((formularios) => {
-                res.render('formulario/preform', {formularios: formularios})
+            Despacho.find({usuarioID: req.user._id}).lean().sort({data: 'desc'}).then((despachos) => {
+                res.render('formulario/preform', {despachos: despachos})
             }).catch((err) => {
                 console.log(err)
                 req.flash('error_msg', 'Não foi possivel mostrar os formularios')
@@ -109,4 +111,60 @@ const moment = require('moment')
             res.render('formulario/despacho')
         })
 
+
+        router.post('/formulario/despacho', (req, res) => {
+            const novoDespacho = {
+                usuarioID: req.user._id,
+                NprocessoDespacho: req.body.NprocessoDespacho,
+                despachoPortoEstadia: req.body.despachoPortoEstadia,
+                despachoDataHoraPartida: req.body.despachoDataHoraPartida,
+                despachoNomeEmbarcação: req.body.despachoNomeEmbarcação,
+                despachoTipoEmbarcacao: req.body.despachoTipoEmbarcacao,
+                despachoBandeira: req.body.despachoBandeira,
+                despachoNInscricaoautoridadeMB: req.body.despachoNInscricaoautoridadeMB,
+                despachoArqueacaoBruta: req.body.despachoArqueacaoBruta,
+                despachoComprimentoTotal: req.body.despachoComprimentoTotal,
+                despachoTonelagemPorteBruto: req.body.despachoTonelagemPorteBruto,
+                despachoCertificadoRegistroAmador: req.body.despachoCertificadoRegistroAmador,
+                despachoArmador: req.body.despachoArmador,
+                despacgoNCRA: req.body.despacgoNCRA,
+                despachoValidade: req.body.despachoValidade,
+                despachoNomeRepresentanteEmbarcacao: req.body.despachoNomeRepresentanteEmbarcacao,
+                despachoCPFCNPJRepresentanteEmbarcacao: req.body.despachoCPFCNPJRepresentanteEmbarcacao,
+                despachoTelefoneRepresentanteEmbarcacao: req.body.despachoTelefoneRepresentanteEmbarcacao,
+                despachoEnderecoRepresentanteEmbarcacao: req.body.despachoEnderecoRepresentanteEmbarcacao,
+                despachoEmailRepresentanteEmbarcacao: req.body.despachoEmailRepresentanteEmbarcacao,
+                despachoDataUltimaInspecaoNaval: req.body.despachoDataUltimaInspecaoNaval,
+                despachoDeficiencias: req.body.despachoDeficiencias,
+                despachoTransportaCargaPerigosa: req.body.despachoTransportaCargaPerigosa,
+                despachoCertificadoTemporario90dias: req.body.despachoCertificadoTemporario90dias,
+                despachoCasoDocumentoExpirado: req.body.despachoCasoDocumentoExpirado,
+                despachoOBS: req.body.despachoOBS,
+                despachoNTripulantes: req.body.despachoNTripulantes,
+                despachoNomeComandante: req.body.despachoNomeComandante,
+                despachoTripulantesNome: req.body.despachoTripulantesNome,
+                despachoTripulantesGrau: req.body.despachoTripulantesGrau,
+                despachoTripulantesDataNascimento: req.body.despachoTripulantesDataNascimento,
+                despachoTripulantesNCIR: req.body.despachoTripulantesNCIR,
+                despachoTripulantesValidadeCIR: req.body.despachoTripulantesValidadeCIR,
+                despachoNomeEmbarcacao: req.body.despachoNomeEmbarcacao,
+                despachoNEmbN: req.body.despachoNEmbN,
+                despachoArqueacaoBrutaComboio: req.body.despachoArqueacaoBrutaComboio,
+                despachoCarga: req.body.despachoCarga,
+                despachoQuantidadeCaga: req.body.despachoQuantidadeCaga,
+                despachoSomaArqueacaoBruta: req.body.despachoSomaArqueacaoBruta,
+                despachoDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+
+            }
+            new Despacho(novoDespacho).save().then(() => {
+                req.flash('success_msg', 'Despacho enviado com sucesso')
+                res.redirect('/')
+            }).catch((err) => {
+                console.log(err)
+                req.flash('error_msg', 'Erro interno, tente novamente')
+                res.redirect('/')
+            })
+        })
+
 module.exports = router
+

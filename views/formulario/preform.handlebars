@@ -28,17 +28,9 @@
 <br>
     <h4>Minhas ultimas requisições de despacho.</h4>
 
-{{#each formularios}}
-    <div class="card mt-4">
-        <div class="card-body">
-            <p>Nome: {{nome}}</p>
-            <p>Email: {{email}}</p>
-            <p>Codigo: {{codigo}}</p>
-            <p>Data de saída: {{dsaida}}</p>
-            <p>Data de volta: {{dvolta}}</p>
-            <p>Data de requisição: {{data}}</p>
-        </div>
-    </div>
+{{#each despachos}}
+    <p>Numero de despacho: {{NprocessoDespacho}}</p>
+    <p>Data de pedido: {{despachoDataPedido}}</p>
 
 {{else}}
     <p>Nenhum formulário para ser exibido</p>

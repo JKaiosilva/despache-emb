@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 
 const Despacho = new Schema ({
+    usuarioID: {
+        type: String,
+        default: {}
+    },
     NprocessoDespacho: {
         type: String,
         required: true
@@ -27,7 +31,7 @@ const Despacho = new Schema ({
         type: String,
         required: true
     },
-    despachoNInscricaoautoridadeM: {
+    despachoNInscricaoautoridadeMB: {
         type: String,
         required: true
     },
@@ -84,15 +88,15 @@ const Despacho = new Schema ({
         required: true
     },
     despachoDeficiencias: {
-        type: Boolean,
+        type: String,
         required: false
     },
     despachoTransportaCargaPerigosa: {
-        type: Boolean,
+        type: String,
         required: false
     },
     despachoCertificadoTemporario90dias: {
-        type: Boolean,
+        type: String,
         required: false
     },
     despachoCasoDocumentoExpirado: {
@@ -110,6 +114,42 @@ const Despacho = new Schema ({
     despachoNomeComandante: {
         type: String,
         required: true
+    },
+    despachoTripulantes: {
+        type: String,
+        despachoTripulantesLista: [{despachoTripulantesNome: String, 
+            despachoTripulantesGrau: String, 
+            despachoTripulantesDataNascimento: String,
+            despachoTripulantesNCIR: String,
+            despachoTripulantesValidadeCIR: String}]
+    },
+    despachoNomeEmbarcacao: {
+        type: String,
+        required: true
+    },
+    despachoNEmbN: {
+        type: String,
+        required: true
+    },
+    despachoArqueacaoBrutaComboio: {
+        type: String,
+        required: true
+    },
+    despachoCarga: {
+        type: String,
+        required: true
+    },
+    despachoQuantidadeCaga: {
+        type: String,
+        required: true
+    },
+    despachoSomaArqueacaoBruta: {
+        type: String,
+        required: true
+    },
+    despachoDataPedido: {
+        type: String,
+        default: []
     }
 
 })
