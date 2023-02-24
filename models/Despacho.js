@@ -88,16 +88,16 @@ const Despacho = new Schema ({
         required: true
     },
     despachoDeficiencias: {
-        type: String,
-        required: false
+        type: Boolean,
+        
     },
     despachoTransportaCargaPerigosa: {
-        type: String,
-        required: false
+        type: Boolean,
+        
     },
     despachoCertificadoTemporario90dias: {
-        type: String,
-        required: false
+        type: Boolean,
+        
     },
     despachoCasoDocumentoExpirado: {
         type: String,
@@ -116,8 +116,8 @@ const Despacho = new Schema ({
         required: true
     },
     despachoTripulantes: {
-        type: String,
-        despachoTripulantesLista: [{despachoTripulantesNome: String, 
+        type: Array,
+        arr: [{despachoTripulantesNome: String, 
             despachoTripulantesGrau: String, 
             despachoTripulantesDataNascimento: String,
             despachoTripulantesNCIR: String,

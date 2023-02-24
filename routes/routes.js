@@ -142,11 +142,11 @@ const Despacho = mongoose.model('despachos')
                 despachoOBS: req.body.despachoOBS,
                 despachoNTripulantes: req.body.despachoNTripulantes,
                 despachoNomeComandante: req.body.despachoNomeComandante,
-                despachoTripulantesNome: req.body.despachoTripulantesNome,
-                despachoTripulantesGrau: req.body.despachoTripulantesGrau,
-                despachoTripulantesDataNascimento: req.body.despachoTripulantesDataNascimento,
-                despachoTripulantesNCIR: req.body.despachoTripulantesNCIR,
-                despachoTripulantesValidadeCIR: req.body.despachoTripulantesValidadeCIR,
+                despachoTripulantes:"Nomes: "+ req.body.despachoTripulantesNome+" || Grau ou Função: "+
+                req.body.despachoTripulantesGrau+" || Data de nascimento: "+
+                req.body.despachoTripulantesDataNascimento+" || N° da CIR: "+
+                req.body.despachoTripulantesNCIR+" || Validade da CIR: "+
+                req.body.despachoTripulantesValidadeCIR,
                 despachoNomeEmbarcacao: req.body.despachoNomeEmbarcacao,
                 despachoNEmbN: req.body.despachoNEmbN,
                 despachoArqueacaoBrutaComboio: req.body.despachoArqueacaoBrutaComboio,
@@ -162,6 +162,15 @@ const Despacho = mongoose.model('despachos')
             }).catch((err) => {
                 console.log(err)
                 req.flash('error_msg', 'Erro interno, tente novamente')
+                res.redirect('/')
+            })
+        })
+
+        router.get('/formulario/vizu/:id', (req, res) => {
+            Despacho.findOne({_id: req.params.id}).lean().then((despachos) => {
+                res.render('formulario/vizu', {despachos: despachos})
+            }).catch((err) => {
+                console.log(err)
                 res.redirect('/')
             })
         })
