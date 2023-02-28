@@ -94,51 +94,27 @@
                 <br>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Caso afirmativo, informe o(s) certificado(s)/documento(s) e suas respectivas datas de validade</label>
-                        <input name="despachoCasoDocumentoExpirado" class="form-control" type="text">
+                        <input name="despachoCasoDocumentoExpirado" class="form-control" type="text" value="{{despachos.despachoCasoDocumentoExpirado}}" disabled>
                     </div>
             <div>
                 <h4 class="text-center">Observações</h4>
                     <div class="input-group">
-                        <textarea name="despachoOBS" class="form-control"></textarea>
+                        <textarea name="despachoOBS" class="form-control" value="{{despachos.despachoOBS}}" disabled></textarea>
                     </div>
             </div>
             <div>
                 <h4 class="text-center mt-3">Lista de Tripulantes</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">N° de Tripulantes - incluindo o Comandante</label>
-                        <input name="despachoNTripulantes" class="form-control" type="text">
+                        <input name="despachoNTripulantes" class="form-control" type="text" value="{{despachos.despachoNTripulantes}}" disabled>
                         <label class="input-group-text">Nome do Comandante</label>
-                        <input name="despachoNomeComandante" class="form-control" type="text">
+                        <input name="despachoNomeComandante" class="form-control" type="text" value="{{despachos.despachoNomeComandante}}" disabled>
                     </div>
             </div>
             <div>
                 <div id="tripulantes" class="card bg-secondary">
-                    <script>
-                        var tripulantes = 1;
-                    function addInput(divName) {
-                    var newdiv = document.createElement('div');
-                    newdiv.innerHTML  = 'Tripulante : ['+tripulantes +']';
-                    newdiv.innerHTML += '<label class="input-group-text">Nome completo</label>'
-                    newdiv.innerHTML += '<input name="despachoTripulantesNome" class="form-control" type="text">'
-                    newdiv.innerHTML += '<label class="input-group-text">Grau ou Função</label>'
-                    newdiv.innerHTML += '<input name="despachoTripulantesGrau" class="form-control" type="text">'
-                    newdiv.innerHTML += '<label class="input-group-text">Data de nascimento</label>'
-                    newdiv.innerHTML += '<input name="despachoTripulantesDataNascimento" class="form-control" type="text">'
-                    newdiv.innerHTML += '<label class="input-group-text">N° da CIR</label>'
-                    newdiv.innerHTML += '<input name="despachoTripulantesNCIR" class="form-control" type="text">'
-                    newdiv.innerHTML += '<label class="input-group-text">Validade da CIR</label>'
-                    newdiv.innerHTML += '<input name="despachoTripulantesValidadeCIR" class="form-control" type="text">'
-
-                    document.getElementById(divName).appendChild(newdiv);
-                    tripulantes++;
-                    }
-
-                    addInput('lines');
-
-                    </script>
+                    <input name="despachoTripulantesNome" class="form-control" type="text" value="{{despachos.despachoTripulantes}}" disabled>
                 </div>
-                <button class="btn btn-primary" type="button" onclick="addInput('tripulantes')">Adicioanar tripulante</button>
-
             </div>
             <div>
                 <h4 class="text-center">Comboios</h4>
@@ -147,26 +123,25 @@
             <div>
                 <div class="input-group mb-3">
                     <label class="input-group-text">Nome da Embarcação</label>
-                    <input name="despachoNomeEmbarcacao" class="form-control" type="text">
+                    <input name="despachoNomeEmbarcacao" class="form-control" type="text" value="{{despachos.despachoNomeEmbarcacao}}" disabled>
                     <label class="input-group-text">N° de Inscrição</label>
-                    <input name="despachoNEmbN" class="form-control" type="text">
+                    <input name="despachoNEmbN" class="form-control" type="text" value="{{despachos.despachoNEmbN}}" disabled>
                 </div>
                 <div class="input-group mb-3">
                     <label class="input-group-text">Arqueação Bruta</label>
-                    <input name="despachoArqueacaoBrutaComboio" class="form-control" type="text">
+                    <input name="despachoArqueacaoBrutaComboio" class="form-control" type="text" value="{{despachos.despachoArqueacaoBrutaComboio}}" disabled>
                     <label class="input-group-text">Carga</label>
-                    <input name="despachoCarga" class="form-control" type="text">
+                    <input name="despachoCarga" class="form-control" type="text" value="{{despachos.despachoCarga}}" disabled>
                     <label class="input-group-text">Quantidade e Unidade de Carga</label>
-                    <input name="despachoQuantidadeCaga" class="form-control" type="text">
+                    <input name="despachoQuantidadeCaga" class="form-control" type="text" value="{{despachos.despachoQuantidadeCaga}}" disabled>
                 </div>
                         <div class="input-group mb-3">
                             <label class="input-group-text">Somatório da Arqueação Bruta das embarcações que compõem o comboio, incluindo a embarcação propulsora</label>
-                            <input name="despachoSomaArqueacaoBruta" class="form-control" type="text">
+                            <input name="despachoSomaArqueacaoBruta" class="form-control" type="text" value="{{despachos.despachoSomaArqueacaoBruta}}" disabled>
                         </div>
             </div>
                 <Label>Estou ciente de que responderei administrativamente, civil e penalmente pelos eventuais dados incorretos constantes da presente declaração</Label>
             </div>
-            <button type="submit" class="btn btn-success" required>Enviar</button>
         </form>
     </div>
 </div>

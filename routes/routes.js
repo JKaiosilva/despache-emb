@@ -10,6 +10,8 @@ const {eUser} = require('../helpers/eUser')
 const moment = require('moment')
 require('../models/Despacho')
 const Despacho = mongoose.model('despachos')
+require('../models/AvisoEntrada')
+const AvisoEntrada = mongoose.model('avisoEntradas')
 
 // Novo Formulário
 
@@ -166,14 +168,71 @@ const Despacho = mongoose.model('despachos')
             })
         })
 
+        router.post('/formulario/avisoEntrada', eUser, (req, res) => {
+            const novoAvisoEntrada = {
+                usuarioID: req.user._id,
+                entradaNprocesso: req.body.entradaNprocesso,
+                entradaPortoChegada: req.body.entradaPortoChegada,
+                entradaDataHoraChegada: req.body.entradaDataHoraChegada,
+                entradaPosicaoPortoAtual: req.body.entradaPosicaoPortoAtual,
+                entradaPortoOrigem: req.body.entradaPortoOrigem,
+                entradaPortoDestino: req.body.entradaPortoDestino,
+                entradaDataHoraEstimadaSaida: req.body.entradaDataHoraEstimadaSaida,
+                entradaNomeEmbarcacao: req.body.entradaNomeEmbarcacao,
+                entradaTipoEmbarcacao: req.body.entradaTipoEmbarcacao,
+                entradaBandeira: req.body.entradaBandeira,
+                entradaNInscricaoAutoridadeMaritima: req.body.entradaNInscricaoAutoridadeMaritima,
+                entradaArqueacaoBruta: req.body.entradaArqueacaoBruta,
+                entradaTonelagemPorteBruto: req.body.entradaTonelagemPorteBruto,
+                entradaNomeRepresentanteEmbarcacao: req.body.entradaNomeRepresentanteEmbarcacao,
+                entradaCPFCNPJRepresentanteEmbarcacao: req.body.entradaCPFCNPJRepresentanteEmbarcacao,
+                entradaTelefoneRepresentanteEmbarcacao: req.body.entradaTelefoneRepresentanteEmbarcacao,
+                entradaEnderecoRepresentanteEmbarcacao: req.body.entradaEnderecoRepresentanteEmbarcacao,
+                entradaEmailRepresentanteEmbarcacao: req.body.entradaEmailRepresentanteEmbarcacao,
+                entradaDadosUltimaInpecaoNaval: req.body.entradaDadosUltimaInpecaoNaval,
+                entradaDeficienciasRetificadasPorto: req.body.entradaDeficienciasRetificadasPorto,
+                entradaTransporteCagaPerigosa: req.body.entradaTransporteCagaPerigosa,
+                entradaObservacoes: req.body.entradaObservacoes,
+                entradaTripulantes: "Nome: "+ req.body.entradaTripulantesNome+" || Grau ou Função"+
+                req.body.entradaTripulantesGrauFuncao + " || Data de Nascimento: "+
+                req.body.entradaTripulantesDataNascimento + " || Numero da CIR: "+
+                req.body.entradaTipulantesNCIR + " || Validade da CIR: "+
+                req.body.entradaTripulantesValidadeCIR,
+                entradaPassageiros: "Nome: "+ req.body.entradaPassageirosNome+
+                " || Data de Nascimento: " + req.body.entradaPassageirosDataNascimento+
+                " || Sexo: " + req.body.entradaPassageirosSexo,
+                entradaComboios: "Nome: "+ req.body.entradaComboiosNome+
+                " || Numero de Inscrição: "+ req.body.entradaComboiosNIncricao+
+                " || Arqueação Bruta: "+ req.body.entradaComboiosArqueacaoBruta+
+                " || Carga: "+ req.body.entradaComboiosCarga+
+                " || Quantidade da Caga: "+ req.body.entradaComboiosQuantidadeCarga
+            }
+            new AvisoEntrada(novoAvisoEntrada).save().then(() => {
+                req.flash('success_msg', 'Aviso de entrada enviado com sucesso')
+                res.redirect('/')
+            }).catch((err) => {
+                console.log(err)
+                req.flash('error_msg', 'Erro interno, tente novamente')
+                res.redirect('/')
+            })
+        })
+
+
+
         router.get('/formulario/vizu/:id', (req, res) => {
             Despacho.findOne({_id: req.params.id}).lean().then((despachos) => {
+                AvisoEntrada.findOne({_id: req.params.id}).lean().then((avisoEntrada) => {
+                    
+                })
                 res.render('formulario/vizu', {despachos: despachos})
             }).catch((err) => {
                 console.log(err)
                 res.redirect('/')
             })
         })
+
+
+
 
 module.exports = router
 

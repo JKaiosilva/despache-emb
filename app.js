@@ -18,8 +18,8 @@ const pages = require('./routes/routes')
 const Handlebars = require('handlebars')
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
-
-
+require('./models/AvisoEntrada')
+const AvisoEntrada = mongoose.model('avisoEntradas')
 
 
 

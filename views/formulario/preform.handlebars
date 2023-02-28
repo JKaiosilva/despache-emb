@@ -26,8 +26,11 @@
     </div>
 </div>
 <br>
+<container>
+<div class="container text-center">
+<div class="row justify-content-around">
+<div class="col">
     <h4>Minhas ultimas requisições de despacho.</h4>
-
 {{#each despachos}}
 <div class="card mt-4">
     <div class="card-body">
@@ -42,3 +45,23 @@
 {{else}}
     <p>Nenhum formulário para ser exibido</p>
 {{/each}}
+</div>
+{{#each avisoEntrada}}
+<div class="card mt-4">
+    <div class="card-body">
+        <p>Numero de despacho: {{entradaNprocesso}}</p>
+        <p>Data de pedido: {{despachoDataPedido}}</p>
+        <a href="/formulario/formulario/vizu/{{_id}}"><button class="btn btn-success mt-3">Visualizar</button></a>
+
+    </div>
+</div>
+
+
+{{else}}
+    <p>Nenhum formulário para ser exibido</p>
+{{/each}}
+</div>
+
+</div>
+</div>
+</container>

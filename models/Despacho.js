@@ -88,16 +88,16 @@ const Despacho = new Schema ({
         required: true
     },
     despachoDeficiencias: {
-        type: Boolean,
-        
+        type: String,
+        required: true  
     },
     despachoTransportaCargaPerigosa: {
-        type: Boolean,
-        
+        type: String,
+        required: true  
     },
     despachoCertificadoTemporario90dias: {
-        type: Boolean,
-        
+        type: String,
+        required: true  
     },
     despachoCasoDocumentoExpirado: {
         type: String,
