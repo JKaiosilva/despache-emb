@@ -1,5 +1,7 @@
 <br>
 <h2 class="text-center mb-4">AVISO DE ENTRADA – NAVEGAÇÃO INTERIOR</h2>
+<h4 class="text-center mb-4">Aviso de Entrada enviado em: {{avisoEntradas.entradaDataPedido}}</h4>
+
 <div class="card">
     <div class="card-body">
         <form class="row gx-3 gy-2 align-items-center" action="formulario/avisoEntrada" method="POST">
@@ -108,11 +110,6 @@
                         <input name="entradaComboios" class="form-control" type="text" value="{{avisoEntradas.entradaComboios}}" disabled>
                     </div>
                     </div>
-                <div>
-                    <label class="input-group-text">Estou ciente de que responderei administrativa, 
-                        civil e penalmente pelos 
-                        eventuais dados incorretos constantes da presente declaração</label>
-                </div>
         </form>
     </div>
 </div>

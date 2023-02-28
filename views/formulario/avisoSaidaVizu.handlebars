@@ -1,0 +1,92 @@
+<br>
+<h2 class="text-center mb-4">AVISO DE SAÍDA – NAVEGAÇÃO INTERIOR</h2>
+<h4 class="text-center mb-4">Aviso de Saida enviado em: {{avisoSaidas.saidaDataPedido}}</h4>
+
+<div class="card">
+    <div class="card-body">
+        <form class="row gx-3 gy-2 align-items-center" action="formulario/avisoSaida" method="POST">
+            <input type="hidden" name="usuarioID" value="%= req.user._id %">
+                <div class="input-group mb-3">
+                    <label class="input-group-text" class="input-group-text">N° Pocesso de Despacho</label>
+                    <input name="saidaNprocesso" class="form-control" type="text" value="{{avisoSaidas.saidaNprocesso}}" disabled>
+                </div>
+                <div>
+                    <h4 class="text-center">Dados da Partida</h4>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text">Porto de Saída</label>
+                        <input name="saidaPortoSaida" class="form-control" type="text" value="{{avisoSaidas.saidaPortoSaida}}" disabled>
+                        <label class="input-group-text">Data/Hora de Saída</label>
+                        <input name="saidaDataHoraSaida" class="form-control" type="text" value="{{avisoSaidas.saidaDataHoraSaida}}" disabled>
+                    </div>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text">Porto de Destino</label>
+                        <input name="saidaPortoDestino" class="form-control" type="text" value="{{avisoSaidas.saidaPortoDestino}}" disabled>
+                        <label class="input-group-text">Data/Hora Estimada de Chegada</label>
+                        <input name="saidaDataHoraChegada" class="form-control" type="text" value="{{avisoSaidas.saidaDataHoraChegada}}" disabled>
+                    </div>
+                    <div class="input-group mb-3">
+                    <h4 class="text-center">Dados da Embarcação</h4>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Nome da Embarcação</label>
+                            <input name="saidaNomeEmbarcacao" class="form-control" type="text" value="{{avisoSaidas.saidaNomeEmbarcacao}}" disabled>
+                            <label class="input-group-text">Tipo da Embarcação</label>
+                            <input name="saidaTipoEmbarcacao" class="form-control" type="text" value="{{avisoSaidas.saidaTipoEmbarcacao}}" disabled>
+                        </div>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Bandeira</label>
+                            <input name="saidaBandeira" class="form-control" type="text" value="{{avisoSaidas.saidaBandeira}}" disabled>
+                            <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
+                            <input name="saidaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="{{avisoSaidas.saidaNInscricaoAutoridadeMaritima}}" disabled>
+                        </div>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Arqueação Buta</label>
+                            <input name="saidaArqueacaoBruta" class="form-control" type="text" value="{{avisoSaidas.saidaArqueacaoBruta}}" disabled>
+                            <label class="input-group-text">Tonelagem Porte Bruto</label>
+                            <input name="saidaTonelagemPorteBruto" class="form-control" type="text" value="{{avisoSaidas.saidaTonelagemPorteBruto}}" disabled>
+                        </div>
+                </div>
+                    <h4 class="text-center">Dados do Representante da Embarcação</h4>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text">Nome</label>
+                        <input name="saidaNomeRepresentanteEmbarcacao" class="form-control" type="text" value="{{avisoSaidas.saidaNomeRepresentanteEmbarcacao}}" disabled>
+                    </div>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text">CPF/CNPJ</label>
+                        <input name="saidaCPFCNPJRepresentanteEmbarcacao" class="form-control" type="text" value="{{avisoSaidas.saidaCPFCNPJRepresentanteEmbarcacao}}" disabled>
+                        <label class="input-group-text">Telefone</label>
+                        <input name="saidaTelefoneRepresentanteEmbarcacao" class="form-control" type="text" value="{{avisoSaidas.saidaTelefoneRepresentanteEmbarcacao}}" disabled>
+                    </div>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text">Endereço</label>
+                        <input name="saidaEnderecoRepresentanteEmbarcacao" class="form-control" type="text" value="{{avisoSaidas.saidaEnderecoRepresentanteEmbarcacao}}" disabled>
+                        <label class="input-group-text">Email</label>
+                        <input name="saidaEmailRepresentanteEmbarcacao" class="form-control" type="text" value="{{avisoSaidas.saidaEmailRepresentanteEmbarcacao}}" disabled>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-center">Observações</h4>
+                    <div class="input-group mb-3">
+                        <input name="saidaObservacoes" class="form-control" type="text" value="{{avisoSaidas.saidaObservacoes}}" disabled>
+                    </div>
+                </div>
+                <div>
+                    <div id="tripulantes" class="card bg-secondary">
+                        <h4 class="text-center">Lista de Tripulantes</h4>
+                        <input name="saidaTripulantes" class="form-control" type="text" value="{{avisoSaidas.saidaTripulantes}}" disabled>
+                    </div>
+                </div>
+                <div>
+                    <div id="passageiros" class="card bg-secondary">
+                        <h4 class="text-center">Lista de Passageiros</h4>
+                        <input name="saidaPassageiros" class="form-control" type="text" value="{{avisoSaidas.saidaPassageiros}}" disabled>
+                        </div>
+                    </div>
+                    <div>
+                    <div id="comboios" class="card bg-secondary">
+                        <h4 class="text-center">Lista de Comboios</h4>
+                        <input name="saidaComboios" class="form-control" type="text" value="{{avisoSaidas.saidaComboios}}" disabled>
+                    </div>
+                    </div>
+        </form>
+    </div>
+</div>

@@ -12,13 +12,17 @@ require('../models/Despacho')
 const Despacho = mongoose.model('despachos')
 require('../models/AvisoEntrada')
 const AvisoEntrada = mongoose.model('avisoEntradas')
+require('../models/AvisoSaida')
+const AvisoSaida = mongoose.model('avisoSaidas')
 
 // Novo Formulário
 
         router.get('/formulario', eUser, (req, res) => {
-            Despacho.find({usuarioID: req.user._id}).lean().sort({data: 'desc'}).then((despachos) => {
-                AvisoEntrada.find({usuarioID: req.user._id}).lean().sort({data: 'desc'}).then((avisoEntradas) => {
-                    res.render('formulario/preform', {despachos: despachos, avisoEntradas: avisoEntradas})
+            Despacho.find({usuarioID: req.user._id}).lean().sort({despachoDataPedido: 'asc'}).then((despachos) => {
+                AvisoEntrada.find({usuarioID: req.user._id}).lean().sort({entradaDataPedido: 'desc'}).then((avisoEntradas) => {
+                    AvisoSaida.find({usuarioID: req.user._id}).lean().sort({saidaDataPedido: 'asc'}).then((avisoSaidas) => {
+                        res.render('formulario/preform', {despachos: despachos, avisoEntradas: avisoEntradas, avisoSaidas: avisoSaidas})
+                    })
                 })
             }).catch((err) => {
                 console.log(err)
@@ -221,11 +225,55 @@ const AvisoEntrada = mongoose.model('avisoEntradas')
             })
         })
 
+        router.post('/formulario/avisoSaida', (req, res) => {
+            const novoAvisoSaida = {
+                usuarioID: req.user._id,
+                saidaNprocesso: req.body.saidaNprocesso,
+                saidaPortoSaida: req.body.saidaPortoSaida,
+                saidaDataHoraSaida: req.body.saidaDataHoraSaida,
+                saidaPortoDestino: req.body.saidaPortoDestino,
+                saidaDataHoraChegada: req.body.saidaDataHoraChegada,
+                saidaNomeEmbarcacao: req.body.saidaNomeEmbarcacao,
+                saidaTipoEmbarcacao: req.body.saidaTipoEmbarcacao,
+                saidaBandeira: req.body.saidaBandeira,
+                saidaNInscricaoAutoridadeMaritima: req.body.saidaNInscricaoAutoridadeMaritima,
+                saidaArqueacaoBruta: req.body.saidaArqueacaoBruta,
+                saidaTonelagemPorteBruto: req.body.saidaTonelagemPorteBruto,
+                saidaNomeRepresentanteEmbarcacao: req.body.saidaNomeRepresentanteEmbarcacao,
+                saidaCPFCNPJRepresentanteEmbarcacao: req.body.saidaCPFCNPJRepresentanteEmbarcacao,
+                saidaTelefoneRepresentanteEmbarcacao: req.body.saidaTelefoneRepresentanteEmbarcacao,
+                saidaEnderecoRepresentanteEmbarcacao: req.body.saidaEnderecoRepresentanteEmbarcacao,
+                saidaEmailRepresentanteEmbarcacao: req.body.saidaEmailRepresentanteEmbarcacao,
+                saidaObservacoes: req.body.saidaObservacoes,
+                saidaTripulantes: "Nome: "+ req.body.saidaTripulantesNome+" || Grau ou Função"+
+                req.body.saidaTripulantesGrauFuncao + " || Data de Nascimento: "+
+                req.body.saidaTripulantesDataNascimento + " || Numero da CIR: "+
+                req.body.saidaTipulantesNCIR + " || Validade da CIR: "+
+                req.body.saidaTripulantesValidadeCIR,
+                saidaPassageiros: "Nome: "+ req.body.saidaPassageirosNome+
+                " || Data de Nascimento: " + req.body.saidaPassageirosDataNascimento+
+                " || Sexo: " + req.body.saidaPassageirosSexo,
+                saidaComboios: "Nome: "+ req.body.saidaComboiosNome+
+                " || Numero de Inscrição: "+ req.body.saidaComboiosNIncricao+
+                " || Arqueação Bruta: "+ req.body.saidaComboiosArqueacaoBruta+
+                " || Carga: "+ req.body.saidaComboiosCarga+
+                " || Quantidade da Caga: "+ req.body.saidaComboiosQuantidadeCarga,
+                saidaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+            }
+            new AvisoSaida(novoAvisoSaida).save().then(() => {
+                req.flash('success_msg', 'Aviso de saida enviado com sucesso')
+                res.redirect('/')
+            }).catch((err) => {
+                console.log(err)
+                req.flash('error_msg', 'Erro interno, tente novamente')
+                res.redirect('/')
+            })
+        })
+
 
 
         router.get('/formulario/despachoVizu/:id', (req, res) => {
             Despacho.findOne({_id: req.params.id}).lean().then((despachos) => {                    
-                
                 res.render('formulario/despachoVizu', {despachos: despachos})
             }).catch((err) => {
                 console.log(err)
@@ -235,8 +283,16 @@ const AvisoEntrada = mongoose.model('avisoEntradas')
 
         router.get('/formulario/avisoEntradaVizu/:id', (req, res) => {
             AvisoEntrada.findOne({_id: req.params.id}).lean().then((avisoEntradas) => {                    
-                
                 res.render('formulario/avisoEntradaVizu', {avisoEntradas: avisoEntradas})
+            }).catch((err) => {
+                console.log(err)
+                res.redirect('/')
+            })
+        })
+
+        router.get('/formulario/avisoSaidaVizu/:id', (req, res) => {
+            AvisoSaida.findOne({_id: req.params.id}).lean().then((avisoSaidas) => {                    
+                res.render('formulario/avisoSaidaVizu', {avisoSaidas: avisoSaidas})
             }).catch((err) => {
                 console.log(err)
                 res.redirect('/')
