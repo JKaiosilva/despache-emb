@@ -2,6 +2,10 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
 const AvisoEntrada = new Schema ({
+    usuarioID: {
+        type: String,
+        default: {}
+    },
     entradaNprocesso: {
         type: String,
         required: true
@@ -117,6 +121,10 @@ const AvisoEntrada = new Schema ({
             entradaComboiosCarga: String,
             entradaComboiosQuantidadeCarga: String
         }]
+    },
+    entradaDataPedido: {
+        type: String,
+        default: []
     }
 
 

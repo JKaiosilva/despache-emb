@@ -17,7 +17,9 @@ const AvisoEntrada = mongoose.model('avisoEntradas')
 
         router.get('/formulario', eUser, (req, res) => {
             Despacho.find({usuarioID: req.user._id}).lean().sort({data: 'desc'}).then((despachos) => {
-                res.render('formulario/preform', {despachos: despachos})
+                AvisoEntrada.find({usuarioID: req.user._id}).lean().sort({data: 'desc'}).then((avisoEntradas) => {
+                    res.render('formulario/preform', {despachos: despachos, avisoEntradas: avisoEntradas})
+                })
             }).catch((err) => {
                 console.log(err)
                 req.flash('error_msg', 'Não foi possivel mostrar os formularios')
@@ -205,7 +207,9 @@ const AvisoEntrada = mongoose.model('avisoEntradas')
                 " || Numero de Inscrição: "+ req.body.entradaComboiosNIncricao+
                 " || Arqueação Bruta: "+ req.body.entradaComboiosArqueacaoBruta+
                 " || Carga: "+ req.body.entradaComboiosCarga+
-                " || Quantidade da Caga: "+ req.body.entradaComboiosQuantidadeCarga
+                " || Quantidade da Caga: "+ req.body.entradaComboiosQuantidadeCarga,
+                entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+
             }
             new AvisoEntrada(novoAvisoEntrada).save().then(() => {
                 req.flash('success_msg', 'Aviso de entrada enviado com sucesso')
@@ -219,18 +223,25 @@ const AvisoEntrada = mongoose.model('avisoEntradas')
 
 
 
-        router.get('/formulario/vizu/:id', (req, res) => {
-            Despacho.findOne({_id: req.params.id}).lean().then((despachos) => {
-                AvisoEntrada.findOne({_id: req.params.id}).lean().then((avisoEntrada) => {
-                    
-                })
-                res.render('formulario/vizu', {despachos: despachos})
+        router.get('/formulario/despachoVizu/:id', (req, res) => {
+            Despacho.findOne({_id: req.params.id}).lean().then((despachos) => {                    
+                
+                res.render('formulario/despachoVizu', {despachos: despachos})
             }).catch((err) => {
                 console.log(err)
                 res.redirect('/')
             })
         })
 
+        router.get('/formulario/avisoEntradaVizu/:id', (req, res) => {
+            AvisoEntrada.findOne({_id: req.params.id}).lean().then((avisoEntradas) => {                    
+                
+                res.render('formulario/avisoEntradaVizu', {avisoEntradas: avisoEntradas})
+            }).catch((err) => {
+                console.log(err)
+                res.redirect('/')
+            })
+        })
 
 
 
