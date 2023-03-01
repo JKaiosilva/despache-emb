@@ -1,19 +1,40 @@
-
 <br>
-<div style="display: flex; justify-content: inline">
-    <div class="card mt-4">
-        <div class="card-body">
-            <a href="/admin/avisos"><button class="btn btn-primary mt-4">Avisos</button></a>
-        </div>
+<h4 class="text-center">Painel Administrativo</h4>
+<br>
+{{#each usuarios}}
+<h6>Operador: {{nome}}</h6>
+{{else}}
+<span>Operador: Erro interno ao mostrar operador</span>
+{{/each}}
+<div class="card mt-4">
+    <div class="card-body">
+        <a href="/admin/avisos"><button class="btn btn-primary mt-4">Avisos</button></a>
     </div>
-    <div class="card mt-4">
-        <div class="card-body">
-            <a href="/admin/listaUsers"><button class="btn btn-primary mt-4">Usuarios</button></a>
-        </div>
+</div>
+<div class="card mt-4">
+    <div class="card-body">
+        <a href="/admin/listaUsers"><button class="btn btn-primary mt-4">Usuarios</button></a>
     </div>
-    <div class="card mt-4">
-        <div class="card-body">
-            <a href="/admin/listaForms"><button class="btn btn-primary mt-4">Formularios</button></a>
-        </div>
+</div>
+<div class="card mt-4">
+    <div class="card-body">
+        <a href="/admin/listaDespacho"><button class="btn btn-primary mt-4">Despachos</button></a>
     </div>
+</div>
+<div class="card mt-4">
+    <div class="card-body">
+        <a href="/admin/listaAvisoEntrada"><button class="btn btn-primary mt-4">Avisos Entrada</button></a>
+    </div>
+</div>
+<div class="card mt-4">
+    <div class="card-body">
+        <a href="/admin/listaAvisoSaida"><button class="btn btn-primary mt-4">Avisos Saída</button></a>
+    </div>
+</div>
+
+
+
+
+
+
 </div>

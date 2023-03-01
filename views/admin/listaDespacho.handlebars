@@ -1,0 +1,13 @@
+<h4>Lista de Despachos</h4>
+<br>
+{{#each despachos}}
+    <div class="card mt-4">
+        <div class="card-body">
+            <h6>Despacho: {{NprocessoDespacho}}</h6>
+            <span>Data: {{despachoDataPedido}}</span>
+            <a href="/formulario/formulario/despachoVizu/{{_id}}"><button class="btn btn-success mt-3">Visualizar</button></a>
+        </div>
+    </div>
+{{else}}
+<h6>Nenhum despaho</h6>
+{{/each}}

@@ -1,0 +1,13 @@
+<h4>Lista de Avisos de Saida</h4>
+<br>
+{{#each avisoSaidas}}
+    <div class="card mt-4">
+        <div class="card-body">
+            <h6>Despacho: {{saidaNprocesso}}</h6>
+            <span>Data: {{saidaDataPedido}}</span>
+            <a href="/formulario/formulario/avisoSaidavizu/{{_id}}"><button class="btn btn-success mt-3">Visualizar</button></a>
+        </div>
+    </div>
+{{else}}
+<h6>Nenhum Aviso de Saida</h6>
+{{/each}}

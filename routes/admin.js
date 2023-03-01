@@ -7,36 +7,24 @@ const Formulario = mongoose.model('formularios')
 require('../models/Aviso')
 const Aviso = mongoose.model('avisos')
 const moment = require('moment')
+require('../models/Despacho')
+const Despacho = mongoose.model('despachos')
+require('../models/AvisoEntrada')
+const AvisoEntrada = mongoose.model('avisoEntradas')
+require('../models/AvisoSaida')
+const AvisoSaida = mongoose.model('avisoSaidas')
+
 
 
 router.get('/painel', Admin, (req, res) => {
-    res.render('admin/painel')
-})
-
-
-router.get('/listaUsers', Admin, (req, res) => {
-    Usuario.find().lean().sort({nome: 'desc'}).then((usuarios) => {
-        res.render('admin/listaUsers', {usuarios: usuarios})
+    Usuario.find({_id: req.user._id}).lean().sort().then((usuarios) => {
+        res.render('admin/painel', {usuarios: usuarios})
     }).catch((err) => {
         console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar usuarios!')
         res.redirect('/')
     })
-   
 })
-
-
-router.get('/listaForms', Admin, (req, res) => {
-    Formulario.find().lean().sort({data: 'desc'}).then((formularios) => {
-        res.render('admin/listaForms', {formularios: formularios})
-    }).catch((err) => {
-        console.log(err)
-        req.flash('error_msg', 'Erro interno ao mostrar formularios!')
-        res.redirect('/')
-    })
-   
-})
-
 router.get('/avisos', Admin, (req, res) => {
     Aviso.find().lean().sort({data: 'desc'}).then((avisos) => {
         res.render('admin/avisos', {avisos: avisos})
@@ -77,5 +65,49 @@ router.post('/avisos/deletar', Admin, (req, res) => {
         res.redirect('/admin/avisos')
     })
 })
+
+router.get('/listaUsers', Admin, (req, res) => {
+    Usuario.find().lean().sort({nome: 'desc'}).then((usuarios) => {
+        res.render('admin/listaUsers', {usuarios: usuarios})
+    }).catch((err) => {
+        console.log(err)
+        req.flash('error_msg', 'Erro interno ao mostrar usuarios!')
+        res.redirect('/')
+    })
+   
+})
+
+
+router.get('/listaDespacho', Admin, (req, res) => {
+    Despacho.find().lean().sort({data: 'desc'}).then((despachos) => {
+        res.render('admin/listaDespacho', {despachos: despachos})
+    }).catch((err) => {
+        console.log(err)
+        req.flash('error_msg', 'Erro interno ao mostrar despachos!')
+        res.redirect('/')
+    }) 
+})
+
+router.get('/listaAvisoEntrada', Admin, (req, res) => {
+    AvisoEntrada.find().lean().sort({data: 'desc'}).then((avisoEntradas) => {
+        res.render('admin/listaAvisoEntrada', {avisoEntradas: avisoEntradas})
+    }).catch((err) => {
+        console.log(err)
+        req.flash('error_msg', 'Erro interno ao mostrar avisos de entrada!')
+        res.redirect('/')
+    }) 
+})
+
+router.get('/listaAvisoSaida', Admin, (req, res) => {
+    AvisoSaida.find().lean().sort({data: 'desc'}).then((avisoSaidas) => {
+        res.render('admin/listaAvisoSaida', {avisoSaidas: avisoSaidas})
+    }).catch((err) => {
+        console.log(err)
+        req.flash('error_msg', 'Erro interno ao mostrar avisos de saida!')
+        res.redirect('/')
+    }) 
+})
+
+
 
 module.exports = router
