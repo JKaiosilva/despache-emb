@@ -6,15 +6,15 @@ painel admn{
 
 
 user {
-    area de acadastro de embarcações
+    area de acadastro de embarcações (N° Inscrição na Autoridade Marítima do Brasil) e tripulantes (N° da CIR)
+    
 
 }
 
-
-usuario {
-    abas de despachos e formularios
-}
 
 pagina de passo a passo
+
+
+
 
 
