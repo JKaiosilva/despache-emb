@@ -1,0 +1,47 @@
+<br>
+<h2 class="text-center mb-4">CADASTRO DE EMBARCAÇÃO</h2>
+<div class="card">
+    <div class="card-body">
+        <form class="row gx-3 gy-2 align-items-center" action="formulario/addEmbarcacao" method="POST">
+            <input type="hidden" name="usuarioID" value="%= req.user._id %">
+            <div>
+                <h4 class="text-center">Dados da Embarcação</h4>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text">Nome da Embarcação</label>
+                        <input name="embarcacaoNome" class="form-control" type="text">
+                        <label class="input-group-text">Tipo da Embarcação</label>
+                        <input name="embarcacaoTipo" class="form-control" type="text">
+                    </div>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">Bandeira</label>
+                <input name="embarcacaoBandeira" class="form-control" type="text">
+                <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
+                <input name="embarcacaoNInscricaoautoridadeMB" class="form-control" type="text">
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">Arqueação Bruta</label>
+                <input name="embarcacaoArqueacaoBruta" class="form-control" type="text">
+                <label class="input-group-text">Comprimento Total</label>
+                <input name="embarcacaoComprimentoTotal" class="form-control" type="text">
+                <label class="input-group-text">Tonelagem Porte Bruto</label>
+                <input name="embarcacaoTonelagemPorteBruto" class="form-control" type="text">
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">Certificado de Registro do Amador(CRA)</label>
+                <input name="embarcacaoCertificadoRegistroAmador" class="form-control" type="text">
+                <label class="input-group-text">Armador</label>
+                <input name="embarcacaoArmador" class="form-control" type="text">
+            </div>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text">N° do CRA</label>
+                        <input name="embarcacaoNCRA" class="form-control" type="text">
+                        <label class="input-group-text">Validade</label>
+                        <input name="embarcacaoValidade" class="form-control" type="text">
+                    </div>
+                <Label>Estou ciente de que responderei administrativamente, civil e penalmente pelos eventuais dados incorretos constantes da presente declaração</Label>
+            </div>
+            <button type="submit" class="btn btn-success" required>Enviar</button>
+        </form>
+    </div>
+</div>

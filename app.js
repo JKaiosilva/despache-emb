@@ -6,8 +6,6 @@ const path = require('path');
 const { default: mongoose } = require('mongoose');
 const session = require('express-session');
 const flash = require('connect-flash');
-require('./models/Formulario');
-const Formulario = mongoose.model('formularios');
 const passport = require('passport');
 const db = require('./config/bancodados');
 const usuarios = require('./routes/usuario')

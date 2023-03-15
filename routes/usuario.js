@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
-require('../models/Formulario')
 require('../models/Usuario')
 const Usuario = mongoose.model('usuarios')
 const passport = require('passport')

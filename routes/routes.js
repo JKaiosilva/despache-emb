@@ -2,9 +2,7 @@ const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
 const { userInfo } = require('os')
-require('../models/Formulario')
 require('../models/Usuario')
-const Formulario = mongoose.model('formularios')
 const {eUser} = require('../helpers/eUser')
 const moment = require('moment')
 require('../models/Despacho')
@@ -30,9 +28,6 @@ const AvisoSaida = mongoose.model('avisoSaidas')
             })
            
         })
-
-
-
 
         router.get('/sobrenos', (req, res) => {
             res.render('pages/sobrenos')
@@ -203,6 +198,15 @@ const AvisoSaida = mongoose.model('avisoSaidas')
                 req.flash('error_msg', 'Erro interno, tente novamente')
                 res.redirect('/')
             })
+        })
+
+
+        router.get('/addEmbarcacao', (req, res) => {
+            res.render('formulario/addEmbarcacao')
+        })
+
+        router.get('/addTripulante', (req, res) => {
+            res.render('formulario/addTripulante')
         })
 
 
