@@ -125,10 +125,12 @@ const AvisoEntrada = new Schema ({
     entradaDataPedido: {
         type: String,
         default: []
+    },
+    embarcacao: {
+        type: Schema.Types.ObjectId,
+        ref: 'embarcacoes',
+        required: true
     }
-
-
-
 
 })
 

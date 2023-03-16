@@ -50,7 +50,11 @@ const Embarcacao = new Schema ({
     embarcacaoValidade: {
         type: String,
         required: true
-    }
+    },
+    embarcacaoDataCadastro: {
+        type: String,
+        default: []
+    },
 
 })
 

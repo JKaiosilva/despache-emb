@@ -11,6 +11,8 @@ require('../models/AvisoEntrada')
 const AvisoEntrada = mongoose.model('avisoEntradas')
 require('../models/AvisoSaida')
 const AvisoSaida = mongoose.model('avisoSaidas')
+require('../models/Embarcacao')
+const Embarcacao = mongoose.model('embarcacoes')
 
 // Novo Formulário
 
@@ -38,17 +40,57 @@ const AvisoSaida = mongoose.model('avisoSaidas')
         })
 
         router.get('/avisoSaida', eUser, (req, res) => {
-            res.render('formulario/avisoSaida')
+            Embarcacao.find().lean().then((embarcacoes) => {
+                res.render('formulario/avisoSaida', {embarcacoes: embarcacoes})
+            }).catch((err) => {
+                req.flash('error_msg', 'Erro interno ao mostrar formulario')
+                res.redirect('formulario/preform')
+            })
         })
 
         router.get('/avisoEntrada', eUser, (req, res) => {
-            res.render('formulario/avisoEntrada')
+            Embarcacao.find().lean().then((embarcacoes) =>{
+                res.render('formulario/avisoEntrada', {embarcacoes: embarcacoes})
+            }).catch((err) => {
+                req.flash('error_msg', 'Erro interno ao mostrar formulario')
+                res.redirect('formulario/preform')
+            })
         })
 
         router.get('/despacho', eUser, (req, res) => {
-            res.render('formulario/despacho')
+            Embarcacao.find().lean().then((embarcacoes) => {
+                res.render('formulario/despacho', {embarcacoes: embarcacoes})
+            }).catch((err) => {
+                req.flash('error_msg', 'Erro interno ao mostrar formulario')
+                res.redirect('formulario/preform')
+            })
         })
 
+
+        router.post('/formulario/addEmbarcacao', (req, res) => {
+            const novaEmbarcacao = {
+                usuarioID: req.user._id,
+                embarcacaoNome: req.body.embarcacaoNome,
+                embarcacaoTipo: req.body.embarcacaoTipo,
+                embarcacaoBandeira: req.body.embarcacaoBandeira,
+                embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,
+                embarcacaoArqueacaoBruta: req.body.embarcacaoArqueacaoBruta,
+                embarcacaoComprimentoTotal: req.body.embarcacaoComprimentoTotal,
+                embarcacaoTonelagemPorteBruto: req.body.embarcacaoTonelagemPorteBruto,
+                embarcacaoCertificadoRegistroAmador: req.body.embarcacaoCertificadoRegistroAmador,
+                embarcacaoArmador: req.body.embarcacaoArmador,
+                embarcacaoNCRA: req.body.embarcacaoNCRA,
+                embarcacaoValidade: req.body.embarcacaoValidade,
+                embarcacaoDataCadastro: moment(Date.now()).format('DD/MM/YYYY HH:mm')
+            }
+            new Embarcacao(novaEmbarcacao).save().then(() => {
+                req.flash('success_msg', 'Embarcação cadastrada com sucesso')
+                res.redirect('/')
+            }).catch((err) => {
+                req.flash('error_msg', 'Erro ao salvar embarcação')
+                res.redirect('/')
+            })
+        })
 
         router.post('/formulario/despacho', (req, res) => {
             const novoDespacho = {

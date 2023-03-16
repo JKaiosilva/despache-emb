@@ -150,6 +150,11 @@ const Despacho = new Schema ({
     despachoDataPedido: {
         type: String,
         default: []
+    },
+    embarcacao: {
+        type: Schema.Types.ObjectId,
+        ref: 'embarcacoes',
+        required: true
     }
 
 })

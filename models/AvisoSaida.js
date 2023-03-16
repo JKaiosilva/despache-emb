@@ -88,6 +88,11 @@ const AvisoSaida = new Schema({
     saidaDataPedido: {
         type: String,
         default: []
+    },
+    embarcacao: {
+        type: Schema.Types.ObjectId,
+        ref: 'embarcacoes',
+        required: true
     }
 
 })

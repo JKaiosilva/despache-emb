@@ -154,6 +154,15 @@
                         civil e penalmente pelos 
                         eventuais dados incorretos constantes da presente declaração</label>
                 </div>
+                <div>
+                    <select name="embarcacao" class="form-select">
+                        {{#each embarcacoes}}
+                            <option value="{{_id}}">{{embarcacaoNome}}</option>
+                        {{else}}
+                            <option value="0">Nenhuma embarcação cadastrada</option>
+                        {{/each}}
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-success" required>Enviar</button>
         </form>
     </div>
