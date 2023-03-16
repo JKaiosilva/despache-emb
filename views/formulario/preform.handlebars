@@ -76,6 +76,26 @@
 <div class="container text-center">
     <div class="row">
     <div class="col">
+    <h5>Minhas ultimas Embarcações cadastradas.</h5>
+    {{#each embarcacoes}}
+    <div class="card mt-4">
+        <div class="card-body">
+            <p>Nome da Embarcação: {{embarcacaoNome}}</p>
+            <p>Data de pedido: {{embarcacaoDataCadastro}}</p>
+            <a href="/formulario/formulario/embarcacaoVizu/{{_id}}"><button class="btn btn-success mt-3">Visualizar</button></a>
+        </div>
+    </div>
+    
+
+    {{else}}
+        <div class="card mt-4">
+            <div class="card-body">
+                <p>Nenhuma Embarcação</p>
+            </div>
+        </div>
+    {{/each}}
+    </div>
+    <div class="col">
     <h5>Minhas ultimas requisições de despacho.</h5>
     {{#each despachos}}
     <div class="card mt-4">
@@ -90,7 +110,7 @@
     {{else}}
         <div class="card mt-4">
             <div class="card-body">
-                <p>Nenhum despacho para ser exibido</p>
+                <p>Nenhum despacho</p>
             </div>
         </div>
     {{/each}}
@@ -110,7 +130,7 @@
     {{else}}
         <div class="card mt-4">
             <div class="card-body">
-                <p>Nenhum aviso de entrada para ser exibido</p>
+                <p>Nenhum aviso de entrada</p>
             </div>
         </div>
     {{/each}}
@@ -120,7 +140,7 @@
     {{#each avisoSaidas}}
     <div class="card mt-4">
         <div class="card-body">
-            <p>Numero do Aviso de Entrada: {{saidaNprocesso}}</p>
+            <p>Numero do Aviso de Saída: {{saidaNprocesso}}</p>
             <p>Data de pedido: {{saidaDataPedido}}</p>
             <a href="/formulario/formulario/avisoSaidavizu/{{_id}}"><button class="btn btn-success mt-3">Visualizar</button></a>
         </div>
@@ -130,7 +150,7 @@
     {{else}}
         <div class="card mt-4">
             <div class="card-body">
-                <p>Nenhum aviso de saída para ser exibido</p>
+                <p>Nenhum aviso de saída</p>
             </div>
         </div>
     {{/each}}
