@@ -17,6 +17,10 @@ const Aviso = new Schema({
     data: {
         type: String,
         default: []
+    },
+    img: {
+        data: Buffer,
+        contentType: String
     }
 })
 

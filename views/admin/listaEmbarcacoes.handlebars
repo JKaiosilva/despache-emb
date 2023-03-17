@@ -1,0 +1,12 @@
+<h4>Lista de Embarcações</h4>
+<hr>
+{{#each embarcacoes}}
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4>Nome da Embarcação: {{embarcacaoNome}}</h4>
+            <small>Numero de registro: {{embarcacaoNInscricaoautoridadeMB}}</small>
+        </div>
+    </div>
+{{else}}
+    <span>Nenhuma Embarcação cadastrada</span>
+{{/each}}

@@ -12,6 +12,11 @@ require('../models/AvisoEntrada')
 const AvisoEntrada = mongoose.model('avisoEntradas')
 require('../models/AvisoSaida')
 const AvisoSaida = mongoose.model('avisoSaidas')
+const Embarcacoes = mongoose.model('embarcacoes')
+const fs = require('fs')
+const path = require('path')
+require('dotenv/config');
+const multer = require('multer')
 
 
 
@@ -44,6 +49,10 @@ router.post('/avisos/novo', Admin, (req, res) => {
         descricao: req.body.descricao,
         conteudo: req.body.conteudo,
         data: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+        img: {
+            data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+            contentType: 'image/png'
+        }
     } 
     new Aviso(novoAviso).save().then(() => {
         req.flash('success_msg', 'Aviso postado com sucesso')
@@ -105,6 +114,15 @@ router.get('/listaAvisoSaida', Admin, (req, res) => {
         req.flash('error_msg', 'Erro interno ao mostrar avisos de saida!')
         res.redirect('/')
     }) 
+})
+
+router.get('/listaEmbarcacoes', Admin, (req, res) => {
+    Embarcacoes.find().lean().sort({EmbarcacaoNome: 'asc'}).then((embarcacoes) => {
+        res.render('admin/listaEmbarcacoes', {embarcacoes: embarcacoes})
+    }).catch((err) => {
+        req.flash('error_msg', 'Erro interno ao mostrar embarcações')
+        res.redirect('/')
+    })
 })
 
 

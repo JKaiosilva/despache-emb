@@ -19,6 +19,10 @@ const Aviso = mongoose.model('avisos')
 require('./models/AvisoEntrada')
 const AvisoEntrada = mongoose.model('avisoEntradas')
 const ifAdmin = require('./helpers/barAdmin')
+const fs = require('fs')
+require('dotenv/config');
+const multer = require('multer')
+
 
 
 
@@ -60,9 +64,6 @@ const ifAdmin = require('./helpers/barAdmin')
         app.set('view engine', 'handlebars')
         
 
-
-
-
     // Mongoose
 
         mongoose.set('strictQuery', false)
@@ -79,6 +80,18 @@ const ifAdmin = require('./helpers/barAdmin')
         app.use((req, res, next) => {
             next();
         })
+
+    // Multer
+
+    const storage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, 'uploads')
+        },
+        filename: (req, file, cb) => {
+            cb(null, file.fieldname + '-' + Date.now())
+        }
+    })
+    const upload = multer({stoage: storage})
 
 // Rota
         app.get('/', (req, res) => {
