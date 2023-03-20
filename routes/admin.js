@@ -17,6 +17,20 @@ const fs = require('fs')
 const path = require('path')
 require('dotenv/config');
 const multer = require('multer')
+const imgModel = require('../models/Aviso');
+
+
+const upload = multer({
+    dest: './uploads',
+    storage: multer.diskStorage({
+       destination: (req, file, cb) => {
+           cb(null, './uploads');
+       },
+       filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+    })
+});
 
 
 
@@ -43,16 +57,16 @@ router.get('/avisos/novo', Admin, (req, res) => {
     res.render('admin/addaviso')
 })
 
-router.post('/avisos/novo', Admin, (req, res) => {
+router.post('/avisos/novo', upload.single('img'), (req, res) => {
     const novoAviso = {
         titulo: req.body.titulo,
         descricao: req.body.descricao,
         conteudo: req.body.conteudo,
         data: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
         img: {
-            data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
-            contentType: 'image/png'
-        }
+            data: fs.readFileSync(path.join('/uploads/' + req.file.img)),
+            contentType: 'image/png'  
+        }    
     } 
     new Aviso(novoAviso).save().then(() => {
         req.flash('success_msg', 'Aviso postado com sucesso')

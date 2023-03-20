@@ -1,7 +1,7 @@
 <h3>Adicionar novo Aviso:</h3>
 <div class="card">
     <div class="card-body">
-        <form action="/admin/avisos/novo" method="POST">
+        <form action="/admin/avisos/novo" method="POST" enctype="multipart/form-data">
         <div class="mb-3">
                 <label for="titulo" class="input-group-text mt-4">titulo do aviso: </label>
                 <input type="text" class="form-control" name="titulo" placeholder="" required>
@@ -16,7 +16,7 @@
             </div>
             <div>
                 <label>Adicionar Imagem</label>
-                <input type="file" id="image" name="image">
+                <input type="file" id="image" name="img">
             </div>
             <button type="submit" class="btn btn-success" required>Postar aviso</button>
         </form>

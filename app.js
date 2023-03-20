@@ -19,9 +19,9 @@ const Aviso = mongoose.model('avisos')
 require('./models/AvisoEntrada')
 const AvisoEntrada = mongoose.model('avisoEntradas')
 const ifAdmin = require('./helpers/barAdmin')
-const fs = require('fs')
 require('dotenv/config');
 const multer = require('multer')
+require('dotenv').config()
 
 
 
@@ -66,9 +66,9 @@ const multer = require('multer')
 
     // Mongoose
 
-        mongoose.set('strictQuery', false)
+        mongoose.set('strictQuery', true)
         mongoose.Promise = global.Promise;
-        mongoose.connect(db.mongoURI).then(() => {
+        mongoose.connect(db.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
             console.log('Servidor conectado!')
         }).catch((err) => {
             console.log('Erro' + err)
@@ -81,17 +81,7 @@ const multer = require('multer')
             next();
         })
 
-    // Multer
-
-    const storage = multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, 'uploads')
-        },
-        filename: (req, file, cb) => {
-            cb(null, file.fieldname + '-' + Date.now())
-        }
-    })
-    const upload = multer({stoage: storage})
+    
 
 // Rota
         app.get('/', (req, res) => {
