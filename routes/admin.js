@@ -64,7 +64,7 @@ router.post('/avisos/novo', upload.single('img'), (req, res) => {
         conteudo: req.body.conteudo,
         data: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
         img: {
-            data: fs.readFileSync(path.join('/uploads/' + req.file.img)),
+            data: fs.readFileSync(path.join(__dirname + '../uploads/' + req.file.img)),
             contentType: 'image/png'  
         }    
     } 

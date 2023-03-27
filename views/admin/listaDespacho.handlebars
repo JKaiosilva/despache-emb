@@ -1,6 +1,9 @@
 <h4>Lista de Despachos</h4>
 <br>
 {{#each despachos}}
+    {{#ifValidade despachos}}
+        <label>Vai vencer</label>
+    {{/ifValidade}}
     <div class="card mt-4">
         <div class="card-body">
             <h6>Despacho: {{NprocessoDespacho}}</h6>
