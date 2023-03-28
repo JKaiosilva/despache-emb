@@ -136,6 +136,7 @@ const Embarcacao = mongoose.model('embarcacoes')
                 despachoQuantidadeCaga: req.body.despachoQuantidadeCaga,
                 despachoSomaArqueacaoBruta: req.body.despachoSomaArqueacaoBruta,
                 despachoDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+                despachoData: Date.now(),
                 embarcacao: req.body.embarcacao,
 
             }

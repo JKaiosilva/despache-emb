@@ -151,6 +151,10 @@ const Despacho = new Schema ({
         type: String,
         default: []
     },
+    despachoData: {
+        type: Number,
+        default: []
+    },
     embarcacao: {
         type: Schema.Types.ObjectId,
         ref: 'embarcacoes',
