@@ -7,25 +7,23 @@ const Despacho = mongoose.model('despachos')
 
 
 
-Despacho.find().lean().then((despachos) => {
+/* Despacho.find().lean().then((despachos) => {
     despachos.forEach((data)=>{
       globalThis.valor = data.despachoData
-        /* console.log(valor) */
-    }).then((valor) => {
-      Handlebars.registerHelper("ifValidade", function(valor, options) {
-        console.log(valor)
-        if (valor != 0) {
+        /* console.log(valor)
+    })
+  })
+*/
+
+
+Handlebars.registerHelper("ifValidade", function(options) {
+        if (0 != 0) {
           console.log(valor)
           return options.fn(this);
         } else {
           return options.inverse(this);
         }
-    }) 
-    })
-}).catch(err => {
-  console.log(err)
-})
-
+}) 
 
 
 

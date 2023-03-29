@@ -1,16 +1,35 @@
 <h4>Lista de Despachos</h4>
 <br>
 {{#each despachos}}
-    {{#ifValidade despachos}}
+{{!--     {{#ifValidade despachos}}
         <label>Vai vencer</label>
-    {{/ifValidade}}
-    <div class="card mt-4">
+    {{/ifValidade}} --}}
+    
+    <div id="{{_id}}" class="card mt-4">
         <div class="card-body">
             <h6>Despacho: {{NprocessoDespacho}}</h6>
             <span>Data: {{despachoDataPedido}}</span>
             <a href="/formulario/formulario/despachoVizu/{{_id}}"><button class="btn btn-success mt-3">Visualizar</button></a>
         </div>
     </div>
+    
+    <script>
+            horaLocal = Date.now()
+            dezHoras = 36000000
+            segundos = 20000
+
+            if(horaLocal > {{despachoData}} + dezHoras) {
+                console.log('a')
+                const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-danger')
+            }else if(horaLocal > {{despachoData}} + segundos) {
+                console.log('b')
+                const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-warning')
+            }else {
+
+            }
+        
+        
+    </script>
 {{else}}
 <h6>Nenhum despaho</h6>
 {{/each}}
