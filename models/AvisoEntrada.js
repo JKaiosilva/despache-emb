@@ -130,6 +130,10 @@ const AvisoEntrada = new Schema ({
         type: Schema.Types.ObjectId,
         ref: 'embarcacoes',
         required: true
+    },
+    entradaData: {
+        type: Number,
+        default: []
     }
 
 })

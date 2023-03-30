@@ -1,13 +1,32 @@
 <h4>Lista de Avisos de Entrada</h4>
 <br>
 {{#each avisoEntradas}}
-    <div class="card mt-4">
+
+    <div id="{{_id}}" class="card mt-4">
         <div class="card-body">
-            <h6>Despacho: {{entradaNprocesso}}</h6>
-            <span>Data: {{entradaDataPedido}}</span>
-            <a href="/formulario/formulario/avisoEntradavizu/{{_id}}"><button class="btn btn-success mt-3">Visualizar</button></a>
+            <div>
+                <h6>Despacho: {{entradaNprocesso}}</h6>
+            </div>
+            <div class="">
+                <label class="mt-2">Data: {{entradaDataPedido}}</label>
+                <a class="btn btn-success float-end" href="/formulario/formulario/avisoEntradavizu/{{_id}}">Visualizar</a>
+            </div>
         </div>
     </div>
+    <script>
+            horaLocal = Date.now()
+            dezHoras = 36000000
+            segundos = 20000
+
+            if(horaLocal > {{entradaData}} + dezHoras) {
+                console.log('a')
+                const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-danger')
+            }else if(horaLocal > {{entradaData}} + segundos) {
+                console.log('b')
+                const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-warning')
+            } else {
+            }
+</script>
 {{else}}
 <h6>Nenhum Aviso de Entrada</h6>
 {{/each}}

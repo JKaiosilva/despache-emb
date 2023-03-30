@@ -12,7 +12,7 @@ require('../models/AvisoEntrada')
 const AvisoEntrada = mongoose.model('avisoEntradas')
 require('../models/AvisoSaida')
 const AvisoSaida = mongoose.model('avisoSaidas')
-const Embarcacoes = mongoose.model('embarcacoes')
+const Embarcacao = mongoose.model('embarcacoes')
 const fs = require('fs')
 const path = require('path')
 require('dotenv/config');
@@ -131,7 +131,7 @@ router.get('/listaAvisoSaida', Admin, (req, res) => {
 })
 
 router.get('/listaEmbarcacoes', Admin, (req, res) => {
-    Embarcacoes.find().lean().sort({EmbarcacaoNome: 'asc'}).then((embarcacoes) => {
+    Embarcacao.find().lean().sort({EmbarcacaoNome: 'asc'}).then((embarcacoes) => {
         res.render('admin/listaEmbarcacoes', {embarcacoes: embarcacoes})
     }).catch((err) => {
         req.flash('error_msg', 'Erro interno ao mostrar embarcações')
@@ -140,5 +140,23 @@ router.get('/listaEmbarcacoes', Admin, (req, res) => {
 })
 
 
+router.get('/usuariosVizu/:id', Admin, (req, res) => {
+    Usuario.find({_id: req.params.id}).lean().then((usuario) => {
+        res.render('admin/usuariosVizu', {usuario: usuario})
+    }).catch((err) => {
+        req.flash('error_msg', 'Erro ao mostrar usuarios.')
+        res.redirect('admin/listaUsers')
+    })
+})
+
+
+router.get('/embarcacaoVizu/:id', Admin, (req, res) => {
+    Embarcacao.find({_id: req.params.id}).lean().then((embarcacao) => {
+        res.render('admin/embarcacaoVizu', {embarcacao: embarcacao})
+    }).catch((err) => {
+        req.flash('error_msg', 'Erro ao mostrar embarcação')
+        res.redirect('admin/listaEmbarcacoes')
+    })
+})
 
 module.exports = router

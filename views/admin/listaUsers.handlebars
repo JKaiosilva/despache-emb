@@ -5,7 +5,8 @@
         <div class="card-body">
             <h4>Nome: {{nome}}</h4>
             <h5>Email: {{email}}</h5>
-            <small>Acesso de administrador: {{eAdmin}}</small>
+            <label class="mt-2">Acesso de administrador: {{eAdmin}}</label>
+            <a class="btn btn-success float-end" href="/admin/usuariosVizu/{{_id}}">Visualizar</a>
         </div>
     </div>
 {{else}}

@@ -190,6 +190,7 @@ const Embarcacao = mongoose.model('embarcacoes')
                 " || Quantidade da Caga: "+ req.body.entradaComboiosQuantidadeCarga,
                 entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
                 embarcacao: req.body.embarcacao,
+                entradaData: Date.now(),
 
             }
             new AvisoEntrada(novoAvisoEntrada).save().then(() => {
@@ -237,6 +238,7 @@ const Embarcacao = mongoose.model('embarcacoes')
                 " || Quantidade da Caga: "+ req.body.saidaComboiosQuantidadeCarga,
                 saidaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
                 embarcacao: req.body.embarcacao,
+                saidaData: Date.now(),
 
             }
             new AvisoSaida(novoAvisoSaida).save().then(() => {

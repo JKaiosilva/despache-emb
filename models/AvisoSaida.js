@@ -93,6 +93,10 @@ const AvisoSaida = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'embarcacoes',
         required: true
+    },
+    saidaData: {
+        type: Number,
+        default: []
     }
 
 })
