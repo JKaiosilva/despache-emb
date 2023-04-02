@@ -14,14 +14,14 @@ const Aviso = new Schema({
         type: String,
         require: true
     },
-    data: {
+    avisoData: {
         type: String,
         default: []
     },
-    img: {
-        data: Buffer,
-        contentType: String
-    }
+    data: {
+        type: Buffer
+    },
+    contentType: String
 })
 
 mongoose.model('avisos', Aviso)

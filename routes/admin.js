@@ -18,20 +18,17 @@ const path = require('path')
 require('dotenv/config');
 const multer = require('multer')
 const imgModel = require('../models/Aviso');
-
+const {uuid} = require('uuidv4')
 
 const upload = multer({
-    dest: './uploads',
     storage: multer.diskStorage({
-       destination: (req, file, cb) => {
-           cb(null, './uploads');
-       },
-       filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now())
-    }
-    })
-});
-
+      destination: 'uploads/',
+      filename(req, file, callback) {
+        const fileName = `${uuid()}-${file.originalname}`
+        return callback(null, fileName)
+      },
+    }),
+  })
 
 
 router.get('/painel', Admin, (req, res) => {
@@ -57,17 +54,15 @@ router.get('/avisos/novo', Admin, (req, res) => {
     res.render('admin/addaviso')
 })
 
-router.post('/avisos/novo', upload.single('img'), (req, res) => {
+router.post('/avisos/novo', upload.single('foto'), (req, res) => {
     const novoAviso = {
         titulo: req.body.titulo,
         descricao: req.body.descricao,
         conteudo: req.body.conteudo,
-        data: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-        img: {
-            data: fs.readFileSync(path.join(__dirname + '../uploads/' + req.file.img)),
-            contentType: 'image/png'  
-        }    
-    } 
+        avisoData: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+        data: fs.readFileSync(req.file.path),
+        contentType: 'image/png'
+    }
     new Aviso(novoAviso).save().then(() => {
         req.flash('success_msg', 'Aviso postado com sucesso')
         res.redirect('/admin/avisos')
