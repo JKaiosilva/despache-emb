@@ -1,14 +1,16 @@
 <br>
 <h4 class="text-center">Painel Administrativo</h4>
 <br>
-{{#each usuarios}}
-<h6>Operador: {{nome}}</h6>
-
+{{#each usuariosOperador}}
+    <div class="input-group" style="width: 30rem">
+        <label class="input-group-text">Operador</label>
+        <input class="form-control" value="{{nome}}" disabled>
+    </div>
 {{else}}
 <span>Operador: Erro interno ao mostrar operador</span>
 {{/each}}
 <hr>
-{{count}}
+
 <div class="container-fluid">
     <div class="row">
         <div class="row justify-content-around">
@@ -19,6 +21,9 @@
                         <h6 class="mt-4">Avisos</h6>
                     </div>
                 </a>
+                <div class="card-footer text-center bg-light">
+                    <label>{{avisos}} Avisos Postados</label>
+                </div>
             </div>
 
             <div class="card mt-4" style="max-width: 15rem">
@@ -28,6 +33,9 @@
                         <h6 class="mt-4">Usuarios</h6>
                     </div>
                 </a>
+                <div class="card-footer text-center bg-light">
+                    <label>{{usuarios}} Usuários cadastrados</label>
+                </div>
             </div>
 
 
@@ -38,6 +46,9 @@
                         <h6 class="mt-4">Embarcações</h6>
                     </div>
                 </a>
+                <div class="card-footer text-center bg-light">
+                    <label>{{embarcacoes}} Embarcações cadastrados</label>
+                </div>
             </div>
         </div>
     </div>
@@ -51,6 +62,9 @@
                         <h6 class="mt-4">Despachos</h6>
                     </div>
                 </a>
+                <div class="card-footer text-center bg-light">
+                    <label>{{despachos}} Despachos solicitados</label>
+                </div>
             </div>
 
 
@@ -61,6 +75,9 @@
                         <h6 class="mt-4">Avisos Entrada</h6>
                     </div>
                 </a>
+                <div class="card-footer text-center bg-light">
+                    <label>{{avisoEntradas}} Entradas solicitadas</label>
+                </div>
             </div>
 
 
@@ -71,6 +88,9 @@
                         <h6 class="mt-4">Avisos Saída</h6>
                     </div>
                 </a>
+                <div class="card-footer text-center bg-light">
+                    <label>{{avisoSaidas}} Saídas solicitadas</label>
+                </div>
             </div>
         </div>
     </div>

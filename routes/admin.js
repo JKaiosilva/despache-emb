@@ -35,17 +35,23 @@ const upload = multer({
 
 router.get('/painel', Admin, async(req, res) => {
     try{
-        var avisos = await Aviso.find().lean()
-        var usuarios = Usuario.find();
-        var usersL = usuarios.count(function(err, count) {
-            if(err){
-                console.log(err)
-            }else{
-                console.log(count)
-                return count
-            }
-        });
-        res.render('admin/painel', {avisos: avisos, usersL: count})
+        var usuariosOperador = await Usuario.find({_id: req.user._id}).lean();
+
+        var avisos = await Aviso.find().count();
+        var usuarios = await Usuario.find().count();
+        var embarcacoes = await Embarcacao.find().count();
+        var despachos = await Despacho.find().count();
+        var avisoEntradas = await AvisoEntrada.find().count();
+        var avisoSaidas = await AvisoSaida.find().count();
+        
+        res.render('admin/painel', 
+        {avisos: avisos, 
+            usuariosOperador: usuariosOperador, 
+                usuarios: usuarios,
+                    embarcacoes: embarcacoes,
+                        despachos: despachos,
+                            avisoEntradas: avisoEntradas,
+                                avisoSaidas: avisoSaidas})
     }catch (err){
         console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar avisos')
