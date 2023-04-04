@@ -86,9 +86,11 @@ require('dotenv').config()
 // Rota
         app.get('/', (req, res) => {
             Aviso.find().lean().sort({data: 'desc'}).then((avisos) => {
+                avisos.forEach((aviso) => {
+                    aviso.data = aviso.data.toString('base64')
+                })
                 res.render('index', {avisos: avisos})
             })
-            
         })
 
 

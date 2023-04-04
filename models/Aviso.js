@@ -19,9 +19,12 @@ const Aviso = new Schema({
         default: []
     },
     data: {
-        type: Buffer
+        type: String
     },
-    contentType: String
+    contentType: {
+    type: String,
+    required: true
+  }
 })
 
 mongoose.model('avisos', Aviso)

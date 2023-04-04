@@ -3,12 +3,12 @@
 
 {{#each avisos}}
     <div class="card mt-4">
+        <img src="data:{{contentType}};base64,{{data}}" style="width: 10rem;">
         <div class="card-body">
-            <img src="{{this.src}}">
             <h4>{{titulo}}</h4>
             <h4>{{descricao}}</h4>
-            <h4>{{eudontco}}</h4>
-            <h4>{{data}}</h4>
+            <h4>{{conteudo}}</h4>
+            <h4>{{avisoData}}</h4>
             <br>
             <form action="/admin/avisos/deletar" method="POST">
                 <input type="hidden" name="id" value="{{_id}}">

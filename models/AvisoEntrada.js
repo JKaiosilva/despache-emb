@@ -135,7 +135,6 @@ const AvisoEntrada = new Schema ({
         type: Number,
         default: []
     }
-
 })
 
 mongoose.model('avisoEntradas', AvisoEntrada)

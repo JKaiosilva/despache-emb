@@ -19,34 +19,75 @@ require('dotenv/config');
 const multer = require('multer')
 const imgModel = require('../models/Aviso');
 const {uuid} = require('uuidv4')
+const {promisify} = require('util')
+const mime = require('mime')
 
 const upload = multer({
     storage: multer.diskStorage({
       destination: 'uploads/',
       filename(req, file, callback) {
-        const fileName = `${uuid()}-${file.originalname}`
+        const fileName = file.originalname
         return callback(null, fileName)
       },
     }),
   })
 
 
-router.get('/painel', Admin, (req, res) => {
-    Usuario.find({_id: req.user._id}).lean().sort().then((usuarios) => {
-        res.render('admin/painel', {usuarios: usuarios})
-    }).catch((err) => {
+router.get('/painel', Admin, async(req, res) => {
+    try{
+        var avisos = await Aviso.find().lean()
+        var usuarios = Usuario.find();
+        var usersL = usuarios.count(function(err, count) {
+            if(err){
+                console.log(err)
+            }else{
+                console.log(count)
+                return count
+            }
+        });
+        res.render('admin/painel', {avisos: avisos, usersL: count})
+    }catch (err){
         console.log(err)
-        req.flash('error_msg', 'Erro interno ao mostrar usuarios!')
+        req.flash('error_msg', 'Erro interno ao mostrar avisos')
         res.redirect('/')
-    })
+    }
+    
 })
+
+
+/* router.get('/avisos', Admin, async(req, res) => {
+    try{
+        const avisos = await Aviso.find().lean().sort({data: 'desc'});
+        console.log(avisos)
+
+        const avisosComImagens = await Promise.all(avisos.map(async aviso => {
+            if (aviso.data && aviso.contetType) {
+                console.log('aeroporto')
+                const imagemBase64 = `data:${aviso.contentType};base64,${aviso.data.toString('base64')}`;
+                return { ...aviso, imagem: imagemBase64}
+            }else{
+                return aviso
+            }
+        }))
+        res.render('admin/avisos', {avisos: avisosComImagens})
+    }catch (err){
+        console.error(err);
+        req.flash('error_msg', 'Erro interno ao mostrar avisos')
+        res.redirect('/admin/painel')
+    }
+}) */
+
+
+
+
+
 router.get('/avisos', Admin, (req, res) => {
     Aviso.find().lean().sort({data: 'desc'}).then((avisos) => {
         res.render('admin/avisos', {avisos: avisos})
     }).catch((err) => {
         console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar avisos')
-        res.redirect('/painel')
+        res.redirect('/admin/painel')
     })
 })
 
@@ -54,24 +95,31 @@ router.get('/avisos/novo', Admin, (req, res) => {
     res.render('admin/addaviso')
 })
 
-router.post('/avisos/novo', upload.single('foto'), (req, res) => {
-    const novoAviso = {
-        titulo: req.body.titulo,
-        descricao: req.body.descricao,
-        conteudo: req.body.conteudo,
-        avisoData: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-        data: fs.readFileSync(req.file.path),
-        contentType: 'image/png'
-    }
-    new Aviso(novoAviso).save().then(() => {
+router.post('/avisos/novo', upload.single('foto'), async (req, res) => {
+    try {
+        const novoAviso = {
+            titulo: req.body.titulo,
+            descricao: req.body.descricao,
+            conteudo: req.body.conteudo,
+            avisoData: moment(Date.now()).format('DD/MM/YYYY HH:mm')
+        }
+        
+        if (req.file) {
+            const contentType = mime.getType(req.file.originalname);
+            const data = fs.readFileSync(req.file.path);
+            novoAviso.contentType = contentType;
+            novoAviso.data = data.toString('base64');
+        }
+
+        await new Aviso(novoAviso).save();
         req.flash('success_msg', 'Aviso postado com sucesso')
-        res.redirect('/admin/avisos')
-    }).catch((err) => {
+        res.redirect('/')
+    } catch (err) {
         console.log(err)
         req.flash('error_msg', 'Houve um erro interno ao postar aviso')
-        res.redirect('admin/avisos')
-    })
-})
+        res.redirect('/')
+    }
+});
 
 router.post('/avisos/deletar', Admin, (req, res) => {
     Aviso.deleteOne({_id: req.body.id}).then(() => {
