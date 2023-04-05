@@ -61,30 +61,6 @@ router.get('/painel', Admin, async(req, res) => {
 })
 
 
-/* router.get('/avisos', Admin, async(req, res) => {
-    try{
-        const avisos = await Aviso.find().lean().sort({data: 'desc'});
-        console.log(avisos)
-
-        const avisosComImagens = await Promise.all(avisos.map(async aviso => {
-            if (aviso.data && aviso.contetType) {
-                console.log('aeroporto')
-                const imagemBase64 = `data:${aviso.contentType};base64,${aviso.data.toString('base64')}`;
-                return { ...aviso, imagem: imagemBase64}
-            }else{
-                return aviso
-            }
-        }))
-        res.render('admin/avisos', {avisos: avisosComImagens})
-    }catch (err){
-        console.error(err);
-        req.flash('error_msg', 'Erro interno ao mostrar avisos')
-        res.redirect('/admin/painel')
-    }
-}) */
-
-
-
 
 
 router.get('/avisos', Admin, (req, res) => {
@@ -115,6 +91,9 @@ router.post('/avisos/novo', upload.single('foto'), async (req, res) => {
             const data = fs.readFileSync(req.file.path);
             novoAviso.contentType = contentType;
             novoAviso.data = data.toString('base64');
+            excluir = fs.unlink(`./uploads/${req.file.originalname}`,(err => {
+            }))
+            
         }
 
         await new Aviso(novoAviso).save();
