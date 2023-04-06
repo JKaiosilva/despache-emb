@@ -317,11 +317,26 @@ router.get('/page/:page', async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
-    const nextPage = parseInt(page) + 1
-    const previousPage = parseInt(page) - 1
     try {
+        const contagem = await Aviso.count()
+        if(parseInt(page) * limit >= contagem){
+            nextPage = ''
+        }else{
+            nextPage = `/formulario/page/${parseInt(page) + 1}`
+        }
+
+        if(parseInt(page) == 2){
+            previousPage = '/'
+        }else {
+            previousPage = `/formulario/page/${parseInt(page) -1}`
+        }
+
         const avisos = await Aviso.find().skip(skip).limit(limit).lean().sort({data: 'desc'})
-        res.render('pages/page', {avisos: avisos, nextPage: nextPage, previousPage: previousPage})
+        res.render('pages/page', 
+            {avisos: avisos, 
+                nextPage: nextPage, 
+                    previousPage: previousPage
+            })
     } catch(err){
         console.log(err)
     }

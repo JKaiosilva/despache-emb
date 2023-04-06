@@ -18,9 +18,8 @@
     {{else}}
       <h5>Nenhum aviso postado</h5>
     {{/each}}
-
   </div>
 </div>
 <br>
-<a href="/formulario/page/{{previousPage}}" class="btn btn-primary" >Anterior</a>
-<a href="/formulario/page/{{nextPage}}" class="btn btn-primary" style="float: right">Proximo</a>
+<a href="{{previousPage}}" class="btn btn-primary" type="{{hidden}}">Anterior</a>
+<a href="{{nextPage}}" class="btn btn-primary" style="float: right">Proximo</a>
