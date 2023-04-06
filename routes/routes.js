@@ -13,6 +13,8 @@ require('../models/AvisoSaida')
 const AvisoSaida = mongoose.model('avisoSaidas')
 require('../models/Embarcacao')
 const Embarcacao = mongoose.model('embarcacoes')
+require('../models/Aviso')
+const Aviso = mongoose.model('avisos')
 
 // Novo Formulário
 
@@ -310,6 +312,21 @@ const Embarcacao = mongoose.model('embarcacoes')
             })
         })
 
+
+router.get('/page/:page', async (req, res) => {
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+    const nextPage = parseInt(page) + 1
+    const previousPage = parseInt(page) - 1
+    try {
+        const avisos = await Aviso.find().skip(skip).limit(limit).lean().sort({data: 'desc'})
+        res.render('pages/page', {avisos: avisos, nextPage: nextPage, previousPage: previousPage})
+    } catch(err){
+        console.log(err)
+    }
+
+})
 
 
 

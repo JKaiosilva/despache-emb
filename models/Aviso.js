@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const Aviso = new Schema({
     titulo: {
@@ -26,5 +27,7 @@ const Aviso = new Schema({
     required: true
   }
 })
+
+
 
 mongoose.model('avisos', Aviso)

@@ -22,7 +22,7 @@ const ifAdmin = require('./helpers/barAdmin')
 require('dotenv/config');
 const multer = require('multer')
 require('dotenv').config()
-
+require('./helpers/pagination')
 
 
 
@@ -85,7 +85,7 @@ require('dotenv').config()
 
 // Rota
         app.get('/', (req, res) => {
-            Aviso.find().lean().sort({data: 'desc'}).then((avisos) => {
+            Aviso.find().limit(5).lean().sort({data: 'desc'}).then((avisos) => {
                 avisos.forEach((aviso) => {
                     aviso.data = aviso.data.toString('base64')
                 })
