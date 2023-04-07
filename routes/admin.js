@@ -17,10 +17,9 @@ const fs = require('fs')
 const path = require('path')
 require('dotenv/config');
 const multer = require('multer')
-const imgModel = require('../models/Aviso');
-const {uuid} = require('uuidv4')
-const {promisify} = require('util')
 const mime = require('mime')
+const pagination = require('../helpers/pagination')
+const eAdmin = require('../helpers/eAdmin')
 
 const upload = multer({
     storage: multer.diskStorage({
@@ -61,16 +60,47 @@ router.get('/painel', Admin, async(req, res) => {
 })
 
 
+router.get('/avisos', Admin, async (req, res) => {
+    try {
+        const avisos = await Aviso.find().limit(5).lean().sort({data: 'desc'})
+            res.render('admin/avisos/avisos', {avisos: avisos})
+    }catch (err) {
+        res.redirect('/painel')
+    }
+})
 
 
-router.get('/avisos', Admin, (req, res) => {
-    Aviso.find().lean().sort({data: 'desc'}).then((avisos) => {
-        res.render('admin/avisos', {avisos: avisos})
-    }).catch((err) => {
-        console.log(err)
-        req.flash('error_msg', 'Erro interno ao mostrar avisos')
-        res.redirect('/admin/painel')
-    })
+router.get('/avisos/:page', Admin, async (req, res) => {
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+        try{
+            const contagem = await Aviso.count()
+            if(parseInt(page) * limit >= contagem){
+                nextPage = ''
+                hidden = 'hidden'
+            }else{
+                nextPage = parseInt(page) + 1;
+                hidden = ''
+            }
+
+            if(parseInt(page) == 2){
+                previousPage = ''
+            }else{
+                previousPage = parseInt(page) - 1;
+            }
+            const avisos = await Aviso.find().skip(skip).limit(limit).lean().sort({data: 'desc'})
+                res.render('admin/avisos/avisosPage', 
+                    {avisos: avisos,
+                        nextPage: nextPage,
+                            previousPage: previousPage,
+                                hidden: hidden
+                })
+        } catch(err) {
+            console.log(err)
+        }
+        
+
 })
 
 router.get('/avisos/novo', Admin, (req, res) => {

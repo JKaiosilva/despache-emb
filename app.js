@@ -1,7 +1,8 @@
 const express = require('express');
 const handlebars = require('express-handlebars');
 const app = express();
-const formulario = require('./routes/routes')
+const postForms = require('./routes/postForms')
+const getForms = require('./routes/getForms')
 const path = require('path');
 const { default: mongoose } = require('mongoose');
 const session = require('express-session');
@@ -12,7 +13,7 @@ const usuarios = require('./routes/usuario')
 require('./config/auth')(passport)
 const admin = require('./routes/admin')
 const {Admin} = require('./helpers/eAdmin')
-const pages = require('./routes/routes')
+const pages = require('./routes/postForms')
 const Handlebars = require('handlebars')
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
@@ -93,8 +94,8 @@ require('./helpers/pagination')
             })
         })
 
-
-        app.use('/formulario', formulario)
+        app.use(getForms)
+        app.use(postForms)
         app.use('/usuarios', usuarios)
         app.use('/aviso', Aviso)
         app.use('/admin', admin)
