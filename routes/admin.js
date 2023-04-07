@@ -14,12 +14,9 @@ require('../models/AvisoSaida')
 const AvisoSaida = mongoose.model('avisoSaidas')
 const Embarcacao = mongoose.model('embarcacoes')
 const fs = require('fs')
-const path = require('path')
 require('dotenv/config');
 const multer = require('multer')
 const mime = require('mime')
-const pagination = require('../helpers/pagination')
-const eAdmin = require('../helpers/eAdmin')
 
 const upload = multer({
     storage: multer.diskStorage({
@@ -95,10 +92,10 @@ router.get('/avisos/:page', Admin, async (req, res) => {
                         nextPage: nextPage,
                             previousPage: previousPage,
                                 hidden: hidden
-                })
-        } catch(err) {
-            console.log(err)
-        }
+                    })
+            } catch(err) {
+
+            }
         
 
 })
@@ -128,11 +125,11 @@ router.post('/avisos/novo', upload.single('foto'), async (req, res) => {
 
         await new Aviso(novoAviso).save();
         req.flash('success_msg', 'Aviso postado com sucesso')
-        res.redirect('/')
+        res.redirect('/admin/avisos')
     } catch (err) {
         console.log(err)
         req.flash('error_msg', 'Houve um erro interno ao postar aviso')
-        res.redirect('/')
+        res.redirect('/admin/avisos')
     }
 });
 
@@ -148,13 +145,42 @@ router.post('/avisos/deletar', Admin, (req, res) => {
 
 router.get('/listaUsers', Admin, (req, res) => {
     Usuario.find().lean().sort({nome: 'desc'}).then((usuarios) => {
-        res.render('admin/listaUsers', {usuarios: usuarios})
+        res.render('admin/users/listaUsers', {usuarios: usuarios})
     }).catch((err) => {
         console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar usuarios!')
         res.redirect('/')
     })
-   
+})
+
+router.get('/listaUsers/:page', Admin, async (req, res) => {
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+        try{
+            const contagem = await Usuario.count()
+            if(parseInt(page) * limit >= contagem){
+                nextPage = ''
+                hidden = 'hidden'
+            }else{
+                nextPage = parseInt(page) + 1
+                hidden = ''
+            }
+
+            if(parseInt(page) == 2){
+                previousPage = ''
+            }else{
+                previousPage = parseInt(page) - 1
+            }
+            const usuarios = await Usuario.find().skip(skip).limit(limit).lean().sort({nome: 'desc'})
+                res.render('admin/users/usersPage', 
+                    {usuarios: usuarios,
+                        nextPage: nextPage,
+                            previousPage: previousPage,
+                                hidden: hidden})
+        }catch(err){
+
+        }
 })
 
 
@@ -198,9 +224,9 @@ router.get('/listaEmbarcacoes', Admin, (req, res) => {
 })
 
 
-router.get('/usuariosVizu/:id', Admin, (req, res) => {
+router.get('/users/usuariosVizu/:id', Admin, (req, res) => {
     Usuario.find({_id: req.params.id}).lean().then((usuario) => {
-        res.render('admin/usuariosVizu', {usuario: usuario})
+        res.render('admin/users/usuariosVizu', {usuario: usuario})
     }).catch((err) => {
         req.flash('error_msg', 'Erro ao mostrar usuarios.')
         res.redirect('admin/listaUsers')

@@ -1,0 +1,18 @@
+<h2>Lista de usuários</h2>
+<hr>
+{{#each usuarios}}
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4>Nome: {{nome}}</h4>
+            <h5>Email: {{email}}</h5>
+            <label class="mt-2">Acesso de administrador: {{eAdmin}}</label>
+            <a class="btn btn-success float-end" href="/admin/users/usuariosVizu/{{_id}}">Visualizar</a>
+        </div>
+    </div>
+{{else}}
+    <h4>Nenhum usuário cadastrado</h4>
+{{/each}}
+<br>
+<a href="/admin/listaUsers/{{previousPage}}" class="btn btn-primary">Anterior</a>
+<a href="/admin/listaUsers/{{nextPage}}" class="btn btn-primary" style="float: right" {{hidden}}>Próximo</a>
+

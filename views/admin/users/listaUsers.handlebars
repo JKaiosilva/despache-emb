@@ -6,9 +6,12 @@
             <h4>Nome: {{nome}}</h4>
             <h5>Email: {{email}}</h5>
             <label class="mt-2">Acesso de administrador: {{eAdmin}}</label>
-            <a class="btn btn-success float-end" href="/admin/usuariosVizu/{{_id}}">Visualizar</a>
+            <a class="btn btn-success float-end" href="/admin/users/usuariosVizu/{{_id}}">Visualizar</a>
         </div>
     </div>
 {{else}}
     <h4>Nenhum usuário cadastrado</h4>
 {{/each}}
+<br>
+<a href="/admin/painel" class="btn btn-primary">Painel</a>
+<a href="/admin/listaUsers/2" class="btn btn-primary" style="float: right">Próximo</a>
