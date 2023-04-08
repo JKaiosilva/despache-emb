@@ -9,7 +9,7 @@
             </div>
             <div class="">
                 <label class="mt-2">Data: {{entradaDataPedido}}</label>
-                <a class="btn btn-success float-end" href="/formulario/formulario/avisoEntradavizu/{{_id}}">Visualizar</a>
+                <a class="btn btn-success float-end" href="/formulario/avisoEntradavizu/{{_id}}">Visualizar</a>
             </div>
         </div>
     </div>
@@ -30,3 +30,6 @@
 {{else}}
 <h6>Nenhum Aviso de Entrada</h6>
 {{/each}}
+<br>
+<a href="/admin/entradas/{{previousPage}}" class="btn btn-primary">Anterior</a>
+<a href="/admin/entradas/{{nextPage}}" class="btn btn-primary" style="float: right" {{hidden}}>Próximo</a>

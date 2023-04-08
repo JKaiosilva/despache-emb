@@ -226,9 +226,9 @@ router.get('/despachos/:page', Admin, async (req, res) => {
 })
 
 
-router.get('/listaAvisoEntrada', Admin, (req, res) => {
-    AvisoEntrada.find().lean().sort({data: 'desc'}).then((avisoEntradas) => {
-        res.render('admin/listaAvisoEntrada', {avisoEntradas: avisoEntradas})
+router.get('/entradas', Admin, (req, res) => {
+    AvisoEntrada.find().limit(5).lean().sort({entradaData: 'desc'}).then((avisoEntradas) => {
+        res.render('admin/entradas/entradas', {avisoEntradas: avisoEntradas})
     }).catch((err) => {
         console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar avisos de entrada!')
@@ -236,15 +236,79 @@ router.get('/listaAvisoEntrada', Admin, (req, res) => {
     }) 
 })
 
-router.get('/listaAvisoSaida', Admin, (req, res) => {
-    AvisoSaida.find().lean().sort({data: 'desc'}).then((avisoSaidas) => {
-        res.render('admin/listaAvisoSaida', {avisoSaidas: avisoSaidas})
+
+router.get('/entradasPage/:page', Admin, async(req, res) => {
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+        try{
+            const contagem = await AvisoEntrada.count()
+                if(parseInt(page) * limit >= contagem){
+                    nextPage = ''
+                    hidden = 'hidden'
+                }else{
+                    nextPage = parseInt(page) + 1;
+                    hidden = ''
+                }
+
+                if(parseInt(page) == 2){
+                    previousPage = ''
+                }else{
+                    previousPage = parseInt(page) - 1
+                }
+                const avisoEntradas = await AvisoEntrada.find().skip(skip).limit(limit).lean().sort({entradaData: 'desc'})
+                    res.render('admin/entradas/entradasPage',
+                        {avisoEntradas: avisoEntradas,
+                            nextPage: nextPage,
+                                previousPage: previousPage,
+                                    hidden: hidden})
+        }catch(err){
+
+        }
+})
+
+
+router.get('/saidas', Admin, (req, res) => {
+    AvisoSaida.find().limit(5).lean().sort({saidaData: 'desc'}).then((avisoSaidas) => {
+        res.render('admin/saidas/saidas', {avisoSaidas: avisoSaidas})
     }).catch((err) => {
         console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar avisos de saida!')
         res.redirect('/')
     }) 
 })
+
+
+router.get('/saidasPage/:page', Admin, async (req, res) => {
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+        try{
+            const contagem = await AvisoSaida.count()
+                if(parseInt(page) * limit >= contagem){
+                    nextPage = ''
+                    hidden = 'hidden'
+                }else{
+                    nextPage = parseInt(page) + 1;
+                    hidden = ''
+                }
+
+                if(parseInt(page) == 2){
+                    previousPage = ''
+                }else{
+                    previousPage = parseInt(page) - 1
+                }
+                const avisoSaidas = await AvisoSaida.find().skip(skip).limit(limit).lean().sort({saidaData: 'desc'})
+                    res.render('admin/saidas/saidasPage',
+                    {avisoSaidas: avisoSaidas,
+                        nextPage: nextPage,
+                            previousPage: previousPage,
+                                hidden: hidden})
+        }catch(err){
+
+        }
+})
+
 
 router.get('/embarcacoes', Admin, (req, res) => {
     Embarcacao.find().limit(5).lean().sort({EmbarcacaoNome: 'asc'}).then((embarcacoes) => {

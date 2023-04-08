@@ -1,15 +1,15 @@
-<h4>Lista de Avisos de Saida</h4>
+<h4>Lista de Avisos de Entrada</h4>
 <br>
-{{#each avisoSaidas}}
+{{#each avisoEntradas}}
 
     <div id="{{_id}}" class="card mt-4">
         <div class="card-body">
             <div>
-                <h6>Despacho: {{saidaNprocesso}}</h6>
+                <h6>Despacho: {{entradaNprocesso}}</h6>
             </div>
             <div class="">
-                <label class="mt-2">Data: {{saidaDataPedido}}</label>
-                <a class="btn btn-success float-end" href="/formulario/formulario/avisosaidavizu/{{_id}}">Visualizar</a>
+                <label class="mt-2">Data: {{entradaDataPedido}}</label>
+                <a class="btn btn-success float-end" href="/formulario/avisoEntradavizu/{{_id}}">Visualizar</a>
             </div>
         </div>
     </div>
@@ -18,15 +18,19 @@
             dezHoras = 36000000
             segundos = 20000
 
-            if(horaLocal > {{saidaData}} + dezHoras) {
+            if(horaLocal > {{entradaData}} + dezHoras) {
                 console.log('a')
                 const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-danger')
-            }else if(horaLocal > {{saidaData}} + segundos) {
+            }else if(horaLocal > {{entradaData}} + segundos) {
                 console.log('b')
                 const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-warning')
             } else {
             }
 </script>
 {{else}}
-<h6>Nenhum Aviso de Saida</h6>
+<h6>Nenhum Aviso de Entrada</h6>
 {{/each}}
+<br>
+<a href="/admin/painel" class="btn btn-primary">Painel</a>
+<a href="/admin/entradasPage/2" class="btn btn-primary" style="float: right" {{hidden}}>Próximo</a>
+
