@@ -9,7 +9,7 @@
             </div>
             <div class="">
                 <label class="mt-2">Data: {{despachoDataPedido}}</label>
-                <a class="btn btn-success float-end" href="/formulario/formulario/despachoVizu/{{_id}}">Visualizar</a>
+                <a class="btn btn-success float-end" href="/formulario/despachoVizu/{{_id}}">Visualizar</a>
             </div>
         </div>
     </div>
@@ -31,4 +31,7 @@
 {{else}}
 <h6>Nenhum despaho</h6>
 {{/each}}
+<br>
+<a href="/admin/despachos/{{previousPage}}" class="btn btn-primary">Anterior</a>
+<a href="/admin/despachos/{{nextPage}}" class="btn btn-primary" style="float: right" {{hidden}}>Próximo</a>
 

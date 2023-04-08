@@ -59,7 +59,7 @@ router.get('/painel', Admin, async(req, res) => {
 
 router.get('/avisos', Admin, async (req, res) => {
     try {
-        const avisos = await Aviso.find().limit(5).lean().sort({data: 'desc'})
+        const avisos = await Aviso.find().limit(5).lean().sort({avisoData: 'desc'})
             res.render('admin/avisos/avisos', {avisos: avisos})
     }catch (err) {
         res.redirect('/painel')
@@ -86,7 +86,7 @@ router.get('/avisos/:page', Admin, async (req, res) => {
             }else{
                 previousPage = parseInt(page) - 1;
             }
-            const avisos = await Aviso.find().skip(skip).limit(limit).lean().sort({data: 'desc'})
+            const avisos = await Aviso.find().skip(skip).limit(limit).lean().sort({avisoData: 'desc'})
                 res.render('admin/avisos/avisosPage', 
                     {avisos: avisos,
                         nextPage: nextPage,
@@ -184,15 +184,47 @@ router.get('/listaUsers/:page', Admin, async (req, res) => {
 })
 
 
-router.get('/listaDespacho', Admin, (req, res) => {
-    Despacho.find().lean().sort({data: 'desc'}).then((despachos) => {
-        res.render('admin/listaDespacho', {despachos: despachos})
+router.get('/despachos', Admin, (req, res) => {
+    Despacho.find().limit(5).lean().sort({despachoData: 'desc'}).then((despachos) => {
+        res.render('admin/despachos/listaDespacho', {despachos: despachos})
     }).catch((err) => {
         console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar despachos!')
         res.redirect('/')
     }) 
 })
+
+
+router.get('/despachos/:page', Admin, async (req, res) => {
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+    try{
+        const contagem = await Despacho.count()
+        if(parseInt(page) * limit >= contagem){
+            nextPage = ''
+            hidden = 'hidden'
+        }else{
+            nextPage = parseInt(page) + 1
+            hidden = ''
+        }
+
+        if(parseInt(page) == 2){
+            previousPage = ''
+        }else{
+            previousPage = parseInt(page) -1
+        }
+        const despachos = await Despacho.find().skip(skip).limit(limit).lean().sort({despachoData: 'desc'})
+            res.render('admin/despachos/despachosPage',
+                {despachos: despachos,
+                    nextPage: nextPage,
+                        previousPage: previousPage,
+                            hidden: hidden})
+    }catch(err){
+
+    }
+})
+
 
 router.get('/listaAvisoEntrada', Admin, (req, res) => {
     AvisoEntrada.find().lean().sort({data: 'desc'}).then((avisoEntradas) => {
