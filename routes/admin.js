@@ -144,7 +144,7 @@ router.post('/avisos/deletar', Admin, (req, res) => {
 })
 
 router.get('/listaUsers', Admin, (req, res) => {
-    Usuario.find().lean().sort({nome: 'desc'}).then((usuarios) => {
+    Usuario.find().lean().sort({nome: 'asc'}).then((usuarios) => {
         res.render('admin/users/listaUsers', {usuarios: usuarios})
     }).catch((err) => {
         console.log(err)
@@ -246,13 +246,45 @@ router.get('/listaAvisoSaida', Admin, (req, res) => {
     }) 
 })
 
-router.get('/listaEmbarcacoes', Admin, (req, res) => {
-    Embarcacao.find().lean().sort({EmbarcacaoNome: 'asc'}).then((embarcacoes) => {
-        res.render('admin/listaEmbarcacoes', {embarcacoes: embarcacoes})
+router.get('/embarcacoes', Admin, (req, res) => {
+    Embarcacao.find().limit(5).lean().sort({EmbarcacaoNome: 'asc'}).then((embarcacoes) => {
+        res.render('admin/embarcacoes/listaEmbarcacoes', {embarcacoes: embarcacoes})
     }).catch((err) => {
         req.flash('error_msg', 'Erro interno ao mostrar embarcações')
         res.redirect('/')
     })
+})
+
+
+router.get('/embarcacoes/:page', Admin, async (req, res) => {
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+        try{
+            const contagem = await Embarcacao.count()
+            if(parseInt(page) * limit >= contagem){
+                nextPage = ''
+                hidden = 'hidden'
+            }else{
+                nextPage = parseInt(page) + 1
+                hidden = ''
+            }
+
+            if(parseInt(page) == 2){
+                previousPage = ''
+            }else{
+                previousPage = parseInt(page) -1
+            }
+            const embarcacoes = await Embarcacao.find().skip(skip).limit(limit).lean().sort({nome: 'asc'})
+                res.render('admin/embarcacoes/embarcacoesPage',
+                    {embarcacoes: embarcacoes,
+                        nextPage: nextPage,
+                            previousPage: previousPage,
+                                hidden: hidden
+                    })
+        }catch(err){
+
+        }
 })
 
 
@@ -266,9 +298,9 @@ router.get('/users/usuariosVizu/:id', Admin, (req, res) => {
 })
 
 
-router.get('/embarcacaoVizu/:id', Admin, (req, res) => {
+router.get('/embarcacoes/embarcacaoVizu/:id', Admin, (req, res) => {
     Embarcacao.find({_id: req.params.id}).lean().then((embarcacao) => {
-        res.render('admin/embarcacaoVizu', {embarcacao: embarcacao})
+        res.render('admin/embarcacoes/embarcacaoVizu', {embarcacao: embarcacao})
     }).catch((err) => {
         req.flash('error_msg', 'Erro ao mostrar embarcação')
         res.redirect('admin/listaEmbarcacoes')

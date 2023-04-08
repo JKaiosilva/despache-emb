@@ -5,9 +5,13 @@
         <div class="card-body">
             <h4>Nome da Embarcação: {{embarcacaoNome}}</h4>
             <label class="mt-2">Numero de registro: {{embarcacaoNInscricaoautoridadeMB}}</label>
-            <a class="btn btn-success float-end" href="/admin/embarcacaoVizu/{{_id}}">Visualizar</a>
+            <a class="btn btn-success float-end" href="/admin/embarcacoes/embarcacaoVizu/{{_id}}">Visualizar</a>
         </div>
     </div>
 {{else}}
     <span>Nenhuma Embarcação cadastrada</span>
 {{/each}}
+<br>
+<a href="/admin/painel" class="btn btn-primary">Painel</a>
+<a href="/admin/embarcacoes/2" class="btn btn-primary" style="float: right" {{hidden}}>Próximo</a>
+
