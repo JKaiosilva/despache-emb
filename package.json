@@ -37,6 +37,7 @@
   "description": "",
   "devDependencies": {
     "@babylonjs/core": "^5.45.1",
-    "@babylonjs/loaders": "^5.45.1"
+    "@babylonjs/loaders": "^5.45.1",
+    "start": "node app.js"
   }
 }
