@@ -35,9 +35,6 @@
     "uuidv4": "^6.2.13"
   },
   "description": "",
-  "devDependencies": {
-    "@babylonjs/core": "^5.45.1",
-    "@babylonjs/loaders": "^5.45.1",
-    "start": "node app.js"
-  }
+  "devDependencies": {},
+  "start": "node app.js"
 }
