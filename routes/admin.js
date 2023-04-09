@@ -104,7 +104,7 @@ router.get('/avisos/novo', Admin, (req, res) => {
     res.render('admin/addaviso')
 })
 
-router.post('/avisos/novo', upload.single('foto'), async (req, res) => {
+router.post('/novo', upload.single('foto'), async (req, res) => {
     try {
         const novoAviso = {
             titulo: req.body.titulo,
