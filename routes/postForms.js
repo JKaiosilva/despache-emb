@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
 require('../models/Usuario')
-const eUser = require('../helpers/eUser')
 const moment = require('moment')
 require('../models/Despacho')
 const Despacho = mongoose.model('despachos')
@@ -97,7 +96,7 @@ require('../models/Aviso')
             })
         })
 
-        router.post('/formulario/avisoEntrada', eUser, (req, res) => {
+        router.post('/formulario/avisoEntrada', (req, res) => {
             const novoAvisoEntrada = {
                 usuarioID: req.user._id,
                 entradaNprocesso: req.body.entradaNprocesso,
