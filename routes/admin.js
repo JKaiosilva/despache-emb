@@ -96,8 +96,6 @@ router.get('/avisos/:page', Admin, async (req, res) => {
             } catch(err) {
 
             }
-        
-
 })
 
 router.get('/avisos/novo', Admin, (req, res) => {
