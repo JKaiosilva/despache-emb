@@ -5,7 +5,6 @@ require('../models/Usuario')
 const Usuario = mongoose.model('usuarios')
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
-const {eUser} = require('../helpers/eUser')
 require('../models/Embarcacao')
 const Embarcacao = mongoose.model('embarcacoes')
 
@@ -99,7 +98,7 @@ const Embarcacao = mongoose.model('embarcacoes')
 
 // Perfil usuário
 
-            router.get('/perfil', eUser, (req, res) => {
+            router.get('/perfil', (req, res) => {
                 Usuario.find({_id: req.user._id}).lean().sort().then((usuarios) => {
                     Embarcacao.find({usuarioID: req.user._id}).lean().sort({embarcacaoDataCadastro: 'asc'}).then((embarcacoes) => {
                         res.render('usuarios/perfil', {usuarios: usuarios, embarcacoes: embarcacoes})
