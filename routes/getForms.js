@@ -14,7 +14,7 @@ require('../models/Aviso')
 const Aviso = mongoose.model('avisos')
 
 
-router.get('/formulario', (req, res) => {
+/* router.get('/formulario', (req, res) => {
     Embarcacao.find({usuarioID: req.user._id}).lean().sort({embarcacaoDataCadastro: 'asc'}).then((embarcacoes) => {
         Despacho.find({usuarioID: req.user._id}).lean().sort({despachoDataPedido: 'asc'}).then((despachos) => {
             AvisoEntrada.find({usuarioID: req.user._id}).lean().sort({entradaDataPedido: 'desc'}).then((avisoEntradas) => {
@@ -33,13 +33,33 @@ router.get('/formulario', (req, res) => {
         res.redirect('/')
     })
    
+}) */
+
+
+router.get('/formulario', async (req, res) => {
+    try{
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(3).lean().sort({embarcacaoDataCadastro: 'asc'})
+        const despachos = await Despacho.find({usuarioID: req.user._id}).limit(3).lean().sort({despachoDataPedido: 'asc'})
+        const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(3).lean().sort({entradaDataPedido: 'desc'})
+        const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(3).lean().sort({saidaDataPedido: 'asc'})
+        
+            res.render('formulario/preform', 
+            {despachos: despachos, 
+                avisoEntradas: avisoEntradas, 
+                    avisoSaidas: avisoSaidas, 
+                        embarcacoes: embarcacoes
+            })
+    }catch(err){
+        req.flash('error_msg', 'Não foi possivel mostrar os formularios')
+        res.redirect('/')
+    }
 })
 
-router.get('/sobrenos', (req, res) => {
+router.get('/pages/sobrenos', (req, res) => {
     res.render('pages/sobrenos')
 })
 
-router.get('/termosUso', (req, res) => {
+router.get('/pages/termosUso', (req, res) => {
     res.render('pages/termosUso')
 })
 
