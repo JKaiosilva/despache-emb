@@ -1,0 +1,16 @@
+<h4>Lista de Embarcações</h4>
+<hr>
+{{#each embarcacoes}}
+    <div class="card mt-4">
+        <div class="card-body">
+            <h4>Nome da Embarcação: {{embarcacaoNome}}</h4>
+            <label class="mt-2">Numero de registro: {{embarcacaoNInscricaoautoridadeMB}}</label>
+            <a class="btn btn-success float-end" href="/admin/embarcacoes/embarcacaoVizu/{{_id}}">Visualizar</a>
+        </div>
+    </div>
+{{else}}
+    <span>Nenhuma Embarcação cadastrada</span>
+{{/each}}
+<br>
+<a href="/embarcacoes/{{previousPage}}" class="btn btn-primary">Anterior</a>
+<a href="/embarcacoes/{{nextPage}}" class="btn btn-primary" style="float: right" {{hidden}}>Próximo</a>

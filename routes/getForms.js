@@ -14,34 +14,13 @@ require('../models/Aviso')
 const Aviso = mongoose.model('avisos')
 
 
-/* router.get('/formulario', (req, res) => {
-    Embarcacao.find({usuarioID: req.user._id}).lean().sort({embarcacaoDataCadastro: 'asc'}).then((embarcacoes) => {
-        Despacho.find({usuarioID: req.user._id}).lean().sort({despachoDataPedido: 'asc'}).then((despachos) => {
-            AvisoEntrada.find({usuarioID: req.user._id}).lean().sort({entradaDataPedido: 'desc'}).then((avisoEntradas) => {
-                AvisoSaida.find({usuarioID: req.user._id}).lean().sort({saidaDataPedido: 'asc'}).then((avisoSaidas) => {
-                    res.render('formulario/preform', 
-                        {despachos: despachos, 
-                            avisoEntradas: avisoEntradas, 
-                                avisoSaidas: avisoSaidas, 
-                                    embarcacoes: embarcacoes
-                        })
-                })
-            })
-        })
-    }).catch((err) => {
-        req.flash('error_msg', 'Não foi possivel mostrar os formularios')
-        res.redirect('/')
-    })
-   
-}) */
-
 
 router.get('/formulario', async (req, res) => {
     try{
-        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(3).lean().sort({embarcacaoDataCadastro: 'asc'})
-        const despachos = await Despacho.find({usuarioID: req.user._id}).limit(3).lean().sort({despachoDataPedido: 'asc'})
-        const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(3).lean().sort({entradaDataPedido: 'desc'})
-        const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(3).lean().sort({saidaDataPedido: 'asc'})
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({embarcacaoDataCadastro: 'asc'})
+        const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoDataPedido: 'asc'})
+        const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaDataPedido: 'desc'})
+        const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaDataPedido: 'asc'})
         
             res.render('formulario/preform', 
             {despachos: despachos, 
@@ -98,7 +77,7 @@ router.get('/formulario/despacho', (req, res) => {
 
 
 router.get('/formulario/addEmbarcacao', (req, res) => {
-    res.render('formulario/addEmbarcacao')
+    res.render('formulario/embarcacoes/addEmbarcacao')
 })
 
 router.get('/addTripulante', (req, res) => {
@@ -111,7 +90,7 @@ router.get('/formulario/embarcacaoVizu/:id', (req, res) => {
         Despacho.find({embarcacao: embarcacoes._id}).lean().then((despachos) => {
             AvisoEntrada.find({embarcacao: embarcacoes._id}).lean().then((avisoEntradas) => {
                 AvisoSaida.find({embarcacao: embarcacoes._id}).lean().then((avisoSaidas) => {
-                    res.render('formulario/embarcacaoVizu', 
+                    res.render('formulario/embarcacoes/embarcacaoVizu', 
                         {embarcacoes: embarcacoes, 
                             despachos: despachos, 
                                 avisoEntradas: avisoEntradas, 
@@ -196,6 +175,46 @@ router.get('/page/:page', async (req, res) => {
                             })
         } catch (err) {
     }
+})
+
+router.get('/embarcacoes',  (req, res) => {
+    Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({EmbarcacaoNome: 'asc'}).then((embarcacoes) => {
+        res.render('formulario/embarcacoes/embarcacoes', {embarcacoes: embarcacoes})
+    }).catch((err) => {
+        req.flash('error_msg', 'Erro interno ao mostrar embarcações')
+        res.redirect('/')
+    })
+})
+
+router.get('/embarcacoes/:page', async (req, res) => {
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+     try{
+        const contagem = await Embarcacao.count()
+        if(parseInt(page) * limit >= contagem){
+            nextPage = ''
+            hidden = 'hidden'
+        }else{
+            nextPage = parseInt(page) + 1
+            hidden = ''
+        }
+
+        if(parseInt(page) == 2){
+            previousPage = ''
+        }else{
+            previousPage = parseInt(page) - 1
+        }
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({embarcacaoDataCadastro: 'asc'})
+            res.render('formulario/embarcacoes/embarcacoesPage', 
+                {embarcacoes: embarcacoes,
+                    nextPage: nextPage,
+                        previousPage: previousPage,
+                            hidden: hidden
+                })
+    }catch(err){
+
+     }
 })
 
 module.exports = router
