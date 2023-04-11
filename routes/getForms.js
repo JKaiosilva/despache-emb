@@ -310,4 +310,51 @@ router.get('/saidas/:page', async (req, res) => {
         }
 })
 
+
+router.get('/despachos', async (req, res) => {
+    try{
+        const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoDataPedido: 'asc'})
+            res.render('formulario/despachos/despachos', 
+                {despachos: despachos
+            })
+    }catch(err){
+        req.flash('error_msg', 'Erro ao mostrar página')
+        res.redirect('/formulario')
+    }
+})
+
+
+router.get('/despachos/:page', async (req, res) => {
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+        try{
+            const contagem = await Despacho.count()
+            if(parseInt(page) * limit >= contagem){
+                nextPage = ''
+                hidden = 'hidden'
+            }else{
+                nextPage = parseInt(page) + 1
+                hidden = ''
+            }
+
+            if(parseInt(page) == 2){
+                previousPage = ''
+            }else{
+                previousPage = parseInt(page) - 1
+            }
+            const despachos = await Despacho.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({despachoDataPedido: 'asc'})
+                res.render('formulario/despachos/despachosPage', 
+                    {despachos: despachos,
+                        nextPage: nextPage,
+                            previousPage: previousPage,
+                                hidden: hidden
+                    })
+        }catch(err){
+            req.flash('error_msg', 'Erro ao mostrar página')
+            res.redirect('/formulario')
+        }
+})
+
+
 module.exports = router
