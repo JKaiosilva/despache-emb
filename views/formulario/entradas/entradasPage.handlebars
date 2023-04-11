@@ -1,0 +1,36 @@
+<h4>Lista de Avisos de Entrada</h4>
+<br>
+{{#each avisoEntradas}}
+
+    <div id="{{_id}}" class="card mt-4">
+        <div class="card-body">
+            <div>
+                <h6>Despacho: {{entradaNprocesso}}</h6>
+            </div>
+            <div class="">
+                <label class="mt-2">Data: {{entradaDataPedido}}</label>
+                <a class="btn btn-success float-end" href="/formulario/avisoEntradavizu/{{_id}}">Visualizar</a>
+            </div>
+        </div>
+    </div>
+    <script>
+            horaLocal = Date.now()
+            dezHoras = 36000000
+            segundos = 20000
+
+            if(horaLocal > {{entradaData}} + dezHoras) {
+                console.log('a')
+                const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-danger')
+            }else if(horaLocal > {{entradaData}} + segundos) {
+                console.log('b')
+                const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-warning')
+            } else {
+            }
+</script>
+{{else}}
+<h6>Nenhum Aviso de Entrada</h6>
+{{/each}}
+<br>
+<br>
+<a href="/entradas/{{previousPage}}" class="btn btn-primary">Anterior</a>
+<a href="/entradas/{{nextPage}}" class="btn btn-primary" style="float: right" {{hidden}}>Próximo</a>

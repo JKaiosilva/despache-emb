@@ -181,8 +181,8 @@ router.get('/embarcacoes',  (req, res) => {
     Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({EmbarcacaoNome: 'asc'}).then((embarcacoes) => {
         res.render('formulario/embarcacoes/embarcacoes', {embarcacoes: embarcacoes})
     }).catch((err) => {
-        req.flash('error_msg', 'Erro interno ao mostrar embarcações')
-        res.redirect('/')
+        req.flash('error_msg', 'Erro ao mostrar página')
+        res.redirect('/formulario')
     })
 })
 
@@ -213,8 +213,101 @@ router.get('/embarcacoes/:page', async (req, res) => {
                             hidden: hidden
                 })
     }catch(err){
-
+        req.flash('error_msg', 'Erro ao mostrar página')
+        res.redirect('/formulario')
      }
+})
+
+
+router.get('/entradas', async (req, res) => {
+    try{
+        const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaDataPedido: 'asc'})
+        res.render('formulario/entradas/entradas', 
+            {avisoEntradas: avisoEntradas,
+            })
+    }catch(err){
+        req.flash('error_msg', 'Erro ao mostrar página')
+        res.redirect('/formulario')
+    }
+})
+
+
+router.get('/entradas/:page', async (req, res) => {
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+        try{
+            const contagem = await AvisoEntrada.count()
+            if(parseInt(page) * limit >= contagem){
+                nextPage = ''
+                hidden = 'hidden'
+            }else{
+                nextPage = parseInt(page) + 1
+                hidden = ''
+            }
+
+            if(parseInt(page) == 2){
+                previousPage = ''
+            }else{
+                previousPage = parseInt(page) - 1
+            }
+            const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({entradaDataPedido: 'asc'})
+                res.render('formulario/entradas/entradasPage', 
+                    {avisoEntradas: avisoEntradas,
+                        nextPage: nextPage,
+                            previousPage: previousPage,
+                                hidden: hidden
+                    })
+        }catch(err){
+            req.flash('error_msg', 'Erro ao mostrar página')
+            res.redirect('/formulario')
+        }
+})
+
+
+router.get('/saidas', async (req, res) => {
+    try{
+        const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaDataPedido: 'asc'})
+            res.render('formulario/saidas/saidas', 
+                {avisoSaidas: avisoSaidas
+            })
+    }catch(err){
+        req.flash('error_msg', 'Erro ao mostrar página')
+        res.redirect('/formulario')
+    }
+})
+
+
+router.get('/saidas/:page', async (req, res) => {
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+        try{
+            const contagem = await AvisoSaida.count()
+            if(parseInt(page) * limit >= contagem){
+                nextPage = ''
+                hidden = 'hidden'
+            }else{
+                nextPage = parseInt(page) + 1
+                hidden = ''
+            }
+
+            if(parseInt(page) == 2){
+                previousPage = ''
+            }else{
+                previousPage = parseInt(page) - 1
+            }
+            const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({saidaDataPedido: 'asc'})
+                res.render('formulario/saidas/saidasPage', 
+                    {avisoSaidas: avisoSaidas,
+                        nextPage: nextPage,
+                            previousPage: previousPage,
+                                hidden: hidden
+                    })
+        }catch(err){
+            req.flash('error_msg', 'Erro ao mostrar página')
+            res.redirect('/formulario')
+        }
 })
 
 module.exports = router
