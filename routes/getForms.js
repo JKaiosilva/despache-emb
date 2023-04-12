@@ -108,7 +108,7 @@ router.get('/formulario/embarcacaoVizu/:id', (req, res) => {
 router.get('/formulario/despachoVizu/:id', (req, res) => {
     Despacho.findOne({_id: req.params.id}).lean().then((despachos) => {   
         Embarcacao.findOne({_id: despachos.embarcacao}).lean().then((embarcacoes) => {
-            res.render('formulario/despachoVizu', 
+            res.render('formulario/despachos/despachoVizu', 
             {despachos: despachos, 
                 embarcacoes: embarcacoes
             })
@@ -121,7 +121,7 @@ router.get('/formulario/despachoVizu/:id', (req, res) => {
 router.get('/formulario/avisoEntradaVizu/:id', (req, res) => {
     AvisoEntrada.findOne({_id: req.params.id}).lean().then((avisoEntradas) => {  
         Embarcacao.findOne({_id: avisoEntradas.embarcacao}).lean().then((embarcacoes) => {
-            res.render('formulario/avisoEntradaVizu', 
+            res.render('formulario/entradas/avisoEntradaVizu', 
             {avisoEntradas: avisoEntradas, 
                 embarcacoes: embarcacoes
             })
@@ -134,7 +134,7 @@ router.get('/formulario/avisoEntradaVizu/:id', (req, res) => {
 router.get('/formulario/avisoSaidaVizu/:id', (req, res) => {
     AvisoSaida.findOne({_id: req.params.id}).lean().then((avisoSaidas) => {
         Embarcacao.findOne({_id: avisoSaidas.embarcacao}).lean().then((embarcacoes) => {
-            res.render('formulario/avisoSaidaVizu', 
+            res.render('formulario/saidas/avisoSaidaVizu', 
             {avisoSaidas: avisoSaidas, 
                 embarcacoes: embarcacoes
             })
@@ -355,6 +355,23 @@ router.get('/despachos/:page', async (req, res) => {
             res.redirect('/formulario')
         }
 })
+
+
+
+router.get('/embarcacoesDespacho/:id', async (req, res) => {
+    const embarcacaoId = await req.params._id;
+
+    try{
+        const despachos = await Despacho.find({embarcacaoId: embarcacoes._id}).limit(5).lean().sort({despachoDataPedido: 'asc'})
+        res.render('formulario/despachos/embarcacoesDespacho', 
+            {despachos: despachos})
+    }catch(err){
+        req.flash('error_msg', 'Erro ao mostrar página')
+        res.redirect('/formulario')
+    }
+})
+
+
 
 
 module.exports = router

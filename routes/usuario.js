@@ -100,7 +100,7 @@ const Embarcacao = mongoose.model('embarcacoes')
 
             router.get('/perfil', (req, res) => {
                 Usuario.find({_id: req.user._id}).lean().sort().then((usuarios) => {
-                    Embarcacao.find({usuarioID: req.user._id}).lean().sort({embarcacaoDataCadastro: 'asc'}).then((embarcacoes) => {
+                    Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({embarcacaoDataCadastro: 'asc'}).then((embarcacoes) => {
                         res.render('usuarios/perfil', {usuarios: usuarios, embarcacoes: embarcacoes})
                     })
                 }).catch((err) => {

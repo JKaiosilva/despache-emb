@@ -1,15 +1,15 @@
-<h4>Lista de Avisos de Saida</h4>
+<h4>Lista de Despachos</h4>
 <br>
-{{#each avisoSaidas}}
+{{#each despachos}}
 
     <div id="{{_id}}" class="card mt-4">
         <div class="card-body">
             <div>
-                <h6>Saída: {{saidaNprocesso}}</h6>
+                <h6>Despacho: {{NprocessoDespacho}}</h6>
             </div>
             <div class="">
-                <label class="mt-2">Data: {{saidaDataPedido}}</label>
-                <a class="btn btn-success float-end" href="/formulario/avisosaidavizu/{{_id}}">Visualizar</a>
+                <label class="mt-2">Data: {{despachoDataPedido}}</label>
+                <a class="btn btn-success float-end" href="/formulario/despachoVizu/{{_id}}">Visualizar</a>
             </div>
         </div>
     </div>
@@ -18,18 +18,19 @@
             dezHoras = 36000000
             segundos = 20000
 
-            if(horaLocal > {{saidaData}} + dezHoras) {
+            if(horaLocal > {{despachoData}} + dezHoras) {
                 console.log('a')
                 const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-danger')
-            }else if(horaLocal > {{saidaData}} + segundos) {
+            }else if(horaLocal > {{despachoData}} + segundos) {
                 console.log('b')
                 const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-warning')
             } else {
+
             }
 </script>
 {{else}}
-<h6>Nenhum Aviso de Saida</h6>
+<h6>Nenhum despaho</h6>
 {{/each}}
 <br>
-<a href="/admin/saidas/{{previousPage}}" class="btn btn-primary">Anterior</a>
-<a href="/admin/saidas/{{nextPage}}" class="btn btn-primary" style="float: right" {{hidden}}>Próximo</a>
+<a href="/formulario" class="btn btn-primary">Formulários</a>
+<a href="/despachos/2" class="btn btn-primary" style="float: right" {{hidden}}>Próximo</a>
