@@ -17,6 +17,7 @@ const fs = require('fs')
 require('dotenv/config');
 const multer = require('multer')
 const mime = require('mime')
+const pdf = require('html-pdf')
 
 const upload = multer({
     storage: multer.diskStorage({
@@ -361,12 +362,29 @@ router.get('/users/usuariosVizu/:id', Admin, (req, res) => {
 
 
 router.get('/embarcacoes/embarcacaoVizu/:id', Admin, (req, res) => {
+    
     Embarcacao.find({_id: req.params.id}).lean().then((embarcacao) => {
+
         res.render('admin/embarcacoes/embarcacaoVizu', {embarcacao: embarcacao})
     }).catch((err) => {
         req.flash('error_msg', 'Erro ao mostrar embarcação')
         res.redirect('admin/listaEmbarcacoes')
     })
 })
+
+router.get('/conteudo/:id/pdf', (req, res) => {
+    Embarcacao.findById(req.params.id).then(embarcacoes => {
+      const html = `
+        <h1>${embarcacoes.embarcacaoNome}</h1>
+      `;
+      pdf.create(html).toStream((err, stream) => {
+        if (err) return res.send(err);
+        res.attachment(`${embarcacoes.embarcacaoNome}.pdf`);
+        res.setHeader('Content-Type', 'application/pdf');
+        stream.pipe(res);
+      });
+    });
+  });
+
 
 module.exports = router

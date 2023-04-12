@@ -12,6 +12,7 @@ require('../models/Embarcacao')
 const Embarcacao = mongoose.model('embarcacoes')
 require('../models/Aviso')
 const Aviso = mongoose.model('avisos')
+const pdf = require('html-pdf')
 
 
 
@@ -66,7 +67,7 @@ router.get('/formulario/avisoEntrada', (req, res) => {
 
 router.get('/formulario/despacho', (req, res) => {
     Embarcacao.find({usuarioID: req.user._id}).lean().then((embarcacoes) => {
-        res.render('formulario/despacho', 
+        res.render('formulario/despachos/despacho', 
             {embarcacoes: embarcacoes
         })
     }).catch((err) => {

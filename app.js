@@ -24,6 +24,7 @@ require('dotenv/config');
 const multer = require('multer')
 require('dotenv').config()
 require('./helpers/pagination')
+const pdfGerator = require('./routes/pdfGerator')
 
 
 
@@ -94,6 +95,7 @@ require('./helpers/pagination')
             })
         })
 
+        app.use(pdfGerator)
         app.use(getForms)
         app.use(postForms)
         app.use('/usuarios', usuarios)
