@@ -45,7 +45,7 @@ router.get('/pages/termosUso', (req, res) => {
 
 router.get('/formulario/avisoSaida', (req, res) => {
     Embarcacao.find({usuarioID: req.user._id}).lean().then((embarcacoes) => {
-        res.render('formulario/avisoSaida', 
+        res.render('formulario/saidas/avisoSaida', 
             {embarcacoes: embarcacoes
         })
     }).catch((err) => {
@@ -56,7 +56,7 @@ router.get('/formulario/avisoSaida', (req, res) => {
 
 router.get('/formulario/avisoEntrada', (req, res) => {
     Embarcacao.find({usuarioID: req.user._id}).lean().then((embarcacoes) =>{
-        res.render('formulario/avisoEntrada', 
+        res.render('formulario/entradas/avisoEntrada', 
             {embarcacoes: embarcacoes
         })
     }).catch((err) => {

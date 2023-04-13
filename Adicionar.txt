@@ -33,3 +33,5 @@ adicionar bandeira(
 
 adicionar sistema de email para enviar os relatorios
 
+
+restringir gerador de PDFs somente para Adms
