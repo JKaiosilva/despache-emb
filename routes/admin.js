@@ -372,19 +372,7 @@ router.get('/embarcacoes/embarcacaoVizu/:id', Admin, (req, res) => {
     })
 })
 
-router.get('/conteudo/:id/pdf', (req, res) => {
-    Embarcacao.findById(req.params.id).then(embarcacoes => {
-      const html = `
-        <h1>${embarcacoes.embarcacaoNome}</h1>
-      `;
-      pdf.create(html).toStream((err, stream) => {
-        if (err) return res.send(err);
-        res.attachment(`${embarcacoes.embarcacaoNome}.pdf`);
-        res.setHeader('Content-Type', 'application/pdf');
-        stream.pipe(res);
-      });
-    });
-  });
+
 
 
 module.exports = router
