@@ -361,7 +361,7 @@ router.get('/users/usuariosVizu/:id', Admin, (req, res) => {
 })
 
 
-router.get('/embarcacoes/embarcacaoVizu/:id', Admin, (req, res) => {
+/* router.get('/embarcacoes/embarcacaoVizu/:id', Admin, (req, res) => {
     
     Embarcacao.find({_id: req.params.id}).lean().then((embarcacao) => {
 
@@ -371,7 +371,7 @@ router.get('/embarcacoes/embarcacaoVizu/:id', Admin, (req, res) => {
         res.redirect('admin/listaEmbarcacoes')
     })
 })
-
+ */
 
 
 
