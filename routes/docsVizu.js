@@ -15,26 +15,6 @@ const Aviso = mongoose.model('avisos')
 const pdf = require('html-pdf')
 
 
-/* router.get('/formulario/embarcacaoVizu/:id', (req, res) => {
-    Embarcacao.findOne({_id: req.params.id}).lean().then((embarcacoes) => {
-        Despacho.find({embarcacao: embarcacoes._id}).lean().then((despachos) => {
-            AvisoEntrada.find({embarcacao: embarcacoes._id}).lean().then((avisoEntradas) => {
-                AvisoSaida.find({embarcacao: embarcacoes._id}).lean().then((avisoSaidas) => {
-                    res.render('formulario/embarcacoes/embarcacaoVizu', 
-                        {embarcacoes: embarcacoes, 
-                            despachos: despachos, 
-                                avisoEntradas: avisoEntradas, 
-                                avisoSaidas: avisoSaidas
-                        })
-                })
-            })
-        })
-    }).catch((err) => {
-        req.flash('error_msg', 'Erro ao mostrar Embarcação')
-        res.redirect('/')
-    })
-}) */
-
 
 router.get('/formulario/embarcacaoVizu/:id', async (req, res) => {
     try{
@@ -52,26 +32,13 @@ router.get('/formulario/embarcacaoVizu/:id', async (req, res) => {
                     despachos: despachos,
                         avisoEntradas: avisoEntradas,
                             avisoSaidas: avisoSaidas,
-                                hidden: hidden})
+                                hidden: hidden
+                })
     }catch(err){
         req.flash('error_msg', 'Erro ao mostrar Embarcação')
         res.redirect('/')
     }
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -88,6 +55,28 @@ router.get('/formulario/despachoVizu/:id', (req, res) => {
         res.redirect('/')
     })
 })
+
+
+router.get('/formulario/despachoVizu/:id', async (req, res) => {
+    try{
+        if(req.user.eAdmin){
+            hidden = ''
+        }else{
+            hidden = 'hidden'
+        }
+        const despachos = await Despacho.findOne({_id: req.params.id}).lean()
+        const embarcacoes = await Embarcacao.findOne({_id: despachos.embarcacao}).lean()
+            res.render('formulario/despachos/despachoVizu',
+                {despachos: despachos,
+                    embarcacoes: embarcacoes,
+                        hidden: hidden
+                })
+    }catch(err){
+
+    }
+})
+
+
 
 router.get('/formulario/avisoEntradaVizu/:id', (req, res) => {
     AvisoEntrada.findOne({_id: req.params.id}).lean().then((avisoEntradas) => {  
