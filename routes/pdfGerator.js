@@ -120,7 +120,7 @@ router.get('/despacho/:id/pdf', (req, res) => {
                 <label class="input-group-text">Certificado de Registro do Amador(CRA)</label>
                 <input name="despachoCertificadoRegistroAmador" class="form-control" type="text" value="${despachos.despachoCertificadoRegistroAmador}" disabled>
                 <label class="input-group-text">Armador</label>
-                <input name="despachoArmador" class="form-control" type="text" value="{{despachos.despachoArmador}}" disabled>
+                <input name="despachoArmador" class="form-control" type="text" value="${despachos.despachoArmador}" disabled>
             </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">N° do CRA</label>
@@ -224,6 +224,136 @@ router.get('/despacho/:id/pdf', (req, res) => {
         res.setHeader('Content-Type', 'application/pdf');
         stream.pipe(res);
       });
+    })
+  });
+})
+
+
+
+
+router.get('/avisoEntrada/:id/pdf', (req, res) => {
+    AvisoEntrada.findById(req.params.id).lean().then((avisoEntradas) => {
+        Embarcacao.findOne({_id: avisoEntradas.embarcacao}).lean().then((embarcacoes) => {
+      const html = `
+      <form class="row gx-3 gy-2 align-items-center">
+          <div class="input-group mb-3">
+              <label class="input-group-text" class="input-group-text">N° Pocesso de Despacho</label>
+              <input name="entradaNprocesso" class="form-control" type="text" value="${avisoEntradas.entradaNprocesso}" disabled>
+          </div>
+          <div>
+              <h4 class="text-center">Dados da Estadia</h4>
+              <div class="input-group mb-3">
+                  <label class="input-group-text">Porto de chegada</label>
+                  <input name="entradaPortoChegada" class="form-control" type="text" value="${avisoEntradas.entradaPortoChegada}" disabled>
+                  <label class="input-group-text">Data/Hora de chegada</label>
+                  <input name="entradaDataHoraChegada" class="form-control" type="text" value="${avisoEntradas.entradaDataHoraChegada}" disabled>
+              </div>
+              <div class="input-group mb-3">
+                  <label class="input-group-text">Posição no Porto Atual</label>
+                  <input name="entradaPosicaoPortoAtual" class="form-control" type="text" value="${avisoEntradas.entradaPosicaoPortoAtual}" disabled>
+              </div>
+              <div class="input-group mb-3">
+                  <label class="input-group-text">Porto de Origem</label>
+                  <input name="entradaPortoOrigem" class="form-control" type="text" value="${avisoEntradas.entradaPortoOrigem}" disabled>
+              </div>
+              <div class="input-group mb-3">
+                  <label class="input-group-text">Porto de Destino</label>
+                  <input name="entradaPortoDestino" class="form-control" type="text" value="${avisoEntradas.entradaPortoDestino}" disabled>
+                  <label class="input-group-text">Data/Hora Estimada de Saída para Porto de destino</label>
+                  <input name="entradaDataHoraEstimadaSaida" class="form-control" type="text" value="${avisoEntradas.entradaDataHoraEstimadaSaida}" disabled>
+              </div>
+          <div>
+              <h4 class="text-center">Dados da Embarcação</h4>
+                  <div class="input-group mb-3">
+                      <label class="input-group-text">Nome da Embarcação</label>
+                      <input name="entradaNomeEmbarcacao" class="form-control" type="text" value="${avisoEntradas.entradaNomeEmbarcacao}" disabled>
+                      <label class="input-group-text">Tipo da Embarcação</label>
+                      <input name="entradaTipoEmbarcacao" class="form-control" type="text" value="${avisoEntradas.entradaTipoEmbarcacao}" disabled>
+                  </div>
+                  <div class="input-group mb-3">
+                      <label class="input-group-text">Bandeira</label>
+                      <input name="entradaBandeira" class="form-control" type="text" value="${avisoEntradas.entradaBandeira}" disabled>
+                      <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
+                      <input name="entradaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="${avisoEntradas.entradaNInscricaoAutoridadeMaritima}" disabled>
+                  </div>
+                  <div class="input-group mb-3">
+                      <label class="input-group-text">Arqueação Buta</label>
+                      <input name="entradaArqueacaoBruta" class="form-control" type="text" value="${avisoEntradas.entradaArqueacaoBruta}" disabled>
+                      <label class="input-group-text">Tonelagem Porte Bruto</label>
+                      <input name="entradaTonelagemPorteBruto" class="form-control" type="text" value="${avisoEntradas.entradaTonelagemPorteBruto}" disabled>
+                  </div>
+          </div>
+              <h4 class="text-center">Dados do Representante da Embarcação</h4>
+              <div class="input-group mb-3">
+                  <label class="input-group-text">Nome</label>
+                  <input name="entradaNomeRepresentanteEmbarcacao" class="form-control" type="text" value="${avisoEntradas.entradaNomeRepresentanteEmbarcacao}" disabled>
+              </div>
+              <div class="input-group mb-3">
+                  <label class="input-group-text">CPF/CNPJ</label>
+                  <input name="entradaCPFCNPJRepresentanteEmbarcacao" class="form-control" type="text" value="${avisoEntradas.entradaCPFCNPJRepresentanteEmbarcacao}" disabled>
+                  <label class="input-group-text">Telefone</label>
+                  <input name="entradaTelefoneRepresentanteEmbarcacao" class="form-control" type="text" value="${avisoEntradas.entradaTelefoneRepresentanteEmbarcacao}" disabled>
+              </div>
+              <div class="input-group mb-3">
+                  <label class="input-group-text">Endereço</label>
+                  <input name="entradaEnderecoRepresentanteEmbarcacao" class="form-control" type="text" value="${avisoEntradas.entradaEnderecoRepresentanteEmbarcacao}" disabled>
+                  <label class="input-group-text">Email</label>
+                  <input name="entradaEmailRepresentanteEmbarcacao" class="form-control" type="text" value="${avisoEntradas.entradaEmailRepresentanteEmbarcacao}" disabled>
+              </div>
+          </div>
+          <div>
+              <h4 class="text-center">Informações Complementares</h4>
+              <div class="input-group mb-3">
+                  <label class="input-group-text">Dados da Ultima Inspeção Naval</label>
+                  <input name="entradaDadosUltimaInpecaoNaval" class="form-control" type="text" value="${avisoEntradas.entradaDadosUltimaInpecaoNaval}" disabled>
+              </div>
+              <div class="input-group mb-3">
+                  <label class="input-group-text">Deficiências a serem retificadas neste porto?</label>
+                  <input name="entradaDeficienciasRetificadasPorto" class="form-control" type="text" value="${avisoEntradas.entradaDeficienciasRetificadasPorto}" disabled>
+              </div>
+              <div class="input-group mb-3">
+                  <label class="input-group-text">Transporte de Carga Perigosa</label>
+                  <input name="entradaTransporteCagaPerigosa" class="form-control" type="text" value="${avisoEntradas.entradaTransporteCagaPerigosa}" disabled>
+              </div>
+          </div>
+          <div>
+              <h4 class="text-center">Observações</h4>
+              <div class="input-group mb-3">
+                  <input name="entradaObservacoes" class="form-control" type="text" value="${avisoEntradas.entradaObservacoes}" disabled>
+              </div>
+          </div>
+          <div>
+              <div id="tripulantes" class="card bg-secondary">
+                  <h4 class="text-center">Lista de Tripulantes</h4>
+                  <input name="entradaTripulantes" class="form-control" type="text" value="${avisoEntradas.entradaTripulantes}" disabled>
+              </div>
+          </div>
+          <div>
+              <div id="passageiros" class="card bg-secondary">
+                  <h4 class="text-center">Lista de Passageiros</h4>
+                  <input name="entradaPassageiros" class="form-control" type="text" value="${avisoEntradas.entradaPassageiros}" disabled>
+                  </div>
+              </div>
+              <div>
+              <div id="comboios" class="card bg-secondary">
+                  <h4 class="text-center">Lista de Comboios</h4>
+                  <input name="entradaComboios" class="form-control" type="text" value="${avisoEntradas.entradaComboios}" disabled>
+              </div>
+              </div>
+              <div>
+                  <label>Embarcação</label>
+                  <input value="${embarcacoes.embarcacaoNome}" disabled>
+              </div>
+  </form>
+
+ `
+        pdf.create(html).toStream((err, stream) => {
+          if (err) return res.send(err);
+          res.attachment(`${avisoEntradas.entradaNprocesso}.pdf`);
+          res.setHeader('Content-Type', 'application/pdf');
+          stream.pipe(res);
+        
+        });
     })
   });
 })
