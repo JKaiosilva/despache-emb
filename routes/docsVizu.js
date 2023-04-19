@@ -43,18 +43,7 @@ router.get('/formulario/embarcacaoVizu/:id', async (req, res) => {
 
 
 
-router.get('/formulario/despachoVizu/:id', (req, res) => {
-    Despacho.findOne({_id: req.params.id}).lean().then((despachos) => {   
-        Embarcacao.findOne({_id: despachos.embarcacao}).lean().then((embarcacoes) => {
-            res.render('formulario/despachos/despachoVizu', 
-            {despachos: despachos, 
-                embarcacoes: embarcacoes
-            })
-        })                 
-    }).catch((err) => {
-        res.redirect('/')
-    })
-})
+
 
 
 router.get('/formulario/despachoVizu/:id', async (req, res) => {
@@ -77,31 +66,48 @@ router.get('/formulario/despachoVizu/:id', async (req, res) => {
 })
 
 
-
-router.get('/formulario/avisoEntradaVizu/:id', (req, res) => {
-    AvisoEntrada.findOne({_id: req.params.id}).lean().then((avisoEntradas) => {  
-        Embarcacao.findOne({_id: avisoEntradas.embarcacao}).lean().then((embarcacoes) => {
-            res.render('formulario/entradas/avisoEntradaVizu', 
-            {avisoEntradas: avisoEntradas, 
-                embarcacoes: embarcacoes
+router.get('/formulario/avisoEntradavizu/:id', async (req, res) => {
+    try{
+        if(req.user.eAdmin){
+            hidden = ''
+        }else{
+            hidden = 'hidden'
+        }
+        avisoEntradas = await AvisoEntrada.findOne({_id: req.params.id}).lean()
+        embarcacoes = await Embarcacao.findOne({_id: avisoEntradas.embarcacao}).lean()
+        res.render('formulario/entradas/avisoEntradaVizu',
+            {avisoEntradas: avisoEntradas,
+                embarcacoes: embarcacoes,
+                    hidden: hidden
             })
-        })                  
-    }).catch((err) => {
-        res.redirect('/')
-    })
+    }catch(err){
+        req.flash('error_msg', 'Erro interno ao mostrar formulário')
+        res.redirect('/formulario')
+    }
 })
 
-router.get('/formulario/avisoSaidaVizu/:id', (req, res) => {
-    AvisoSaida.findOne({_id: req.params.id}).lean().then((avisoSaidas) => {
-        Embarcacao.findOne({_id: avisoSaidas.embarcacao}).lean().then((embarcacoes) => {
-            res.render('formulario/saidas/avisoSaidaVizu', 
-            {avisoSaidas: avisoSaidas, 
-                embarcacoes: embarcacoes
+
+
+
+
+router.get('/formulario/avisoSaidaVizu/:id', async (req, res) => {
+    try{
+        if(req.user.eAdmin){
+            hidden = ''
+        }else{
+            hidden = 'hidden'
+        }
+        avisoSaidas = await AvisoSaida.findOne({_id: req.params.id}).lean()
+        embarcacoes = await Embarcacao.findOne({_id: avisoSaidas.embarcacao}).lean()
+        res.render('formulario/saidas/avisoSaidaVizu',
+            {avisoSaidas: avisoSaidas,
+                embarcacoes: embarcacoes,
+                    hidden: hidden
             })
-        })                  
-    }).catch((err) => {
-        res.redirect('/')
-    })
+    }catch(err){
+        req.flash('error_msg', 'Erro interno ao mostrar formulário')
+        res.redirect('/formulario')
+    }
 })
 
 
