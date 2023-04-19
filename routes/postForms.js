@@ -29,7 +29,8 @@ require('../models/Aviso')
                 embarcacaoArmador: req.body.embarcacaoArmador,
                 embarcacaoNCRA: req.body.embarcacaoNCRA,
                 embarcacaoValidade: req.body.embarcacaoValidade,
-                embarcacaoDataCadastro: moment(Date.now()).format('DD/MM/YYYY HH:mm')
+                embarcacaoDataCadastro: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+                embarcacaoData: Date.now()
             }
             new Embarcacao(novaEmbarcacao).save().then(() => {
                 req.flash('success_msg', 'Embarcação cadastrada com sucesso')

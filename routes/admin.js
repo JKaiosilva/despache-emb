@@ -338,7 +338,7 @@ router.get('/embarcacoes/:page', Admin, async (req, res) => {
             }else{
                 previousPage = parseInt(page) -1
             }
-            const embarcacoes = await Embarcacao.find().skip(skip).limit(limit).lean().sort({nome: 'asc'})
+            const embarcacoes = await Embarcacao.find().skip(skip).limit(limit).lean().sort({EmbarcacaoNome: 'asc'})
                 res.render('admin/embarcacoes/embarcacoesPage',
                     {embarcacoes: embarcacoes,
                         nextPage: nextPage,

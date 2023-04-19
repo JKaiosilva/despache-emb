@@ -55,6 +55,10 @@ const Embarcacao = new Schema ({
         type: String,
         default: []
     },
+    embarcacaoData: {
+        type: Number,
+        default: []
+    },
 
 })
 

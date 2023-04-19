@@ -18,10 +18,10 @@ const pdf = require('html-pdf')
 
 router.get('/formulario', async (req, res) => {
     try{
-        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({embarcacaoDataCadastro: 'asc'})
-        const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoDataPedido: 'asc'})
-        const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaDataPedido: 'desc'})
-        const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaDataPedido: 'asc'})
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({EmbarcacaoNome: 'asc'})
+        const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
+        const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
+        const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
         
             res.render('formulario/preform', 
             {despachos: despachos, 
@@ -206,7 +206,7 @@ router.get('/embarcacoes/:page', async (req, res) => {
         }else{
             previousPage = parseInt(page) - 1
         }
-        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({embarcacaoDataCadastro: 'asc'})
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({EmbarcacaoNome: 'asc'})
             res.render('formulario/embarcacoes/embarcacoesPage', 
                 {embarcacoes: embarcacoes,
                     nextPage: nextPage,
@@ -222,7 +222,7 @@ router.get('/embarcacoes/:page', async (req, res) => {
 
 router.get('/entradas', async (req, res) => {
     try{
-        const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaDataPedido: 'asc'})
+        const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
         res.render('formulario/entradas/entradas', 
             {avisoEntradas: avisoEntradas,
             })
@@ -252,7 +252,7 @@ router.get('/entradas/:page', async (req, res) => {
             }else{
                 previousPage = parseInt(page) - 1
             }
-            const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({entradaDataPedido: 'asc'})
+            const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({entradaData: 'desc'})
                 res.render('formulario/entradas/entradasPage', 
                     {avisoEntradas: avisoEntradas,
                         nextPage: nextPage,
@@ -268,7 +268,7 @@ router.get('/entradas/:page', async (req, res) => {
 
 router.get('/saidas', async (req, res) => {
     try{
-        const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaDataPedido: 'asc'})
+        const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
             res.render('formulario/saidas/saidas', 
                 {avisoSaidas: avisoSaidas
             })
@@ -298,7 +298,7 @@ router.get('/saidas/:page', async (req, res) => {
             }else{
                 previousPage = parseInt(page) - 1
             }
-            const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({saidaDataPedido: 'asc'})
+            const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({saidaData: 'desc'})
                 res.render('formulario/saidas/saidasPage', 
                     {avisoSaidas: avisoSaidas,
                         nextPage: nextPage,
@@ -314,7 +314,7 @@ router.get('/saidas/:page', async (req, res) => {
 
 router.get('/despachos', async (req, res) => {
     try{
-        const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoDataPedido: 'asc'})
+        const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
             res.render('formulario/despachos/despachos', 
                 {despachos: despachos
             })
@@ -344,7 +344,7 @@ router.get('/despachos/:page', async (req, res) => {
             }else{
                 previousPage = parseInt(page) - 1
             }
-            const despachos = await Despacho.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({despachoDataPedido: 'asc'})
+            const despachos = await Despacho.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({despachoData: 'desc'})
                 res.render('formulario/despachos/despachosPage', 
                     {despachos: despachos,
                         nextPage: nextPage,
