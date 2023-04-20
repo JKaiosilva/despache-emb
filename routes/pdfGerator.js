@@ -475,8 +475,21 @@ router.get('/avisoSaida/:id/pdf', (req, res) => {
         stream.pipe(res);
       
       });
-  })
-});
+    })
+  });
+})
+
+router.get('/admin/relatorioSaidas', async (req, res) => {
+    try{
+        const avisoSaidas = await AvisoSaida.find().lean()
+        var soma = 0
+        avisoSaidas.forEach(passageiros => {
+            soma += passageiros.saidaSomaPassageiros
+        })
+        console.log(soma)
+    }catch(err){
+
+    }
 })
 
 
