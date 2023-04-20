@@ -147,6 +147,7 @@ require('../models/Aviso')
                 saidaEnderecoRepresentanteEmbarcacao: req.body.saidaEnderecoRepresentanteEmbarcacao,
                 saidaEmailRepresentanteEmbarcacao: req.body.saidaEmailRepresentanteEmbarcacao,
                 saidaObservacoes: req.body.saidaObservacoes,
+                saidaSomaPassageiros: req.body.saidaSomaPassageiros,
                 saidaTripulantes: "Nome: "+ req.body.saidaTripulantesNome+" || Grau ou Função"+
                 req.body.saidaTripulantesGrauFuncao + " || Data de Nascimento: "+
                 req.body.saidaTripulantesDataNascimento + " || Numero da CIR: "+

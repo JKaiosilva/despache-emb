@@ -362,4 +362,14 @@ router.get('/users/usuariosVizu/:id', Admin, (req, res) => {
 
 
 
+router.get('/painelRelatorios', Admin, async (req, res) => {
+    try{
+        res.render('admin/relatorios/painelRelatorios')
+    }catch(err){
+        req.flash('error_msg', 'Erro interno')
+        res.redirect('admin/painel')
+    }
+})
+
+
 module.exports = router

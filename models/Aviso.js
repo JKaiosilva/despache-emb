@@ -28,6 +28,5 @@ const Aviso = new Schema({
   }
 })
 
-/* Você encontrou a terceira flag: lilaz */
 
 mongoose.model('avisos', Aviso)

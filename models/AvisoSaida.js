@@ -39,6 +39,9 @@ const AvisoSaida = new Schema({
     saidaObservacoes: {
 
     },
+    saidaSomaPassageiros: {
+
+    },
     saidaTripulantes: {
         type: Array,
         arr: [{

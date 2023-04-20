@@ -451,6 +451,10 @@ router.get('/avisoSaida/:id/pdf', (req, res) => {
                 <input name="saidaPassageiros" class="form-control" type="text" value="${avisoSaidas.saidaPassageiros}" disabled>
                 </div>
             </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">Somatório de Passageiros</label>
+                <input value="${avisoSaidas.saidaSomaPassageiros}" class="form-control" type="number" disabled>
+            </div>
             <div>
             <div id="comboios" class="card bg-secondary">
                 <h4 class="text-center">Lista de Comboios</h4>
