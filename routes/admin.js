@@ -361,18 +361,5 @@ router.get('/users/usuariosVizu/:id', Admin, (req, res) => {
 })
 
 
-/* router.get('/embarcacoes/embarcacaoVizu/:id', Admin, (req, res) => {
-    
-    Embarcacao.find({_id: req.params.id}).lean().then((embarcacao) => {
-
-        res.render('admin/embarcacoes/embarcacaoVizu', {embarcacao: embarcacao})
-    }).catch((err) => {
-        req.flash('error_msg', 'Erro ao mostrar embarcação')
-        res.redirect('admin/listaEmbarcacoes')
-    })
-})
- */
-
-
 
 module.exports = router

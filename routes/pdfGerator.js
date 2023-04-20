@@ -13,6 +13,7 @@ const Embarcacao = mongoose.model('embarcacoes')
 require('../models/Aviso')
 const Aviso = mongoose.model('avisos')
 const pdf = require('html-pdf')
+const transporter = require('../config/sendMail')
 
 
 
@@ -62,15 +63,25 @@ router.get('/embarcacao/:id/pdf', (req, res) => {
 </div>
 
       `;
-      pdf.create(html).toStream((err, stream) => {
+
+
+
+        pdf.create(html).toStream((err, stream) => {
         if (err) return res.send(err);
         res.attachment(`${embarcacoes.embarcacaoNome}.pdf`);
         res.setHeader('Content-Type', 'application/pdf');
         stream.pipe(res);
-      });
+      });   
+        transporter.sendMail({
+        from: 'Kaio Silva <crb.app.forms@hotmail.com>',
+        to: 'kaiofer39@gmail.com',
+        subject: `Embarcação: ${embarcacoes.embarcacaoNome}`,
+        text: html
     });
+
   });
 
+})
 
 
 router.get('/despacho/:id/pdf', (req, res) => {
@@ -451,8 +462,9 @@ router.get('/avisoSaida/:id/pdf', (req, res) => {
                 <input value="${embarcacoes.embarcacaoNome}" disabled>
             </div>
 </form>
-`
-      pdf.create(html).toStream((err, stream) => {
+`       
+
+        pdf.create(html).toStream((err, stream) => {
         if (err) return res.send(err);
         res.attachment(`${avisoSaidas.saidaNprocesso}.pdf`);
         res.setHeader('Content-Type', 'application/pdf');
