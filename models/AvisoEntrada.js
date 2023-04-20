@@ -34,30 +34,6 @@ const AvisoEntrada = new Schema ({
         type: String,
         required: true
     },
-    entradaNomeEmbarcacao: {
-        type: String,
-        required: true
-    },
-    entradaTipoEmbarcacao: {
-        type: String,
-        required: true
-    },
-    entradaBandeira: {
-        type: String,
-        required: true
-    },
-    entradaNInscricaoAutoridadeMaritima: {
-        type: String,
-        required: true
-    },
-    entradaArqueacaoBruta: {
-        type: String,
-        required: true
-    },
-    entradaTonelagemPorteBruto: {
-        type: String,
-        required: true
-    },
     entradaNomeRepresentanteEmbarcacao: {
         type: String,
         required: true

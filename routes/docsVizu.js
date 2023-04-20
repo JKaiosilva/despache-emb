@@ -87,9 +87,6 @@ router.get('/formulario/avisoEntradavizu/:id', async (req, res) => {
 })
 
 
-
-
-
 router.get('/formulario/avisoSaidaVizu/:id', async (req, res) => {
     try{
         if(req.user.eAdmin){

@@ -1,3 +1,4 @@
+
 <br>
 <h2 class="text-center mb-4">AVISO DE SAÍDA – NAVEGAÇÃO INTERIOR</h2>
 <h4 class="text-center mb-4">Aviso de Saida enviado em: {{avisoSaidas.saidaDataPedido}}</h4>
@@ -28,21 +29,21 @@
                     <h4 class="text-center">Dados da Embarcação</h4>
                         <div class="input-group mb-3">
                             <label class="input-group-text">Nome da Embarcação</label>
-                            <input name="saidaNomeEmbarcacao" class="form-control" type="text" value="{{avisoSaidas.saidaNomeEmbarcacao}}" disabled>
+                            <input name="saidaNomeEmbarcacao" class="form-control" type="text" value="{{embarcacoes.embarcacaoNome}}" disabled>
                             <label class="input-group-text">Tipo da Embarcação</label>
-                            <input name="saidaTipoEmbarcacao" class="form-control" type="text" value="{{avisoSaidas.saidaTipoEmbarcacao}}" disabled>
+                            <input name="saidaTipoEmbarcacao" class="form-control" type="text" value="{{embarcacoes.embarcacaoTipo}}" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <label class="input-group-text">Bandeira</label>
-                            <input name="saidaBandeira" class="form-control" type="text" value="{{avisoSaidas.saidaBandeira}}" disabled>
+                            <input name="saidaBandeira" class="form-control" type="text" value="{{embarcacoes.embarcacaoBandeira}}" disabled>
                             <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-                            <input name="saidaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="{{avisoSaidas.saidaNInscricaoAutoridadeMaritima}}" disabled>
+                            <input name="saidaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="{{embarcacoes.embarcacaoNInscricaoautoridadeMB}}" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <label class="input-group-text">Arqueação Buta</label>
-                            <input name="saidaArqueacaoBruta" class="form-control" type="text" value="{{avisoSaidas.saidaArqueacaoBruta}}" disabled>
+                            <input name="saidaArqueacaoBruta" class="form-control" type="text" value="{{embarcacoes.embarcacaoArqueacaoBruta}}" disabled>
                             <label class="input-group-text">Tonelagem Porte Bruto</label>
-                            <input name="saidaTonelagemPorteBruto" class="form-control" type="text" value="{{avisoSaidas.saidaTonelagemPorteBruto}}" disabled>
+                            <input name="saidaTonelagemPorteBruto" class="form-control" type="text" value="{{embarcacoes.embarcacaoTonelagemPorteBruto}}" disabled>
                         </div>
                 </div>
                     <h4 class="text-center">Dados do Representante da Embarcação</h4>
@@ -95,6 +96,9 @@
     </div>
 </div>
 <br>
+
 <div class="text-center" {{hidden}}>
- <a class="btn btn-success" href="/avisoSaida/{{avisoSaidas._id}}/pdf" target="_blank">Gerar PDF</a>
+ <a class="btn btn-success" href="/avisoSaida/{{avisoSaidas._id}}/pdf" target="_blank" style="float: right">Gerar PDF</a>
 </div>
+<input class="btn btn-success" type="button" value="Voltar" style="float: left" onClick="history.go(-1)"> 
+<br>

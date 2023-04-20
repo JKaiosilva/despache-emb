@@ -21,24 +21,6 @@ const AvisoSaida = new Schema({
     saidaDataHoraChegada: {
 
     },
-    saidaNomeEmbarcacao: {
-
-    },
-    saidaTipoEmbarcacao: {
-
-    },
-    saidaBandeira: {
-
-    },
-    saidaNInscricaoAutoridadeMaritima: {
-
-    },
-    saidaArqueacaoBruta: {
-
-    },
-    saidaTonelagemPorteBruto: {
-
-    },
     saidaNomeRepresentanteEmbarcacao: {
 
     },

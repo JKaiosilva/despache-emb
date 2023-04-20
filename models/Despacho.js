@@ -19,50 +19,6 @@ const Despacho = new Schema ({
         type: String,
         required: true
     },
-    despachoNomeEmbarcação: {
-        type: String,
-        required: true
-    },
-    despachoTipoEmbarcacao: {
-        type: String,
-        required: true
-    },
-    despachoBandeira: {
-        type: String,
-        required: true
-    },
-    despachoNInscricaoautoridadeMB: {
-        type: String,
-        required: true
-    },
-    despachoArqueacaoBruta: {
-        type: String,
-        required: true
-    },
-    despachoComprimentoTotal: {
-        type: String,
-        required: true
-    },
-    despachoTonelagemPorteBruto: {
-        type: String,
-        required: true
-    },
-    despachoCertificadoRegistroAmador: {
-        type: String,
-        required: true
-    },
-    despachoArmador: {
-        type: String,
-        required: true
-    },
-    despacgoNCRA: {
-        type: String,
-        required: true
-    },
-    despachoValidade: {
-        type: String,
-        required: true
-    },
     despachoNomeRepresentanteEmbarcacao: {
         type: String,
         required: true

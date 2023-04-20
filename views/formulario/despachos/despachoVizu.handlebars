@@ -26,36 +26,36 @@
                 <h4 class="text-center">Dados da Embarcação</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Nome da Embarcação</label>
-                        <input name="despachoNomeEmbarcação" class="form-control" type="text" value="{{despachos.despachoNomeEmbarcação}}" disabled>
+                        <input name="despachoNomeEmbarcação" class="form-control" type="text" value="{{embarcacoes.embarcacaoNome}}" disabled>
                         <label class="input-group-text">Tipo da Embarcação</label>
-                        <input name="despachoTipoEmbarcacao" class="form-control" type="text" value="{{despachos.despachoTipoEmbarcacao}}" disabled>
+                        <input name="despachoTipoEmbarcacao" class="form-control" type="text" value="{{embarcacoes.embarcacaoTipo}}" disabled>
                     </div>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Bandeira</label>
-                <input name="despachoBandeira" class="form-control" type="text" value="{{despachos.despachoBandeira}}" disabled>
+                <input name="despachoBandeira" class="form-control" type="text" value="{{embarcacoes.embarcacaoBandeira}}" disabled>
                 <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-                <input name="despachoNInscricaoautoridadeMB" class="form-control" type="text" value="{{despachos.despachoNInscricaoautoridadeMB}}" disabled>
+                <input name="despachoNInscricaoautoridadeMB" class="form-control" type="text" value="{{embarcacoes.embarcacaoNInscricaoautoridadeMB}}" disabled>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Arqueação Bruta</label>
-                <input name="despachoArqueacaoBruta" class="form-control" type="text" value="{{despachos.despachoArqueacaoBruta}}" disabled>
+                <input name="despachoArqueacaoBruta" class="form-control" type="text" value="{{embarcacoes.embarcacaoArqueacaoBruta}}" disabled>
                 <label class="input-group-text">Comprimento Total</label>
-                <input name="despachoComprimentoTotal" class="form-control" type="text" value="{{despachos.despachoComprimentoTotal}}" disabled>
+                <input name="despachoComprimentoTotal" class="form-control" type="text" value="{{embarcacoes.embarcacaoComprimentoTotal}}" disabled>
                 <label class="input-group-text">Tonelagem Porte Bruto</label>
-                <input name="despachoTonelagemPorteBruto" class="form-control" type="text" value="{{despachos.despachoTonelagemPorteBruto}}" disabled>
+                <input name="despachoTonelagemPorteBruto" class="form-control" type="text" value="{{embarcacoes.embarcacaoTonelagemPorteBruto}}" disabled>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Certificado de Registro do Amador(CRA)</label>
-                <input name="despachoCertificadoRegistroAmador" class="form-control" type="text" value="{{despachos.despachoCertificadoRegistroAmador}}" disabled>
+                <input name="despachoCertificadoRegistroAmador" class="form-control" type="text" value="{{embarcacoes.embarcacaoCertificadoRegistroAmador}}" disabled>
                 <label class="input-group-text">Armador</label>
-                <input name="despachoArmador" class="form-control" type="text" value="{{despachos.despachoArmador}}" disabled>
+                <input name="despachoArmador" class="form-control" type="text" value="{{embarcacoes.embarcacaoArmador}}" disabled>
             </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">N° do CRA</label>
-                        <input name="despacgoNCRA" class="form-control" type="text" value="{{despachos.despacgoNCRA}}" disabled>
+                        <input name="despacgoNCRA" class="form-control" type="text" value="{{embarcacoes.embarcacaoNCRA}}" disabled>
                         <label class="input-group-text">Validade</label>
-                        <input name="despachoValidade" class="form-control" type="text" value="{{despachos.despachoValidade}}" disabled>
+                        <input name="despachoValidade" class="form-control" type="text" value="{{embarcacoes.embarcacaoValidade}}" disabled>
                     </div>
             
             <div>
@@ -150,5 +150,7 @@
 </div>
 <br>
 <div class="text-center" {{hidden}}>
- <a class="btn btn-success" href="/despacho/{{despachos._id}}/pdf" target="_blank">Gerar PDF</a>
+ <a class="btn btn-success" href="/despacho/{{despachos._id}}/pdf" target="_blank" style="float: right">Gerar PDF</a>
 </div>
+<input class="btn btn-success" type="button" value="Voltar" style="float: left" onClick="history.go(-1)"> 
+<br>

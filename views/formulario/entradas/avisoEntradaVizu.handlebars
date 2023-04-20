@@ -1,3 +1,4 @@
+
 <br>
 <h2 class="text-center mb-4">AVISO DE ENTRADA – NAVEGAÇÃO INTERIOR</h2>
 <h4 class="text-center mb-4">Aviso de Entrada enviado em: {{avisoEntradas.entradaDataPedido}}</h4>
@@ -36,21 +37,21 @@
                     <h4 class="text-center">Dados da Embarcação</h4>
                         <div class="input-group mb-3">
                             <label class="input-group-text">Nome da Embarcação</label>
-                            <input name="entradaNomeEmbarcacao" class="form-control" type="text" value="{{avisoEntradas.entradaNomeEmbarcacao}}" disabled>
+                            <input name="entradaNomeEmbarcacao" class="form-control" type="text" value="{{embarcacoes.embarcacaoNome}}" disabled>
                             <label class="input-group-text">Tipo da Embarcação</label>
-                            <input name="entradaTipoEmbarcacao" class="form-control" type="text" value="{{avisoEntradas.entradaTipoEmbarcacao}}" disabled>
+                            <input name="entradaTipoEmbarcacao" class="form-control" type="text" value="{{embarcacoes.embarcacaoTipo}}" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <label class="input-group-text">Bandeira</label>
-                            <input name="entradaBandeira" class="form-control" type="text" value="{{avisoEntradas.entradaBandeira}}" disabled>
+                            <input name="entradaBandeira" class="form-control" type="text" value="{{embarcacoes.embarcacaoBandeira}}" disabled>
                             <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-                            <input name="entradaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="{{avisoEntradas.entradaNInscricaoAutoridadeMaritima}}" disabled>
+                            <input name="entradaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="{{embarcacoes.embarcacaoNInscricaoautoridadeMB}}" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <label class="input-group-text">Arqueação Buta</label>
-                            <input name="entradaArqueacaoBruta" class="form-control" type="text" value="{{avisoEntradas.entradaArqueacaoBruta}}" disabled>
+                            <input name="entradaArqueacaoBruta" class="form-control" type="text" value="{{embarcacoes.embarcacaoArqueacaoBruta}}" disabled>
                             <label class="input-group-text">Tonelagem Porte Bruto</label>
-                            <input name="entradaTonelagemPorteBruto" class="form-control" type="text" value="{{avisoEntradas.entradaTonelagemPorteBruto}}" disabled>
+                            <input name="entradaTonelagemPorteBruto" class="form-control" type="text" value="{{embarcacoes.embarcacaoTonelagemPorteBruto}}" disabled>
                         </div>
                 </div>
                     <h4 class="text-center">Dados do Representante da Embarcação</h4>
@@ -119,5 +120,7 @@
 </div>
 <br>
 <div class="text-center" {{hidden}}>
- <a class="btn btn-success" href="/avisoEntrada/{{avisoEntradas._id}}/pdf" target="_blank">Gerar PDF</a>
+ <a class="btn btn-success" href="/avisoEntrada/{{avisoEntradas._id}}/pdf" target="_blank" style="float: right">Gerar PDF</a>
 </div>
+<input class="btn btn-success" type="button" value="Voltar" style="float: left" onClick="history.go(-1)"> 
+<br>
