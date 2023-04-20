@@ -1,6 +1,16 @@
 {{#each usuario}}
-    <h1>{{nome}}</h1>
-    <h1>{{email}}</h1>
+<div class="card">
+    <div class="card-body">
+        <form action="" method="POST">
+            <label for="nome"> Nome </label>
+                <input type="text" value="{{nome}}" class="form-control" disabled>
+            <label for="email">Email: </label>
+                <input type="email" value="{{email}}" class="form-control" disabled>
+            <label type="CPF">CPF/CNPJ: </label>
+                <input type="number" value="{{CPF}}" class="form-control" disabled>
+        </form>
+    </div>
+</div>
 {{else}}
     <h4>Nenhum Usuário cadastrado</h4>
 {{/each}}

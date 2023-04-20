@@ -97,36 +97,36 @@ router.get('/despacho/:id/pdf', (req, res) => {
                 <h4 class="text-center">Dados da Embarcação</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Nome da Embarcação</label>
-                        <input name="despachoNomeEmbarcação" class="form-control" type="text" value="${despachos.despachoNomeEmbarcação}" disabled>
+                        <input name="despachoNomeEmbarcação" class="form-control" type="text" value="${embarcacoes.embarcacaoNome}" disabled>
                         <label class="input-group-text">Tipo da Embarcação</label>
-                        <input name="despachoTipoEmbarcacao" class="form-control" type="text" value="${despachos.despachoTipoEmbarcacao}" disabled>
+                        <input name="despachoTipoEmbarcacao" class="form-control" type="text" value="${embarcacoes.embarcacaoTipo}" disabled>
                     </div>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Bandeira</label>
-                <input name="despachoBandeira" class="form-control" type="text" value="${despachos.despachoBandeira}" disabled>
+                <input name="despachoBandeira" class="form-control" type="text" value="${embarcacoes.embarcacaoBandeira}" disabled>
                 <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-                <input name="despachoNInscricaoautoridadeMB" class="form-control" type="text" value="${despachos.despachoNInscricaoautoridadeMB}" disabled>
+                <input name="despachoNInscricaoautoridadeMB" class="form-control" type="text" value="${embarcacoes.embarcacaoNInscricaoautoridadeMB}" disabled>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Arqueação Bruta</label>
-                <input name="despachoArqueacaoBruta" class="form-control" type="text" value="${despachos.despachoArqueacaoBruta}" disabled>
+                <input name="despachoArqueacaoBruta" class="form-control" type="text" value="${embarcacoes.embarcacaoArqueacaoBruta}" disabled>
                 <label class="input-group-text">Comprimento Total</label>
-                <input name="despachoComprimentoTotal" class="form-control" type="text" value="${despachos.despachoComprimentoTotal}" disabled>
+                <input name="despachoComprimentoTotal" class="form-control" type="text" value="${embarcacoes.embarcacaoComprimentoTotal}" disabled>
                 <label class="input-group-text">Tonelagem Porte Bruto</label>
-                <input name="despachoTonelagemPorteBruto" class="form-control" type="text" value="${despachos.despachoTonelagemPorteBruto}" disabled>
+                <input name="despachoTonelagemPorteBruto" class="form-control" type="text" value="${embarcacoes.embarcacaoTonelagemPorteBruto}" disabled>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Certificado de Registro do Amador(CRA)</label>
-                <input name="despachoCertificadoRegistroAmador" class="form-control" type="text" value="${despachos.despachoCertificadoRegistroAmador}" disabled>
+                <input name="despachoCertificadoRegistroAmador" class="form-control" type="text" value="${embarcacoes.embarcacaoCertificadoRegistroAmador}" disabled>
                 <label class="input-group-text">Armador</label>
-                <input name="despachoArmador" class="form-control" type="text" value="${despachos.despachoArmador}" disabled>
+                <input name="despachoArmador" class="form-control" type="text" value="${embarcacoes.embarcacaoArmador}" disabled>
             </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">N° do CRA</label>
-                        <input name="despacgoNCRA" class="form-control" type="text" value="${despachos.despacgoNCRA}" disabled>
+                        <input name="despacgoNCRA" class="form-control" type="text" value="${embarcacoes.embarcacaoNCRA}" disabled>
                         <label class="input-group-text">Validade</label>
-                        <input name="despachoValidade" class="form-control" type="text" value="${despachos.despachoValidade}" disabled>
+                        <input name="despachoValidade" class="form-control" type="text" value="${embarcacoes.embarcacaoValidade}" disabled>
                     </div>
             
             <div>
@@ -266,21 +266,21 @@ router.get('/avisoEntrada/:id/pdf', (req, res) => {
               <h4 class="text-center">Dados da Embarcação</h4>
                   <div class="input-group mb-3">
                       <label class="input-group-text">Nome da Embarcação</label>
-                      <input name="entradaNomeEmbarcacao" class="form-control" type="text" value="${avisoEntradas.entradaNomeEmbarcacao}" disabled>
+                      <input name="entradaNomeEmbarcacao" class="form-control" type="text" value="${embarcacoes.embarcacaoNome}" disabled>
                       <label class="input-group-text">Tipo da Embarcação</label>
-                      <input name="entradaTipoEmbarcacao" class="form-control" type="text" value="${avisoEntradas.entradaTipoEmbarcacao}" disabled>
+                      <input name="entradaTipoEmbarcacao" class="form-control" type="text" value="${embarcacoes.embarcacaoTipo}" disabled>
                   </div>
                   <div class="input-group mb-3">
                       <label class="input-group-text">Bandeira</label>
-                      <input name="entradaBandeira" class="form-control" type="text" value="${avisoEntradas.entradaBandeira}" disabled>
+                      <input name="entradaBandeira" class="form-control" type="text" value="${embarcacoes.embarcacaoBandeira}" disabled>
                       <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-                      <input name="entradaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="${avisoEntradas.entradaNInscricaoAutoridadeMaritima}" disabled>
+                      <input name="entradaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="${embarcacoes.embarcacaoNInscricaoautoridadeMB}" disabled>
                   </div>
                   <div class="input-group mb-3">
                       <label class="input-group-text">Arqueação Buta</label>
-                      <input name="entradaArqueacaoBruta" class="form-control" type="text" value="${avisoEntradas.entradaArqueacaoBruta}" disabled>
+                      <input name="entradaArqueacaoBruta" class="form-control" type="text" value="${embarcacoes.embarcacaoArqueacaoBruta}" disabled>
                       <label class="input-group-text">Tonelagem Porte Bruto</label>
-                      <input name="entradaTonelagemPorteBruto" class="form-control" type="text" value="${avisoEntradas.entradaTonelagemPorteBruto}" disabled>
+                      <input name="entradaTonelagemPorteBruto" class="form-control" type="text" value="${embarcacoes.embarcacaoTonelagemPorteBruto}" disabled>
                   </div>
           </div>
               <h4 class="text-center">Dados do Representante da Embarcação</h4>
@@ -387,21 +387,21 @@ router.get('/avisoSaida/:id/pdf', (req, res) => {
             <h4 class="text-center">Dados da Embarcação</h4>
                 <div class="input-group mb-3">
                     <label class="input-group-text">Nome da Embarcação</label>
-                    <input name="saidaNomeEmbarcacao" class="form-control" type="text" value="${avisoSaidas.saidaNomeEmbarcacao}" disabled>
+                    <input name="saidaNomeEmbarcacao" class="form-control" type="text" value="${embarcacoes.embarcacaoNome}" disabled>
                     <label class="input-group-text">Tipo da Embarcação</label>
-                    <input name="saidaTipoEmbarcacao" class="form-control" type="text" value="${avisoSaidas.saidaTipoEmbarcacao}" disabled>
+                    <input name="saidaTipoEmbarcacao" class="form-control" type="text" value="${embarcacoes.embarcacaoTipo}" disabled>
                 </div>
                 <div class="input-group mb-3">
                     <label class="input-group-text">Bandeira</label>
-                    <input name="saidaBandeira" class="form-control" type="text" value="${avisoSaidas.saidaBandeira}" disabled>
+                    <input name="saidaBandeira" class="form-control" type="text" value="${embarcacoes.embarcacaoBandeira}" disabled>
                     <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-                    <input name="saidaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="${avisoSaidas.saidaNInscricaoAutoridadeMaritima}" disabled>
+                    <input name="saidaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="${embarcacoes.embarcacaoNInscricaoautoridadeMB}" disabled>
                 </div>
                 <div class="input-group mb-3">
                     <label class="input-group-text">Arqueação Buta</label>
-                    <input name="saidaArqueacaoBruta" class="form-control" type="text" value="${avisoSaidas.saidaArqueacaoBruta}" disabled>
+                    <input name="saidaArqueacaoBruta" class="form-control" type="text" value="${embarcacoes.embarcacaoArqueacaoBruta}" disabled>
                     <label class="input-group-text">Tonelagem Porte Bruto</label>
-                    <input name="saidaTonelagemPorteBruto" class="form-control" type="text" value="${avisoSaidas.saidaTonelagemPorteBruto}" disabled>
+                    <input name="saidaTonelagemPorteBruto" class="form-control" type="text" value="${embarcacoes.embarcacaoTonelagemPorteBruto}" disabled>
                 </div>
         </div>
             <h4 class="text-center">Dados do Representante da Embarcação</h4>
