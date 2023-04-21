@@ -482,13 +482,56 @@ router.get('/avisoSaida/:id/pdf', (req, res) => {
 router.get('/admin/relatorioSaidas', async (req, res) => {
     try{
         const avisoSaidas = await AvisoSaida.find().lean()
-        var soma = 0
-        avisoSaidas.forEach(passageiros => {
-            soma += passageiros.saidaSomaPassageiros
-        })
-        console.log(soma)
-    }catch(err){
+        const embarcacoes = await Embarcacao.find().lean()
+        somaPassageiros = 0
+        ultimoMes = Date.now() - 2629800000
 
+        let bandeirasTotal = ['Paraguaio', 'Argentino', 'Uruguaio', 'Boliviano', 'Brasileiro']
+        let bandeirasExt = ['Paraguaio', 'Argentino', 'Uruguaio', 'Boliviano']
+        let bandeirasBRA = ['Brasileiro']
+        let bandeirasBO = ['Boliviano']
+        let bandeirasPA = ['Paraguai']
+        let bandeirasARG = ['Argentino']
+        let bandeirasURU = ['Uruguaio']
+
+        let somaEmbarcacaoTotal = embarcacoes.filter((el) => bandeirasTotal.includes(el.embarcacaoBandeira)).length
+        let somaEmbarcacaoExt = embarcacoes.filter((el) => bandeirasExt.includes(el.embarcacaoBandeira)).length
+        let somaEmbarcacaoBRA = embarcacoes.filter((el) => bandeirasBRA.includes(el.embarcacaoBandeira)).length
+        let somaEmbarcacaoBO = embarcacoes.filter((el) => bandeirasBO.includes(el.embarcacaoBandeira)).length
+        let somaEmbarcacaoPA = embarcacoes.filter((el) => bandeirasPA.includes(el.embarcacaoBandeira)).length
+        let somaEmbarcacaoARG = embarcacoes.filter((el) => bandeirasARG.includes(el.embarcacaoBandeira)).length
+        let somaEmbarcacaoURU = embarcacoes.filter((el) => bandeirasURU.includes(el.embarcacaoBandeira)).length
+        
+            avisoSaidas.forEach(passageiros => {
+            if(passageiros.saidaData > ultimoMes){
+                passag = parseInt(passageiros.saidaSomaPassageiros)
+                somaPassageiros += passag
+            }
+            })
+    
+            const html = `<h1>Relatório do Ultimo mês</h1><br>
+                        <label>Número de Passageiros: ${somaPassageiros}</label><br>
+                        <label>Embarcações Totais: ${somaEmbarcacaoTotal}</label><br>
+                        <label>Embarcações Internacionais: ${somaEmbarcacaoExt}</label><br>
+                        <label>Embarcações Brasileiras: ${somaEmbarcacaoBRA}</label><br>
+                        <label>Embarcações Bolivianas: ${somaEmbarcacaoBO}</label><br>
+                        <label>Embarcações Paraguaias: ${somaEmbarcacaoPA}</label><br>
+                        <label>Embarcações Argentinas: ${somaEmbarcacaoARG}</label><br>
+                        <label>Embarcações Uruguaias: ${somaEmbarcacaoURU}</label><br>
+
+                        `
+        
+            
+        pdf.create(html).toStream((err, stream) => {
+            if (err) return res.send(err);
+            res.attachment(`Relatorio.pdf`);
+            res.setHeader('Content-Type', 'application/pdf');
+            stream.pipe(res);
+        })
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', 'Erro interno ao gerar relatório')
+        res.redirect('/admin/painel')
     }
 })
 
