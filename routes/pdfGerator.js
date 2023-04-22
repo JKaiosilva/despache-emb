@@ -501,12 +501,17 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
         let somaEmbarcacaoPA = embarcacoes.filter((el) => bandeirasPA.includes(el.embarcacaoBandeira)).length
         let somaEmbarcacaoARG = embarcacoes.filter((el) => bandeirasARG.includes(el.embarcacaoBandeira)).length
         let somaEmbarcacaoURU = embarcacoes.filter((el) => bandeirasURU.includes(el.embarcacaoBandeira)).length
-        
-            avisoSaidas.forEach(passageiros => {
-            if(passageiros.saidaData > ultimoMes){
-                passag = parseInt(passageiros.saidaSomaPassageiros)
-                somaPassageiros += passag
-            }
+            avisoSaidas.forEach(formularios => {
+                if(formularios.saidaData > ultimoMes){
+                    passag = parseInt(formularios.saidaSomaPassageiros)
+                    somaPassageiros += passag
+                    async function procurarBandeiras(){
+                        embs = await Embarcacao.findById({_id: formularios.embarcacao}).lean()
+                        return embs
+                    }
+                    console.log(procurarBandeiras.embs)
+
+                }
             })
     
             const html = `<h1>Relatório do Ultimo mês</h1><br>
