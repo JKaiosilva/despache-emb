@@ -481,39 +481,57 @@ router.get('/avisoSaida/:id/pdf', (req, res) => {
 
 router.get('/admin/relatorioSaidas', async (req, res) => {
     try{
-        const avisoSaidas = await AvisoSaida.find().lean()
-        const embarcacoes = await Embarcacao.find().lean()
-        somaPassageiros = 0
-        ultimoMes = Date.now() - 2629800000
+            const avisoSaidas = await AvisoSaida.find().lean()
 
-        let bandeirasTotal = ['Paraguaio', 'Argentino', 'Uruguaio', 'Boliviano', 'Brasileiro']
-        let bandeirasExt = ['Paraguaio', 'Argentino', 'Uruguaio', 'Boliviano']
-        let bandeirasBRA = ['Brasileiro']
-        let bandeirasBO = ['Boliviano']
-        let bandeirasPA = ['Paraguai']
-        let bandeirasARG = ['Argentino']
-        let bandeirasURU = ['Uruguaio']
+            somaPassageiros = 0
+            ultimoMes = Date.now() - 2629800000
 
-        let somaEmbarcacaoTotal = embarcacoes.filter((el) => bandeirasTotal.includes(el.embarcacaoBandeira)).length
-        let somaEmbarcacaoExt = embarcacoes.filter((el) => bandeirasExt.includes(el.embarcacaoBandeira)).length
-        let somaEmbarcacaoBRA = embarcacoes.filter((el) => bandeirasBRA.includes(el.embarcacaoBandeira)).length
-        let somaEmbarcacaoBO = embarcacoes.filter((el) => bandeirasBO.includes(el.embarcacaoBandeira)).length
-        let somaEmbarcacaoPA = embarcacoes.filter((el) => bandeirasPA.includes(el.embarcacaoBandeira)).length
-        let somaEmbarcacaoARG = embarcacoes.filter((el) => bandeirasARG.includes(el.embarcacaoBandeira)).length
-        let somaEmbarcacaoURU = embarcacoes.filter((el) => bandeirasURU.includes(el.embarcacaoBandeira)).length
-            avisoSaidas.forEach(formularios => {
-                if(formularios.saidaData > ultimoMes){
-                    passag = parseInt(formularios.saidaSomaPassageiros)
-                    somaPassageiros += passag
-                    async function procurarBandeiras(){
-                        embs = await Embarcacao.findById({_id: formularios.embarcacao}).lean()
-                        return embs
+            bandeirasTotal = ['Paraguaio', 'Argentino', 'Uruguaio', 'Boliviano', 'Brasileiro']
+            bandeirasExt = ['Paraguaio', 'Argentino', 'Uruguaio', 'Boliviano']
+            bandeirasBRA = ['Brasileiro']
+            bandeirasBO = ['Boliviano']
+            bandeirasPA = ['Paraguai']
+            bandeirasARG = ['Argentino']
+            bandeirasURU = ['Uruguaio']
+
+            somaEmbarcacaoTotal = 0
+            somaEmbarcacaoExt = 0
+            somaEmbarcacaoBRA = 0
+            somaEmbarcacaoBO = 0
+            somaEmbarcacaoPA = 0
+            somaEmbarcacaoARG = 0
+            somaEmbarcacaoURU = 0 
+            
+/*             somaEmbarcacaoTotalCount = embarcacoes.filter((el) => bandeirasTotal.includes(el.embarcacaoBandeira)).length
+            somaEmbarcacaoExtCount = embarcacoes.filter((el) => bandeirasExt.includes(el.embarcacaoBandeira)).length
+            somaEmbarcacaoBRACount = embarcacoes.filter((el) => bandeirasBRA.includes(el.embarcacaoBandeira)).length
+            somaEmbarcacaoBOCount = embarcacoes.filter((el) => bandeirasBO.includes(el.embarcacaoBandeira)).length
+            somaEmbarcacaoPACount = embarcacoes.filter((el) => bandeirasPA.includes(el.embarcacaoBandeira)).length
+            somaEmbarcacaoARGCount = embarcacoes.filter((el) => bandeirasARG.includes(el.embarcacaoBandeira)).length
+            somaEmbarcacaoURUCount = embarcacoes.filter((el) => bandeirasURU.includes(el.embarcacaoBandeira)).length
+     */
+            avisoSaidas.forEach(async (formularios) => {
+            if (formularios.saidaData > ultimoMes) {
+                passag = parseInt(formularios.saidaSomaPassageiros)
+                somaPassageiros += passag
+
+                
+                const embarcacoes = await Embarcacao.find({_id: formularios.embarcacao}).lean()
+                    if(bandeirasTotal.includes(embarcacoes.embarcacaoBandeira)){
+                        console.log('foi')
                     }
-                    console.log(procurarBandeiras.embs)
-
+/*                     somaEmbarcacaoTotal += somaEmbarcacaoTotalCount
+                    somaEmbarcacaoExt += somaEmbarcacaoExtCount
+                    somaEmbarcacaoBRA += somaEmbarcacaoBRACount
+                    somaEmbarcacaoBO += somaEmbarcacaoBOCount
+                    somaEmbarcacaoPA += somaEmbarcacaoPACount
+                    somaEmbarcacaoARG += somaEmbarcacaoARGCount
+                    somaEmbarcacaoURU += somaEmbarcacaoURUCount
+                    console.log(somaEmbarcacaoTotal) */
                 }
-            })
-    
+            }
+        )
+          
             const html = `<h1>Relatório do Ultimo mês</h1><br>
                         <label>Número de Passageiros: ${somaPassageiros}</label><br>
                         <label>Embarcações Totais: ${somaEmbarcacaoTotal}</label><br>
