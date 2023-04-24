@@ -510,41 +510,44 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             somaEmbarcacaoARGCount = embarcacoes.filter((el) => bandeirasARG.includes(el.embarcacaoBandeira)).length
             somaEmbarcacaoURUCount = embarcacoes.filter((el) => bandeirasURU.includes(el.embarcacaoBandeira)).length
      */
-            avisoSaidas.forEach(async (formularios) => {
-            if (formularios.saidaData > ultimoMes) {
-                passag = parseInt(formularios.saidaSomaPassageiros)
-                somaPassageiros += passag
 
-                
-                const embarcacoes = await Embarcacao.find({_id: formularios.embarcacao}).lean()
-                    if(bandeirasTotal.includes(embarcacoes.embarcacaoBandeira)){
-                        console.log('foi')
-                    }
-/*                     somaEmbarcacaoTotal += somaEmbarcacaoTotalCount
-                    somaEmbarcacaoExt += somaEmbarcacaoExtCount
-                    somaEmbarcacaoBRA += somaEmbarcacaoBRACount
-                    somaEmbarcacaoBO += somaEmbarcacaoBOCount
-                    somaEmbarcacaoPA += somaEmbarcacaoPACount
-                    somaEmbarcacaoARG += somaEmbarcacaoARGCount
-                    somaEmbarcacaoURU += somaEmbarcacaoURUCount
-                    console.log(somaEmbarcacaoTotal) */
-                }
-            }
-        )
-          
-            const html = `<h1>Relatório do Ultimo mês</h1><br>
+
+                for await(const formularios of avisoSaidas){
+                    if (formularios.saidaData > ultimoMes) {
+                        passag = parseInt(formularios.saidaSomaPassageiros);
+                        somaPassageiros += passag;
+
+                        const embarcacoes = await Embarcacao.find({_id: formularios.embarcacao}).lean()
+                         for await(const embs of embarcacoes){
+                            if(bandeirasTotal.includes(embs.embarcacaoBandeira)){
+                                somaEmbarcacaoTotal++
+                            }if(bandeirasExt.includes(embs.embarcacaoBandeira)){
+                                somaEmbarcacaoExt++
+                            }if(bandeirasBRA.includes(embs.embarcacaoBandeira)){
+                                somaEmbarcacaoBRA++
+                            }if(bandeirasBO.includes(embs.embarcacaoBandeira)){
+                                somaEmbarcacaoBO++
+                            }if(bandeirasPA.includes(embs.embarcacaoBandeira)){
+                                somaEmbarcacaoPA++
+                            }if(bandeirasARG.includes(embs.embarcacaoBandeira)){
+                                somaEmbarcacaoARG++
+                            }if(bandeirasURU.includes(embs.embarcacaoBandeira)){
+                                somaEmbarcacaoURU++
+                            }
+                    }}}
+
+
+                const html = `<h1>Relatório do Ultimo mês</h1><br>
                         <label>Número de Passageiros: ${somaPassageiros}</label><br>
-                        <label>Embarcações Totais: ${somaEmbarcacaoTotal}</label><br>
+                        <label>Numero de Saídas: ${somaEmbarcacaoTotal}</label><br><br><br>
+                        <h3>Embarcações</h3><br>
                         <label>Embarcações Internacionais: ${somaEmbarcacaoExt}</label><br>
                         <label>Embarcações Brasileiras: ${somaEmbarcacaoBRA}</label><br>
                         <label>Embarcações Bolivianas: ${somaEmbarcacaoBO}</label><br>
                         <label>Embarcações Paraguaias: ${somaEmbarcacaoPA}</label><br>
                         <label>Embarcações Argentinas: ${somaEmbarcacaoARG}</label><br>
                         <label>Embarcações Uruguaias: ${somaEmbarcacaoURU}</label><br>
-
                         `
-        
-            
         pdf.create(html).toStream((err, stream) => {
             if (err) return res.send(err);
             res.attachment(`Relatorio.pdf`);
