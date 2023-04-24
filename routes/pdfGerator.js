@@ -501,6 +501,16 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             somaEmbarcacaoPA = 0
             somaEmbarcacaoARG = 0
             somaEmbarcacaoURU = 0 
+
+            somaEmbarcacaoInternacionalEmp = 0
+            somaEmbarcacaoNacionalEmp = 0
+            somaEmbarcacaoBarcaca = 0
+            somaEmbarcacaoRebocadorEmpurador = 0
+            somaEmbarcacaoBalsa = 0
+            somaEmbarcacaoCargaGeral = 0
+            somaEmbarcacaoDraga = 0
+            somaEmbarcacaoLancha = 0
+            somaEmbarcacaoPassageiros = 0
             
 /*             somaEmbarcacaoTotalCount = embarcacoes.filter((el) => bandeirasTotal.includes(el.embarcacaoBandeira)).length
             somaEmbarcacaoExtCount = embarcacoes.filter((el) => bandeirasExt.includes(el.embarcacaoBandeira)).length
@@ -533,6 +543,25 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                                 somaEmbarcacaoARG++
                             }if(bandeirasURU.includes(embs.embarcacaoBandeira)){
                                 somaEmbarcacaoURU++
+
+                            }if(['empurrador'].includes(embs.embarcacaoTipo)){
+                                somaEmbarcacaoInternacionalEmp++
+                            }if(['empurrador'].includes(embs.embarcacaoTipo) & bandeirasBRA.includes(embs.embarcacaoBandeira)){
+                                somaEmbarcacaoNacionalEmp++
+                            }if(['barcaça'].includes(embs.embarcacaoTipo)){
+                                somaEmbarcacaoBarcaca++
+                            }if(['rebocadorEmpurrador'].includes(embs.embarcacaoTipo)){
+                                somaEmbarcacaoRebocadorEmpurador++
+                            }if(['balsa'].includes(embs.embarcacaoTipo)){
+                                somaEmbarcacaoBalsa++
+                            }if(['cargaGeral'].includes(embs.embarcacaoTipo)){
+                                somaEmbarcacaoCargaGeral++
+                            }if(['draga'].includes(embs.embarcacaoTipo)){
+                                somaEmbarcacaoDraga++
+                            }if(['lancha'].includes(embs.embarcacaoTipo)){
+                                somaEmbarcacaoLancha++
+                            }if(['embarcacaoPassageiros'].includes(embs.embarcacaoTipo)){
+                                somaEmbarcacaoPassageiros++
                             }
                     }}}
 
@@ -540,13 +569,28 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                 const html = `<h1>Relatório do Ultimo mês</h1><br>
                         <label>Número de Passageiros: ${somaPassageiros}</label><br>
                         <label>Numero de Saídas: ${somaEmbarcacaoTotal}</label><br><br><br>
-                        <h3>Embarcações</h3><br>
+                        <h3>Embarcações Bandeiras:</h3><br>
                         <label>Embarcações Internacionais: ${somaEmbarcacaoExt}</label><br>
                         <label>Embarcações Brasileiras: ${somaEmbarcacaoBRA}</label><br>
                         <label>Embarcações Bolivianas: ${somaEmbarcacaoBO}</label><br>
                         <label>Embarcações Paraguaias: ${somaEmbarcacaoPA}</label><br>
                         <label>Embarcações Argentinas: ${somaEmbarcacaoARG}</label><br>
-                        <label>Embarcações Uruguaias: ${somaEmbarcacaoURU}</label><br>
+                        <label>Embarcações Uruguaias: ${somaEmbarcacaoURU}</label><br><br><br>
+                        <h3>Embarcações Tipos:</h3><br>
+                        <h5>Estrangeiras:</h5><br>
+                        <label>Empurradores: ${somaEmbarcacaoInternacionalEmp}</label><br>
+                        <label>Barcaças: ${somaEmbarcacaoBarcaca}</label><br>
+                        <label>Total: ${somaEmbarcacaoInternacionalEmp + somaEmbarcacaoBarcaca}<hr><br>
+                        <h5>Nacionais: </h5>
+                        <label>Empurradores: ${somaEmbarcacaoNacionalEmp}</label><br>
+                        <label>Rebocador/Empurrador: ${somaEmbarcacaoRebocadorEmpurador}</label><br>
+                        <label>Balsas: ${somaEmbarcacaoBalsa}</label><br>
+                        <label>Carga Geral: ${somaEmbarcacaoCargaGeral}</label><br>
+                        <label>Dragas: ${somaEmbarcacaoDraga}</label><br>
+                        <label>Lanchas: ${somaEmbarcacaoLancha}</label><br>
+                        <label>Embarcações de Passageiros: ${somaEmbarcacaoPassageiros}</label><br>
+                        <label>Total: ${somaEmbarcacaoNacionalEmp + somaEmbarcacaoRebocadorEmpurador + somaEmbarcacaoBalsa + somaEmbarcacaoCargaGeral + somaEmbarcacaoDraga + somaEmbarcacaoLancha + somaEmbarcacaoPassageiros}</label>
+
                         `
         pdf.create(html).toStream((err, stream) => {
             if (err) return res.send(err);
