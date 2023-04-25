@@ -512,14 +512,6 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             somaEmbarcacaoLancha = 0
             somaEmbarcacaoPassageiros = 0
             
-/*             somaEmbarcacaoTotalCount = embarcacoes.filter((el) => bandeirasTotal.includes(el.embarcacaoBandeira)).length
-            somaEmbarcacaoExtCount = embarcacoes.filter((el) => bandeirasExt.includes(el.embarcacaoBandeira)).length
-            somaEmbarcacaoBRACount = embarcacoes.filter((el) => bandeirasBRA.includes(el.embarcacaoBandeira)).length
-            somaEmbarcacaoBOCount = embarcacoes.filter((el) => bandeirasBO.includes(el.embarcacaoBandeira)).length
-            somaEmbarcacaoPACount = embarcacoes.filter((el) => bandeirasPA.includes(el.embarcacaoBandeira)).length
-            somaEmbarcacaoARGCount = embarcacoes.filter((el) => bandeirasARG.includes(el.embarcacaoBandeira)).length
-            somaEmbarcacaoURUCount = embarcacoes.filter((el) => bandeirasURU.includes(el.embarcacaoBandeira)).length
-     */
 
 
                 for await(const formularios of avisoSaidas){
@@ -570,12 +562,12 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                         <label>Número de Passageiros: ${somaPassageiros}</label><br>
                         <label>Numero de Saídas: ${somaEmbarcacaoTotal}</label><br><br><br>
                         <h3>Embarcações Bandeiras:</h3><br>
-                        <label>Embarcações Internacionais: ${somaEmbarcacaoExt}</label><br>
-                        <label>Embarcações Brasileiras: ${somaEmbarcacaoBRA}</label><br>
-                        <label>Embarcações Bolivianas: ${somaEmbarcacaoBO}</label><br>
-                        <label>Embarcações Paraguaias: ${somaEmbarcacaoPA}</label><br>
-                        <label>Embarcações Argentinas: ${somaEmbarcacaoARG}</label><br>
-                        <label>Embarcações Uruguaias: ${somaEmbarcacaoURU}</label><br><br><br>
+                        <label>Despachos de Embarcações Internacionais: ${somaEmbarcacaoExt}</label><br>
+                        <label>Despachos de Embarcações Brasileiras: ${somaEmbarcacaoBRA}</label><br>
+                        <label>Despachos de Embarcações Bolivianas: ${somaEmbarcacaoBO}</label><br>
+                        <label>Despachos de Embarcações Paraguaias: ${somaEmbarcacaoPA}</label><br>
+                        <label>Despachos de Embarcações Argentinas: ${somaEmbarcacaoARG}</label><br>
+                        <label>Despachos de Embarcações Uruguaias: ${somaEmbarcacaoURU}</label><br><br><br>
                         <h3>Embarcações Tipos:</h3><br>
                         <h5>Estrangeiras:</h5><br>
                         <label>Empurradores: ${somaEmbarcacaoInternacionalEmp}</label><br>
@@ -590,6 +582,29 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                         <label>Lanchas: ${somaEmbarcacaoLancha}</label><br>
                         <label>Embarcações de Passageiros: ${somaEmbarcacaoPassageiros}</label><br>
                         <label>Total: ${somaEmbarcacaoNacionalEmp + somaEmbarcacaoRebocadorEmpurador + somaEmbarcacaoBalsa + somaEmbarcacaoCargaGeral + somaEmbarcacaoDraga + somaEmbarcacaoLancha + somaEmbarcacaoPassageiros}</label>
+
+                        <table class="demo">
+                            <caption>Relatório</caption>
+                            <thead>
+                                <tr>
+                                    <th>Embarcações Estrangeiras</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Empurrador:</td>
+                                    <td>${somaEmbarcacaoInternacionalEmp}</td>
+                                </tr>
+                                <tr>
+                                    <td>Barcaças:</td>
+                                    <td>${somaEmbarcacaoBarcaca}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+
+
 
                         `
         pdf.create(html).toStream((err, stream) => {
