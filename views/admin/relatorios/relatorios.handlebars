@@ -1,0 +1,23 @@
+<h1>Meus Relatórios</h1>
+<br>
+
+{{#each relatorios}}
+    <div class="card mt-4">
+        <div class="card-header">
+            <h6>Relatório {{mesAtual}}</h6>
+        </div>
+        <div class="card-body">
+            <label>Soma de embarcações Estrangeiras: {{totalExtrangeiro}}</label>
+            <br>
+            <label>Soma de embarcações Nacionais: {{totalNacional}}</label>
+            <br>
+            <label>Soma de passageiros: {{somaPassageiros}}</label>
+            <hr>
+            <label>Ultima atualização: {{relatorioDataString}}</label>
+            <a class="btn btn-success" href="/admin/relatorios/{{_id}}" style="float: right">Visualizar</a>
+        </div>
+    </div>
+
+{{else}}
+    <h4>Nenhum relatório gerado!</h4>
+{{/each}}

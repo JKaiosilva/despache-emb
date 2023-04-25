@@ -26,6 +26,7 @@ require('dotenv').config()
 require('./helpers/pagination')
 const pdfGerator = require('./routes/pdfGerator')
 const docsVizu = require('./routes/docsVizu')
+const relatorios = require('./routes/relatorios')
 
 
 
@@ -96,6 +97,7 @@ const docsVizu = require('./routes/docsVizu')
             })
         })
 
+        app.use(relatorios)
         app.use(docsVizu)
         app.use(pdfGerator)
         app.use(getForms)
