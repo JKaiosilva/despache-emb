@@ -164,6 +164,7 @@ require('../models/Aviso')
                 saidaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
                 embarcacao: req.body.embarcacao,
                 saidaData: Date.now(),
+                saidaMesAtual: moment(Date.now()).format('MM')
 
             }
             new AvisoSaida(novoAvisoSaida).save().then(() => {

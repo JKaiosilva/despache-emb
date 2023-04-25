@@ -82,6 +82,10 @@ const AvisoSaida = new Schema({
     saidaData: {
         type: Number,
         default: []
+    },
+    saidaMesAtual: {
+        type: Number,
+        default: []
     }
 
 })

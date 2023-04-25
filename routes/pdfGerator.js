@@ -14,6 +14,7 @@ require('../models/Aviso')
 const Aviso = mongoose.model('avisos')
 const pdf = require('html-pdf')
 const transporter = require('../config/sendMail')
+const moment = require('moment')
 
 
 
@@ -484,7 +485,7 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             const avisoSaidas = await AvisoSaida.find().lean()
 
             somaPassageiros = 0
-            ultimoMes = Date.now() - 2629800000
+            mesAtual = moment(Date.now()).format('MM')
 
             bandeirasTotal = ['Paraguaio', 'Argentino', 'Uruguaio', 'Boliviano', 'Brasileiro']
             bandeirasExt = ['Paraguaio', 'Argentino', 'Uruguaio', 'Boliviano']
@@ -515,7 +516,7 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
 
 
                 for await(const formularios of avisoSaidas){
-                    if (formularios.saidaData > ultimoMes) {
+                    if (formularios.saidaMesAtual == 4) {
                         passag = parseInt(formularios.saidaSomaPassageiros);
                         somaPassageiros += passag;
 
@@ -559,31 +560,7 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
 
 
                 const html = `<h1>Relatório do Ultimo mês</h1><br>
-                        <label>Número de Passageiros: ${somaPassageiros}</label><br>
-                        <label>Numero de Saídas: ${somaEmbarcacaoTotal}</label><br><br><br>
-                        <h3>Embarcações Bandeiras:</h3><br>
-                        <label>Despachos de Embarcações Internacionais: ${somaEmbarcacaoExt}</label><br>
-                        <label>Despachos de Embarcações Brasileiras: ${somaEmbarcacaoBRA}</label><br>
-                        <label>Despachos de Embarcações Bolivianas: ${somaEmbarcacaoBO}</label><br>
-                        <label>Despachos de Embarcações Paraguaias: ${somaEmbarcacaoPA}</label><br>
-                        <label>Despachos de Embarcações Argentinas: ${somaEmbarcacaoARG}</label><br>
-                        <label>Despachos de Embarcações Uruguaias: ${somaEmbarcacaoURU}</label><br><br><br>
-                        <h3>Embarcações Tipos:</h3><br>
-                        <h5>Estrangeiras:</h5><br>
-                        <label>Empurradores: ${somaEmbarcacaoInternacionalEmp}</label><br>
-                        <label>Barcaças: ${somaEmbarcacaoBarcaca}</label><br>
-                        <label>Total: ${somaEmbarcacaoInternacionalEmp + somaEmbarcacaoBarcaca}<hr><br>
-                        <h5>Nacionais: </h5>
-                        <label>Empurradores: ${somaEmbarcacaoNacionalEmp}</label><br>
-                        <label>Rebocador/Empurrador: ${somaEmbarcacaoRebocadorEmpurador}</label><br>
-                        <label>Balsas: ${somaEmbarcacaoBalsa}</label><br>
-                        <label>Carga Geral: ${somaEmbarcacaoCargaGeral}</label><br>
-                        <label>Dragas: ${somaEmbarcacaoDraga}</label><br>
-                        <label>Lanchas: ${somaEmbarcacaoLancha}</label><br>
-                        <label>Embarcações de Passageiros: ${somaEmbarcacaoPassageiros}</label><br>
-                        <label>Total: ${somaEmbarcacaoNacionalEmp + somaEmbarcacaoRebocadorEmpurador + somaEmbarcacaoBalsa + somaEmbarcacaoCargaGeral + somaEmbarcacaoDraga + somaEmbarcacaoLancha + somaEmbarcacaoPassageiros}</label>
-
-                        <table class="demo">
+                        <table border="1">
                             <caption>Relatório</caption>
                             <thead>
                                 <tr>
@@ -598,6 +575,53 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                                 <tr>
                                     <td>Barcaças:</td>
                                     <td>${somaEmbarcacaoBarcaca}</td>
+                                </tr>
+                                <tr>
+                                    <td>Total</td>
+                                    <td>${somaEmbarcacaoInternacionalEmp + somaEmbarcacaoBarcaca}</td>
+                                </tr>
+                            </tbody>
+                            <thead>
+                            <tr>
+                                <th>Embarcações Nacionais</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Rebocado/Empurrador</td>
+                                    <td>${somaEmbarcacaoRebocadorEmpurador}</td>
+                                </tr>
+                                <tr>
+                                    <td>Balsa</td>
+                                    <td>${somaEmbarcacaoBalsa}</td>
+                                </tr>
+                                <tr>
+                                    <td>Carga Geral</td>
+                                    <td>${somaEmbarcacaoCargaGeral}</td>
+                                </tr>
+                                <tr>
+                                    <td>Draga</td>
+                                    <td>${somaEmbarcacaoDraga}</td>
+                                </tr>
+                                <tr>
+                                    <td>Empurrador</td>
+                                    <td>${somaEmbarcacaoNacionalEmp}</td>
+                                </tr>
+                                <tr>
+                                    <td>Lancha</td>
+                                    <td>${somaEmbarcacaoLancha}</td>
+                                </tr>
+                                <tr>
+                                    <td>Embarcação de passageiros</td>
+                                    <td>${somaEmbarcacaoPassageiros}</td>
+                                </tr>
+                                <tr>
+                                    <td>Total</td>
+                                    <td>${somaEmbarcacaoNacionalEmp + somaEmbarcacaoRebocadorEmpurador + somaEmbarcacaoBalsa + somaEmbarcacaoCargaGeral + somaEmbarcacaoDraga + somaEmbarcacaoLancha + somaEmbarcacaoPassageiros}</td>
+                                </tr>
+                                <tr>
+                                    <td>N° de passageiros</td>
+                                    <td>${somaPassageiros}</td>
                                 </tr>
                             </tbody>
                         </table>
