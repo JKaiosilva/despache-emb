@@ -74,6 +74,23 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             documentSaidaMesAtual = 0
 
 
+            totalEmbarcacaoTotal = 0
+            totalEmbarcacaoExt = 0
+            totalEmbarcacaoBRA = 0
+            totalEmbarcacaoBO = 0
+            totalEmbarcacaoPA = 0 
+            totalEmbarcacaoARG = 0
+            totalEmbarcacaoURU = 0
+            totalEmbarcacaoInternacionalEmp = 0
+            totalEmbarcacaoNacionalEmp = 0
+            totalEmbarcacaoBarcaca = 0
+            totalEmbarcacaoRebocadorEmpurador = 0
+            totalEmbarcacaoBalsa = 0
+            totalEmbarcacaoCargaGeral = 0
+            totalEmbarcacaoDraga = 0
+            totalEmbarcacaoLancha = 0
+            totalEmbarcacaoPassageiros = 0
+            totalPassageiros = 0
 
             var despachosCountMes = despachos.filter((el) => el.depachoMesAtual == mesAtual).length
             var avisoEntradasCountMes = avisoEntradas.filter((el) => el.entradaMesAtual == mesAtual).length
@@ -83,12 +100,14 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             var usuariosCountMes = usuarios.filter((el) => el.usuarioMesAtual == mesAtual).length
 
                 for await(const formularios of avisoSaidas){
+                    totalPass = parseInt(formularios.saidaSomaPassageiros)
+                    totalPassageiros += totalPass
                     if (formularios.saidaMesAtual == mesAtual) {
                         passag = parseInt(formularios.saidaSomaPassageiros);
                         somaPassageiros += passag;
                         documentSaidaMesAtual = formularios.saidaMesAtual
 
-                        const embarcacoes = await Embarcacao.find({_id: formularios.embarcacao}).lean()
+                        let embarcacoes = await Embarcacao.find({_id: formularios.embarcacao}).lean()
                          for await(const embs of embarcacoes){
                             if(bandeirasTotal.includes(embs.embarcacaoBandeira)){
                                 somaEmbarcacaoTotal++
@@ -126,11 +145,51 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                             }
                     }}}
 
+                    
+    
+    
+                             for await(const embsTotal of embarcacoes){
+                                if(bandeirasTotal.includes(embsTotal.embarcacaoBandeira)){
+                                    totalEmbarcacaoTotal++
+                                }if(bandeirasExt.includes(embsTotal.embarcacaoBandeira)){
+                                    totalEmbarcacaoExt++
+                                }if(bandeirasBRA.includes(embsTotal.embarcacaoBandeira)){
+                                    totalEmbarcacaoBRA++
+                                }if(bandeirasBO.includes(embsTotal.embarcacaoBandeira)){
+                                    totalEmbarcacaoBO++
+                                }if(bandeirasPA.includes(embsTotal.embarcacaoBandeira)){
+                                    totalEmbarcacaoPA++
+                                }if(bandeirasARG.includes(embsTotal.embarcacaoBandeira)){
+                                    totalEmbarcacaoARG++
+                                }if(bandeirasURU.includes(embsTotal.embarcacaoBandeira)){
+                                    totalEmbarcacaoURU++
+    
+                                }if(['empurrador'].includes(embsTotal.embarcacaoTipo)){
+                                    totalEmbarcacaoInternacionalEmp++
+                                }if(['empurrador'].includes(embsTotal.embarcacaoTipo) & bandeirasBRA.includes(embsTotal.embarcacaoBandeira)){
+                                    totalEmbarcacaoNacionalEmp++
+                                }if(['barcaça'].includes(embsTotal.embarcacaoTipo)){
+                                    totalEmbarcacaoBarcaca++
+                                }if(['rebocadorEmpurrador'].includes(embsTotal.embarcacaoTipo)){
+                                    totalEmbarcacaoRebocadorEmpurador++
+                                }if(['balsa'].includes(embsTotal.embarcacaoTipo)){
+                                    totalEmbarcacaoBalsa++
+                                }if(['cargaGeral'].includes(embsTotal.embarcacaoTipo)){
+                                    totalEmbarcacaoCargaGeral++
+                                }if(['draga'].includes(embsTotal.embarcacaoTipo)){
+                                    totalEmbarcacaoDraga++
+                                }if(['lancha'].includes(embsTotal.embarcacaoTipo)){
+                                    totalEmbarcacaoLancha++
+                                }if(['embarcacaoPassageiros'].includes(embsTotal.embarcacaoTipo)){
+                                    totalEmbarcacaoPassageiros++
+                                }
+                            }
+
 
 
 
                 const html = `<h1>Relatório do Ultimo mês</h1><br>
-                        <table border="1">
+                        <table border="10">
                         <br>
                         ${despachosCountMes}<br>
                         ${avisoEntradasCountMes}<br>
@@ -201,6 +260,75 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                                     <td>${somaPassageiros}</td>
                                 </tr>
                             </tbody>
+                        </table>
+                        <br>
+                        <br>
+                        <br>
+                        <table>
+                            <caption>Relatório Geral</caption>
+                            <thead>
+                            <tr>
+                                <th>Embarcações Estrangeiras</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Empurrador:</td>
+                                <td>${totalEmbarcacaoInternacionalEmp}</td>
+                            </tr>
+                            <tr>
+                                <td>Barcaças:</td>
+                                <td>${totalEmbarcacaoBarcaca}</td>
+                            </tr>
+                            <tr>
+                                <td>Total</td>
+                                <td>${totalEmbarcacaoInternacionalEmp + totalEmbarcacaoBarcaca}</td>
+                            </tr>
+                        </tbody>
+                        <thead>
+                        <tr>
+                            <th>Embarcações Nacionais</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Rebocado/Empurrador</td>
+                                <td>${totalEmbarcacaoRebocadorEmpurador}</td>
+                            </tr>
+                            <tr>
+                                <td>Balsa</td>
+                                <td>${totalEmbarcacaoBalsa}</td>
+                            </tr>
+                            <tr>
+                                <td>Carga Geral</td>
+                                <td>${totalEmbarcacaoCargaGeral}</td>
+                            </tr>
+                            <tr>
+                                <td>Draga</td>
+                                <td>${totalEmbarcacaoDraga}</td>
+                            </tr>
+                            <tr>
+                                <td>Empurrador</td>
+                                <td>${totalEmbarcacaoNacionalEmp}</td>
+                            </tr>
+                            <tr>
+                                <td>Lancha</td>
+                                <td>${totalEmbarcacaoLancha}</td>
+                            </tr>
+                            <tr>
+                                <td>Embarcação de passageiros</td>
+                                <td>${totalEmbarcacaoPassageiros}</td>
+                            </tr>
+                            <tr>
+                                <td>Total</td>
+                                <td>${embarcacoesCount}</td>
+                            </tr>
+                            <tr>
+                                <td>N° de passageiros</td>
+                                <td>${totalPassageiros}</td>
+                            </tr>
+                        </tbody>
+
                         </table>
                         `
            
