@@ -25,7 +25,11 @@ const Aviso = new Schema({
     contentType: {
     type: String,
     required: true
-  }
+    },
+    avisoMesAtual: {
+        type: Number,
+        default: []
+    }
 })
 
 

@@ -25,6 +25,14 @@ const Usuario = new Schema({
     senha: {
         type: String,
         require: true
+    },
+    dataCadastro: {
+        type: Number,
+        default: []
+    },
+    usuarioMesAtual: {
+        type: Number,
+        default: []
     }
 })
 

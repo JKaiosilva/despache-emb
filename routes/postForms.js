@@ -30,7 +30,8 @@ require('../models/Aviso')
                 embarcacaoNCRA: req.body.embarcacaoNCRA,
                 embarcacaoValidade: req.body.embarcacaoValidade,
                 embarcacaoDataCadastro: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-                embarcacaoData: Date.now()
+                embarcacaoData: Date.now(),
+                embarcacaoMesAtual: moment(Date.now()).format('MM')
             }
             new Embarcacao(novaEmbarcacao).save().then(() => {
                 req.flash('success_msg', 'Embarcação cadastrada com sucesso')
@@ -74,6 +75,7 @@ require('../models/Aviso')
                 despachoDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
                 despachoData: Date.now(),
                 embarcacao: req.body.embarcacao,
+                depachoMesAtual: moment(Date.now()).format('MM')
 
             }
             new Despacho(novoDespacho).save().then(() => {
@@ -121,6 +123,7 @@ require('../models/Aviso')
                 entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
                 embarcacao: req.body.embarcacao,
                 entradaData: Date.now(),
+                entradaMesAtual: moment(Date.now()).format('MM')
 
             }
             new AvisoEntrada(novoAvisoEntrada).save().then(() => {

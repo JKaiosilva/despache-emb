@@ -7,7 +7,7 @@ const passport = require('passport')
 const bcrypt = require('bcryptjs')
 require('../models/Embarcacao')
 const Embarcacao = mongoose.model('embarcacoes')
-
+const moment = require('moment')
 
 // Cadatro de usuário
 
@@ -42,7 +42,9 @@ const Embarcacao = mongoose.model('embarcacoes')
                             nome: req.body.nome,
                             email: req.body.email,
                             CPF: req.body.CPF,
-                            senha: req.body.senha
+                            senha: req.body.senha,
+                            dataCadastro: Date.now(),
+                            usuarioMesAtual: moment(Date.now()).format('MM')
                         })
 
                         bcrypt.genSalt(10, (erro, salt) => {

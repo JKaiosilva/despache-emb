@@ -46,6 +46,10 @@ const Relatorio = new Schema ({
         type: Number,
         default: []
     },
+    mesAtualString: {
+        type: String,
+        default: []
+    },
     relatorioDataNumber: {
         type: Number,
         default: []
@@ -53,6 +57,24 @@ const Relatorio = new Schema ({
     relatorioDataString: {
         type: String,
         default: []
+    },
+    despachosCountMes: {
+        type: Number
+    },
+    avisoEntradasCountMes: {
+        type: Number
+    },
+    avisoSaidasCountCount: {
+        type: Number
+    },
+    embarcacoesCountMes: {
+        type: Number
+    },
+    avisosCountMes: {
+        type: Number
+    },
+    usuariosCountMes: {
+        type: Number 
     }
 })
 

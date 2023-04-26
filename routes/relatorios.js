@@ -1,30 +1,48 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+
 require('../models/Usuario')
 require('../models/Despacho')
-const Despacho = mongoose.model('despachos')
 require('../models/AvisoEntrada')
-const AvisoEntrada = mongoose.model('avisoEntradas')
 require('../models/AvisoSaida')
-const AvisoSaida = mongoose.model('avisoSaidas')
 require('../models/Embarcacao')
-const Embarcacao = mongoose.model('embarcacoes')
 require('../models/Aviso')
+require('../models/Relatorio')
+
+const Despacho = mongoose.model('despachos')
+const AvisoEntrada = mongoose.model('avisoEntradas')
+const AvisoSaida = mongoose.model('avisoSaidas')
+const Embarcacao = mongoose.model('embarcacoes')
 const Aviso = mongoose.model('avisos')
+const Relatorio = mongoose.model('relatorios')
+const Usuario = mongoose.model('usuarios')
+
 const pdf = require('html-pdf')
 const transporter = require('../config/sendMail')
 const moment = require('moment')
-require('../models/Relatorio')
-const Relatorio = mongoose.model('relatorios')
+
 
 
 router.get('/admin/relatorioSaidas', async (req, res) => {
     try{
-            const avisoSaidas = await AvisoSaida.find().lean()
+            const despachos = await Despacho.find().lean();
+            const avisoEntradas = await AvisoEntrada.find().lean();
+            const avisoSaidas = await AvisoSaida.find().lean();
+            const embarcacoes = await Embarcacao.find().lean();
+            const avisos = await Aviso.find().lean();
+            const usuarios = await Usuario.find().lean();
+            
+            let despachosCount = despachos.length;
+            let avisoEntradasCount = avisoEntradas.length;
+            let avisoSaidasCount = avisoSaidas.length;
+            let embarcacoesCount = embarcacoes.length;
+            let avisosCount = avisos.length;
+            let usuariosCount = usuarios.length;
 
-            somaPassageiros = 0
+
             mesAtual = moment(Date.now()).format('MM')
+            mesAtualString = moment(Date.now()).format('MMMM')
 
             bandeirasTotal = ['Paraguaio', 'Argentino', 'Uruguaio', 'Boliviano', 'Brasileiro']
             bandeirasExt = ['Paraguaio', 'Argentino', 'Uruguaio', 'Boliviano']
@@ -51,9 +69,18 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             somaEmbarcacaoDraga = 0
             somaEmbarcacaoLancha = 0
             somaEmbarcacaoPassageiros = 0
-            
+            somaPassageiros = 0
+
             documentSaidaMesAtual = 0
 
+
+
+            var despachosCountMes = despachos.filter((el) => el.depachoMesAtual == mesAtual).length
+            var avisoEntradasCountMes = avisoEntradas.filter((el) => el.entradaMesAtual == mesAtual).length
+            var avisoSaidasCountCount = avisoSaidas.filter((el) => el.saidaMesAtual == mesAtual).length
+            var embarcacoesCountMes = embarcacoes.filter((el) => el.embarcacaoMesAtual == mesAtual).length
+            var avisosCountMes = avisos.filter((el) => el.avisoMesAtual == mesAtual).length
+            var usuariosCountMes = usuarios.filter((el) => el.usuarioMesAtual == mesAtual).length
 
                 for await(const formularios of avisoSaidas){
                     if (formularios.saidaMesAtual == mesAtual) {
@@ -100,9 +127,18 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                     }}}
 
 
+
+
                 const html = `<h1>Relatório do Ultimo mês</h1><br>
                         <table border="1">
-                            <caption>Relatório</caption>
+                        <br>
+                        ${despachosCountMes}<br>
+                        ${avisoEntradasCountMes}<br>
+                        ${avisoSaidasCountCount}<br>
+                        ${embarcacoesCountMes}<br>
+                        ${avisosCountMes}<br>
+                        ${usuariosCountMes}<br>
+                            <caption>Relatório Mês ${mesAtualString}</caption>
                             <thead>
                                 <tr>
                                     <th>Embarcações Estrangeiras</th>
@@ -190,8 +226,15 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             totalNacional: somaEmbarcacaoRebocadorEmpurador + somaEmbarcacaoBalsa + somaEmbarcacaoCargaGeral + somaEmbarcacaoDraga + somaEmbarcacaoNacionalEmp + somaEmbarcacaoLancha + somaEmbarcacaoPassageiros,
             somaPassageiros: somaPassageiros,
             mesAtual: mesAtual,
+            mesAtualString: mesAtualString,
             relatorioDataNumber: Date.now(),
             relatorioDataString: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+            despachosCountMes: despachosCountMes,
+            avisoEntradasCountMes: avisoEntradasCountMes,
+            avisoSaidasCountCount: avisoSaidasCountCount,
+            embarcacoesCountMes: embarcacoesCountMes,
+            avisosCountMes: avisosCountMes,
+            usuariosCountMes: usuariosCountMes
         }
         
         if(mesAtual == documentSaidaMesAtual){
@@ -199,7 +242,6 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
         }else{
             await new Relatorio(novoRelatorio).save()
         }
-        console.log(documentSaidaMesAtual)
         
     }catch(err){
         console.log(err)

@@ -110,6 +110,10 @@ const AvisoEntrada = new Schema ({
     entradaData: {
         type: Number,
         default: []
+    },
+    entradaMesAtual: {
+        type: Number,
+        default: []
     }
 })
 
