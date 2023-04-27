@@ -111,8 +111,8 @@ const AvisoEntrada = new Schema ({
         type: Number,
         default: []
     },
-    entradaMesAtual: {
-        type: Number,
+    entradaMesAnoAtual: {
+        type: String,
         default: []
     }
 })

@@ -110,7 +110,7 @@ router.post('/avisos/novo', upload.single('foto'), async (req, res) => {
             descricao: req.body.descricao,
             conteudo: req.body.conteudo,
             avisoData: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-            avisoMesAtual: moment(Date.now()).format('MM')
+            avisoMesAnoAtual: moment(Date.now()).format('MM/YYYY')
         }
         
         if (req.file) {

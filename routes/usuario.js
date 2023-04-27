@@ -44,7 +44,7 @@ const moment = require('moment')
                             CPF: req.body.CPF,
                             senha: req.body.senha,
                             dataCadastro: Date.now(),
-                            usuarioMesAtual: moment(Date.now()).format('MM')
+                            usuarioMesAtual: moment(Date.now()).format('MM/YYYY')
                         })
 
                         bcrypt.genSalt(10, (erro, salt) => {

@@ -30,8 +30,8 @@ const Usuario = new Schema({
         type: Number,
         default: []
     },
-    usuarioMesAtual: {
-        type: Number,
+    usuarioMesAnoAtual: {
+        type: String,
         default: []
     }
 })

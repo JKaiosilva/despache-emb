@@ -59,8 +59,8 @@ const Embarcacao = new Schema ({
         type: Number,
         default: []
     },
-    embarcacaoMesAtual: {
-        type: Number,
+    embarcacaoMesAnoAtual: {
+        type: String,
         default: []
     }
 

@@ -41,7 +41,7 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             let usuariosCount = usuarios.length;
 
 
-            mesAtual = moment(Date.now()).format('MM')
+            mesAnoAtual = moment(Date.now()).format('MM/YYYY')
             mesAtualString = moment(Date.now()).format('MMMM')
 
             bandeirasTotal = ['Paraguaio', 'Argentino', 'Uruguaio', 'Boliviano', 'Brasileiro']
@@ -92,17 +92,17 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             totalEmbarcacaoPassageiros = 0
             totalPassageiros = 0
 
-            var despachosCountMes = despachos.filter((el) => el.depachoMesAtual == mesAtual).length
-            var avisoEntradasCountMes = avisoEntradas.filter((el) => el.entradaMesAtual == mesAtual).length
-            var avisoSaidasCountCount = avisoSaidas.filter((el) => el.saidaMesAtual == mesAtual).length
-            var embarcacoesCountMes = embarcacoes.filter((el) => el.embarcacaoMesAtual == mesAtual).length
-            var avisosCountMes = avisos.filter((el) => el.avisoMesAtual == mesAtual).length
-            var usuariosCountMes = usuarios.filter((el) => el.usuarioMesAtual == mesAtual).length
+            var mesDespachosCount = despachos.filter((el) => el.depachoMesAtual == mesAnoAtual).length
+            var mesAvisoEntradasCount = avisoEntradas.filter((el) => el.entradaMesAtual == mesAnoAtual).length
+            var mesAvisoSaidasCount = avisoSaidas.filter((el) => el.saidaMesAtual == mesAnoAtual).length
+            var mesEmbarcacoesCount = embarcacoes.filter((el) => el.embarcacaoMesAtual == mesAnoAtual).length
+            var mesAvisosCount = avisos.filter((el) => el.avisoMesAtual == mesAnoAtual).length
+            var mesUsuariosCount = usuarios.filter((el) => el.usuarioMesAtual == mesAnoAtual).length
 
                 for await(const formularios of avisoSaidas){
                     totalPass = parseInt(formularios.saidaSomaPassageiros)
                     totalPassageiros += totalPass
-                    if (formularios.saidaMesAtual == mesAtual) {
+                    if (formularios.saidaMesAnoAtual == mesAnoAtual) {
                         passag = parseInt(formularios.saidaSomaPassageiros);
                         mesPassageiros += passag;
                         documentSaidaMesAtual = formularios.saidaMesAtual
@@ -164,7 +164,7 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                                 }if(bandeirasURU.includes(embsTotal.embarcacaoBandeira)){
                                     totalEmbarcacaoURU++
     
-                                }if(['empurrador'].includes(embsTotal.embarcacaoTipo)){
+                                }if(['empurrador'].includes(embsTotal.embarcacaoTipo) & bandeirasBRA.indexOf(embsTotal.embarcacaoBandeira)){
                                     totalEmbarcacaoInternacionalEmp++
                                 }if(['empurrador'].includes(embsTotal.embarcacaoTipo) & bandeirasBRA.includes(embsTotal.embarcacaoBandeira)){
                                     totalEmbarcacaoNacionalEmp++
@@ -191,12 +191,6 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                 const html = `<h1>Relatório do Ultimo mês</h1><br>
                         <table border="10">
                         <br>
-                        ${despachosCountMes}<br>
-                        ${avisoEntradasCountMes}<br>
-                        ${avisoSaidasCountCount}<br>
-                        ${embarcacoesCountMes}<br>
-                        ${avisosCountMes}<br>
-                        ${usuariosCountMes}<br>
                             <caption>Relatório Mês ${mesAtualString}</caption>
                             <thead>
                                 <tr>
@@ -353,19 +347,19 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             mesEmbarcacaoPassageiros: mesEmbarcacaoPassageiros,
             totalNacional: mesEmbarcacaoRebocadorEmpurador + mesEmbarcacaoBalsa + mesEmbarcacaoCargaGeral + mesEmbarcacaoDraga + mesEmbarcacaoNacionalEmp + mesEmbarcacaoLancha + mesEmbarcacaoPassageiros,
             mesPassageiros: mesPassageiros,
-            mesAtual: mesAtual,
+            mesAnoAtual: mesAnoAtual,
             mesAtualString: mesAtualString,
             relatorioDataNumber: Date.now(),
             relatorioDataString: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-            despachosCountMes: despachosCountMes,
-            avisoEntradasCountMes: avisoEntradasCountMes,
-            avisoSaidasCountCount: avisoSaidasCountCount,
-            embarcacoesCountMes: embarcacoesCountMes,
-            avisosCountMes: avisosCountMes,
-            usuariosCountMes: usuariosCountMes
+            mesDespachosCount: mesDespachosCount,
+            mesAvisoEntradasCount: mesAvisoEntradasCount,
+            mesAvisoSaidasCount: mesAvisoSaidasCount,
+            mesEmbarcacoesCount: mesEmbarcacoesCount,
+            mesAvisosCount: mesAvisosCount,
+            mesUsuariosCount: mesUsuariosCount
         }
         
-        if(mesAtual == documentSaidaMesAtual){
+        if(mesAnoAtual == documentSaidaMesAtual){
             await Relatorio.updateOne(novoRelatorio)
         }else{
             await new Relatorio(novoRelatorio).save()

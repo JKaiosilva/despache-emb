@@ -116,8 +116,8 @@ const Despacho = new Schema ({
         ref: 'embarcacoes',
         required: true
     },
-    depachoMesAtual: {
-        type: Number,
+    depachoMesAnoAtual: {
+        type: String,
         default: []
     }
 

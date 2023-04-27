@@ -31,7 +31,7 @@ require('../models/Aviso')
                 embarcacaoValidade: req.body.embarcacaoValidade,
                 embarcacaoDataCadastro: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
                 embarcacaoData: Date.now(),
-                embarcacaoMesAtual: moment(Date.now()).format('MM')
+                embarcacaoMesAnoAtual: moment(Date.now()).format('MM/YYYY')
             }
             new Embarcacao(novaEmbarcacao).save().then(() => {
                 req.flash('success_msg', 'Embarcação cadastrada com sucesso')
@@ -75,7 +75,7 @@ require('../models/Aviso')
                 despachoDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
                 despachoData: Date.now(),
                 embarcacao: req.body.embarcacao,
-                depachoMesAtual: moment(Date.now()).format('MM')
+                depachoMesAnoAtual: moment(Date.now()).format('MM/YYYY')
 
             }
             new Despacho(novoDespacho).save().then(() => {
@@ -123,7 +123,7 @@ require('../models/Aviso')
                 entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
                 embarcacao: req.body.embarcacao,
                 entradaData: Date.now(),
-                entradaMesAtual: moment(Date.now()).format('MM')
+                entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
 
             }
             new AvisoEntrada(novoAvisoEntrada).save().then(() => {
@@ -167,7 +167,7 @@ require('../models/Aviso')
                 saidaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
                 embarcacao: req.body.embarcacao,
                 saidaData: Date.now(),
-                saidaMesAtual: moment(Date.now()).format('MM')
+                saidaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
 
             }
             new AvisoSaida(novoAvisoSaida).save().then(() => {
