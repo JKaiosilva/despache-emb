@@ -71,7 +71,7 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             mesEmbarcacaoPassageiros = 0
             mesPassageiros = 0
 
-            documentSaidaMesAtual = 0
+            documentSaidaMesAnoAtual = 0
 
 
             totalEmbarcacaoTotal = 0
@@ -92,20 +92,40 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             totalEmbarcacaoPassageiros = 0
             totalPassageiros = 0
 
-            var mesDespachosCount = despachos.filter((el) => el.depachoMesAtual == mesAnoAtual).length
-            var mesAvisoEntradasCount = avisoEntradas.filter((el) => el.entradaMesAtual == mesAnoAtual).length
-            var mesAvisoSaidasCount = avisoSaidas.filter((el) => el.saidaMesAtual == mesAnoAtual).length
-            var mesEmbarcacoesCount = embarcacoes.filter((el) => el.embarcacaoMesAtual == mesAnoAtual).length
-            var mesAvisosCount = avisos.filter((el) => el.avisoMesAtual == mesAnoAtual).length
-            var mesUsuariosCount = usuarios.filter((el) => el.usuarioMesAtual == mesAnoAtual).length
 
-                for await(const formularios of avisoSaidas){
+            saidaTotalEmbarcacaoTotal = 0
+            saidaTotalEmbarcacaoExt = 0
+            saidaTotalEmbarcacaoBRA = 0
+            saidaTotalEmbarcacaoBO = 0
+            saidaTotalEmbarcacaoPA = 0
+            saidaTotalEmbarcacaoARG = 0
+            saidaTotalEmbarcacaoURU = 0
+
+            saidaTotalEmbarcacaoInternacionalEmp = 0
+            saidaTotalEmbarcacaoNacionalEmp = 0
+            saidaTotalEmbarcacaoBarcaca = 0
+            saidaTotalEmbarcacaoRebocadorEmpurador = 0
+            saidaTotalEmbarcacaoBalsa = 0
+            saidaTotalEmbarcacaoCargaGeral = 0
+            saidaTotalEmbarcacaoDraga = 0
+            saidaTotalEmbarcacaoLancha = 0
+            saidaTotalEmbarcacaoPassageiros = 0
+
+
+            var mesDespachosCount = despachos.filter((el) => el.depachoMesAnoAtual == mesAnoAtual).length
+            var mesAvisoEntradasCount = avisoEntradas.filter((el) => el.entradaMesAnoAtual == mesAnoAtual).length
+            var mesAvisoSaidasCount = avisoSaidas.filter((el) => el.saidaMesoAnAtual == mesAnoAtual).length
+            var mesEmbarcacoesCount = embarcacoes.filter((el) => el.embarcacaoMesAnoAtual == mesAnoAtual).length
+            var mesAvisosCount = avisos.filter((el) => el.avisoMesAnoAtual == mesAnoAtual).length
+            var mesUsuariosCount = usuarios.filter((el) => el.usuarioMesAnoAtual == mesAnoAtual).length
+
+                for await(formularios of avisoSaidas){
                     totalPass = parseInt(formularios.saidaSomaPassageiros)
                     totalPassageiros += totalPass
                     if (formularios.saidaMesAnoAtual == mesAnoAtual) {
                         passag = parseInt(formularios.saidaSomaPassageiros);
                         mesPassageiros += passag;
-                        documentSaidaMesAtual = formularios.saidaMesAtual
+                        documentSaidaMesAnoAtual = formularios.saidaMesAnoAtual
 
                         let embarcacoes = await Embarcacao.find({_id: formularios.embarcacao}).lean()
                          for await(const embs of embarcacoes){
@@ -147,44 +167,82 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
 
                     
     
+                    for await(formularios of avisoSaidas){
+                        let embarcacoes = await Embarcacao.find({_id: formularios.embarcacao}).lean()
+                             for await(const saidaEmbsTotal of embarcacoes){
+                                if(bandeirasTotal.includes(saidaEmbsTotal.embarcacaoBandeira)){
+                                    saidaTotalEmbarcacaoTotal++
+                                }if(bandeirasExt.includes(saidaEmbsTotal.embarcacaoBandeira)){
+                                    saidaTotalEmbarcacaoExt++
+                                }if(bandeirasBRA.includes(saidaEmbsTotal.embarcacaoBandeira)){
+                                    saidaTotalEmbarcacaoBRA++
+                                }if(bandeirasBO.includes(saidaEmbsTotal.embarcacaoBandeira)){
+                                    saidaTotalEmbarcacaoBO++
+                                }if(bandeirasPA.includes(saidaEmbsTotal.embarcacaoBandeira)){
+                                    saidaTotalEmbarcacaoPA++
+                                }if(bandeirasARG.includes(saidaEmbsTotal.embarcacaoBandeira)){
+                                    saidaTotalEmbarcacaoARG++
+                                }if(bandeirasURU.includes(saidaEmbsTotal.embarcacaoBandeira)){
+                                    saidaTotalEmbarcacaoURU++
     
-                             for await(const embsTotal of embarcacoes){
-                                if(bandeirasTotal.includes(embsTotal.embarcacaoBandeira)){
-                                    totalEmbarcacaoTotal++
-                                }if(bandeirasExt.includes(embsTotal.embarcacaoBandeira)){
-                                    totalEmbarcacaoExt++
-                                }if(bandeirasBRA.includes(embsTotal.embarcacaoBandeira)){
-                                    totalEmbarcacaoBRA++
-                                }if(bandeirasBO.includes(embsTotal.embarcacaoBandeira)){
-                                    totalEmbarcacaoBO++
-                                }if(bandeirasPA.includes(embsTotal.embarcacaoBandeira)){
-                                    totalEmbarcacaoPA++
-                                }if(bandeirasARG.includes(embsTotal.embarcacaoBandeira)){
-                                    totalEmbarcacaoARG++
-                                }if(bandeirasURU.includes(embsTotal.embarcacaoBandeira)){
-                                    totalEmbarcacaoURU++
-    
-                                }if(['empurrador'].includes(embsTotal.embarcacaoTipo) & bandeirasBRA.indexOf(embsTotal.embarcacaoBandeira)){
-                                    totalEmbarcacaoInternacionalEmp++
-                                }if(['empurrador'].includes(embsTotal.embarcacaoTipo) & bandeirasBRA.includes(embsTotal.embarcacaoBandeira)){
-                                    totalEmbarcacaoNacionalEmp++
-                                }if(['barcaça'].includes(embsTotal.embarcacaoTipo)){
-                                    totalEmbarcacaoBarcaca++
-                                }if(['rebocadorEmpurrador'].includes(embsTotal.embarcacaoTipo)){
-                                    totalEmbarcacaoRebocadorEmpurador++
-                                }if(['balsa'].includes(embsTotal.embarcacaoTipo)){
-                                    totalEmbarcacaoBalsa++
-                                }if(['cargaGeral'].includes(embsTotal.embarcacaoTipo)){
-                                    totalEmbarcacaoCargaGeral++
-                                }if(['draga'].includes(embsTotal.embarcacaoTipo)){
-                                    totalEmbarcacaoDraga++
-                                }if(['lancha'].includes(embsTotal.embarcacaoTipo)){
-                                    totalEmbarcacaoLancha++
-                                }if(['embarcacaoPassageiros'].includes(embsTotal.embarcacaoTipo)){
-                                    totalEmbarcacaoPassageiros++
+                                }if(['empurrador'].includes(saidaEmbsTotal.embarcacaoTipo) & bandeirasBRA.indexOf(saidaEmbsTotal.embarcacaoBandeira)){
+                                    saidaTotalEmbarcacaoInternacionalEmp++
+                                }if(['empurrador'].includes(saidaEmbsTotal.embarcacaoTipo) & bandeirasBRA.includes(saidaEmbsTotal.embarcacaoBandeira)){
+                                    saidaTotalEmbarcacaoNacionalEmp++
+                                }if(['barcaça'].includes(saidaEmbsTotal.embarcacaoTipo)){
+                                    saidaTotalEmbarcacaoBarcaca++
+                                }if(['rebocadorEmpurrador'].includes(saidaEmbsTotal.embarcacaoTipo)){
+                                    saidaTotalEmbarcacaoRebocadorEmpurador++
+                                }if(['balsa'].includes(saidaEmbsTotal.embarcacaoTipo)){
+                                    saidaTotalEmbarcacaoBalsa++
+                                }if(['cargaGeral'].includes(saidaEmbsTotal.embarcacaoTipo)){
+                                    saidaTotalEmbarcacaoCargaGeral++
+                                }if(['draga'].includes(saidaEmbsTotal.embarcacaoTipo)){
+                                    saidaTotalEmbarcacaoDraga++
+                                }if(['lancha'].includes(saidaEmbsTotal.embarcacaoTipo)){
+                                    saidaTotalEmbarcacaoLancha++
+                                }if(['embarcacaoPassageiros'].includes(saidaEmbsTotal.embarcacaoTipo)){
+                                    saidaTotalEmbarcacaoPassageiros++
                                 }
                             }
+                        }        
 
+                    for await(const embsTotal of embarcacoes){
+                        if(bandeirasTotal.includes(embsTotal.embarcacaoBandeira)){
+                            totalEmbarcacaoTotal++
+                        }if(bandeirasExt.includes(embsTotal.embarcacaoBandeira)){
+                            totalEmbarcacaoExt++
+                        }if(bandeirasBRA.includes(embsTotal.embarcacaoBandeira)){
+                            totalEmbarcacaoBRA++
+                        }if(bandeirasBO.includes(embsTotal.embarcacaoBandeira)){
+                            totalEmbarcacaoBO++
+                        }if(bandeirasPA.includes(embsTotal.embarcacaoBandeira)){
+                            totalEmbarcacaoPA++
+                        }if(bandeirasARG.includes(embsTotal.embarcacaoBandeira)){
+                            totalEmbarcacaoARG++
+                        }if(bandeirasURU.includes(embsTotal.embarcacaoBandeira)){
+                            totalEmbarcacaoURU++
+
+                        }if(['empurrador'].includes(embsTotal.embarcacaoTipo) & bandeirasBRA.indexOf(embsTotal.embarcacaoBandeira)){
+                            totalEmbarcacaoInternacionalEmp++
+                        }if(['empurrador'].includes(embsTotal.embarcacaoTipo) & bandeirasBRA.includes(embsTotal.embarcacaoBandeira)){
+                            totalEmbarcacaoNacionalEmp++
+                        }if(['barcaça'].includes(embsTotal.embarcacaoTipo)){
+                            totalEmbarcacaoBarcaca++
+                        }if(['rebocadorEmpurrador'].includes(embsTotal.embarcacaoTipo)){
+                            totalEmbarcacaoRebocadorEmpurador++
+                        }if(['balsa'].includes(embsTotal.embarcacaoTipo)){
+                            totalEmbarcacaoBalsa++
+                        }if(['cargaGeral'].includes(embsTotal.embarcacaoTipo)){
+                            totalEmbarcacaoCargaGeral++
+                        }if(['draga'].includes(embsTotal.embarcacaoTipo)){
+                            totalEmbarcacaoDraga++
+                        }if(['lancha'].includes(embsTotal.embarcacaoTipo)){
+                            totalEmbarcacaoLancha++
+                        }if(['embarcacaoPassageiros'].includes(embsTotal.embarcacaoTipo)){
+                            totalEmbarcacaoPassageiros++
+                        }
+                    }
 
 
 
@@ -257,12 +315,90 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                         </table>
                         <br>
                         <br>
+
+
+
+
+                        <table>
+                        <caption>Relatório Geral</caption>
+                        <thead>
+                        <tr>
+                            <th>Saídas de Embarcações Estrangeiras</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Empurrador:</td>
+                            <td>${saidaTotalEmbarcacaoInternacionalEmp}</td>
+                        </tr>
+                        <tr>
+                            <td>Barcaças:</td>
+                            <td>${saidaTotalEmbarcacaoBarcaca}</td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td>${saidaTotalEmbarcacaoInternacionalEmp + saidaTotalEmbarcacaoBarcaca}</td>
+                        </tr>
+                    </tbody>
+                    <thead>
+                    <tr>
+                        <th>Saídas de Embarcações Nacionais</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Rebocado/Empurrador</td>
+                            <td>${saidaTotalEmbarcacaoRebocadorEmpurador}</td>
+                        </tr>
+                        <tr>
+                            <td>Balsa</td>
+                            <td>${saidaTotalEmbarcacaoBalsa}</td>
+                        </tr>
+                        <tr>
+                            <td>Carga Geral</td>
+                            <td>${saidaTotalEmbarcacaoCargaGeral}</td>
+                        </tr>
+                        <tr>
+                            <td>Draga</td>
+                            <td>${saidaTotalEmbarcacaoDraga}</td>
+                        </tr>
+                        <tr>
+                            <td>Empurrador</td>
+                            <td>${saidaTotalEmbarcacaoNacionalEmp}</td>
+                        </tr>
+                        <tr>
+                            <td>Lancha</td>
+                            <td>${saidaTotalEmbarcacaoLancha}</td>
+                        </tr>
+                        <tr>
+                            <td>Embarcação de passageiros</td>
+                            <td>${saidaTotalEmbarcacaoPassageiros}</td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td>${saidaTotalEmbarcacaoNacionalEmp + saidaTotalEmbarcacaoRebocadorEmpurador + saidaTotalEmbarcacaoBalsa + saidaTotalEmbarcacaoCargaGeral + saidaTotalEmbarcacaoDraga + saidaTotalEmbarcacaoLancha + saidaTotalEmbarcacaoPassageiros}</td>
+                        </tr>
+                        <tr>
+                            <td>N° de passageiros</td>
+                            <td>${totalPassageiros}</td>
+                        </tr>
+                    </tbody>
+
+                    </table>
+
+
+
+                    <br>
+                    <br>
+                    <br>
+
+
+
                         <br>
                         <table>
-                            <caption>Relatório Geral</caption>
                             <thead>
                             <tr>
-                                <th>Embarcações Estrangeiras</th>
+                                <th>Quantidade de Embarcações Estrangeiras</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -281,7 +417,7 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                         </tbody>
                         <thead>
                         <tr>
-                            <th>Embarcações Nacionais</th>
+                            <th>Quantidade de Embarcações Nacionais</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -317,12 +453,42 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                                 <td>Total</td>
                                 <td>${embarcacoesCount}</td>
                             </tr>
+                            </tbody>
+                        <thead>
+                            <tr>
+                                <th>Informações Gerais</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             <tr>
                                 <td>N° de passageiros</td>
                                 <td>${totalPassageiros}</td>
                             </tr>
+                            <tr>
+                                <td>Despachos</td>
+                                <td>${despachosCount}</td>
+                            </tr>
+                            <tr>
+                                <td>Avisos de Entrada</td>
+                                <td>${avisoEntradasCount}</td>
+                            </tr>
+                            <tr>
+                                <td>Avisos de Saída</td>
+                                <td>${avisoSaidasCount}</td>
+                            </tr> 
+                            <tr>
+                                <td>Embarcações</td>
+                                <td>${embarcacoesCount}</td>
+                            </tr> 
+                            <tr>
+                                <td>Avisos</td>
+                                <td>${avisosCount}</td>
+                            </tr>
+                            <tr>
+                                <td>Usuários</td>
+                                <td>${usuariosCount}</td>
+                            </tr>                                                                                                                                                                                                                            
                         </tbody>
-
                         </table>
                         `
            
@@ -359,7 +525,7 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             mesUsuariosCount: mesUsuariosCount
         }
         
-        if(mesAnoAtual == documentSaidaMesAtual){
+        if(mesAnoAtual == documentSaidaMesAnoAtual){
             await Relatorio.updateOne(novoRelatorio)
         }else{
             await new Relatorio(novoRelatorio).save()
