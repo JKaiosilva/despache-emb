@@ -6,40 +6,40 @@ const Relatorio = new Schema ({
     usuarioID: {
         
     },
-    somaEmbarcacaoInternacionalEmp: {
+    mesEmbarcacaoInternacionalEmp: {
         type: Number
     },
-    somaEmbarcacaoBarcaca: {
+    mesEmbarcacaoBarcaca: {
         type: Number
     },
     totalExtrangeiro: {
         type: Number
     },
-    somaEmbarcacaoRebocadorEmpurador: {
+    mesEmbarcacaoRebocadorEmpurador: {
         type: Number
     },
-    somaEmbarcacaoBalsa: {
+    mesEmbarcacaoBalsa: {
         type: Number
     },
-    somaEmbarcacaoCargaGeral: {
+    mesEmbarcacaoCargaGeral: {
         type: Number
     },
-    somaEmbarcacaoDraga: {
+    mesEmbarcacaoDraga: {
         type: Number
     },
-    somaEmbarcacaoNacionalEmp: {
+    mesEmbarcacaoNacionalEmp: {
         type: Number
     },
-    somaEmbarcacaoLancha: {
+    mesEmbarcacaoLancha: {
         type: Number
     },
-    somaEmbarcacaoPassageiros: {
+    mesEmbarcacaoPassageiros: {
         type: Number
     },
     totalNacional: {
         type: Number
     },
-    somaPassageiros: {
+    mesPassageiros: {
         type: Number
     },
     mesAtual: {

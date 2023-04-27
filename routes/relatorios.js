@@ -52,24 +52,24 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             bandeirasARG = ['Argentino']
             bandeirasURU = ['Uruguaio']
 
-            somaEmbarcacaoTotal = 0
-            somaEmbarcacaoExt = 0
-            somaEmbarcacaoBRA = 0
-            somaEmbarcacaoBO = 0
-            somaEmbarcacaoPA = 0
-            somaEmbarcacaoARG = 0
-            somaEmbarcacaoURU = 0 
+            mesEmbarcacaoTotal = 0
+            mesEmbarcacaoExt = 0
+            mesEmbarcacaoBRA = 0
+            mesEmbarcacaoBO = 0
+            mesEmbarcacaoPA = 0
+            mesEmbarcacaoARG = 0
+            mesEmbarcacaoURU = 0 
 
-            somaEmbarcacaoInternacionalEmp = 0
-            somaEmbarcacaoNacionalEmp = 0
-            somaEmbarcacaoBarcaca = 0
-            somaEmbarcacaoRebocadorEmpurador = 0
-            somaEmbarcacaoBalsa = 0
-            somaEmbarcacaoCargaGeral = 0
-            somaEmbarcacaoDraga = 0
-            somaEmbarcacaoLancha = 0
-            somaEmbarcacaoPassageiros = 0
-            somaPassageiros = 0
+            mesEmbarcacaoInternacionalEmp = 0
+            mesEmbarcacaoNacionalEmp = 0
+            mesEmbarcacaoBarcaca = 0
+            mesEmbarcacaoRebocadorEmpurador = 0
+            mesEmbarcacaoBalsa = 0
+            mesEmbarcacaoCargaGeral = 0
+            mesEmbarcacaoDraga = 0
+            mesEmbarcacaoLancha = 0
+            mesEmbarcacaoPassageiros = 0
+            mesPassageiros = 0
 
             documentSaidaMesAtual = 0
 
@@ -104,44 +104,44 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                     totalPassageiros += totalPass
                     if (formularios.saidaMesAtual == mesAtual) {
                         passag = parseInt(formularios.saidaSomaPassageiros);
-                        somaPassageiros += passag;
+                        mesPassageiros += passag;
                         documentSaidaMesAtual = formularios.saidaMesAtual
 
                         let embarcacoes = await Embarcacao.find({_id: formularios.embarcacao}).lean()
                          for await(const embs of embarcacoes){
                             if(bandeirasTotal.includes(embs.embarcacaoBandeira)){
-                                somaEmbarcacaoTotal++
+                                mesEmbarcacaoTotal++
                             }if(bandeirasExt.includes(embs.embarcacaoBandeira)){
-                                somaEmbarcacaoExt++
+                                mesEmbarcacaoExt++
                             }if(bandeirasBRA.includes(embs.embarcacaoBandeira)){
-                                somaEmbarcacaoBRA++
+                                mesEmbarcacaoBRA++
                             }if(bandeirasBO.includes(embs.embarcacaoBandeira)){
-                                somaEmbarcacaoBO++
+                                mesEmbarcacaoBO++
                             }if(bandeirasPA.includes(embs.embarcacaoBandeira)){
-                                somaEmbarcacaoPA++
+                                mesEmbarcacaoPA++
                             }if(bandeirasARG.includes(embs.embarcacaoBandeira)){
-                                somaEmbarcacaoARG++
+                                mesEmbarcacaoARG++
                             }if(bandeirasURU.includes(embs.embarcacaoBandeira)){
-                                somaEmbarcacaoURU++
+                                mesEmbarcacaoURU++
 
-                            }if(['empurrador'].includes(embs.embarcacaoTipo)){
-                                somaEmbarcacaoInternacionalEmp++
+                            }if(['empurrador'].includes(embs.embarcacaoTipo) & bandeirasBRA.indexOf(embs.embarcacaoBandeira)){
+                                mesEmbarcacaoInternacionalEmp++
                             }if(['empurrador'].includes(embs.embarcacaoTipo) & bandeirasBRA.includes(embs.embarcacaoBandeira)){
-                                somaEmbarcacaoNacionalEmp++
+                                mesEmbarcacaoNacionalEmp++
                             }if(['barcaça'].includes(embs.embarcacaoTipo)){
-                                somaEmbarcacaoBarcaca++
+                                mesEmbarcacaoBarcaca++
                             }if(['rebocadorEmpurrador'].includes(embs.embarcacaoTipo)){
-                                somaEmbarcacaoRebocadorEmpurador++
+                                mesEmbarcacaoRebocadorEmpurador++
                             }if(['balsa'].includes(embs.embarcacaoTipo)){
-                                somaEmbarcacaoBalsa++
+                                mesEmbarcacaoBalsa++
                             }if(['cargaGeral'].includes(embs.embarcacaoTipo)){
-                                somaEmbarcacaoCargaGeral++
+                                mesEmbarcacaoCargaGeral++
                             }if(['draga'].includes(embs.embarcacaoTipo)){
-                                somaEmbarcacaoDraga++
+                                mesEmbarcacaoDraga++
                             }if(['lancha'].includes(embs.embarcacaoTipo)){
-                                somaEmbarcacaoLancha++
+                                mesEmbarcacaoLancha++
                             }if(['embarcacaoPassageiros'].includes(embs.embarcacaoTipo)){
-                                somaEmbarcacaoPassageiros++
+                                mesEmbarcacaoPassageiros++
                             }
                     }}}
 
@@ -200,64 +200,64 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                             <caption>Relatório Mês ${mesAtualString}</caption>
                             <thead>
                                 <tr>
-                                    <th>Embarcações Estrangeiras</th>
+                                    <th>Saídas de Embarcações Estrangeiras</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>Empurrador:</td>
-                                    <td>${somaEmbarcacaoInternacionalEmp}</td>
+                                    <td>${mesEmbarcacaoInternacionalEmp}</td>
                                 </tr>
                                 <tr>
                                     <td>Barcaças:</td>
-                                    <td>${somaEmbarcacaoBarcaca}</td>
+                                    <td>${mesEmbarcacaoBarcaca}</td>
                                 </tr>
                                 <tr>
                                     <td>Total</td>
-                                    <td>${somaEmbarcacaoInternacionalEmp + somaEmbarcacaoBarcaca}</td>
+                                    <td>${mesEmbarcacaoInternacionalEmp + mesEmbarcacaoBarcaca}</td>
                                 </tr>
                             </tbody>
                             <thead>
                             <tr>
-                                <th>Embarcações Nacionais</th>
+                                <th>Saídas de Embarcações Nacionais</th>
                             </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>Rebocado/Empurrador</td>
-                                    <td>${somaEmbarcacaoRebocadorEmpurador}</td>
+                                    <td>${mesEmbarcacaoRebocadorEmpurador}</td>
                                 </tr>
                                 <tr>
                                     <td>Balsa</td>
-                                    <td>${somaEmbarcacaoBalsa}</td>
+                                    <td>${mesEmbarcacaoBalsa}</td>
                                 </tr>
                                 <tr>
                                     <td>Carga Geral</td>
-                                    <td>${somaEmbarcacaoCargaGeral}</td>
+                                    <td>${mesEmbarcacaoCargaGeral}</td>
                                 </tr>
                                 <tr>
                                     <td>Draga</td>
-                                    <td>${somaEmbarcacaoDraga}</td>
+                                    <td>${mesEmbarcacaoDraga}</td>
                                 </tr>
                                 <tr>
                                     <td>Empurrador</td>
-                                    <td>${somaEmbarcacaoNacionalEmp}</td>
+                                    <td>${mesEmbarcacaoNacionalEmp}</td>
                                 </tr>
                                 <tr>
                                     <td>Lancha</td>
-                                    <td>${somaEmbarcacaoLancha}</td>
+                                    <td>${mesEmbarcacaoLancha}</td>
                                 </tr>
                                 <tr>
                                     <td>Embarcação de passageiros</td>
-                                    <td>${somaEmbarcacaoPassageiros}</td>
+                                    <td>${mesEmbarcacaoPassageiros}</td>
                                 </tr>
                                 <tr>
                                     <td>Total</td>
-                                    <td>${somaEmbarcacaoNacionalEmp + somaEmbarcacaoRebocadorEmpurador + somaEmbarcacaoBalsa + somaEmbarcacaoCargaGeral + somaEmbarcacaoDraga + somaEmbarcacaoLancha + somaEmbarcacaoPassageiros}</td>
+                                    <td>${mesEmbarcacaoNacionalEmp + mesEmbarcacaoRebocadorEmpurador + mesEmbarcacaoBalsa + mesEmbarcacaoCargaGeral + mesEmbarcacaoDraga + mesEmbarcacaoLancha + mesEmbarcacaoPassageiros}</td>
                                 </tr>
                                 <tr>
                                     <td>N° de passageiros</td>
-                                    <td>${somaPassageiros}</td>
+                                    <td>${mesPassageiros}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -341,18 +341,18 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
 
         const novoRelatorio = {
             usuarioID: req.user_id,
-            somaEmbarcacaoInternacionalEmp: somaEmbarcacaoInternacionalEmp,
-            somaEmbarcacaoBarcaca: somaEmbarcacaoBarcaca,
-            totalExtrangeiro: somaEmbarcacaoInternacionalEmp + somaEmbarcacaoBarcaca,
-            somaEmbarcacaoRebocadorEmpurador: somaEmbarcacaoRebocadorEmpurador,
-            somaEmbarcacaoBalsa: somaEmbarcacaoBalsa,
-            somaEmbarcacaoCargaGeral: somaEmbarcacaoCargaGeral,
-            somaEmbarcacaoDraga: somaEmbarcacaoDraga,
-            somaEmbarcacaoNacionalEmp: somaEmbarcacaoNacionalEmp,
-            somaEmbarcacaoLancha: somaEmbarcacaoLancha,
-            somaEmbarcacaoPassageiros: somaEmbarcacaoPassageiros,
-            totalNacional: somaEmbarcacaoRebocadorEmpurador + somaEmbarcacaoBalsa + somaEmbarcacaoCargaGeral + somaEmbarcacaoDraga + somaEmbarcacaoNacionalEmp + somaEmbarcacaoLancha + somaEmbarcacaoPassageiros,
-            somaPassageiros: somaPassageiros,
+            mesEmbarcacaoInternacionalEmp: mesEmbarcacaoInternacionalEmp,
+            mesEmbarcacaoBarcaca: mesEmbarcacaoBarcaca,
+            totalExtrangeiro: mesEmbarcacaoInternacionalEmp + mesEmbarcacaoBarcaca,
+            mesEmbarcacaoRebocadorEmpurador: mesEmbarcacaoRebocadorEmpurador,
+            mesEmbarcacaoBalsa: mesEmbarcacaoBalsa,
+            mesEmbarcacaoCargaGeral: mesEmbarcacaoCargaGeral,
+            mesEmbarcacaoDraga: mesEmbarcacaoDraga,
+            mesEmbarcacaoNacionalEmp: mesEmbarcacaoNacionalEmp,
+            mesEmbarcacaoLancha: mesEmbarcacaoLancha,
+            mesEmbarcacaoPassageiros: mesEmbarcacaoPassageiros,
+            totalNacional: mesEmbarcacaoRebocadorEmpurador + mesEmbarcacaoBalsa + mesEmbarcacaoCargaGeral + mesEmbarcacaoDraga + mesEmbarcacaoNacionalEmp + mesEmbarcacaoLancha + mesEmbarcacaoPassageiros,
+            mesPassageiros: mesPassageiros,
             mesAtual: mesAtual,
             mesAtualString: mesAtualString,
             relatorioDataNumber: Date.now(),
