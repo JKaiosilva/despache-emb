@@ -525,7 +525,8 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             mesUsuariosCount: mesUsuariosCount
         }
         
-        if(mesAnoAtual == documentSaidaMesAnoAtual){
+
+        if(documentSaidaMesAnoAtual.toString() == mesAnoAtual.toString()){
             await Relatorio.updateOne(novoRelatorio)
         }else{
             await new Relatorio(novoRelatorio).save()
