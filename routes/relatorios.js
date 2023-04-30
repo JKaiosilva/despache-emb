@@ -21,7 +21,7 @@ const Usuario = mongoose.model('usuarios')
 const pdf = require('html-pdf')
 const transporter = require('../config/sendMail')
 const moment = require('moment')
-const { checkPrime } = require('crypto')
+
 
 
 
@@ -75,7 +75,6 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
 
             documentSaidaMesAnoAtual = 0
 
-
             totalEmbarcacaoTotal = 0
             totalEmbarcacaoExt = 0
             totalEmbarcacaoBRA = 0
@@ -94,7 +93,6 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             totalEmbarcacaoPassageiros = 0
             totalPassageiros = 0
 
-
             saidaTotalEmbarcacaoTotal = 0
             saidaTotalEmbarcacaoExt = 0
             saidaTotalEmbarcacaoBRA = 0
@@ -112,7 +110,6 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             saidaTotalEmbarcacaoDraga = 0
             saidaTotalEmbarcacaoLancha = 0
             saidaTotalEmbarcacaoPassageiros = 0
-
 
             var mesDespachosCount = despachos.filter((el) => el.depachoMesAnoAtual == mesAnoAtual).length
             var mesAvisoEntradasCount = avisoEntradas.filter((el) => el.entradaMesAnoAtual == mesAnoAtual).length
@@ -166,8 +163,6 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                                 mesEmbarcacaoPassageiros++
                             }
                     }}}
-
-                    
     
                     for await(formularios of avisoSaidas){
                         let embarcacoes = await Embarcacao.find({_id: formularios.embarcacao}).lean()
@@ -245,8 +240,6 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                             totalEmbarcacaoPassageiros++
                         }
                     }
-
-
 
                 const html = `<h1>Relatório do Ultimo mês</h1><br>
                         <table border="10">

@@ -81,11 +81,6 @@ router.get('/formulario/addEmbarcacao', (req, res) => {
     res.render('formulario/embarcacoes/addEmbarcacao')
 })
 
-router.get('/formulario/addTripulante', (req, res) => {
-    res.render('formulario/tripulantes/addTripulante')
-})
-
-
 
 
 

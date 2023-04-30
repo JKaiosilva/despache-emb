@@ -20,11 +20,20 @@ const Tripulante = new Schema ({
     },
     tripulanteNCIR: {
         type: String,
-        required: tue
+        required: true
     },
     tripulanteValidadeCIR: {
         type: String,
         required: true
+    },
+    tripulanteDataCadastro: {
+        type: String
+    },
+    tripulanteDataNumber: {
+        type: Number
+    },
+    tripulanteMesAnoAtual: {
+        type: String
     }
 })
 

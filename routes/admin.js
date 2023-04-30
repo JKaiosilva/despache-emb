@@ -18,6 +18,8 @@ require('dotenv/config');
 const multer = require('multer')
 const mime = require('mime')
 const pdf = require('html-pdf')
+require('../models/Tripulante')
+const Tripulante = mongoose.model('tripulantes')
 
 const upload = multer({
     storage: multer.diskStorage({
@@ -372,5 +374,32 @@ router.get('/painelRelatorios', Admin, async (req, res) => {
     }
 })
 
+
+router.get('/addTripulante', (req, res) => {
+    res.render('admin/tripulantes/addTripulante')
+})
+
+
+router.post('/addTripulante', async(req, res) => {
+    try{
+        const novoTripulante = {
+            usuarioID: req.user._id,
+            tripulanteNome: req.body.tripulanteNome,
+            tripulanteGrau: req.body.tripulanteGrau,
+            tripulanteDataNascimento: req.body.tripulanteDataNascimento,
+            tripulanteNCIR: req.body.tripulanteNCIR,
+            tripulanteValidadeCIR: req.body.tripulanteValidadeCIR,
+            tripulanteDataCadastro: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+            tripulanteDataNumber: Date.now(),
+            tripulanteMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+        }
+        await new Tripulante(novoTripulante).save()
+        req.flash('success_msg', 'Tripulante cadastrado com sucesso')
+        res.redirect('painel')
+    }catch(err){
+        req.flash('error_msg', 'Erro ao cadastrar tripulante.')
+        res.redirect('painel')
+    }
+})
 
 module.exports = router
