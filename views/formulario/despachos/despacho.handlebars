@@ -71,22 +71,12 @@
                     </div>
             </div>
             <div>
-                <div id="tripulantes" class="card bg-secondary">
+                <div id="tripulantes" name="despachoTripulantes" class="card bg-secondary">
                     <script>
                         var tripulantes = 1;
                     function addInput(divName) {
                     var newdiv = document.createElement('div');
-                    newdiv.innerHTML  = 'Tripulante : ['+tripulantes +']';
-                    newdiv.innerHTML += '<label class="input-group-text">Nome completo</label>'
-                    newdiv.innerHTML += '<input name="despachoTripulantesNome" class="form-control" type="text">'
-                    newdiv.innerHTML += '<label class="input-group-text">Grau ou Função</label>'
-                    newdiv.innerHTML += '<input name="despachoTripulantesGrau" class="form-control" type="text">'
-                    newdiv.innerHTML += '<label class="input-group-text">Data de nascimento</label>'
-                    newdiv.innerHTML += '<input name="despachoTripulantesDataNascimento" class="form-control" type="text">'
-                    newdiv.innerHTML += '<label class="input-group-text">N° da CIR</label>'
-                    newdiv.innerHTML += '<input name="despachoTripulantesNCIR" class="form-control" type="text">'
-                    newdiv.innerHTML += '<label class="input-group-text">Validade da CIR</label>'
-                    newdiv.innerHTML += '<input name="despachoTripulantesValidadeCIR" class="form-control" type="text">'
+                    newdiv.innerHTML  = `<select name="despachoTripulantes[${tripulantes}]" class="form-select">{{#each tripulantes}}<option name="tripulantes" value="">{{tripulanteNome}}</option>{{/each}}</select>`
 
                     document.getElementById(divName).appendChild(newdiv);
                     tripulantes++;

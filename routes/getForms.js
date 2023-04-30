@@ -13,7 +13,8 @@ const Embarcacao = mongoose.model('embarcacoes')
 require('../models/Aviso')
 const Aviso = mongoose.model('avisos')
 const pdf = require('html-pdf')
-
+require('../models/Tripulante')
+const Tripulante = mongoose.model('tripulantes')
 
 
 router.get('/formulario', async (req, res) => {
@@ -65,16 +66,20 @@ router.get('/formulario/avisoEntrada', (req, res) => {
     })
 })
 
-router.get('/formulario/despacho', (req, res) => {
-    Embarcacao.find({usuarioID: req.user._id}).lean().then((embarcacoes) => {
+
+router.get('/formulario/despacho', async(req, res) => {
+    try{
+        const tripulantes = await Tripulante.find().lean()
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).lean()
         res.render('formulario/despachos/despacho', 
-            {embarcacoes: embarcacoes
-        })
-    }).catch((err) => {
+            {embarcacoes: embarcacoes,
+                tripulantes: tripulantes})
+    }catch(err){
         req.flash('error_msg', 'Erro interno ao mostrar formulario')
         res.redirect('formulario/preform')
-    })
+    }
 })
+
 
 
 router.get('/formulario/addEmbarcacao', (req, res) => {

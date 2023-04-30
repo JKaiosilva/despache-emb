@@ -71,14 +71,10 @@ const Despacho = new Schema ({
         type: String,
         required: true
     },
-    despachoTripulantes: {
-        type: Array,
-        arr: [{despachoTripulantesNome: String, 
-            despachoTripulantesGrau: String, 
-            despachoTripulantesDataNascimento: String,
-            despachoTripulantesNCIR: String,
-            despachoTripulantesValidadeCIR: String}]
-    },
+    despachoTripulantes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tripulante'
+    }],
     despachoNomeEmbarcacao: {
         type: String,
         required: true

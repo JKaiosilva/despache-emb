@@ -43,6 +43,14 @@ require('../models/Aviso')
         })
 
         router.post('/formulario/despacho', (req, res) => {
+/*             tripulantesSelecionados = []
+            const despachoTripulantes = req.body.despachoTripulantes
+
+            const tripulantesCount = despachoTripulantes.filter(() => req.body.despachoTripulantes).length
+            for (let tripulante of tripulantesCount){
+                despachoTripulantes = req.body.despachoTripulantes
+                tripulantesSelecionados.push(tripulante)
+            } */
             const novoDespacho = {
                 usuarioID: req.user._id,
                 NprocessoDespacho: req.body.NprocessoDespacho,
@@ -61,11 +69,7 @@ require('../models/Aviso')
                 despachoOBS: req.body.despachoOBS,
                 despachoNTripulantes: req.body.despachoNTripulantes,
                 despachoNomeComandante: req.body.despachoNomeComandante,
-                despachoTripulantes:"Nomes: "+ req.body.despachoTripulantesNome+" || Grau ou Função: "+
-                req.body.despachoTripulantesGrau+" || Data de nascimento: "+
-                req.body.despachoTripulantesDataNascimento+" || N° da CIR: "+
-                req.body.despachoTripulantesNCIR+" || Validade da CIR: "+
-                req.body.despachoTripulantesValidadeCIR,
+                despachoTripulantes: req.body.despachoTripulantes,
                 despachoNomeEmbarcacao: req.body.despachoNomeEmbarcacao,
                 despachoNEmbN: req.body.despachoNEmbN,
                 despachoArqueacaoBrutaComboio: req.body.despachoArqueacaoBrutaComboio,
