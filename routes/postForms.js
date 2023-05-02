@@ -12,6 +12,8 @@ const AvisoSaida = mongoose.model('avisoSaidas')
 require('../models/Embarcacao')
 const Embarcacao = mongoose.model('embarcacoes')
 require('../models/Aviso')
+require('../models/Tripulante')
+const Tripulante = mongoose.model('tripulantes')
 
 // Novo Formulário
 
@@ -42,15 +44,10 @@ require('../models/Aviso')
             })
         })
 
-        router.post('/formulario/despacho', (req, res) => {
-/*             tripulantesSelecionados = []
-            const despachoTripulantes = req.body.despachoTripulantes
-
-            const tripulantesCount = despachoTripulantes.filter(() => req.body.despachoTripulantes).length
-            for (let tripulante of tripulantesCount){
-                despachoTripulantes = req.body.despachoTripulantes
-                tripulantesSelecionados.push(tripulante)
-            } */
+        router.post('/formulario/despacho', async (req, res) => {
+  
+          
+            try{
             const novoDespacho = {
                 usuarioID: req.user._id,
                 NprocessoDespacho: req.body.NprocessoDespacho,
@@ -82,15 +79,16 @@ require('../models/Aviso')
                 depachoMesAnoAtual: moment(Date.now()).format('MM/YYYY')
 
             }
-            new Despacho(novoDespacho).save().then(() => {
+            new Despacho(novoDespacho).save()
                 req.flash('success_msg', 'Despacho enviado com sucesso')
                 res.redirect('/')
-            }).catch((err) => {
-                console.log(err)
-                req.flash('error_msg', 'Erro interno, tente novamente')
-                res.redirect('/')
-            })
-        })
+
+        }catch(err){
+            console.log(err)
+            req.flash('error_msg', 'Erro interno, tente novamente')
+            res.redirect('/')
+        }
+    })
 
         router.post('/formulario/avisoEntrada', (req, res) => {
             const novoAvisoEntrada = {
