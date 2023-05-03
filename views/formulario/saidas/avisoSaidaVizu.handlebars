@@ -70,12 +70,16 @@
                         <input name="saidaObservacoes" class="form-control" type="text" value="{{avisoSaidas.saidaObservacoes}}" disabled>
                     </div>
                 </div>
-                <div>
-                    <div id="tripulantes" class="card bg-secondary">
-                        <h4 class="text-center">Lista de Tripulantes</h4>
-                        <input name="saidaTripulantes" class="form-control" type="text" value="{{avisoSaidas.saidaTripulantes}}" disabled>
+                {{#each tripulantes}}
+                    <div>
+                        <div id="tripulantes" class="card bg-secondary mt-4">
+                            <span>Tripulante: {{add @index 1}}</span>
+                            <input class="form-control" type="text" value="{{tripulanteNome}}" disabled>
+                            <input class="form-control" type="text" value="{{tripulanteGrau}}" disabled>
+                            <input class="form-control" type="text" value="{{tripulanteNCIR}}" disabled>
+                        </div>
                     </div>
-                </div>
+                {{/each}}
                 <div>
                     <div id="passageiros" class="card bg-secondary">
                         <h4 class="text-center">Lista de Passageiros</h4>

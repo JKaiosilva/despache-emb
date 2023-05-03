@@ -42,16 +42,10 @@ const AvisoSaida = new Schema({
     saidaSomaPassageiros: {
 
     },
-    saidaTripulantes: {
-        type: Array,
-        arr: [{
-            saidaTripulantesNome: String,
-            saidaTripulantesGrauFuncao: String,
-            saidaTripulantesDataNascimento: String,
-            saidaTipulantesNCIR: String,
-            saidaTripulantesValidadeCIR: String
-        }]
-    },
+    saidaTripulantes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Tripulante'
+    }],
     saidaPassageiros: {
         type: Array,
         arr: [{

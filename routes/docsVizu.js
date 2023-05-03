@@ -97,11 +97,13 @@ router.get('/formulario/avisoSaidaVizu/:id', async (req, res) => {
             hidden = 'hidden'
         }
         avisoSaidas = await AvisoSaida.findOne({_id: req.params.id}).lean()
+        tripulantes = await Tripulante.find({_id: avisoSaidas.saidaTripulantes}).lean()
         embarcacoes = await Embarcacao.findOne({_id: avisoSaidas.embarcacao}).lean()
         res.render('formulario/saidas/avisoSaidaVizu',
             {avisoSaidas: avisoSaidas,
                 embarcacoes: embarcacoes,
-                    hidden: hidden
+                    tripulantes: tripulantes,
+                        hidden: hidden
             })
     }catch(err){
         req.flash('error_msg', 'Erro interno ao mostrar formulário')

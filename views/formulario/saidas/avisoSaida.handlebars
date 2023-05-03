@@ -47,34 +47,31 @@
                     </div>
                 </div>
 
-                <div>
-                    <div id="tripulantes" class="card bg-secondary">
-                        <h4 class="text-center">Lista de Tripulantes</h4>
-                        <script>
-                        var tripulantes = 1;
-                        function addInputtripulantes(divName) {
+                                            <div>
+            <div id="tripulantes" class="card bg-secondary">
+                    <script>
+                        var tripulantesArray = []
+                        function addInputSelect(divName) {
                         var newdiv = document.createElement('div');
-                        newdiv.innerHTML  = 'Tripulantes : ['+tripulantes +']';
-                        newdiv.innerHTML += '<label class="input-group-text">Nome completo</label>'
-                        newdiv.innerHTML += '<input name="saidaTripulantesNome" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">Grau ou Função</label>'
-                        newdiv.innerHTML += '<input name="saidaTripulantesGrauFuncao" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">Data de nascimento</label>'
-                        newdiv.innerHTML += '<input name="saidaTripulantesDataNascimento" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">N° da CIR</label>'
-                        newdiv.innerHTML += '<input name="saidaTipulantesNCIR" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">Validade da CIR</label>'
-                        newdiv.innerHTML += '<input name="saidaTripulantesValidadeCIR" class="form-control" type="text">'
-
+                        newdiv.innerHTML = '<select onclick="getId()" name="tripulantesSelect" class="form-select">{{#each tripulantes}}<option value="{{_id}}">{{tripulanteNome}}</option>{{/each}}</select>';
                         document.getElementById(divName).appendChild(newdiv);
-                        tripulantes++;
                         }
-
-                        addInputtripulantes('lines');
-                        </script>
-                    </div>
-                    <button class="btn btn-primary" type="button" onclick="addInputtripulantes('tripulantes')">Adicioanar tripulante</button>
+                        addInputSelect('lines');
+                        function getId(){
+                        tripulantesArray = []
+                        var tripulantesIds = document.querySelectorAll("[name='tripulantesSelect'] option:checked")
+                        for (var i = 0; i < tripulantesIds.length; i++) {
+                            tripulantesArray.push(tripulantesIds[i].value)
+                            console.log('foi')
+                            document.getElementById('tripulantesArrayIds').setAttribute('value', `${tripulantesArray}`)
+                        }
+                        console.log(tripulantesArray)
+                        }
+                    </script>
                 </div>
+                <input value="" id="tripulantesArrayIds" name="despachoTripulantes" hidden>
+                <button class="btn btn-primary" type="button" onclick="addInputSelect('tripulantes')">Adicionar tripulante</button>
+            </div>
                 <div>
                     <div id="passageiros" class="card bg-secondary">
                         <h4 class="text-center">Lista de Passageiros</h4>

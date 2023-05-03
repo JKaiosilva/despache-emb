@@ -143,49 +143,48 @@ const Tripulante = mongoose.model('tripulantes')
                 }
         })
 
-        router.post('/formulario/avisoSaida', (req, res) => {
-            const novoAvisoSaida = {
-                usuarioID: req.user._id,
-                saidaNprocesso: req.body.saidaNprocesso,
-                saidaPortoSaida: req.body.saidaPortoSaida,
-                saidaDataHoraSaida: req.body.saidaDataHoraSaida,
-                saidaPortoDestino: req.body.saidaPortoDestino,
-                saidaDataHoraChegada: req.body.saidaDataHoraChegada,
-                saidaNomeRepresentanteEmbarcacao: req.body.saidaNomeRepresentanteEmbarcacao,
-                saidaCPFCNPJRepresentanteEmbarcacao: req.body.saidaCPFCNPJRepresentanteEmbarcacao,
-                saidaTelefoneRepresentanteEmbarcacao: req.body.saidaTelefoneRepresentanteEmbarcacao,
-                saidaEnderecoRepresentanteEmbarcacao: req.body.saidaEnderecoRepresentanteEmbarcacao,
-                saidaEmailRepresentanteEmbarcacao: req.body.saidaEmailRepresentanteEmbarcacao,
-                saidaObservacoes: req.body.saidaObservacoes,
-                saidaSomaPassageiros: req.body.saidaSomaPassageiros,
-                saidaTripulantes: "Nome: "+ req.body.saidaTripulantesNome+" || Grau ou Função"+
-                req.body.saidaTripulantesGrauFuncao + " || Data de Nascimento: "+
-                req.body.saidaTripulantesDataNascimento + " || Numero da CIR: "+
-                req.body.saidaTipulantesNCIR + " || Validade da CIR: "+
-                req.body.saidaTripulantesValidadeCIR,
-                saidaPassageiros: "Nome: "+ req.body.saidaPassageirosNome+
-                " || Data de Nascimento: " + req.body.saidaPassageirosDataNascimento+
-                " || Sexo: " + req.body.saidaPassageirosSexo,
-                saidaComboios: "Nome: "+ req.body.saidaComboiosNome+
-                " || Numero de Inscrição: "+ req.body.saidaComboiosNIncricao+
-                " || Arqueação Bruta: "+ req.body.saidaComboiosArqueacaoBruta+
-                " || Carga: "+ req.body.saidaComboiosCarga+
-                " || Quantidade da Caga: "+ req.body.saidaComboiosQuantidadeCarga,
-                saidaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-                embarcacao: req.body.embarcacao,
-                saidaData: Date.now(),
-                saidaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
-
-            }
-            new AvisoSaida(novoAvisoSaida).save().then(() => {
-                req.flash('success_msg', 'Aviso de saida enviado com sucesso')
-                res.redirect('/')
-            }).catch((err) => {
+        router.post('/formulario/avisoSaida', async (req, res) => {
+            const cleanString = req.body.despachoTripulantes.replace(/[\n' \[\]]/g, '');
+            const tripulantes = cleanString.split(',');
+            const avisoSaidaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+                try{
+                    const novoAvisoSaida = {
+                        usuarioID: req.user._id,
+                        saidaNprocesso: req.body.saidaNprocesso,
+                        saidaPortoSaida: req.body.saidaPortoSaida,
+                        saidaDataHoraSaida: req.body.saidaDataHoraSaida,
+                        saidaPortoDestino: req.body.saidaPortoDestino,
+                        saidaDataHoraChegada: req.body.saidaDataHoraChegada,
+                        saidaNomeRepresentanteEmbarcacao: req.body.saidaNomeRepresentanteEmbarcacao,
+                        saidaCPFCNPJRepresentanteEmbarcacao: req.body.saidaCPFCNPJRepresentanteEmbarcacao,
+                        saidaTelefoneRepresentanteEmbarcacao: req.body.saidaTelefoneRepresentanteEmbarcacao,
+                        saidaEnderecoRepresentanteEmbarcacao: req.body.saidaEnderecoRepresentanteEmbarcacao,
+                        saidaEmailRepresentanteEmbarcacao: req.body.saidaEmailRepresentanteEmbarcacao,
+                        saidaObservacoes: req.body.saidaObservacoes,
+                        saidaSomaPassageiros: req.body.saidaSomaPassageiros,
+                        saidaTripulantes: avisoSaidaTripulantes,
+                        saidaPassageiros: "Nome: "+ req.body.saidaPassageirosNome+
+                        " || Data de Nascimento: " + req.body.saidaPassageirosDataNascimento+
+                        " || Sexo: " + req.body.saidaPassageirosSexo,
+                        saidaComboios: "Nome: "+ req.body.saidaComboiosNome+
+                        " || Numero de Inscrição: "+ req.body.saidaComboiosNIncricao+
+                        " || Arqueação Bruta: "+ req.body.saidaComboiosArqueacaoBruta+
+                        " || Carga: "+ req.body.saidaComboiosCarga+
+                        " || Quantidade da Caga: "+ req.body.saidaComboiosQuantidadeCarga,
+                        saidaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+                        embarcacao: req.body.embarcacao,
+                        saidaData: Date.now(),
+                        saidaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+                    }
+                    new AvisoSaida(novoAvisoSaida).save()
+                        req.flash('success_msg', 'Aviso de saida enviado com sucesso')
+                        res.redirect('/')
+                }catch(err){
                 console.log(err)
                 req.flash('error_msg', 'Erro interno, tente novamente')
                 res.redirect('/')
+                }
             })
-        })
 
 
 module.exports = router
