@@ -94,52 +94,53 @@ const Tripulante = mongoose.model('tripulantes')
         }
     })
 
-        router.post('/formulario/avisoEntrada', (req, res) => {
-            const novoAvisoEntrada = {
-                usuarioID: req.user._id,
-                entradaNprocesso: req.body.entradaNprocesso,
-                entradaPortoChegada: req.body.entradaPortoChegada,
-                entradaDataHoraChegada: req.body.entradaDataHoraChegada,
-                entradaPosicaoPortoAtual: req.body.entradaPosicaoPortoAtual,
-                entradaPortoOrigem: req.body.entradaPortoOrigem,
-                entradaPortoDestino: req.body.entradaPortoDestino,
-                entradaDataHoraEstimadaSaida: req.body.entradaDataHoraEstimadaSaida,
-                entradaNomeRepresentanteEmbarcacao: req.body.entradaNomeRepresentanteEmbarcacao,
-                entradaCPFCNPJRepresentanteEmbarcacao: req.body.entradaCPFCNPJRepresentanteEmbarcacao,
-                entradaTelefoneRepresentanteEmbarcacao: req.body.entradaTelefoneRepresentanteEmbarcacao,
-                entradaEnderecoRepresentanteEmbarcacao: req.body.entradaEnderecoRepresentanteEmbarcacao,
-                entradaEmailRepresentanteEmbarcacao: req.body.entradaEmailRepresentanteEmbarcacao,
-                entradaDadosUltimaInpecaoNaval: req.body.entradaDadosUltimaInpecaoNaval,
-                entradaDeficienciasRetificadasPorto: req.body.entradaDeficienciasRetificadasPorto,
-                entradaTransporteCagaPerigosa: req.body.entradaTransporteCagaPerigosa,
-                entradaObservacoes: req.body.entradaObservacoes,
-                entradaTripulantes: "Nome: "+ req.body.entradaTripulantesNome+" || Grau ou Função"+
-                req.body.entradaTripulantesGrauFuncao + " || Data de Nascimento: "+
-                req.body.entradaTripulantesDataNascimento + " || Numero da CIR: "+
-                req.body.entradaTipulantesNCIR + " || Validade da CIR: "+
-                req.body.entradaTripulantesValidadeCIR,
-                entradaPassageiros: "Nome: "+ req.body.entradaPassageirosNome+
-                " || Data de Nascimento: " + req.body.entradaPassageirosDataNascimento+
-                " || Sexo: " + req.body.entradaPassageirosSexo,
-                entradaComboios: "Nome: "+ req.body.entradaComboiosNome+
-                " || Numero de Inscrição: "+ req.body.entradaComboiosNIncricao+
-                " || Arqueação Bruta: "+ req.body.entradaComboiosArqueacaoBruta+
-                " || Carga: "+ req.body.entradaComboiosCarga+
-                " || Quantidade da Caga: "+ req.body.entradaComboiosQuantidadeCarga,
-                entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-                embarcacao: req.body.embarcacao,
-                entradaData: Date.now(),
-                entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+        router.post('/formulario/avisoEntrada', async (req, res) => {
+            const cleanString = req.body.despachoTripulantes.replace(/[\n' \[\]]/g, '');
+            const tripulantes = cleanString.split(',');
+            const avisoEntradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
 
-            }
-            new AvisoEntrada(novoAvisoEntrada).save().then(() => {
-                req.flash('success_msg', 'Aviso de entrada enviado com sucesso')
-                res.redirect('/')
-            }).catch((err) => {
+                try{
+                    const novoAvisoEntrada = {
+                        usuarioID: req.user._id,
+                        entradaNprocesso: req.body.entradaNprocesso,
+                        entradaPortoChegada: req.body.entradaPortoChegada,
+                        entradaDataHoraChegada: req.body.entradaDataHoraChegada,
+                        entradaPosicaoPortoAtual: req.body.entradaPosicaoPortoAtual,
+                        entradaPortoOrigem: req.body.entradaPortoOrigem,
+                        entradaPortoDestino: req.body.entradaPortoDestino,
+                        entradaDataHoraEstimadaSaida: req.body.entradaDataHoraEstimadaSaida,
+                        entradaNomeRepresentanteEmbarcacao: req.body.entradaNomeRepresentanteEmbarcacao,
+                        entradaCPFCNPJRepresentanteEmbarcacao: req.body.entradaCPFCNPJRepresentanteEmbarcacao,
+                        entradaTelefoneRepresentanteEmbarcacao: req.body.entradaTelefoneRepresentanteEmbarcacao,
+                        entradaEnderecoRepresentanteEmbarcacao: req.body.entradaEnderecoRepresentanteEmbarcacao,
+                        entradaEmailRepresentanteEmbarcacao: req.body.entradaEmailRepresentanteEmbarcacao,
+                        entradaDadosUltimaInpecaoNaval: req.body.entradaDadosUltimaInpecaoNaval,
+                        entradaDeficienciasRetificadasPorto: req.body.entradaDeficienciasRetificadasPorto,
+                        entradaTransporteCagaPerigosa: req.body.entradaTransporteCagaPerigosa,
+                        entradaObservacoes: req.body.entradaObservacoes,
+                        entradaTripulantes: avisoEntradaTripulantes,
+                        entradaPassageiros: "Nome: "+ req.body.entradaPassageirosNome+
+                        " || Data de Nascimento: " + req.body.entradaPassageirosDataNascimento+
+                        " || Sexo: " + req.body.entradaPassageirosSexo,
+                        entradaComboios: "Nome: "+ req.body.entradaComboiosNome+
+                        " || Numero de Inscrição: "+ req.body.entradaComboiosNIncricao+
+                        " || Arqueação Bruta: "+ req.body.entradaComboiosArqueacaoBruta+
+                        " || Carga: "+ req.body.entradaComboiosCarga+
+                        " || Quantidade da Caga: "+ req.body.entradaComboiosQuantidadeCarga,
+                        entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+                        embarcacao: req.body.embarcacao,
+                        entradaData: Date.now(),
+                        entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+        
+                    }
+                    new AvisoEntrada(novoAvisoEntrada).save()
+                        req.flash('success_msg', 'Aviso de entrada enviado com sucesso')
+                        res.redirect('/')
+                }catch(err){
                 console.log(err)
                 req.flash('error_msg', 'Erro interno, tente novamente')
                 res.redirect('/')
-            })
+                }
         })
 
         router.post('/formulario/avisoSaida', (req, res) => {

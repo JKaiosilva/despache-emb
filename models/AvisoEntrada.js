@@ -70,16 +70,10 @@ const AvisoEntrada = new Schema ({
         type: String,
         required: true
     },
-    entradaTripulantes: {
-        type: Array,
-        arr: [{
-            entradaTripulantesNome: String,
-            entradaTripulantesGrauFuncao: String,
-            entradaTripulantesDataNascimento: String,
-            entradaTipulantesNCIR: String,
-            entradaTripulantesValidadeCIR: String
-        }]
-    },
+    entradaTripulantes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Tripulante'
+    }],
     entradaPassageiros: {
         type: Array,
         arr: [{

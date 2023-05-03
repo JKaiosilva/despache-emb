@@ -55,17 +55,21 @@ router.get('/formulario/avisoSaida', (req, res) => {
     })
 })
 
-router.get('/formulario/avisoEntrada', (req, res) => {
-    Embarcacao.find({usuarioID: req.user._id}).lean().then((embarcacoes) =>{
-        res.render('formulario/entradas/avisoEntrada', 
-            {embarcacoes: embarcacoes
-        })
-    }).catch((err) => {
+
+
+router.get('/formulario/avisoEntrada', async(req, res) => {
+    try{
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).lean()
+        const tripulantes = await Tripulante.find().lean()
+            res.render('formulario/entradas/avisoEntrada', 
+                {embarcacoes: embarcacoes,
+                    tripulantes: tripulantes
+            })
+    }catch(err){
         req.flash('error_msg', 'Erro interno ao mostrar formulario')
         res.redirect('formulario/preform')
-    })
+    }
 })
-
 
 router.get('/formulario/despacho', async(req, res) => {
     try{

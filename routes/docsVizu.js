@@ -43,11 +43,6 @@ router.get('/formulario/embarcacaoVizu/:id', async (req, res) => {
 })
 
 
-
-
-
-
-
 router.get('/formulario/despachoVizu/:id', async (req, res) => {
     try{
         if(req.user.eAdmin){
@@ -78,13 +73,16 @@ router.get('/formulario/avisoEntradavizu/:id', async (req, res) => {
             hidden = 'hidden'
         }
         avisoEntradas = await AvisoEntrada.findOne({_id: req.params.id}).lean()
+        const tripulantes = await Tripulante.find({_id: avisoEntradas.entradaTripulantes}).lean()
         embarcacoes = await Embarcacao.findOne({_id: avisoEntradas.embarcacao}).lean()
         res.render('formulario/entradas/avisoEntradaVizu',
             {avisoEntradas: avisoEntradas,
-                embarcacoes: embarcacoes,
-                    hidden: hidden
+                tripulantes: tripulantes,
+                    embarcacoes: embarcacoes,
+                        hidden: hidden
             })
     }catch(err){
+        console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar formulário')
         res.redirect('/formulario')
     }
