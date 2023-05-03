@@ -36,6 +36,7 @@ router.get('/formulario', async (req, res) => {
     }
 })
 
+
 router.get('/pages/sobrenos', async (req, res) => {
     try{
         res.render('pages/sobrenos')
@@ -44,6 +45,7 @@ router.get('/pages/sobrenos', async (req, res) => {
         res.redirect('/')
     }
 })
+
 
 router.get('/pages/termosUso', async (req, res) => {
     try{
@@ -68,6 +70,7 @@ router.get('/formulario/avisoSaida', async(req, res) => {
     }
 })
 
+
 router.get('/formulario/avisoEntrada', async(req, res) => {
     try{
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).lean()
@@ -81,6 +84,7 @@ router.get('/formulario/avisoEntrada', async(req, res) => {
         res.redirect('formulario/preform')
     }
 })
+
 
 router.get('/formulario/despacho', async(req, res) => {
     try{
@@ -105,7 +109,6 @@ router.get('/formulario/addEmbarcacao', async (req, res) => {
         res.redirect('/')
     }
 })
-
 
 
 
@@ -141,13 +144,17 @@ router.get('/page/:page', async (req, res) => {
     }
 })
 
-router.get('/embarcacoes',  (req, res) => {
-    Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({EmbarcacaoNome: 'asc'}).then((embarcacoes) => {
-        res.render('formulario/embarcacoes/embarcacoes', {embarcacoes: embarcacoes})
-    }).catch((err) => {
+
+router.get('/embarcacoes',  async (req, res) => {
+    try{
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({EmbarcacaoNome: 'asc'})
+            res.render('formulario/embarcacoes/embarcacoes', 
+                {embarcacoes: embarcacoes
+            })
+    }catch(err){
         req.flash('error_msg', 'Erro ao mostrar página')
         res.redirect('/formulario')
-    })
+    }
 })
 
 router.get('/embarcacoes/:page', async (req, res) => {
@@ -319,7 +326,6 @@ router.get('/despachos/:page', async (req, res) => {
             res.redirect('/formulario')
         }
 })
-
 
 
 router.get('/embarcacoesDespacho/:id', async (req, res) => {

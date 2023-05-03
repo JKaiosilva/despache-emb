@@ -32,7 +32,7 @@ const upload = multer({
   })
 
 
-router.get('/painel', Admin, async(req, res) => {
+router.get('/painel', async(req, res) => {
     try{
         var usuariosOperador = await Usuario.find({_id: req.user._id}).lean();
 
