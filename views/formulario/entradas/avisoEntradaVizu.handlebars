@@ -97,11 +97,12 @@
                     <div>
                         <div id="tripulantes" class="card bg-secondary mt-4">
                             <span>Tripulante: {{add @index 1}}</span>
-                            <input class="form-control" type="text" value="{{tripulanteNome}}" disabled>
-                            <input class="form-control" type="text" value="{{tripulanteGrau}}" disabled>
-                            <input class="form-control" type="text" value="{{tripulanteNCIR}}" disabled>
+                            <input class="form-control" type="text" value="Nome: {{tripulanteNome}}" disabled>
+                            <input class="form-control" type="text" value="Grau: {{tripulanteGrau}}" disabled>
+                            <input class="form-control" type="text" value="Numero da CIR: {{tripulanteNCIR}}" disabled>
                         </div>
                     </div>
+                    <br>
                 {{/each}}
                 <div>
                     <div id="passageiros" class="card bg-secondary">
