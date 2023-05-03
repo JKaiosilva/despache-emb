@@ -45,7 +45,11 @@ const Tripulante = mongoose.model('tripulantes')
         })
 
         router.post('/formulario/despacho', async (req, res) => {
-  
+            const cleanString = req.body.despachoTripulantes.replace(/[\n' \[\]]/g, '');
+            const tripulantes = cleanString.split(',');
+            const despachoTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+
+                
           
             try{
             const novoDespacho = {
@@ -66,7 +70,7 @@ const Tripulante = mongoose.model('tripulantes')
                 despachoOBS: req.body.despachoOBS,
                 despachoNTripulantes: req.body.despachoNTripulantes,
                 despachoNomeComandante: req.body.despachoNomeComandante,
-                despachoTripulantes: req.body.despachoTripulantes,
+                despachoTripulantes: despachoTripulantes,
                 despachoNomeEmbarcacao: req.body.despachoNomeEmbarcacao,
                 despachoNEmbN: req.body.despachoNEmbN,
                 despachoArqueacaoBrutaComboio: req.body.despachoArqueacaoBrutaComboio,

@@ -27,6 +27,8 @@ require('./helpers/pagination')
 const pdfGerator = require('./routes/pdfGerator')
 const docsVizu = require('./routes/docsVizu')
 const relatorios = require('./routes/relatorios')
+require('./helpers/AddIndex')
+const Add = require('./helpers/AddIndex')
 
 
 
@@ -67,7 +69,6 @@ const relatorios = require('./routes/relatorios')
         app.engine('handlebars', handlebars.engine({defaultLayout: 'main'}))
         app.set('view engine', 'handlebars')
         
-
     // Mongoose
 
         mongoose.set('strictQuery', true)

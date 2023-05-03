@@ -13,6 +13,8 @@ const Embarcacao = mongoose.model('embarcacoes')
 require('../models/Aviso')
 const Aviso = mongoose.model('avisos')
 const pdf = require('html-pdf')
+require('../models/Tripulante')
+const Tripulante = mongoose.model('tripulantes')
 
 
 
@@ -54,11 +56,13 @@ router.get('/formulario/despachoVizu/:id', async (req, res) => {
             hidden = 'hidden'
         }
         const despachos = await Despacho.findOne({_id: req.params.id}).lean()
+        const tripulantes = await Tripulante.find({_id: despachos.despachoTripulantes}).lean()
         const embarcacoes = await Embarcacao.findOne({_id: despachos.embarcacao}).lean()
             res.render('formulario/despachos/despachoVizu',
                 {despachos: despachos,
-                    embarcacoes: embarcacoes,
-                        hidden: hidden
+                    tripulantes: tripulantes,
+                        embarcacoes: embarcacoes,
+                            hidden: hidden
                 })
     }catch(err){
 

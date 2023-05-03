@@ -72,7 +72,7 @@ const Despacho = new Schema ({
         required: true
     },
     despachoTripulantes: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Tripulante'
     }],
     despachoNomeEmbarcacao: {

@@ -111,11 +111,16 @@
                         <input name="despachoNomeComandante" class="form-control" type="text" value="{{despachos.despachoNomeComandante}}" disabled>
                     </div>
             </div>
+            {{#each tripulantes}}
             <div>
-                <div id="tripulantes" class="card bg-secondary">
-                    <input name="despachoTripulantesNome" class="form-control" type="text" value="{{despachos.despachoTripulantes}}" disabled>
+                <div id="tripulantes" class="card bg-secondary mt-4">
+                    <span>Tripulante: {{add @index 1}}</span>
+                    <input name="despachoTripulantesNome" class="form-control" type="text" value="{{tripulanteNome}}" disabled>
+                    <input name="despachoTripulantesNome" class="form-control" type="text" value="{{tripulanteGrau}}" disabled>
+                    <input name="despachoTripulantesNome" class="form-control" type="text" value="{{tripulanteNCIR}}" disabled>
                 </div>
             </div>
+            {{/each}}
             <div>
                 <h4 class="text-center">Comboios</h4>
                 <span>No caso de navegação em comboio, preencher as informações abaixo sobre as embarcações não propulsadas componentes do comboio</span>
