@@ -60,7 +60,8 @@ router.get('/formulario/despachoVizu/:id', async (req, res) => {
                             hidden: hidden
                 })
     }catch(err){
-
+        req.flash('error_msg', 'Erro interno ao mostrar formulário')
+        res.redirect('/formulario')
     }
 })
 
@@ -82,7 +83,6 @@ router.get('/formulario/avisoEntradavizu/:id', async (req, res) => {
                         hidden: hidden
             })
     }catch(err){
-        console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar formulário')
         res.redirect('/formulario')
     }

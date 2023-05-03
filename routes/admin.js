@@ -52,7 +52,6 @@ router.get('/painel', Admin, async(req, res) => {
                             avisoEntradas: avisoEntradas,
                                 avisoSaidas: avisoSaidas})
     }catch (err){
-        console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar avisos')
         res.redirect('/')
     }
@@ -129,7 +128,6 @@ router.post('/avisos/novo', upload.single('foto'), async (req, res) => {
         req.flash('success_msg', 'Aviso postado com sucesso')
         res.redirect('/admin/avisos')
     } catch (err) {
-        console.log(err)
         req.flash('error_msg', 'Houve um erro interno ao postar aviso')
         res.redirect('/admin/avisos')
     }
@@ -149,7 +147,6 @@ router.get('/listaUsers', Admin, (req, res) => {
     Usuario.find().lean().sort({nome: 'asc'}).then((usuarios) => {
         res.render('admin/users/listaUsers', {usuarios: usuarios})
     }).catch((err) => {
-        console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar usuarios!')
         res.redirect('/')
     })
@@ -190,7 +187,6 @@ router.get('/despachos', Admin, (req, res) => {
     Despacho.find().limit(5).lean().sort({despachoData: 'desc'}).then((despachos) => {
         res.render('admin/despachos/listaDespacho', {despachos: despachos})
     }).catch((err) => {
-        console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar despachos!')
         res.redirect('/')
     }) 
@@ -232,7 +228,6 @@ router.get('/entradas', Admin, (req, res) => {
     AvisoEntrada.find().limit(5).lean().sort({entradaData: 'desc'}).then((avisoEntradas) => {
         res.render('admin/entradas/entradas', {avisoEntradas: avisoEntradas})
     }).catch((err) => {
-        console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar avisos de entrada!')
         res.redirect('/')
     }) 
@@ -274,7 +269,6 @@ router.get('/saidas', Admin, (req, res) => {
     AvisoSaida.find().limit(5).lean().sort({saidaData: 'desc'}).then((avisoSaidas) => {
         res.render('admin/saidas/saidas', {avisoSaidas: avisoSaidas})
     }).catch((err) => {
-        console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar avisos de saida!')
         res.redirect('/')
     }) 

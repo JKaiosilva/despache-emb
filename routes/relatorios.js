@@ -9,6 +9,7 @@ require('../models/AvisoSaida')
 require('../models/Embarcacao')
 require('../models/Aviso')
 require('../models/Relatorio')
+require('../models/Tripulante')
 
 const Despacho = mongoose.model('despachos')
 const AvisoEntrada = mongoose.model('avisoEntradas')
@@ -17,6 +18,7 @@ const Embarcacao = mongoose.model('embarcacoes')
 const Aviso = mongoose.model('avisos')
 const Relatorio = mongoose.model('relatorios')
 const Usuario = mongoose.model('usuarios')
+const Tripulante = mongoose.model('tripulantes')
 
 const pdf = require('html-pdf')
 const transporter = require('../config/sendMail')
@@ -33,6 +35,7 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             const embarcacoes = await Embarcacao.find().lean();
             const avisos = await Aviso.find().lean();
             const usuarios = await Usuario.find().lean();
+            const tripulantes = await Tripulante.find().lean();
             
             
             let despachosCount = despachos.length;
@@ -41,6 +44,7 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             let embarcacoesCount = embarcacoes.length;
             let avisosCount = avisos.length;
             let usuariosCount = usuarios.length;
+            let tripulantesCount = tripulantes.length;
 
 
             mesAnoAtual = moment(Date.now()).format('MM/YYYY')
@@ -117,6 +121,7 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
             var mesEmbarcacoesCount = embarcacoes.filter((el) => el.embarcacaoMesAnoAtual == mesAnoAtual).length
             var mesAvisosCount = avisos.filter((el) => el.avisoMesAnoAtual == mesAnoAtual).length
             var mesUsuariosCount = usuarios.filter((el) => el.usuarioMesAnoAtual == mesAnoAtual).length
+            var mesTripulantesCount = tripulantes.filter((el) => el.tripulanteMesAnoAtual == mesAnoAtual).length
 
                 for await(formularios of avisoSaidas){
                     totalPass = parseInt(formularios.saidaSomaPassageiros)
@@ -482,6 +487,10 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
                             <tr>
                                 <td>Usuários</td>
                                 <td>${usuariosCount}</td>
+                            </tr>
+                            <tr>
+                                <td>Tripulantes</td>
+                                <td>${tripulantesCount}</td>
                             </tr>                                                                                                                                                                                                                            
                         </tbody>
                         </table>

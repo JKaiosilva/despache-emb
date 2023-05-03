@@ -36,12 +36,22 @@ router.get('/formulario', async (req, res) => {
     }
 })
 
-router.get('/pages/sobrenos', (req, res) => {
-    res.render('pages/sobrenos')
+router.get('/pages/sobrenos', async (req, res) => {
+    try{
+        res.render('pages/sobrenos')
+    }catch(err){
+        req.flash('error_msg', 'Erro interno')
+        res.redirect('/')
+    }
 })
 
-router.get('/pages/termosUso', (req, res) => {
-    res.render('pages/termosUso')
+router.get('/pages/termosUso', async (req, res) => {
+    try{
+        res.render('pages/termosUso')
+    }catch(err){
+        req.flash('error_msg', 'Erro interno')
+        res.redirect('/')
+    }
 })
 
 
@@ -87,8 +97,13 @@ router.get('/formulario/despacho', async(req, res) => {
 
 
 
-router.get('/formulario/addEmbarcacao', (req, res) => {
-    res.render('formulario/embarcacoes/addEmbarcacao')
+router.get('/formulario/addEmbarcacao', async (req, res) => {
+    try{
+        res.render('formulario/embarcacoes/addEmbarcacao')
+    }catch(err){
+        req.flash('error_msg', 'Erro interno')
+        res.redirect('/')
+    }
 })
 
 
