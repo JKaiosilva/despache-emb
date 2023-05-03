@@ -23,42 +23,42 @@ const Tripulante = mongoose.model('tripulantes')
 router.get('/embarcacao/:id/pdf', (req, res) => {
     Embarcacao.findById(req.params.id).lean().then((embarcacoes) => {
       const html = `
-      <form class="row gx-3 gy-2 align-items-center">
+      <form>
       <input  type="hidden" name="usuarioID" value="%= req.user._id %">
       <div>
           <h4 class="text-center">Dados da Embarcação</h4>
-              <div class="input-group mb-3">
-                  <label class="input-group-text">Nome da Embarcação</label>
-                  <input value="${embarcacoes.embarcacaoNome}" name="embarcacaoNome" class="form-control" type="text" disabled>
-                  <label class="input-group-text">Tipo da Embarcação</label>
-                  <input value="${embarcacoes.embarcacaoTipo}" name="embarcacaoTipo" class="form-control" type="text" disabled>
+              <div>
+                  <label>Nome da Embarcação</label>
+                  <input value="${embarcacoes.embarcacaoNome}" name="embarcacaoNome" type="text" disabled>
+                  <label>Tipo da Embarcação</label>
+                  <input value="${embarcacoes.embarcacaoTipo}" name="embarcacaoTipo" type="text" disabled>
               </div>
       </div>
-      <div class="input-group mb-3">
-          <label class="input-group-text">Bandeira</label>
-          <input value="${embarcacoes.embarcacaoBandeira}" name="embarcacaoBandeira" class="form-control" type="text" disabled>
-          <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-          <input value="${embarcacoes.embarcacaoNInscricaoautoridadeMB}" name="embarcacaoNInscricaoautoridadeMB" class="form-control" type="text" disabled>
+      <div>
+          <label>Bandeira</label>
+          <input value="${embarcacoes.embarcacaoBandeira}" name="embarcacaoBandeira" type="text" disabled>
+          <label>N° Inscrição na Autoridade Marítima do Brasil</label>
+          <input value="${embarcacoes.embarcacaoNInscricaoautoridadeMB}" name="embarcacaoNInscricaoautoridadeMB" type="text" disabled>
       </div>
-      <div class="input-group mb-3">
-          <label class="input-group-text">Arqueação Bruta</label>
-          <input value="${embarcacoes.embarcacaoArqueacaoBruta}" name="embarcacaoArqueacaoBruta" class="form-control" type="text" disabled>
-          <label class="input-group-text">Comprimento Total</label>
-          <input value="${embarcacoes.embarcacaoComprimentoTotal}" name="embarcacaoComprimentoTotal" class="form-control" type="text" disabled>
-          <label class="input-group-text">Tonelagem Porte Bruto</label>
-          <input value="${embarcacoes.embarcacaoTonelagemPorteBruto}" name="embarcacaoTonelagemPorteBruto" class="form-control" type="text" disabled>
+      <div>
+          <label>Arqueação Bruta</label>
+          <input value="${embarcacoes.embarcacaoArqueacaoBruta}" name="embarcacaoArqueacaoBruta" type="text" disabled>
+          <label>Comprimento Total</label>
+          <input value="${embarcacoes.embarcacaoComprimentoTotal}" name="embarcacaoComprimentoTotal" type="text" disabled>
+          <label>Tonelagem Porte Bruto</label>
+          <input value="${embarcacoes.embarcacaoTonelagemPorteBruto}" name="embarcacaoTonelagemPorteBruto" type="text" disabled>
       </div>
-      <div class="input-group mb-3">
-          <label class="input-group-text">Certificado de Registro do Amador(CRA)</label>
-          <input value="${embarcacoes.embarcacaoCertificadoRegistroAmador}" name="embarcacaoCertificadoRegistroAmador" class="form-control" type="text" disabled>
-          <label class="input-group-text">Armador</label>
-          <input value="${embarcacoes.embarcacaoArmador}" name="embarcacaoArmador" class="form-control" type="text" disabled>
+      <div>
+          <label>Certificado de Registro do Amador(CRA)</label>
+          <input value="${embarcacoes.embarcacaoCertificadoRegistroAmador}" name="embarcacaoCertificadoRegistroAmador" type="text" disabled>
+          <label>Armador</label>
+          <input value="${embarcacoes.embarcacaoArmador}" name="embarcacaoArmador" type="text" disabled>
       </div>
-              <div class="input-group mb-3">
-                  <label class="input-group-text">N° do CRA</label>
-                  <input value="${embarcacoes.embarcacaoNCRA}" name="embarcacaoNCRA" class="form-control" type="text" disabled>
-                  <label class="input-group-text">Validade</label>
-                  <input value="${embarcacoes.embarcacaoValidade}" name="embarcacaoValidade" class="form-control" type="text" disabled>
+              <div>
+                  <label>N° do CRA</label>
+                  <input value="${embarcacoes.embarcacaoNCRA}" name="embarcacaoNCRA" type="text" disabled>
+                  <label>Validade</label>
+                  <input value="${embarcacoes.embarcacaoValidade}" name="embarcacaoValidade" type="text" disabled>
               </div>
       </div>
   </form>
@@ -66,8 +66,6 @@ router.get('/embarcacao/:id/pdf', (req, res) => {
 </div>
 
       `;
-
-
 
         pdf.create(html).toStream((err, stream) => {
         if (err) return res.send(err);
@@ -81,7 +79,6 @@ router.get('/embarcacao/:id/pdf', (req, res) => {
         subject: `Embarcação: ${embarcacoes.embarcacaoNome}`,
         text: html
     });
-
   });
 
 })
@@ -92,19 +89,62 @@ router.get('/despacho/:id/pdf', async (req, res) => {
         const despachos = await Despacho.findById(req.params.id).lean()
         const embarcacoes = await Embarcacao.findOne({_id: despachos.embarcacao}).lean()
         const tripulantes = await Tripulante.find({_id: despachos.despachoTripulantes}).lean()
-        const tripulanteNome = []
-        const tripulanteGrau = []
-        const tripulanteNCIR = []
+        const tripulantesInfos = []
         var tripulantesArray = tripulantes.forEach((el) => {
-            tripulanteNome.push(el.tripulanteNome)
-            tripulanteGrau.push(el.tripulanteGrau)
-            tripulanteNCIR.push(el.tripulanteNCIR)
+            tripulantesInfos.push(`<br>` + "Nome: " + el.tripulanteNome + " ")
+            tripulantesInfos.push("Grau: " + el.tripulanteGrau + " ")
+            tripulantesInfos.push("Numero da CIR: " + el.tripulanteNCIR)
         })
         console.log(tripulantes)
         const html = `
+        <style>
+       
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+          }
+          
+          h4 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+          }
+          
+          /* estilizando as caixas de texto */
+          input[type="text"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 20px;
+          }
+          
+          /* estilizando os rótulos */
+          label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+            font-weight: bold;
+          }
+          
+          /* estilizando as divisões */
+          div {
+            margin-bottom: 20px;
+          }
+          
+          /* estilizando o formulário como um todo */
+          form {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+          }
+
+        </style>
         <form>
               <div>
-                  <label>N° Processo de Despacho</label>
+                  <h1>N° Processo de Despacho</h1>
                   <inputtype="text" value="${despachos.NprocessoDespacho}">
               </div>
               <br>
@@ -209,9 +249,8 @@ router.get('/despacho/:id/pdf', async (req, res) => {
               </div>
               <div>
                 <div id="tripulantes">
-                    <textarea type="text">Nome: ${tripulanteNome} ||</textarea><br>
-                    <textarea type="text">Grau: ${tripulanteGrau} ||</textarea><br>
-                    <textarea type="text">Numero da CIR: ${tripulanteNCIR} ||</textarea><br>
+                    <label>Tripulantes:</label>
+                    ${tripulantesInfos}<br>
                 </div>
             </div>
             <br>
@@ -261,118 +300,171 @@ router.get('/despacho/:id/pdf', async (req, res) => {
 
 
 
-router.get('/avisoEntrada/:id/pdf', (req, res) => {
-    AvisoEntrada.findById(req.params.id).lean().then((avisoEntradas) => {
-        Embarcacao.findOne({_id: avisoEntradas.embarcacao}).lean().then((embarcacoes) => {
+router.get('/avisoEntrada/:id/pdf', async (req, res) => {
+    try{
+        const avisoEntradas = await AvisoEntrada.findById(req.params.id).lean()
+        const embarcacoes = await Embarcacao.findOne({_id: avisoEntradas.embarcacao}).lean()
+        const tripulantes = await Tripulante.find({_id: avisoEntradas.entradaTripulantes}).lean()
+        const tripulantesInfos = []
+        var tripulantesArray = tripulantes.forEach((el) => {
+            tripulantesInfos.push(`<br>` + "Nome: " + el.tripulanteNome + " ")
+            tripulantesInfos.push("Grau: " + el.tripulanteGrau + " ")
+            tripulantesInfos.push("Numero da CIR: " + el.tripulanteNCIR)
+            })
       const html = `
-      <form class="row gx-3 gy-2 align-items-center">
+      <style>
+       
+      h1 {
+          font-size: 24px;
+          font-weight: bold;
+          margin-bottom: 20px;
+        }
+        
+        h4 {
+          font-size: 18px;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+        
+        /* estilizando as caixas de texto */
+        input[type="text"] {
+          display: block;
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 16px;
+          margin-bottom: 20px;
+        }
+        
+        /* estilizando os rótulos */
+        label {
+          display: block;
+          font-size: 16px;
+          margin-bottom: 5px;
+          font-weight: bold;
+        }
+        
+        /* estilizando as divisões */
+        div {
+          margin-bottom: 20px;
+        }
+        
+        /* estilizando o formulário como um todo */
+        form {
+          padding: 20px;
+          font-family: Arial, sans-serif;
+        }
+
+      </style>
+      <form>
           <div>
-              <label class="input-group-text" class="input-group-text">N° Pocesso de Despacho</label>
-              <input name="entradaNprocesso" class="form-control" type="text" value="${avisoEntradas.entradaNprocesso}" disabled>
+              <label>N° Pocesso de Despacho</label>
+              <input type="text" value="${avisoEntradas.entradaNprocesso}" >
           </div>
           <div>
               <h4>Dados da Estadia</h4>
               <div>
-                  <label class="input-group-text">Porto de chegada</label>
-                  <input name="entradaPortoChegada" class="form-control" type="text" value="${avisoEntradas.entradaPortoChegada}" disabled>
-                  <label class="input-group-text">Data/Hora de chegada</label>
-                  <input name="entradaDataHoraChegada" class="form-control" type="text" value="${avisoEntradas.entradaDataHoraChegada}" disabled>
+                  <label>Porto de chegada</label>
+                  <input type="text" value="${avisoEntradas.entradaPortoChegada}" >
+                  <label>Data/Hora de chegada</label>
+                  <input type="text" value="${avisoEntradas.entradaDataHoraChegada}" >
               </div>
-              <div class="input-group mb-3">
-                  <label class="input-group-text">Posição no Porto Atual</label>
-                  <input name="entradaPosicaoPortoAtual" class="form-control" type="text" value="${avisoEntradas.entradaPosicaoPortoAtual}" disabled>
+              <div>
+                  <label>Posição no Porto Atual</label>
+                  <input type="text" value="${avisoEntradas.entradaPosicaoPortoAtual}" >
               </div>
-              <div class="input-group mb-3">
-                  <label class="input-group-text">Porto de Origem</label>
-                  <input name="entradaPortoOrigem" class="form-control" type="text" value="${avisoEntradas.entradaPortoOrigem}" disabled>
+              <div>
+                  <label>Porto de Origem</label>
+                  <input type="text" value="${avisoEntradas.entradaPortoOrigem}" >
               </div>
-              <div class="input-group mb-3">
-                  <label class="input-group-text">Porto de Destino</label>
-                  <input name="entradaPortoDestino" class="form-control" type="text" value="${avisoEntradas.entradaPortoDestino}" disabled>
-                  <label class="input-group-text">Data/Hora Estimada de Saída para Porto de destino</label>
-                  <input name="entradaDataHoraEstimadaSaida" class="form-control" type="text" value="${avisoEntradas.entradaDataHoraEstimadaSaida}" disabled>
+              <div>
+                  <label>Porto de Destino</label>
+                  <input type="text" value="${avisoEntradas.entradaPortoDestino}" >
+                  <label>Data/Hora Estimada de Saída para Porto de destino</label>
+                  <input type="text" value="${avisoEntradas.entradaDataHoraEstimadaSaida}" >
               </div>
           <div>
               <h4 class="text-center">Dados da Embarcação</h4>
-                  <div class="input-group mb-3">
-                      <label class="input-group-text">Nome da Embarcação</label>
-                      <input name="entradaNomeEmbarcacao" class="form-control" type="text" value="${embarcacoes.embarcacaoNome}" disabled>
-                      <label class="input-group-text">Tipo da Embarcação</label>
-                      <input name="entradaTipoEmbarcacao" class="form-control" type="text" value="${embarcacoes.embarcacaoTipo}" disabled>
+                  <div>
+                      <label>Nome da Embarcação</label>
+                      <input type="text" value="${embarcacoes.embarcacaoNome}" >
+                      <label>Tipo da Embarcação</label>
+                      <input type="text" value="${embarcacoes.embarcacaoTipo}" >
                   </div>
-                  <div class="input-group mb-3">
-                      <label class="input-group-text">Bandeira</label>
-                      <input name="entradaBandeira" class="form-control" type="text" value="${embarcacoes.embarcacaoBandeira}" disabled>
-                      <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-                      <input name="entradaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="${embarcacoes.embarcacaoNInscricaoautoridadeMB}" disabled>
+                  <div>
+                      <label>Bandeira</label>
+                      <input type="text" value="${embarcacoes.embarcacaoBandeira}" >
+                      <label>N° Inscrição na Autoridade Marítima do Brasil</label>
+                      <input type="text" value="${embarcacoes.embarcacaoNInscricaoautoridadeMB}" >
                   </div>
-                  <div class="input-group mb-3">
-                      <label class="input-group-text">Arqueação Buta</label>
-                      <input name="entradaArqueacaoBruta" class="form-control" type="text" value="${embarcacoes.embarcacaoArqueacaoBruta}" disabled>
-                      <label class="input-group-text">Tonelagem Porte Bruto</label>
-                      <input name="entradaTonelagemPorteBruto" class="form-control" type="text" value="${embarcacoes.embarcacaoTonelagemPorteBruto}" disabled>
+                  <div>
+                      <label>Arqueação Buta</label>
+                      <input type="text" value="${embarcacoes.embarcacaoArqueacaoBruta}" >
+                      <label>Tonelagem Porte Bruto</label>
+                      <input type="text" value="${embarcacoes.embarcacaoTonelagemPorteBruto}" >
                   </div>
           </div>
-              <h4 class="text-center">Dados do Representante da Embarcação</h4>
-              <div class="input-group mb-3">
-                  <label class="input-group-text">Nome</label>
-                  <input name="entradaNomeRepresentanteEmbarcacao" class="form-control" type="text" value="${avisoEntradas.entradaNomeRepresentanteEmbarcacao}" disabled>
+              <h4>Dados do Representante da Embarcação</h4>
+              <div>
+                  <label>Nome</label>
+                  <input type="text" value="${avisoEntradas.entradaNomeRepresentanteEmbarcacao}" >
               </div>
-              <div class="input-group mb-3">
-                  <label class="input-group-text">CPF/CNPJ</label>
-                  <input name="entradaCPFCNPJRepresentanteEmbarcacao" class="form-control" type="text" value="${avisoEntradas.entradaCPFCNPJRepresentanteEmbarcacao}" disabled>
-                  <label class="input-group-text">Telefone</label>
-                  <input name="entradaTelefoneRepresentanteEmbarcacao" class="form-control" type="text" value="${avisoEntradas.entradaTelefoneRepresentanteEmbarcacao}" disabled>
+              <div>
+                  <label>CPF/CNPJ</label>
+                  <input type="text" value="${avisoEntradas.entradaCPFCNPJRepresentanteEmbarcacao}" >
+                  <label>Telefone</label>
+                  <input type="text" value="${avisoEntradas.entradaTelefoneRepresentanteEmbarcacao}" >
               </div>
-              <div class="input-group mb-3">
-                  <label class="input-group-text">Endereço</label>
-                  <input name="entradaEnderecoRepresentanteEmbarcacao" class="form-control" type="text" value="${avisoEntradas.entradaEnderecoRepresentanteEmbarcacao}" disabled>
-                  <label class="input-group-text">Email</label>
-                  <input name="entradaEmailRepresentanteEmbarcacao" class="form-control" type="text" value="${avisoEntradas.entradaEmailRepresentanteEmbarcacao}" disabled>
-              </div>
-          </div>
-          <div>
-              <h4 class="text-center">Informações Complementares</h4>
-              <div class="input-group mb-3">
-                  <label class="input-group-text">Dados da Ultima Inspeção Naval</label>
-                  <input name="entradaDadosUltimaInpecaoNaval" class="form-control" type="text" value="${avisoEntradas.entradaDadosUltimaInpecaoNaval}" disabled>
-              </div>
-              <div class="input-group mb-3">
-                  <label class="input-group-text">Deficiências a serem retificadas neste porto?</label>
-                  <input name="entradaDeficienciasRetificadasPorto" class="form-control" type="text" value="${avisoEntradas.entradaDeficienciasRetificadasPorto}" disabled>
-              </div>
-              <div class="input-group mb-3">
-                  <label class="input-group-text">Transporte de Carga Perigosa</label>
-                  <input name="entradaTransporteCagaPerigosa" class="form-control" type="text" value="${avisoEntradas.entradaTransporteCagaPerigosa}" disabled>
+              <div>
+                  <label>Endereço</label>
+                  <input type="text" value="${avisoEntradas.entradaEnderecoRepresentanteEmbarcacao}" >
+                  <label>Email</label>
+                  <input type="text" value="${avisoEntradas.entradaEmailRepresentanteEmbarcacao}" >
               </div>
           </div>
           <div>
-              <h4 class="text-center">Observações</h4>
-              <div class="input-group mb-3">
-                  <input name="entradaObservacoes" class="form-control" type="text" value="${avisoEntradas.entradaObservacoes}" disabled>
+              <h4>Informações Complementares</h4>
+              <div>
+                  <label>Dados da Ultima Inspeção Naval</label>
+                  <input type="text" value="${avisoEntradas.entradaDadosUltimaInpecaoNaval}" >
+              </div>
+              <div>
+                  <label>Deficiências a serem retificadas neste porto?</label>
+                  <input type="text" value="${avisoEntradas.entradaDeficienciasRetificadasPorto}" >
+              </div>
+              <div>
+                  <label>Transporte de Carga Perigosa</label>
+                  <input type="text" value="${avisoEntradas.entradaTransporteCagaPerigosa}" >
               </div>
           </div>
           <div>
-              <div id="tripulantes" class="card bg-secondary">
-                  <h4 class="text-center">Lista de Tripulantes</h4>
-                  <input name="entradaTripulantes" class="form-control" type="text" value="${avisoEntradas.entradaTripulantes}" disabled>
+              <h4>Observações</h4>
+              <div>
+                  <input type="text" value="${avisoEntradas.entradaObservacoes}" >
               </div>
           </div>
           <div>
-              <div id="passageiros" class="card bg-secondary">
-                  <h4 class="text-center">Lista de Passageiros</h4>
-                  <input name="entradaPassageiros" class="form-control" type="text" value="${avisoEntradas.entradaPassageiros}" disabled>
+              <div>
+                  <h4>Lista de Tripulantes</h4>
+                  ${tripulantesInfos}
+              </div>
+          </div>
+          <div>
+              <div>
+                  <h4>Lista de Passageiros</h4>
+                  <input type="text" value="${avisoEntradas.entradaPassageiros}" >
                   </div>
               </div>
               <div>
-              <div id="comboios" class="card bg-secondary">
-                  <h4 class="text-center">Lista de Comboios</h4>
-                  <input name="entradaComboios" class="form-control" type="text" value="${avisoEntradas.entradaComboios}" disabled>
+              <div>
+                  <h4>Lista de Comboios</h4>
+                  <input type="text" value="${avisoEntradas.entradaComboios}" >
               </div>
               </div>
               <div>
                   <label>Embarcação</label>
-                  <input value="${embarcacoes.embarcacaoNome}" disabled>
+                  <input value="${embarcacoes.embarcacaoNome}" >
               </div>
   </form>
 
@@ -384,100 +476,156 @@ router.get('/avisoEntrada/:id/pdf', (req, res) => {
           stream.pipe(res);
         
         });
-    })
-  });
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', 'Erro ao gerar PDF')
+        res.redirect('/')
+    }  
 })
 
 
+router.get('/avisoSaida/:id/pdf', async (req, res) => {
+    try{
+        const avisoSaidas = await AvisoSaida.findById(req.params.id).lean()
+        const embarcacoes = await Embarcacao.findOne({_id: avisoSaidas.embarcacao}).lean()
+        const tripulantes = await Tripulante.find({_id: avisoSaidas.saidaTripulantes}).lean()
+        const tripulantesInfos = []
+        var tripulantesArray = tripulantes.forEach((el) => {
+            tripulantesInfos.push(`<br>` + "Nome: " + el.tripulanteNome + " ")
+            tripulantesInfos.push("Grau: " + el.tripulanteGrau + " ")
+            tripulantesInfos.push("Numero da CIR: " + el.tripulanteNCIR)
+            })
 
-router.get('/avisoSaida/:id/pdf', (req, res) => {
-  AvisoSaida.findById(req.params.id).lean().then((avisoSaidas) => {
-      Embarcacao.findOne({_id: avisoSaidas.embarcacao}).lean().then((embarcacoes) => {
     const html = `
-    <form class="row gx-3 gy-2 align-items-center">
-        <div class="input-group mb-3">
-            <label class="input-group-text" class="input-group-text">N° Pocesso de Despacho</label>
-            <input name="saidaNprocesso" class="form-control" type="text" value="${avisoSaidas.saidaNprocesso}" disabled>
+    <style>
+       
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+          }
+          
+          h4 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+          }
+          
+          /* estilizando as caixas de texto */
+          input[type="text"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 20px;
+          }
+          
+          /* estilizando os rótulos */
+          label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+            font-weight: bold;
+          }
+          
+          /* estilizando as divisões */
+          div {
+            margin-bottom: 20px;
+          }
+          
+          /* estilizando o formulário como um todo */
+          form {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+          }
+
+        </style>
+    <form>
+        <div>
+            <label>N° Pocesso de Despacho</label>
+            <input type="text" value="${avisoSaidas.saidaNprocesso}" disabled>
         </div>
         <div>
-            <h4 class="text-center">Dados da Partida</h4>
-            <div class="input-group mb-3">
-                <label class="input-group-text">Porto de Saída</label>
-                <input name="saidaPortoSaida" class="form-control" type="text" value="${avisoSaidas.saidaPortoSaida}" disabled>
-                <label class="input-group-text">Data/Hora de Saída</label>
-                <input name="saidaDataHoraSaida" class="form-control" type="text" value="${avisoSaidas.saidaDataHoraSaida}" disabled>
-            </div>
-            <div class="input-group mb-3">
-                <label class="input-group-text">Porto de Destino</label>
-                <input name="saidaPortoDestino" class="form-control" type="text" value="${avisoSaidas.saidaPortoDestino}" disabled>
-                <label class="input-group-text">Data/Hora Estimada de Chegada</label>
-                <input name="saidaDataHoraChegada" class="form-control" type="text" value="${avisoSaidas.saidaDataHoraChegada}" disabled>
-            </div>
-            <div class="input-group mb-3">
-            <h4 class="text-center">Dados da Embarcação</h4>
-                <div class="input-group mb-3">
-                    <label class="input-group-text">Nome da Embarcação</label>
-                    <input name="saidaNomeEmbarcacao" class="form-control" type="text" value="${embarcacoes.embarcacaoNome}" disabled>
-                    <label class="input-group-text">Tipo da Embarcação</label>
-                    <input name="saidaTipoEmbarcacao" class="form-control" type="text" value="${embarcacoes.embarcacaoTipo}" disabled>
-                </div>
-                <div class="input-group mb-3">
-                    <label class="input-group-text">Bandeira</label>
-                    <input name="saidaBandeira" class="form-control" type="text" value="${embarcacoes.embarcacaoBandeira}" disabled>
-                    <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-                    <input name="saidaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="${embarcacoes.embarcacaoNInscricaoautoridadeMB}" disabled>
-                </div>
-                <div class="input-group mb-3">
-                    <label class="input-group-text">Arqueação Buta</label>
-                    <input name="saidaArqueacaoBruta" class="form-control" type="text" value="${embarcacoes.embarcacaoArqueacaoBruta}" disabled>
-                    <label class="input-group-text">Tonelagem Porte Bruto</label>
-                    <input name="saidaTonelagemPorteBruto" class="form-control" type="text" value="${embarcacoes.embarcacaoTonelagemPorteBruto}" disabled>
-                </div>
-        </div>
-            <h4 class="text-center">Dados do Representante da Embarcação</h4>
-            <div class="input-group mb-3">
-                <label class="input-group-text">Nome</label>
-                <input name="saidaNomeRepresentanteEmbarcacao" class="form-control" type="text" value="${avisoSaidas.saidaNomeRepresentanteEmbarcacao}" disabled>
-            </div>
-            <div class="input-group mb-3">
-                <label class="input-group-text">CPF/CNPJ</label>
-                <input name="saidaCPFCNPJRepresentanteEmbarcacao" class="form-control" type="text" value="${avisoSaidas.saidaCPFCNPJRepresentanteEmbarcacao}" disabled>
-                <label class="input-group-text">Telefone</label>
-                <input name="saidaTelefoneRepresentanteEmbarcacao" class="form-control" type="text" value="${avisoSaidas.saidaTelefoneRepresentanteEmbarcacao}" disabled>
-            </div>
-            <div class="input-group mb-3">
-                <label class="input-group-text">Endereço</label>
-                <input name="saidaEnderecoRepresentanteEmbarcacao" class="form-control" type="text" value="${avisoSaidas.saidaEnderecoRepresentanteEmbarcacao}" disabled>
-                <label class="input-group-text">Email</label>
-                <input name="saidaEmailRepresentanteEmbarcacao" class="form-control" type="text" value="${avisoSaidas.saidaEmailRepresentanteEmbarcacao}" disabled>
-            </div>
-        </div>
-        <div>
-            <h4 class="text-center">Observações</h4>
-            <div class="input-group mb-3">
-                <input name="saidaObservacoes" class="form-control" type="text" value="${avisoSaidas.saidaObservacoes}" disabled>
-            </div>
-        </div>
-        <div>
-            <div id="tripulantes" class="card bg-secondary">
-                <h4 class="text-center">Lista de Tripulantes</h4>
-                <input name="saidaTripulantes" class="form-control" type="text" value="${avisoSaidas.saidaTripulantes}" disabled>
-            </div>
-        </div>
-        <div>
-            <div id="passageiros" class="card bg-secondary">
-                <h4 class="text-center">Lista de Passageiros</h4>
-                <input name="saidaPassageiros" class="form-control" type="text" value="${avisoSaidas.saidaPassageiros}" disabled>
-                </div>
-            </div>
-            <div class="input-group mb-3">
-                <label class="input-group-text">Somatório de Passageiros</label>
-                <input value="${avisoSaidas.saidaSomaPassageiros}" class="form-control" type="number" disabled>
+            <h4>Dados da Partida</h4>
+            <div>
+                <label>Porto de Saída</label>
+                <input type="text" value="${avisoSaidas.saidaPortoSaida}" disabled>
+                <label>Data/Hora de Saída</label>
+                <input type="text" value="${avisoSaidas.saidaDataHoraSaida}" disabled>
             </div>
             <div>
-            <div id="comboios" class="card bg-secondary">
-                <h4 class="text-center">Lista de Comboios</h4>
-                <input name="saidaComboios" class="form-control" type="text" value="${avisoSaidas.saidaComboios}" disabled>
+                <label>Porto de Destino</label>
+                <input type="text" value="${avisoSaidas.saidaPortoDestino}" disabled>
+                <label>Data/Hora Estimada de Chegada</label>
+                <input type="text" value="${avisoSaidas.saidaDataHoraChegada}" disabled>
+            </div>
+            <div>
+            <h4>Dados da Embarcação</h4>
+                <div>
+                    <label>Nome da Embarcação</label>
+                    <input type="text" value="${embarcacoes.embarcacaoNome}" disabled>
+                    <label>Tipo da Embarcação</label>
+                    <input type="text" value="${embarcacoes.embarcacaoTipo}" disabled>
+                </div>
+                <div>
+                    <label>Bandeira</label>
+                    <input type="text" value="${embarcacoes.embarcacaoBandeira}" disabled>
+                    <label>N° Inscrição na Autoridade Marítima do Brasil</label>
+                    <input type="text" value="${embarcacoes.embarcacaoNInscricaoautoridadeMB}" disabled>
+                </div>
+                <div>
+                    <label>Arqueação Buta</label>
+                    <input type="text" value="${embarcacoes.embarcacaoArqueacaoBruta}" disabled>
+                    <label>Tonelagem Porte Bruto</label>
+                    <input type="text" value="${embarcacoes.embarcacaoTonelagemPorteBruto}" disabled>
+                </div>
+        </div>
+            <h4 >Dados do Representante da Embarcação</h4>
+            <div>
+                <label>Nome</label>
+                <input type="text" value="${avisoSaidas.saidaNomeRepresentanteEmbarcacao}" disabled>
+            </div>
+            <div>
+                <label>CPF/CNPJ</label>
+                <input type="text" value="${avisoSaidas.saidaCPFCNPJRepresentanteEmbarcacao}" disabled>
+                <label>Telefone</label>
+                <input type="text" value="${avisoSaidas.saidaTelefoneRepresentanteEmbarcacao}" disabled>
+            </div>
+            <div>
+                <label>Endereço</label>
+                <input type="text" value="${avisoSaidas.saidaEnderecoRepresentanteEmbarcacao}" disabled>
+                <label>Email</label>
+                <input type="text" value="${avisoSaidas.saidaEmailRepresentanteEmbarcacao}" disabled>
+            </div>
+        </div>
+        <div>
+            <h4>Observações</h4>
+            <div>
+                <input type="text" value="${avisoSaidas.saidaObservacoes}" disabled>
+            </div>
+        </div>
+        <div>
+            <div>
+                <h4>Lista de Tripulantes</h4>
+                ${tripulantesInfos}
+            </div>
+        </div>
+        <div>
+            <div>
+                <h4>Lista de Passageiros</h4>
+                <input type="text" value="${avisoSaidas.saidaPassageiros}" disabled>
+                </div>
+            </div>
+            <div>
+                <label>Somatório de Passageiros</label>
+                <input value="${avisoSaidas.saidaSomaPassageiros}" type="number" disabled>
+            </div>
+            <div>
+            <div>
+                <h4>Lista de Comboios</h4>
+                <input type="text" value="${avisoSaidas.saidaComboios}" disabled>
             </div>
             </div>
             <div>
@@ -494,8 +642,11 @@ router.get('/avisoSaida/:id/pdf', (req, res) => {
         stream.pipe(res);
       
       });
-    })
-  });
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', 'Erro ao gerar PDF')
+        res.redirect('/') 
+    }
 })
 
 
