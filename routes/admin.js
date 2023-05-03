@@ -59,6 +59,15 @@ router.get('/painel', async(req, res) => {
 })
 
 
+router.get('/infoEmb', async(req, res) => {
+    try{
+        const embarcacoesInfos = await Embarcacao.find().lean()
+        res.json(embarcacoesInfos)
+    }catch(err){
+
+    }
+})
+
 router.get('/avisos', Admin, async (req, res) => {
     try {
         const avisos = await Aviso.find().limit(5).lean().sort({avisoData: 'desc'})

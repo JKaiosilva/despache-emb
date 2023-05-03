@@ -1,6 +1,24 @@
 const canvas = document.getElementById('renderCanvas');
 const engine = new BABYLON.Engine(canvas, true);
 
+
+
+
+fetch('infoEmb')
+  .then(response => response.json())
+  .then((embs) => {
+    const teste = embs.forEach((embarcacoes) => {
+        console.log(embarcacoes.embarcacaoNome)
+    })
+
+    })
+  .catch(error => console.error(error));
+
+
+
+
+
+
 const createScene = function () {
 
     const scene = new BABYLON.Scene(engine);
@@ -11,7 +29,7 @@ const createScene = function () {
     camera.attachControl(canvas, false);
 
 
-    const modelo3d = BABYLON.SceneLoader.ImportMesh("", "/3dModels/", "Maps.gltf", scene, function (newMeshes) {
+    const modelo3d = BABYLON.SceneLoader.ImportMesh("", "/3dModels/", "Mapa.gltf", scene, function (newMeshes) {
         camera.target = newMeshes[0];
         });
 
@@ -30,8 +48,8 @@ const createScene = function () {
                 
 
         const cuiaba = new BABYLON.MeshBuilder.CreateCapsule("cuiaba", {radius:0.5, height:10, radiusTop:4});
-        cuiaba.position.x = 10;
-        cuiaba.position.z = 25;
+        cuiaba.position.x = -115;
+        cuiaba.position.z = -85;
         cuiaba.position.y = 40;
         
         cuiaba.material = textura_pontos;
