@@ -12,7 +12,8 @@ const Despacho = new Schema ({
         required: true
     },
     despachoPortoEstadia: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'portos',
         required: true
     },
     despachoDataHoraPartida: {

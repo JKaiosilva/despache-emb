@@ -427,10 +427,15 @@ router.post('/addPorto', Admin, async(req, res) => {
 })
 
 
+
+
 router.get('/portoInfo', async(req, res) => {
     try{
+        const despachos = await Despacho.find().lean()
+        const embarcacoes = await Embarcacao.find({_id: despachos.embarcacao}).lean()
         const portosInfo = await Porto.find().lean()
-        res.json(portosInfo)
+        const data = {despachos, portosInfo, embarcacoes}
+        res.json(data)
     }catch(err){
 
     }
