@@ -5,6 +5,15 @@ const Porto = new Schema({
     usuarioID: {
         type: String,
         required: true
+    },
+    portoNome: {
+        type: String
+    },
+    positionX: {
+        type: String
+    },
+    positionZ: {
+        type: String
     }
 })
 

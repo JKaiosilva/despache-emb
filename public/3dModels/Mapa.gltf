@@ -62,8 +62,8 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"satelite mapa",
-			"uri":"satelite%20mapa.png"
+			"name":"relevo mapa",
+			"uri":"relevo%20mapa.png"
 		}
 	],
 	"accessors":[
@@ -144,9 +144,7 @@
 	"samplers":[
 		{
 			"magFilter":9729,
-			"minFilter":9987,
-			"wrapS":33648,
-			"wrapT":33648
+			"minFilter":9987
 		}
 	],
 	"buffers":[

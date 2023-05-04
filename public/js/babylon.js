@@ -3,54 +3,22 @@ const engine = new BABYLON.Engine(canvas, true);
 
 
 
-
-fetch('infoEmb')
+fetch('portoInfo')
   .then(response => response.json())
-  .then((embs) => {
-    const teste = embs.forEach((embarcacoes) => {
-        console.log(embarcacoes.embarcacaoNome)
-    })
-
-    })
-  .catch(error => console.error(error));
-
-
-
-
-
-
-const createScene = function () {
-
-    const scene = new BABYLON.Scene(engine);
-
-    scene.clearColor = new BABYLON.Color4(0, 0, 0, 0.0);
-    const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 175, new BABYLON.Vector3(0, 100, 0));
-    camera.setTarget(BABYLON.Vector3.Zero());
-    camera.attachControl(canvas, false);
-
-
-    const modelo3d = BABYLON.SceneLoader.ImportMesh("", "/3dModels/", "Mapa.gltf", scene, function (newMeshes) {
-        camera.target = newMeshes[0];
-        });
-
-
-    const light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
-    light.intensity = 0.6;
-    
-
+  .then((portos) => {
+    portos.forEach((portos) => {
 
         const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
         advancedTexture.idealWidth = 600;
         advancedTexture.useInvalidateRectOptimization = false;
-    
+
         const textura_pontos = new BABYLON.StandardMaterial("textura_pontos");
         textura_pontos.diffuseColor = new BABYLON.Color3(0.1, 0.5, 1);
-                
 
         const cuiaba = new BABYLON.MeshBuilder.CreateCapsule("cuiaba", {radius:0.5, height:10, radiusTop:4});
-        cuiaba.position.x = -115;
-        cuiaba.position.z = -85;
-        cuiaba.position.y = 40;
+        cuiaba.position.x = portos.positionX;
+        cuiaba.position.z = portos.positionZ;
+        cuiaba.position.y = 30;
         
         cuiaba.material = textura_pontos;
     
@@ -69,7 +37,7 @@ const createScene = function () {
             rect1_cuiaba.linkWithMesh(cuiaba);    
       
         var text1 = new BABYLON.GUI.TextBlock();
-            text1.text = "Cuiabá";
+            text1.text = `${portos.portoNome}`;
             text1.color = "white";
             text1.fontSize = 18;
             text1.textWrapping = true;
@@ -111,6 +79,38 @@ const createScene = function () {
     
        
     
+    })
+
+    })
+  .catch(error => console.error(error));
+
+
+const createScene = function () {
+
+    const scene = new BABYLON.Scene(engine);
+
+    scene.clearColor = new BABYLON.Color4(0, 0, 0, 0.0);
+    const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 175, new BABYLON.Vector3(0, 100, 0));
+    camera.setTarget(BABYLON.Vector3.Zero());
+    camera.attachControl(canvas, false);
+
+
+    const modelo3d = BABYLON.SceneLoader.ImportMesh("", "/3dModels/", "Mapa.gltf", scene, function (newMeshes) {
+        camera.target = newMeshes[0];
+        });
+
+
+    const light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+    light.intensity = 0.6;
+    
+
+
+
+    
+
+                
+
+        
     return scene;
 
 };

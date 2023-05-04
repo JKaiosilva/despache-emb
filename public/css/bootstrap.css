@@ -7,6 +7,29 @@
 
 
 
+ .mapIMG {
+  background-image: url('../img/relevo\ mapa.PNG');
+  background-size: cover;
+  width: 700px;
+  height: 590px;
+  background-color: #ddd;
+  position: relative;
+}
+
+.map {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: greenyellow;
+  transform: translate(50%, 50%);
+  
+}  
+
+
+
  .demo {
   border:1px sólido #C0C0C0;
   border-collapse:colapso;

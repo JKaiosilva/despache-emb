@@ -1,0 +1,49 @@
+<br>
+<h2 class="text-center mb-4">CADASTRO DE PORTO</h2>
+<div class="card">
+    <div class="card-body">
+        <form class="row gx-3 gy-2 align-items-center" action="addPorto" method="POST">
+            <input type="hidden" name="usuarioID" value="%= req.user._id %">
+                <div class="input-group mb-3">
+                    <label class="input-group-text">Nome do Porto</label>
+                    <input name="portoNome" class="form-control" type="text">
+                </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text">Posição X</label>
+                    <input id="rangeX" name="positionX" class="form-control" type="range" min="-115" max="115">
+                    
+                    <label class="input-group-text">Posição Z</label>
+                    <input id="rangeZ" name="positionZ" class="form-control" type="range" min="-85" max="85">
+                </div>
+                <div style="display: flex" class="mapIMG">
+                    <div class="map">
+                            <div id="bolinha" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; border-radius: 50%; background-color: red;">
+                            </div>
+                    </div>
+                </div>
+
+
+                    <script>
+
+                rangeX.addEventListener('input', function() {
+                const valueX = parseInt(rangeX.value * 6.5);
+                const percentX = valueX / parseInt(rangeX.max);
+                const positionX = percentX * parseInt(bolinha.parentNode.offsetWidth);
+
+                bolinha.style.left = positionX + 'vh';
+                })
+
+                rangeZ.addEventListener('input', function() {
+                const valueZ = - parseInt(rangeZ.value * 4);
+                const percentZ = valueZ / parseInt(rangeZ.max);
+                const positionZ = percentZ * parseInt(bolinha.parentNode.offsetWidth);
+
+                bolinha.style.top = positionZ + 'vh';
+                
+                });
+
+                    </script>
+            <button type="submit" class="btn btn-success" required>Enviar</button>
+        </form>
+    </div>
+</div>

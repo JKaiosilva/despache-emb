@@ -20,6 +20,8 @@ const mime = require('mime')
 const pdf = require('html-pdf')
 require('../models/Tripulante')
 const Tripulante = mongoose.model('tripulantes')
+require('../models/Porto');
+const Porto = mongoose.model('portos')
 
 const upload = multer({
     storage: multer.diskStorage({
@@ -50,7 +52,8 @@ router.get('/painel', async(req, res) => {
                     embarcacoes: embarcacoes,
                         despachos: despachos,
                             avisoEntradas: avisoEntradas,
-                                avisoSaidas: avisoSaidas})
+                                avisoSaidas: avisoSaidas
+        })
     }catch (err){
         req.flash('error_msg', 'Erro interno ao mostrar avisos')
         res.redirect('/')
@@ -58,15 +61,6 @@ router.get('/painel', async(req, res) => {
     
 })
 
-
-router.get('/infoEmb', async(req, res) => {
-    try{
-        const embarcacoesInfos = await Embarcacao.find().lean()
-        res.json(embarcacoesInfos)
-    }catch(err){
-
-    }
-})
 
 router.get('/avisos', Admin, async (req, res) => {
     try {
@@ -402,6 +396,43 @@ router.post('/addTripulante', async(req, res) => {
     }catch(err){
         req.flash('error_msg', 'Erro ao cadastrar tripulante.')
         res.redirect('painel')
+    }
+})
+
+
+router.get('/addPorto', Admin, async(req, res) => {
+    try{
+        res.render('admin/portos/addPorto')
+    }catch(err){
+        req.flash('error_msg', 'Erro interno.')
+        res.redirect('painel')
+    }
+})
+
+router.post('/addPorto', Admin, async(req, res) => {
+    try{
+        const novoPorto = {
+            usuarioID: req.user._id,
+            portoNome: req.body.portoNome,
+            positionX: req.body.positionX,
+            positionZ: req.body.positionZ
+        }
+        await new Porto(novoPorto).save()
+        req.flash('success_msg', 'Porto cadastrado com sucesso!')
+        res.redirect('painel')
+    }catch(err){
+        req.flash('error_msg', 'Erro ao cadastrar porto.')
+        res.redirect('painel')
+    }
+})
+
+
+router.get('/portoInfo', async(req, res) => {
+    try{
+        const portosInfo = await Porto.find().lean()
+        res.json(portosInfo)
+    }catch(err){
+
     }
 })
 
