@@ -1,0 +1,18 @@
+<h1>Tripulantes:</h1>
+
+{{#each tripulantes}}
+    <div class="card mt-4">
+        
+        
+        <div class="card-body">
+            <h5>Nome: {{tripulanteNome}}</h5><br>
+            <label>Grau/Função: {{tripulanteGrau}}</label><br>
+            <label>Número da CIR: {{tripulanteNCIR}}</label>
+        </div>
+    </div>
+{{else}}
+    <h4>Nenhum tripulante cadastrado!</h4>
+{{/each}}
+<br>
+<br>
+<a class="btn btn-primary" href="/admin/painel">Painel</a>

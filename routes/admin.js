@@ -22,6 +22,9 @@ require('../models/Tripulante')
 const Tripulante = mongoose.model('tripulantes')
 require('../models/Porto');
 const Porto = mongoose.model('portos')
+require('../models/Relatorio');
+const Relatorio = mongoose.model('relatorios')
+
 
 const upload = multer({
     storage: multer.diskStorage({
@@ -44,6 +47,9 @@ router.get('/painel', async(req, res) => {
         var despachos = await Despacho.find().count();
         var avisoEntradas = await AvisoEntrada.find().count();
         var avisoSaidas = await AvisoSaida.find().count();
+        var tripulantes = await Tripulante.find().count()
+        var relatorios = await Relatorio.find().count()
+        var portos = await Porto.find().count()
         
         res.render('admin/painel', 
         {avisos: avisos, 
@@ -52,7 +58,10 @@ router.get('/painel', async(req, res) => {
                     embarcacoes: embarcacoes,
                         despachos: despachos,
                             avisoEntradas: avisoEntradas,
-                                avisoSaidas: avisoSaidas
+                                avisoSaidas: avisoSaidas,
+                                    tripulantes: tripulantes,
+                                        relatorios: relatorios,
+                                            portos: portos
         })
     }catch (err){
         req.flash('error_msg', 'Erro interno ao mostrar avisos')
@@ -362,7 +371,7 @@ router.get('/users/usuariosVizu/:id', Admin, (req, res) => {
 
 
 
-router.get('/painelRelatorios', Admin, async (req, res) => {
+router.get('/Relatorios', Admin, async (req, res) => {
     try{
         res.render('admin/relatorios/painelRelatorios')
     }catch(err){
@@ -370,6 +379,19 @@ router.get('/painelRelatorios', Admin, async (req, res) => {
         res.redirect('admin/painel')
     }
 })
+
+router.get('/tripulantes', async (req, res) => {
+    try{
+        const tripulantes = await Tripulante.find().lean().sort({tripulanteNome: 'asc'})
+            res.render('admin/tripulantes/tripulantes', 
+                {tripulantes: tripulantes
+            })
+    }catch(err){
+        req.flash('error_msg', 'Erro interno')
+        res.redirect('admin/painel')
+    }
+})
+
 
 
 router.get('/addTripulante', (req, res) => {
@@ -398,6 +420,21 @@ router.post('/addTripulante', async(req, res) => {
         res.redirect('painel')
     }
 })
+
+
+
+router.get('/portos', Admin, async(req, res) => {
+    try{
+        const portos = await Porto.find().lean().sort({portoNome: 'asc'})
+            res.render('admin/portos/portos', 
+                {portos: portos
+            })
+    }catch(err){
+        req.flash('error_msg', 'Erro interno.')
+        res.redirect('painel')
+    }
+})
+
 
 
 router.get('/addPorto', Admin, async(req, res) => {

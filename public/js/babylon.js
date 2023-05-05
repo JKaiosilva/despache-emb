@@ -11,9 +11,72 @@ fetch('portoInfo')
     const despachos = data.despachos; 
 
 
+    const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    advancedTexture.idealWidth = 600;
+    advancedTexture.useInvalidateRectOptimization = false;
+
 
     despachos.forEach((despachos) => {
     })
+
+
+    portosInfo.forEach(async(portos) => {
+
+
+      const embarcacao = []
+
+      for await (embs of embarcacoes){
+        embarcacao.push(embs.embarcacaoNome)
+      }
+
+
+      const textura_pontos = new BABYLON.StandardMaterial("textura_pontos");
+      textura_pontos.diffuseColor = new BABYLON.Color3(0.1, 0.5, 1);
+
+      const porto = new BABYLON.MeshBuilder.CreateCapsule("porto", {radius:0.5, height:10, radiusTop:4});
+        porto.position.x = portos.positionX;;
+        porto.position.z = portos.positionZ;;
+        porto.position.y = 30;
+        
+        porto.material = textura_pontos;
+
+
+      porto.actionManager = new BABYLON.ActionManager(scene);
+      porto.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, async function() {
+          // Cria o elemento HTML do card do Bootstrap
+          var card = document.createElement("div");
+          card.className = "card";
+          card.style.position = "absolute";
+          card.style.top = (event.clientY + 10) + "px"; // posição vertical do card
+          card.style.left = (event.clientX + 10) + "px"; // posição horizontal do card
+
+          // Adiciona conteúdo ao card
+          var cardBody = document.createElement("div");
+          cardBody.className = "card-body";
+          cardBody.innerHTML = `<h5 class='card-title'>${portos.portoNome}</h5><p class='card-text'>${embarcacao}</p>`;
+          card.appendChild(cardBody);
+
+          // Adiciona o card ao elemento HTML da cena
+          document.getElementById("renderCanvas").parentNode.appendChild(card);
+      }));
+
+      // Adiciona um evento de mouse out no mesh
+      porto.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function() {
+          // Remove o card da cena
+          document.querySelector(".card").remove();
+      }));
+      
+
+
+
+
+
+
+    })
+
+
+
+
 
 
 /*      portosInfo.forEach(async (portos) => {
@@ -176,48 +239,11 @@ fetch('portoInfo')
     
     }) */
 
-    const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-    advancedTexture.idealWidth = 600;
-    advancedTexture.useInvalidateRectOptimization = false;
 
-    const textura_pontos = new BABYLON.StandardMaterial("textura_pontos");
-        textura_pontos.diffuseColor = new BABYLON.Color3(0.1, 0.5, 1);
 
-        const porto = new BABYLON.MeshBuilder.CreateCapsule("porto", {radius:0.5, height:10, radiusTop:4});
-        porto.position.x = 0;
-        porto.position.z = 0;
-        porto.position.y = 30;
+
+
         
-        porto.material = textura_pontos;
-
-
-      porto.actionManager = new BABYLON.ActionManager(scene);
-      porto.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function() {
-          // Cria o elemento HTML do card do Bootstrap
-          var card = document.createElement("div");
-          card.className = "card";
-          card.style.position = "absolute";
-          card.style.top = (event.clientY + 10) + "px"; // posição vertical do card
-          card.style.left = (event.clientX + 10) + "px"; // posição horizontal do card
-
-          // Adiciona conteúdo ao card
-          var cardBody = document.createElement("div");
-          cardBody.className = "card-body";
-          cardBody.innerHTML = "<h5 class='card-title'>Título do Card</h5><p class='card-text'>Este é um exemplo de card do Bootstrap.</p>";
-          card.appendChild(cardBody);
-
-          // Adiciona o card ao elemento HTML da cena
-          document.getElementById("renderCanvas").parentNode.appendChild(card);
-      }));
-
-      // Adiciona um evento de mouse out no mesh
-      porto.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function() {
-          // Remove o card da cena
-          document.querySelector(".card").remove();
-      }));
-      
-
-
     })
   .catch(error => console.error(error));
 

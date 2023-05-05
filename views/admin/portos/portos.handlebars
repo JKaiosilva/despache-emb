@@ -1,0 +1,15 @@
+<h1>Portos: </h1>
+
+{{#each portos}}
+    <div class="card mt-4">
+        <div class="card-body">
+            <label>Nome: {{portoNome}}</label>
+            <label>info </label>
+        </div>
+    </div>
+{{else}}
+    <h4>Nenhum Porto cadastrado!</h4>
+{{/each}}
+<br>
+<br>
+<a class="btn btn-primary" href="/admin/painel">Painel</a>
