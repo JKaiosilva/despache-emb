@@ -6,9 +6,7 @@ const engine = new BABYLON.Engine(canvas, true);
 fetch('portoInfo')
   .then(response => response.json())
   .then((data) => {
-    const embarcacoes = data.embarcacoes
-    const portosInfo = data.portosInfo;
-    const despachos = data.despachos; 
+    const porto = data.portos;
 
 
     const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
@@ -16,26 +14,18 @@ fetch('portoInfo')
     advancedTexture.useInvalidateRectOptimization = false;
 
 
-    despachos.forEach((despachos) => {
-    })
+    porto.forEach(async(portos) => {
 
 
-    portosInfo.forEach(async(portos) => {
 
-
-      const embarcacao = []
-
-      for await (embs of embarcacoes){
-        embarcacao.push(embs.embarcacaoNome)
-      }
 
 
       const textura_pontos = new BABYLON.StandardMaterial("textura_pontos");
       textura_pontos.diffuseColor = new BABYLON.Color3(0.1, 0.5, 1);
 
-      const porto = new BABYLON.MeshBuilder.CreateCapsule("porto", {radius:0.5, height:10, radiusTop:4});
-        porto.position.x = portos.positionX;;
-        porto.position.z = portos.positionZ;;
+      const porto = new BABYLON.MeshBuilder.CreateCapsule("porto", {radius:0.3, height:5, radiusTop:2});
+        porto.position.x = portos.positionX;
+        porto.position.z = portos.positionZ;
         porto.position.y = 30;
         
         porto.material = textura_pontos;
@@ -46,14 +36,14 @@ fetch('portoInfo')
           // Cria o elemento HTML do card do Bootstrap
           var card = document.createElement("div");
           card.className = "card";
-          card.style.position = "absolute";
+          card.style.position = "fixed";
           card.style.top = (event.clientY + 10) + "px"; // posição vertical do card
           card.style.left = (event.clientX + 10) + "px"; // posição horizontal do card
-
+          
           // Adiciona conteúdo ao card
           var cardBody = document.createElement("div");
           cardBody.className = "card-body";
-          cardBody.innerHTML = `<h5 class='card-title'>${portos.portoNome}</h5><p class='card-text'>${embarcacao}</p>`;
+          cardBody.innerHTML = `<h5 class='card-title'>${portos.portoNome}</h5><p class='card-text'></p>`;
           card.appendChild(cardBody);
 
           // Adiciona o card ao elemento HTML da cena
@@ -73,9 +63,6 @@ fetch('portoInfo')
 
 
     })
-
-
-
 
 
 

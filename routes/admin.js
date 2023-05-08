@@ -468,10 +468,32 @@ router.post('/addPorto', Admin, async(req, res) => {
 
 router.get('/portoInfo', async(req, res) => {
     try{
-        const despachos = await Despacho.find().lean()
-        const embarcacoes = await Embarcacao.find({_id: despachos.embarcacao}).lean()
-        const portosInfo = await Porto.find().lean()
-        const data = {despachos, portosInfo, embarcacoes}
+        const dataHoje = moment(Date.now()).format('MM/YYYY')
+        const despachos = await Despacho.find({depachoMesAnoAtual: dataHoje}).lean()
+        const avisoSaidas = await AvisoSaida.find({saidaMesAnoAtual: dataHoje}).lean()
+        const avisoEntradas = await AvisoEntrada.find({entradaMesAnoAtual: dataHoje}).lean()
+
+/*         const embarcacoesDespachos = await Embarcacao.find({id: despachos.embarcacao}).lean()
+        const embarcacoesSaidas = await Embarcacao.find({id: avisoSaidas.embarcacao}).lean()
+        const embarcacoesEntradas = await Embarcacao.find({id: avisoEntradas.embarcacao}).lean()
+ */
+
+
+/*         const despachoPorto = {despachos, embarcacoesDespachos}
+        const saidasPorto = {avisoSaidas, embarcacoesSaidas}
+        const entradasPorto = {avisoEntradas, embarcacoesEntradas} */
+
+        const portos = await Porto.find().lean()
+
+        portos.forEach((porto) => {
+            if(porto.id == despachos.despachoPortoEstadia){
+                porto.embarcacao = despachos.embarcacao
+                console.log(porto.embarcacao)
+            }
+        })
+        
+        const data = {portos, embarcacoesDespachos, embarcacoesSaidas, embarcacoesEntradas}
+        
         res.json(data)
     }catch(err){
 
