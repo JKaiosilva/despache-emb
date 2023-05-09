@@ -473,27 +473,28 @@ router.get('/portoInfo', async(req, res) => {
         const avisoSaidas = await AvisoSaida.find({saidaMesAnoAtual: dataHoje}).lean()
         const avisoEntradas = await AvisoEntrada.find({entradaMesAnoAtual: dataHoje}).lean()
 
-/*         const embarcacoesDespachos = await Embarcacao.find({id: despachos.embarcacao}).lean()
-        const embarcacoesSaidas = await Embarcacao.find({id: avisoSaidas.embarcacao}).lean()
-        const embarcacoesEntradas = await Embarcacao.find({id: avisoEntradas.embarcacao}).lean()
- */
+        const portos = await Porto.find()
 
 
-/*         const despachoPorto = {despachos, embarcacoesDespachos}
-        const saidasPorto = {avisoSaidas, embarcacoesSaidas}
-        const entradasPorto = {avisoEntradas, embarcacoesEntradas} */
+        const despachosIds = []
+        for await(const despacho of despachos){
+            despachosIds.push(despacho.despachoPortoEstadia)
+        }
 
-        const portos = await Porto.find().lean()
 
-        portos.forEach((porto) => {
-            if(porto.id == despachos.despachoPortoEstadia){
-                porto.embarcacao = despachos.embarcacao
-                console.log(porto.embarcacao)
+        const portoIdDespacho = await Porto.find({id: despachosIds}).lean()
+
+        for await (const porto of portos){
+            if(porto.id.includes(despachosIds)){
+                console.log('foi')
+                
+            }else{
+                console.log('não foi')
             }
-        })
-        
-        const data = {portos, embarcacoesDespachos, embarcacoesSaidas, embarcacoesEntradas}
-        
+        }
+        const data = portos
+        console.log(teste)
+        verifica()
         res.json(data)
     }catch(err){
 

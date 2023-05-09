@@ -6,7 +6,7 @@ const engine = new BABYLON.Engine(canvas, true);
 fetch('portoInfo')
   .then(response => response.json())
   .then((data) => {
-    const porto = data.portos;
+    const porto = data;
 
 
     const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
@@ -14,7 +14,7 @@ fetch('portoInfo')
     advancedTexture.useInvalidateRectOptimization = false;
 
 
-    porto.forEach(async(portos) => {
+    porto.forEach((portos) => {
 
 
 
@@ -43,7 +43,7 @@ fetch('portoInfo')
           // Adiciona conteúdo ao card
           var cardBody = document.createElement("div");
           cardBody.className = "card-body";
-          cardBody.innerHTML = `<h5 class='card-title'>${portos.portoNome}</h5><p class='card-text'></p>`;
+          cardBody.innerHTML = `<h5 class='card-title'>${portos.portoNome}</h5><p class='card-text'>${portos.embarcacaoDespacho}</p>`;
           card.appendChild(cardBody);
 
           // Adiciona o card ao elemento HTML da cena
