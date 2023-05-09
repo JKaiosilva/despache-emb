@@ -473,28 +473,30 @@ router.get('/portoInfo', async(req, res) => {
         const avisoSaidas = await AvisoSaida.find({saidaMesAnoAtual: dataHoje}).lean()
         const avisoEntradas = await AvisoEntrada.find({entradaMesAnoAtual: dataHoje}).lean()
 
-        const portos = await Porto.find()
+        const portos = await Porto.find().lean()
+        const portoEmb = []
 
-
-        const despachosIds = []
         for await(const despacho of despachos){
-            despachosIds.push(despacho.despachoPortoEstadia)
+
+            const procurar = await Embarcacao.findOne({id: despacho.embarcacao})
+            const embarcacao = [procurar.embarcacaoNome, procurar._id]
+            portoEmb.push(despacho.despachoPortoEstadia, embarcacao)
+
+            portos.forEach((porto) => {
+                if(porto.id == portoEmb.despacho.despachoPortoEstadia){
+                    console.log('foi')
+                }else{
+                    console.log('não foi')
+                }
+            
+            })
+            console.log(portoEmb)
+
         }
 
 
-        const portoIdDespacho = await Porto.find({id: despachosIds}).lean()
+        
 
-        for await (const porto of portos){
-            if(porto.id.includes(despachosIds)){
-                console.log('foi')
-                
-            }else{
-                console.log('não foi')
-            }
-        }
-        const data = portos
-        console.log(teste)
-        verifica()
         res.json(data)
     }catch(err){
 
