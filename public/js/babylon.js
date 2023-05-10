@@ -17,7 +17,7 @@ fetch('portoInfo')
     porto.forEach((portos) => {
 
 
-
+      console.log(portos)
 
 
       const textura_pontos = new BABYLON.StandardMaterial("textura_pontos");
@@ -43,7 +43,7 @@ fetch('portoInfo')
           // Adiciona conteúdo ao card
           var cardBody = document.createElement("div");
           cardBody.className = "card-body";
-          cardBody.innerHTML = `<h5 class='card-title'>${portos.portoNome}</h5><p class='card-text'>${portos.embarcacaoDespacho}</p>`;
+          cardBody.innerHTML = `<h5 class='card-title'>${portos.portoNome}</h5><p class='card-text'>${portos.embarcacaoNome}</p>`;
           card.appendChild(cardBody);
 
           // Adiciona o card ao elemento HTML da cena

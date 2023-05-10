@@ -473,29 +473,34 @@ router.get('/portoInfo', async(req, res) => {
         const avisoSaidas = await AvisoSaida.find({saidaMesAnoAtual: dataHoje}).lean()
         const avisoEntradas = await AvisoEntrada.find({entradaMesAnoAtual: dataHoje}).lean()
 
-        const portos = await Porto.find().lean()
-        const portoEmb = []
+        var portoInfo = []
+        var portos = await Porto.find().lean()
 
         for await(const despacho of despachos){
-
+            var portoEmb = {}
             const procurar = await Embarcacao.findOne({id: despacho.embarcacao})
-            const embarcacao = [procurar.embarcacaoNome, procurar._id]
-            portoEmb.push(despacho.despachoPortoEstadia, embarcacao)
+            const embarcacao = {nome: procurar.embarcacaoNome, id: procurar._id.toString()}
+            const nomePorto = {portoEstadia: despacho.despachoPortoEstadia.toString()}
+            portoEmb = nomePorto, embarcacao
 
-            portos.forEach((porto) => {
-                if(porto.id == portoEmb.despacho.despachoPortoEstadia){
-                    console.log('foi')
-                }else{
-                    console.log('não foi')
-                }
             
-            })
-            console.log(portoEmb)
-
+                for await(var porto of portos){
+                    const portoId = porto._id.toString()
+                    if(portoId == portoEmb.nomePorto.portoEstadia){
+                        console.log('foi')
+                        porto.embarcacaoNome = portoEmb.embarcacao.nome
+                        porto.embarcacaoId = portoEmb.embarcacao.id
+                        console.log(porto)
+                        portoInfo.push(porto)
+                    }
+                }
         }
 
+        
 
         
+        console.log(portoEmb)
+       const data = portoInfo
 
         res.json(data)
     }catch(err){
