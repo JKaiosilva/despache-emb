@@ -1,12 +1,14 @@
 <h1>Portos: </h1>
 <br>
-    <a class="btn btn-primary mt-2" style="max-width: 10rem" href="/admin/addPorto">Add Porto</a>
+    <a class="btn btn-primary mt-2" style="max-width: 10rem" href="/admin/addPorto">Novo Porto</a>
 <br>
 {{#each portos}}
     <div class="card mt-4">
         <div class="card-body">
             <label>Nome: {{portoNome}}</label>
+            <br>
             <label>info </label>
+                <a class="btn btn-primary" href="/admin/portoVizu/{{_id}}" style="float: right">Visualizar</a>
         </div>
     </div>
 {{else}}
