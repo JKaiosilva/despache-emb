@@ -477,19 +477,17 @@ router.get('/portoInfo', async(req, res) => {
 
         for await(const despacho of despachos){
             var portoEmb = {}
-            var procurar = await Embarcacao.findOne({id: despacho.embarcacao}).lean()
+            var procurar = await Embarcacao.findOne({_id: despacho.embarcacao}).lean()
             portoEmb = {nome: procurar.embarcacaoNome, id: procurar._id.toString(), portoEstadia: despacho.despachoPortoEstadia.toString()}
 
             var porto = await Porto.findOne({_id: portoEmb.portoEstadia}).lean()
             porto.embarcacaoNome = portoEmb.nome
             porto.embarcacaoId = portoEmb.id
                 if(portos.some(portoLocal => portoLocal.portoNome == porto.portoNome)){
-                    console.log('foi')
                     const portoLocal = portos.find(portoLocal => portoLocal.portoNome == porto.portoNome)
                     portoLocal.embarcacaoNome.push(porto.embarcacaoNome)
                     portoLocal.embarcacaoId.push(porto.embarcacaoId)
                 }else{
-                    console.log('não foi')
                     portos.push({ ...porto, embarcacaoNome: [porto.embarcacaoNome], embarcacaoId: [porto.embarcacaoId] })
                 } 
         }

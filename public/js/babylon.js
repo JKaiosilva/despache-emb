@@ -1,25 +1,16 @@
 const canvas = document.getElementById('renderCanvas');
 const engine = new BABYLON.Engine(canvas, true);
 
-
-
 fetch('portoInfo')
   .then(response => response.json())
   .then((data) => {
     const porto = data;
 
-
     const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
     advancedTexture.idealWidth = 600;
     advancedTexture.useInvalidateRectOptimization = false;
 
-
     porto.forEach((portos) => {
-
-
-      console.log(portos)
-
-
       const textura_pontos = new BABYLON.StandardMaterial("textura_pontos");
       textura_pontos.diffuseColor = new BABYLON.Color3(0.1, 0.5, 1);
 
@@ -29,7 +20,6 @@ fetch('portoInfo')
         porto.position.y = 30;
         
         porto.material = textura_pontos;
-
 
       porto.actionManager = new BABYLON.ActionManager(scene);
       porto.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, async function() {
@@ -43,7 +33,12 @@ fetch('portoInfo')
           // Adiciona conteúdo ao card
           var cardBody = document.createElement("div");
           cardBody.className = "card-body";
-          cardBody.innerHTML = `<h5 class='card-title'>${portos.portoNome}</h5><p class='card-text'>${portos.embarcacaoNome}</p>`;
+          cardBody.innerHTML = `<h5 class='card-title text-center'>${portos.portoNome}</h5>
+                                <h6>Embarcações no porto:</h6>
+                                <p class='card-text'>${portos.embarcacaoNome.join("<br>")}</p>
+                                <br>
+                                <h6>Previsão de chegada hoje:</h6>
+                                <p class='card-text'>teste</p>`;
           card.appendChild(cardBody);
 
           // Adiciona o card ao elemento HTML da cena
@@ -55,182 +50,10 @@ fetch('portoInfo')
           // Remove o card da cena
           document.querySelector(".card").remove();
       }));
-      
-
-
-
-
-
+    
 
     })
 
-
-
-/*      portosInfo.forEach(async (portos) => {
-
-
-
-        const textura_pontos = new BABYLON.StandardMaterial("textura_pontos");
-        textura_pontos.diffuseColor = new BABYLON.Color3(0.1, 0.5, 1);
-
-        const porto = new BABYLON.MeshBuilder.CreateCapsule("porto", {radius:0.5, height:10, radiusTop:4});
-        porto.position.x = portos.positionX;
-        porto.position.z = portos.positionZ;
-        porto.position.y = 30;
-        
-        porto.material = textura_pontos;
-    
-        var rect1_porto = await new BABYLON.GUI.Rectangle();
-            advancedTexture.addControl(rect1_porto);
-            rect1_porto.width = `${portos.portoNome.length * 5}px`;
-            rect1_porto.height = '16px';
-            rect1_porto.thickness = 1;  
-            rect1_porto.linkOffsetY = "-20px";
-            rect1_porto.transformCenterY = 1; 
-            rect1_porto.background = "MidnightBlue"; 
-            rect1_porto.alpha = 0.7;
-            rect1_porto.scaleX = 0;
-            rect1_porto.scaleY = 0;
-            rect1_porto.cornerRadius = 5
-            rect1_porto.linkWithMesh(porto);    
-      
-        var text1 = new BABYLON.GUI.TextBlock();
-            text1.text = `${portos.portoNome}`;
-            text1.color = "white";
-            text1.fontSize = 18;
-            text1.textWrapping = true;
-            text1.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-            text1.background = 'white'
-            rect1_porto.addControl(text1)
-            text1.alpha = (1/text1.parent.alpha);
-
-            
-            // Criar retângulos abaixo do rect1_porto
-            var rect2_porto = new BABYLON.GUI.Rectangle();
-            rect2_porto.width = "50px";
-            rect2_porto.height ="17px";
-            rect2_porto.thickness = 1;  
-            rect2_porto.background = "LightBlue"; 
-            rect2_porto.alpha = 0.7;
-            rect2_porto.scaleX = 0.5;
-            rect2_porto.scaleY = 0.5;
-            rect2_porto.cornerRadius = 5;
-            rect1_porto.addControl(rect2_porto);
-              
-        var actionManager = new BABYLON.ActionManager(scene);
-        porto.actionManager = actionManager;
-    
-          var scaleXAnimation = new BABYLON.Animation("myAnimation", "scaleX", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-          var scaleYAnimation = new BABYLON.Animation("myAnimation", "scaleY", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-    
-            var keys = [];
-    
-             keys.push({
-                          frame: 0,
-                          value: 0
-                      });
-                      keys.push({
-                        frame: 10,
-                        value: 1
-                      });
-    
-                scaleXAnimation.setKeys(keys);
-                scaleYAnimation.setKeys(keys);
-                rect1_porto.animations = [];
-                rect1_porto.animations.push(scaleXAnimation);
-                rect1_porto.animations.push(scaleYAnimation);
-    
-            actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
-                    scene.beginAnimation(rect1_porto, 0, 10, false);
-                    }));
-     
-            actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
-                        scene.beginAnimation(rect1_porto, 10, 0, false);
-                    }));
-
-
-                rect2_porto.animations = [];
-                rect2_porto.animations.push(scaleXAnimation);
-                rect2_porto.animations.push(scaleYAnimation);
-    
-            actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
-                    scene.beginAnimation(rect2_porto, 0, 10, false);
-                    }));
-     
-            actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
-                        scene.beginAnimation(rect2_porto, 10, 0, false);
-                    }));
-       
-    
-    }) 
-
-
-
-    embarcacoes.forEach(async(embs) => {
-
-
-      var rect1_embs = await new BABYLON.GUI.Rectangle();
-            advancedTexture.addControl(rect1_embs);
-            rect1_embs.width = `${embs.embarcacaoNome.length * 5}px`;
-            rect1_embs.height = '16px';
-            rect1_embs.thickness = 1;  
-            rect1_embs.linkOffsetY = "-20px";
-            rect1_embs.transformCenterY = 1; 
-            rect1_embs.background = "MidnightBlue"; 
-            rect1_embs.alpha = 0.7;
-            rect1_embs.scaleX = 0;
-            rect1_embs.scaleY = 0;
-            rect1_embs.cornerRadius = 5
-            rect1_embs.linkWithMesh(porto);    
-      
-        var embs = new BABYLON.GUI.TextBlock();
-            embs.text = `${embs.embarcacaoNome}`;
-            embs.color = "white";
-            embs.fontSize = 18;
-            embs.textWrapping = true;
-            embs.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-            embs.background = 'white'
-            rect1_embs.addControl(embs)
-            embs.alpha = (1/embs.parent.alpha);
-
-            var actionManager = new BABYLON.ActionManager(scene);
-            porto.actionManager = actionManager;
-        
-              var scaleXAnimation = new BABYLON.Animation("myAnimation", "scaleX", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-              var scaleYAnimation = new BABYLON.Animation("myAnimation", "scaleY", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-        
-                var keys = [];
-        
-                 keys.push({
-                              frame: 0,
-                              value: 0
-                          });
-                          keys.push({
-                            frame: 10,
-                            value: 1
-                          });
-        
-                    scaleXAnimation.setKeys(keys);
-                    scaleYAnimation.setKeys(keys);
-                    rect1_embs.animations = [];
-                    rect1_embs.animations.push(scaleXAnimation);
-                    rect1_embs.animations.push(scaleYAnimation);
-        
-                actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev){
-                        scene.beginAnimation(rect1_embs, 0, 10, false);
-                        }));
-         
-                actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev){
-                            scene.beginAnimation(rect1_embs, 10, 0, false);
-                        }));
-    
-    }) */
-
-
-
-
-
-        
     })
   .catch(error => console.error(error));
 
