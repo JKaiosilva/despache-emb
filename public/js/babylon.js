@@ -34,11 +34,11 @@ fetch('portoInfo')
           var cardBody = document.createElement("div");
           cardBody.className = "card-body";
           cardBody.innerHTML = `<h5 class='card-title text-center'>${portos.portoNome}</h5>
-                                <h6>Embarcações no porto:</h6>
-                                <p class='card-text'>${portos.embarcacaoNome.join("<br>")}</p>
+                                <h6>Barcaças no porto:</h6>
+                                <p class='card-text'>${portos.barcaca.join("<br>")}</p>
                                 <br>
-                                <h6>Previsão de chegada hoje:</h6>
-                                <p class='card-text'>teste</p>`;
+                                <h6>Outras Embarcações:</h6>
+                                <p class='card-text'>${portos.embarcacaoNome.join("<br>")}</p>`;
           card.appendChild(cardBody);
 
           // Adiciona o card ao elemento HTML da cena

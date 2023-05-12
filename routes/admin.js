@@ -482,11 +482,7 @@ router.get('/portoVizu/:id', Admin, async(req, res) => {
         const dataHoje = moment(Date.now()).format('DD/MM/YYYY')
         const portos = await Porto.findOne({_id: req.params.id}).lean()
         const despachos = await Despacho.find({despachoPortoEstadia: portos._id}).lean()
-        for await(var despacho of despachos){
-            if (despacho._id == portos._id){
 
-            }
-        }
 
             res.render('admin/portos/portoVizu', 
                 {portos: portos,
@@ -513,17 +509,24 @@ router.get('/portoInfo', async (req, res) => {
         for await (const despacho of despachos) {
             var portoEmb = {}
             var procurar = await Embarcacao.findOne({ _id: despacho.embarcacao }).lean()
-            portoEmb = { nome: procurar.embarcacaoNome, id: procurar._id.toString(), portoEstadia: despacho.despachoPortoEstadia.toString() }
+            if(procurar.embarcacaoTipo != 'barcaça'){
+                portoEmb = { nome: procurar.embarcacaoNome, id: procurar._id.toString(), portoEstadia: despacho.despachoPortoEstadia.toString() }
+            }else{
+                portoEmb = { nomeBarcaca: procurar.embarcacaoNome, id: procurar._id.toString(), portoEstadia: despacho.despachoPortoEstadia.toString() }
+            }
+            
 
             var porto = await Porto.findOne({ _id: portoEmb.portoEstadia }).lean()
-            porto.embarcacaoNome = portoEmb.nome
+            porto.embarcacaoNome = portoEmb.nome 
+            porto.barcaca = portoEmb.nomeBarcaca
             porto.embarcacaoId = portoEmb.id
             if (portos.some(portoLocal => portoLocal.portoNome == porto.portoNome)) {
                 const portoLocal = portos.find(portoLocal => portoLocal.portoNome == porto.portoNome)
                 portoLocal.embarcacaoNome.push(porto.embarcacaoNome)
+                portoLocal.barcaca.push(porto.barcaca)
                 portoLocal.embarcacaoId.push(porto.embarcacaoId)
             } else {
-                portos.push({ ...porto, embarcacaoNome: [porto.embarcacaoNome], embarcacaoId: [porto.embarcacaoId] })
+                portos.push({ ...porto, embarcacaoNome: [porto.embarcacaoNome], barcaca: [porto.barcaca], embarcacaoId: [porto.embarcacaoId] })
             }
         }
 
