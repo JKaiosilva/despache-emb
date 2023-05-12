@@ -3,8 +3,7 @@ const Schema = mongoose.Schema;
 
 const Porto = new Schema({
     usuarioID: {
-        type: String,
-        required: true
+        type: String
     },
     portoNome: {
         type: String

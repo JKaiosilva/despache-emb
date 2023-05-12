@@ -7,68 +7,52 @@ const AvisoEntrada = new Schema ({
         default: {}
     },
     entradaNprocesso: {
-        type: String,
-        required: true
+        type: String
     },
     entradaPortoChegada: {
-        type: String,
-        required: true
+        type: String
     },
     entradaDataHoraChegada: {
-        type: String,
-        required: true
+        type: String
     },
     entradaPosicaoPortoAtual: {
-        type: String,
-        requried: true
+        type: String
     },
     entradaPortoOrigem: {
-        type: String,
-        required: true
+        type: String
     },
     entradaPortoDestino: {
-        type: String,
-        required: true
+        type: String
     },
     entradaDataHoraEstimadaSaida: {
-        type: String,
-        required: true
+        type: String
     },
     entradaNomeRepresentanteEmbarcacao: {
-        type: String,
-        required: true
+        type: String
     },
     entradaCPFCNPJRepresentanteEmbarcacao: {
-        type: String,
-        required: true
+        type: String
     },
     entradaTelefoneRepresentanteEmbarcacao: {
-        type: String,
-        required: true
+        type: String
     },
     entradaEnderecoRepresentanteEmbarcacao: {
-        type: String,
-        required: true
+        type: String
     },
     entradaEmailRepresentanteEmbarcacao: {
-        type: String,
-        requried: true
+        type: String
     },
     entradaDadosUltimaInpecaoNaval: {
-        type: String,
-        required: true
+        type: String
     },
     entradaDeficienciasRetificadasPorto: {
-        type: String,
-        required: true
+        type: String
     },
     entradaTransporteCagaPerigosa: {
-        type: String,
-        required: true
+        type: String
     },
     entradaObservacoes: {
-        type: String,
-        required: true
+        type: String
     },
     entradaTripulantes: [{
         type: Schema.Types.ObjectId,
@@ -98,8 +82,7 @@ const AvisoEntrada = new Schema ({
     },
     embarcacao: {
         type: Schema.Types.ObjectId,
-        ref: 'embarcacoes',
-        required: true
+        ref: 'embarcacoes'
     },
     entradaData: {
         type: Number,

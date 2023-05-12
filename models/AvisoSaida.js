@@ -70,8 +70,7 @@ const AvisoSaida = new Schema({
     },
     embarcacao: {
         type: Schema.Types.ObjectId,
-        ref: 'embarcacoes',
-        required: true
+        ref: 'embarcacoes'
     },
     saidaData: {
         type: Number,

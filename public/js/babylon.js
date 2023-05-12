@@ -18,6 +18,8 @@ fetch('portoInfo')
         porto.position.x = portos.positionX;
         porto.position.z = portos.positionZ;
         porto.position.y = 30;
+
+
         
         porto.material = textura_pontos;
 
@@ -50,7 +52,9 @@ fetch('portoInfo')
           // Remove o card da cena
           document.querySelector(".card").remove();
       }));
-    
+      porto.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function() {
+        window.location.href = `/admin/portoVizu/${portos._id}`
+      }));
 
     })
 

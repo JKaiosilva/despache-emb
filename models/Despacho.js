@@ -8,97 +8,75 @@ const Despacho = new Schema ({
         default: {}
     },
     NprocessoDespacho: {
-        type: String,
-        required: true
+        type: String
     },
     despachoPortoEstadia: {
         type: Schema.Types.ObjectId,
-        ref: 'portos',
-        required: true
+        ref: 'portos'
     },
     despachoDataHoraPartida: {
-        type: String,
-        required: true
+        type: String
     },
     despachoNomeRepresentanteEmbarcacao: {
-        type: String,
-        required: true
+        type: String
     },
     despachoCPFCNPJRepresentanteEmbarcacao: {
-        type: String,
-        required: true
+        type: String
     },
     despachoTelefoneRepresentanteEmbarcacao: {
-        type: String,
-        required: true
+        type: String
     },
     despachoEnderecoRepresentanteEmbarcacao: {
-        type: String,
-        required: true
+        type: String
     },
     despachoEmailRepresentanteEmbarcacao: {
-        type: String,
-        required: true
+        type: String
     },
     despachoDataUltimaInspecaoNaval: {
-        type: String,
-        required: true
+        type: String
     },
     despachoDeficiencias: {
-        type: String,
-        required: true  
+        type: String  
     },
     despachoTransportaCargaPerigosa: {
-        type: String,
-        required: true  
+        type: String  
     },
     despachoCertificadoTemporario90dias: {
-        type: String,
-        required: true  
+        type: String  
     },
     despachoCasoDocumentoExpirado: {
-        type: String,
-        required: false
+        type: String
     },
     despachoOBS: {
-        type: String,
-        required: false
+        type: String
     },
     despachoNTripulantes: {
-        type: String,
-        required: true
+        type: String
     },
     despachoNomeComandante: {
-        type: String,
-        required: true
+        type: String
     },
     despachoTripulantes: [{
         type: Schema.Types.ObjectId,
         ref: 'Tripulante'
     }],
     despachoNomeEmbarcacao: {
-        type: String,
-        required: true
+        type: String
     },
     despachoNEmbN: {
-        type: String,
-        required: true
+        type: String
     },
     despachoArqueacaoBrutaComboio: {
-        type: String,
-        required: true
+        type: String
     },
     despachoCarga: {
-        type: String,
-        required: true
+        type: String
     },
     despachoQuantidadeCaga: {
-        type: String,
-        required: true
+        type: String
     },
     despachoSomaArqueacaoBruta: {
-        type: String,
-        required: true
+        type: String
     },
     despachoDataPedido: {
         type: String,
@@ -110,8 +88,7 @@ const Despacho = new Schema ({
     },
     embarcacao: {
         type: Schema.Types.ObjectId,
-        ref: 'embarcacoes',
-        required: true
+        ref: 'embarcacoes'
     },
     depachoMesAnoAtual: {
         type: String,

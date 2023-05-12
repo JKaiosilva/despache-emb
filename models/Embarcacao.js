@@ -8,48 +8,37 @@ const Embarcacao = new Schema ({
         default: {}
     },
     embarcacaoNome: {
-        type: String,
-        required: true
+        type: String
     },
     embarcacaoTipo: {
-        type: String,
-        required: true
+        type: String
     },
     embarcacaoBandeira: {
-        type: String,
-        required: true
+        type: String
     },
     embarcacaoNInscricaoautoridadeMB: {
-        type: String,
-        required: true
+        type: String
     },
     embarcacaoArqueacaoBruta: {
-        type: String,
-        required: true
+        type: String
     },
     embarcacaoComprimentoTotal: {
-        type: String,
-        required: true
+        type: String
     },
     embarcacaoTonelagemPorteBruto: {
-        type: String,
-        required: true
+        type: String
     },
     embarcacaoCertificadoRegistroAmador: {
-        type: String,
-        required: true
+        type: String
     },
     embarcacaoArmador: {
-        type: String,
-        required: true
+        type: String
     },
     embarcacaoNCRA: {
-        type: String,
-        required: true
+        type: String
     },
     embarcacaoValidade: {
-        type: String,
-        required: true
+        type: String
     },
     embarcacaoDataCadastro: {
         type: String,

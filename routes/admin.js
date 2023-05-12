@@ -1,29 +1,31 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const router = express.Router()
-const { Admin } = require('../helpers/eAdmin')
-const Usuario = mongoose.model('usuarios')
+
 require('../models/Aviso')
-const Aviso = mongoose.model('avisos')
-const moment = require('moment')
 require('../models/Despacho')
-const Despacho = mongoose.model('despachos')
 require('../models/AvisoEntrada')
-const AvisoEntrada = mongoose.model('avisoEntradas')
 require('../models/AvisoSaida')
+require('../models/Tripulante')
+require('../models/Porto');
+require('../models/Relatorio');
+
+const Usuario = mongoose.model('usuarios')
+const Aviso = mongoose.model('avisos')
+const AvisoEntrada = mongoose.model('avisoEntradas')
+const Despacho = mongoose.model('despachos')
 const AvisoSaida = mongoose.model('avisoSaidas')
 const Embarcacao = mongoose.model('embarcacoes')
+const Tripulante = mongoose.model('tripulantes')
+const Porto = mongoose.model('portos')
+const Relatorio = mongoose.model('relatorios')
+
+const { Admin } = require('../helpers/eAdmin')
+const moment = require('moment')
 const fs = require('fs')
-require('dotenv/config');
 const multer = require('multer')
 const mime = require('mime')
 const pdf = require('html-pdf')
-require('../models/Tripulante')
-const Tripulante = mongoose.model('tripulantes')
-require('../models/Porto');
-const Porto = mongoose.model('portos')
-require('../models/Relatorio');
-const Relatorio = mongoose.model('relatorios')
 
 
 const upload = multer({
@@ -37,7 +39,7 @@ const upload = multer({
 })
 
 
-router.get('/painel', async (req, res) => {
+router.get('/painel', Admin, async (req, res) => {
     try {
         var usuariosOperador = await Usuario.find({ _id: req.user._id }).lean();
 
@@ -381,17 +383,7 @@ router.get('/users/usuariosVizu/:id', Admin, (req, res) => {
 })
 
 
-
-router.get('/Relatorios', Admin, async (req, res) => {
-    try {
-        res.render('admin/relatorios/painelRelatorios')
-    } catch (err) {
-        req.flash('error_msg', 'Erro interno')
-        res.redirect('admin/painel')
-    }
-})
-
-router.get('/tripulantes', async (req, res) => {
+router.get('/tripulantes', Admin, async (req, res) => {
     try {
         const tripulantes = await Tripulante.find().lean().sort({ tripulanteNome: 'asc' })
         res.render('admin/tripulantes/tripulantes',
@@ -406,12 +398,17 @@ router.get('/tripulantes', async (req, res) => {
 
 
 
-router.get('/addTripulante', (req, res) => {
-    res.render('admin/tripulantes/addTripulante')
+router.get('/addTripulante', Admin, async (req, res) => {
+    try{
+        res.render('admin/tripulantes/addTripulante')
+    }catch(err){
+        req.flash('error_msg', 'Erro interno')
+        res.redirect('admin/painel')
+    }
 })
 
 
-router.post('/addTripulante', async (req, res) => {
+router.post('/addTripulante', Admin, async (req, res) => {
     try {
         const novoTripulante = {
             usuarioID: req.user._id,
@@ -497,7 +494,7 @@ router.get('/portoVizu/:id', Admin, async(req, res) => {
 
 
 
-router.get('/portoInfo', async (req, res) => {
+router.get('/portoInfo', Admin, async (req, res) => {
     try {
         const dataHoje = moment(Date.now()).format('MM/YYYY')
         const despachos = await Despacho.find({ depachoMesAnoAtual: dataHoje }).lean()

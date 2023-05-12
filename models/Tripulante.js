@@ -7,24 +7,19 @@ const Tripulante = new Schema ({
         default: {}
     },
     tripulanteNome: {
-        type: String,
-        required: true
+        type: String
     },
     tripulanteGrau: {
-        type: String,
-        required: true
+        type: String
     },
     tripulanteDataNascimento: {
-        type: String,
-        required: true
+        type: String
     },
     tripulanteNCIR: {
-        type: String,
-        required: true
+        type: String
     },
     tripulanteValidadeCIR: {
-        type: String,
-        required: true
+        type: String
     },
     tripulanteDataCadastro: {
         type: String

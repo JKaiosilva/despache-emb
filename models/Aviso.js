@@ -4,16 +4,13 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 
 const Aviso = new Schema({
     titulo: {
-        type: String,
-        require: true
+        type: String
     },
     descricao: {
-        type: String,
-        require: true
+        type: String
     },
     conteudo: {
-        type: String,
-        require: true
+        type: String
     },
     avisoData: {
         type: String,
@@ -23,8 +20,7 @@ const Aviso = new Schema({
         type: String
     },
     contentType: {
-    type: String,
-    required: true
+        type: String
     },
     avisoMesAnoAtual: {
         type: String,

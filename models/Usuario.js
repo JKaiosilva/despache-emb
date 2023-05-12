@@ -3,16 +3,13 @@ const Schema = mongoose.Schema
 
 const Usuario = new Schema({
     nome: {
-        type: String,
-        require: true
+        type: String
     },
     email: {
-        type: String,
-        require: true
+        type: String
     },
     CPF: {
-        type: Number,
-        require: true
+        type: Number
     },
     eAdmin: {
         type: Boolean,
@@ -23,8 +20,7 @@ const Usuario = new Schema({
         default: 1
     },
     senha: {
-        type: String,
-        require: true
+        type: String
     },
     dataCadastro: {
         type: Number,
