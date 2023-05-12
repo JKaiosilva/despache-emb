@@ -479,9 +479,18 @@ router.post('/addPorto', Admin, async (req, res) => {
 
 router.get('/portoVizu/:id', Admin, async(req, res) => {
     try{
+        const dataHoje = moment(Date.now()).format('DD/MM/YYYY')
         const portos = await Porto.findOne({_id: req.params.id}).lean()
+        const despachos = await Despacho.find({despachoPortoEstadia: portos._id}).lean()
+        for await(var despacho of despachos){
+            if (despacho._id == portos._id){
+
+            }
+        }
+
             res.render('admin/portos/portoVizu', 
-                {portos: portos
+                {portos: portos,
+                    despachos: despachos
             })
     }catch(err){
         req.flash('error_msg', 'Erro ao mostrar porto.')

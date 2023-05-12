@@ -45,6 +45,18 @@
     </div>
 </div>
 <br>
+    {{#each despachos}}
+        <div class="card mt-4">
+            <div class="card-body">
+                <label>Despacho: {{NprocessoDespacho}}</label>
+                <br>
+                <a class="btn btn-primary" href="/formulario/despachoVizu/{{_id}}" style="float: right">Vizualizar</a>
+            </div>
+        </div>
+    {{else}}
+        <h4>Nenhum Despacho neste porto</h4>
+    {{/each}}
+<br>
 <br>
 <a class="btn btn-primary" href="/admin/portos">Portos</a>
 
