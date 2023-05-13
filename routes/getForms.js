@@ -30,11 +30,18 @@ router.get('/formulario', eUser, async (req, res) => {
         const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
         const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
         
+        if(embarcacoes.length === 0){
+            hidden = 'hidden'
+        }else{
+            hidden = ''
+        }
+
             res.render('formulario/preform', 
             {despachos: despachos, 
                 avisoEntradas: avisoEntradas, 
                     avisoSaidas: avisoSaidas, 
-                        embarcacoes: embarcacoes
+                        embarcacoes: embarcacoes,
+                            hidden: hidden
             })
     }catch(err){
         req.flash('error_msg', 'Não foi possivel mostrar os formularios')
