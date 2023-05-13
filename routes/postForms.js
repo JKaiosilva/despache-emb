@@ -1,23 +1,27 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+
 require('../models/Usuario')
-const moment = require('moment')
 require('../models/Despacho')
-const Despacho = mongoose.model('despachos')
 require('../models/AvisoEntrada')
-const AvisoEntrada = mongoose.model('avisoEntradas')
 require('../models/AvisoSaida')
-const AvisoSaida = mongoose.model('avisoSaidas')
 require('../models/Embarcacao')
-const Embarcacao = mongoose.model('embarcacoes')
 require('../models/Aviso')
 require('../models/Tripulante')
+
+const Despacho = mongoose.model('despachos')
+const AvisoEntrada = mongoose.model('avisoEntradas')
+const AvisoSaida = mongoose.model('avisoSaidas')
+const Embarcacao = mongoose.model('embarcacoes')
 const Tripulante = mongoose.model('tripulantes')
+
+const {eUser} = require('../helpers/eUser')
+const moment = require('moment')
 
 // Novo Formulário
 
-        router.post('/formulario/addEmbarcacao', (req, res) => {
+        router.post('/formulario/addEmbarcacao', eUser, (req, res) => {
             const novaEmbarcacao = {
                 usuarioID: req.user._id,
                 embarcacaoNome: req.body.embarcacaoNome,
@@ -44,7 +48,7 @@ const Tripulante = mongoose.model('tripulantes')
             })
         })
 
-        router.post('/formulario/despacho', async (req, res) => {
+router.post('/formulario/despacho', eUser, async (req, res) => {
             const cleanString = req.body.despachoTripulantes.replace(/[\n' \[\]]/g, '');
             const tripulantes = cleanString.split(',');
             const despachoTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
@@ -94,7 +98,7 @@ const Tripulante = mongoose.model('tripulantes')
         }
     })
 
-        router.post('/formulario/avisoEntrada', async (req, res) => {
+router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
             const cleanString = req.body.despachoTripulantes.replace(/[\n' \[\]]/g, '');
             const tripulantes = cleanString.split(',');
             const avisoEntradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
@@ -143,7 +147,7 @@ const Tripulante = mongoose.model('tripulantes')
                 }
         })
 
-        router.post('/formulario/avisoSaida', async (req, res) => {
+router.post('/formulario/avisoSaida', eUser, async (req, res) => {
             const cleanString = req.body.despachoTripulantes.replace(/[\n' \[\]]/g, '');
             const tripulantes = cleanString.split(',');
             const avisoSaidaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));

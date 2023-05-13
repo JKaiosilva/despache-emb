@@ -1,25 +1,29 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+
 require('../models/Usuario')
 require('../models/Despacho')
-const Despacho = mongoose.model('despachos')
 require('../models/AvisoEntrada')
-const AvisoEntrada = mongoose.model('avisoEntradas')
 require('../models/AvisoSaida')
-const AvisoSaida = mongoose.model('avisoSaidas')
 require('../models/Embarcacao')
-const Embarcacao = mongoose.model('embarcacoes')
 require('../models/Aviso')
-const Aviso = mongoose.model('avisos')
-const pdf = require('html-pdf')
 require('../models/Tripulante')
-const Tripulante = mongoose.model('tripulantes')
 require('../models/Porto')
+
+const Despacho = mongoose.model('despachos')
+const AvisoEntrada = mongoose.model('avisoEntradas')
+const AvisoSaida = mongoose.model('avisoSaidas')
+const Embarcacao = mongoose.model('embarcacoes')
+const Aviso = mongoose.model('avisos')
+const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
 
+const {eUser} = require('../helpers/eUser')
+const pdf = require('html-pdf')
 
-router.get('/formulario', async (req, res) => {
+
+router.get('/formulario', eUser, async (req, res) => {
     try{
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({EmbarcacaoNome: 'asc'})
         const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
@@ -59,7 +63,7 @@ router.get('/pages/termosUso', async (req, res) => {
 })
 
 
-router.get('/formulario/avisoSaida', async(req, res) => {
+router.get('/formulario/avisoSaida', eUser, async(req, res) => {
     try{
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).lean()
         const tripulantes = await Tripulante.find().lean()
@@ -73,7 +77,7 @@ router.get('/formulario/avisoSaida', async(req, res) => {
 })
 
 
-router.get('/formulario/avisoEntrada', async(req, res) => {
+router.get('/formulario/avisoEntrada', eUser, async(req, res) => {
     try{
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).lean()
         const tripulantes = await Tripulante.find().lean()
@@ -88,7 +92,7 @@ router.get('/formulario/avisoEntrada', async(req, res) => {
 })
 
 
-router.get('/formulario/despacho', async(req, res) => {
+router.get('/formulario/despacho', eUser, async(req, res) => {
     try{
         const tripulantes = await Tripulante.find().lean()
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).lean()
@@ -106,7 +110,7 @@ router.get('/formulario/despacho', async(req, res) => {
 
 
 
-router.get('/formulario/addEmbarcacao', async (req, res) => {
+router.get('/formulario/addEmbarcacao', eUser, async (req, res) => {
     try{
         res.render('formulario/embarcacoes/addEmbarcacao')
     }catch(err){
@@ -150,7 +154,7 @@ router.get('/page/:page', async (req, res) => {
 })
 
 
-router.get('/embarcacoes',  async (req, res) => {
+router.get('/embarcacoes', eUser, async (req, res) => {
     try{
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({EmbarcacaoNome: 'asc'})
             res.render('formulario/embarcacoes/embarcacoes', 
@@ -162,7 +166,7 @@ router.get('/embarcacoes',  async (req, res) => {
     }
 })
 
-router.get('/embarcacoes/:page', async (req, res) => {
+router.get('/embarcacoes/:page', eUser, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
@@ -195,7 +199,7 @@ router.get('/embarcacoes/:page', async (req, res) => {
 })
 
 
-router.get('/entradas', async (req, res) => {
+router.get('/entradas', eUser, async (req, res) => {
     try{
         const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
         res.render('formulario/entradas/entradas', 
@@ -208,7 +212,7 @@ router.get('/entradas', async (req, res) => {
 })
 
 
-router.get('/entradas/:page', async (req, res) => {
+router.get('/entradas/:page', eUser, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
@@ -241,7 +245,7 @@ router.get('/entradas/:page', async (req, res) => {
 })
 
 
-router.get('/saidas', async (req, res) => {
+router.get('/saidas', eUser, async (req, res) => {
     try{
         const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
             res.render('formulario/saidas/saidas', 
@@ -254,7 +258,7 @@ router.get('/saidas', async (req, res) => {
 })
 
 
-router.get('/saidas/:page', async (req, res) => {
+router.get('/saidas/:page', eUser, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
@@ -287,7 +291,7 @@ router.get('/saidas/:page', async (req, res) => {
 })
 
 
-router.get('/despachos', async (req, res) => {
+router.get('/despachos', eUser, async (req, res) => {
     try{
         const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
             res.render('formulario/despachos/despachos', 
@@ -300,7 +304,7 @@ router.get('/despachos', async (req, res) => {
 })
 
 
-router.get('/despachos/:page', async (req, res) => {
+router.get('/despachos/:page', eUser, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
@@ -333,7 +337,7 @@ router.get('/despachos/:page', async (req, res) => {
 })
 
 
-router.get('/embarcacoesDespacho/:id', async (req, res) => {
+router.get('/embarcacoesDespacho/:id', eUser, async (req, res) => {
     const embarcacaoId = await req.params._id;
 
     try{

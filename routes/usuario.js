@@ -1,13 +1,17 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+
 require('../models/Usuario')
+require('../models/Embarcacao')
+
 const Usuario = mongoose.model('usuarios')
+const Embarcacao = mongoose.model('embarcacoes')
+
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
-require('../models/Embarcacao')
-const Embarcacao = mongoose.model('embarcacoes')
 const moment = require('moment')
+const {eUser} = require('../helpers/eUser')
 
 // Cadatro de usuário
 
@@ -100,7 +104,7 @@ const moment = require('moment')
 
 // Perfil usuário
 
-            router.get('/perfil', (req, res) => {
+            router.get('/perfil', eUser, (req, res) => {
                 Usuario.find({_id: req.user._id}).lean().sort().then((usuarios) => {
                     Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({embarcacaoDataCadastro: 'asc'}).then((embarcacoes) => {
                         res.render('usuarios/perfil', {usuarios: usuarios, embarcacoes: embarcacoes})

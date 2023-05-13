@@ -1,26 +1,30 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+
 require('../models/Usuario')
 require('../models/Despacho')
-const Despacho = mongoose.model('despachos')
 require('../models/AvisoEntrada')
-const AvisoEntrada = mongoose.model('avisoEntradas')
 require('../models/AvisoSaida')
-const AvisoSaida = mongoose.model('avisoSaidas')
 require('../models/Embarcacao')
-const Embarcacao = mongoose.model('embarcacoes')
 require('../models/Aviso')
-const Aviso = mongoose.model('avisos')
-const pdf = require('html-pdf')
 require('../models/Tripulante')
-const Tripulante = mongoose.model('tripulantes')
 require('../models/Porto')
+
+const Despacho = mongoose.model('despachos')
+const AvisoEntrada = mongoose.model('avisoEntradas')
+const AvisoSaida = mongoose.model('avisoSaidas')
+const Embarcacao = mongoose.model('embarcacoes')
+const Aviso = mongoose.model('avisos')
+const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
 
+const {eUser} = require('../helpers/eUser')
+const pdf = require('html-pdf')
 
 
-router.get('/formulario/embarcacaoVizu/:id', async (req, res) => {
+
+router.get('/formulario/embarcacaoVizu/:id', eUser, async(req, res) => {
     try{
         if(req.user.eAdmin){
             hidden = ''
@@ -45,7 +49,7 @@ router.get('/formulario/embarcacaoVizu/:id', async (req, res) => {
 })
 
 
-router.get('/formulario/despachoVizu/:id', async (req, res) => {
+router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
     try{
         if(req.user.eAdmin){
             hidden = ''
@@ -70,22 +74,22 @@ router.get('/formulario/despachoVizu/:id', async (req, res) => {
 })
 
 
-router.get('/formulario/avisoEntradavizu/:id', async (req, res) => {
+router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
     try{
         if(req.user.eAdmin){
             hidden = ''
         }else{
             hidden = 'hidden'
         }
-        avisoEntradas = await AvisoEntrada.findOne({_id: req.params.id}).lean()
+        const avisoEntradas = await AvisoEntrada.findOne({_id: req.params.id}).lean()
         const tripulantes = await Tripulante.find({_id: avisoEntradas.entradaTripulantes}).lean()
-        embarcacoes = await Embarcacao.findOne({_id: avisoEntradas.embarcacao}).lean()
-        res.render('formulario/entradas/avisoEntradaVizu',
-            {avisoEntradas: avisoEntradas,
-                tripulantes: tripulantes,
-                    embarcacoes: embarcacoes,
-                        hidden: hidden
-            })
+        const embarcacoes = await Embarcacao.findOne({_id: avisoEntradas.embarcacao}).lean()
+            res.render('formulario/entradas/avisoEntradaVizu',
+                {avisoEntradas: avisoEntradas,
+                    tripulantes: tripulantes,
+                        embarcacoes: embarcacoes,
+                            hidden: hidden
+                })
     }catch(err){
         req.flash('error_msg', 'Erro interno ao mostrar formulário')
         res.redirect('/formulario')
@@ -93,22 +97,22 @@ router.get('/formulario/avisoEntradavizu/:id', async (req, res) => {
 })
 
 
-router.get('/formulario/avisoSaidaVizu/:id', async (req, res) => {
+router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
     try{
         if(req.user.eAdmin){
             hidden = ''
         }else{
             hidden = 'hidden'
         }
-        avisoSaidas = await AvisoSaida.findOne({_id: req.params.id}).lean()
-        tripulantes = await Tripulante.find({_id: avisoSaidas.saidaTripulantes}).lean()
-        embarcacoes = await Embarcacao.findOne({_id: avisoSaidas.embarcacao}).lean()
-        res.render('formulario/saidas/avisoSaidaVizu',
-            {avisoSaidas: avisoSaidas,
-                embarcacoes: embarcacoes,
-                    tripulantes: tripulantes,
-                        hidden: hidden
-            })
+        const avisoSaidas = await AvisoSaida.findOne({_id: req.params.id}).lean()
+        const tripulantes = await Tripulante.find({_id: avisoSaidas.saidaTripulantes}).lean()
+        const embarcacoes = await Embarcacao.findOne({_id: avisoSaidas.embarcacao}).lean()
+            res.render('formulario/saidas/avisoSaidaVizu',
+                {avisoSaidas: avisoSaidas,
+                    embarcacoes: embarcacoes,
+                        tripulantes: tripulantes,
+                            hidden: hidden
+                })
     }catch(err){
         req.flash('error_msg', 'Erro interno ao mostrar formulário')
         res.redirect('/formulario')

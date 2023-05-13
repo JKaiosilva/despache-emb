@@ -1,26 +1,30 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+
 require('../models/Usuario')
 require('../models/Despacho')
-const Despacho = mongoose.model('despachos')
 require('../models/AvisoEntrada')
-const AvisoEntrada = mongoose.model('avisoEntradas')
 require('../models/AvisoSaida')
-const AvisoSaida = mongoose.model('avisoSaidas')
 require('../models/Embarcacao')
-const Embarcacao = mongoose.model('embarcacoes')
 require('../models/Aviso')
+require('../models/Tripulante')
+
+const Despacho = mongoose.model('despachos')
+const AvisoEntrada = mongoose.model('avisoEntradas')
+const AvisoSaida = mongoose.model('avisoSaidas')
+const Embarcacao = mongoose.model('embarcacoes')
 const Aviso = mongoose.model('avisos')
 const pdf = require('html-pdf')
-const transporter = require('../config/sendMail')
-const moment = require('moment')
-require('../models/Tripulante')
 const Tripulante = mongoose.model('tripulantes')
 
+const {Admin} = require('../helpers/eAdmin')
+const transporter = require('../config/sendMail')
+const moment = require('moment')
 
 
-router.get('/embarcacao/:id/pdf', (req, res) => {
+
+router.get('/embarcacao/:id/pdf', Admin, (req, res) => {
     Embarcacao.findById(req.params.id).lean().then((embarcacoes) => {
       const html = `
       <form>
@@ -84,7 +88,7 @@ router.get('/embarcacao/:id/pdf', (req, res) => {
 })
 
 
-router.get('/despacho/:id/pdf', async (req, res) => {
+router.get('/despacho/:id/pdf', Admin, async (req, res) => {
     try{
         const despachos = await Despacho.findById(req.params.id).lean()
         const embarcacoes = await Embarcacao.findOne({_id: despachos.embarcacao}).lean()
@@ -300,7 +304,7 @@ router.get('/despacho/:id/pdf', async (req, res) => {
 
 
 
-router.get('/avisoEntrada/:id/pdf', async (req, res) => {
+router.get('/avisoEntrada/:id/pdf', Admin, async (req, res) => {
     try{
         const avisoEntradas = await AvisoEntrada.findById(req.params.id).lean()
         const embarcacoes = await Embarcacao.findOne({_id: avisoEntradas.embarcacao}).lean()
@@ -484,7 +488,7 @@ router.get('/avisoEntrada/:id/pdf', async (req, res) => {
 })
 
 
-router.get('/avisoSaida/:id/pdf', async (req, res) => {
+router.get('/avisoSaida/:id/pdf', Admin, async (req, res) => {
     try{
         const avisoSaidas = await AvisoSaida.findById(req.params.id).lean()
         const embarcacoes = await Embarcacao.findOne({_id: avisoSaidas.embarcacao}).lean()

@@ -23,11 +23,11 @@ const Tripulante = mongoose.model('tripulantes')
 const pdf = require('html-pdf')
 const transporter = require('../config/sendMail')
 const moment = require('moment')
+const {Admin} = require('../helpers/eAdmin')
 
 
 
-
-router.get('/admin/relatorioSaidas', async (req, res) => {
+router.get('/admin/relatorioSaidas', Admin, async (req, res) => {
     try{
             const despachos = await Despacho.find().lean();
             const avisoEntradas = await AvisoEntrada.find().lean();
@@ -553,7 +553,7 @@ router.get('/admin/relatorioSaidas', async (req, res) => {
     }
 })
 
-router.get('/admin/relatorios', async (req, res) => {
+router.get('/admin/relatorios', Admin, async (req, res) => {
     try{
         const relatorios = await Relatorio.find().lean().sort({mesAtual: 'asc'})
             res.render('admin/relatorios/relatorios', 
@@ -565,7 +565,7 @@ router.get('/admin/relatorios', async (req, res) => {
     }
 })
 
-router.get('/admin/relatorios/:id', async (req, res) => {
+router.get('/admin/relatorios/:id', Admin, async (req, res) => {
     try{
         const relatorios = await Relatorio.findOne({_id: req.params.id}).lean()
             res.render('admin/relatorios/relatoriosVizu', 
