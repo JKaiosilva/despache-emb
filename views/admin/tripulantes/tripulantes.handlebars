@@ -10,11 +10,13 @@
             <h5>Nome: {{tripulanteNome}}</h5><br>
             <label>Grau/Função: {{tripulanteGrau}}</label><br>
             <label>Número da CIR: {{tripulanteNCIR}}</label>
+            <a class="btn btn-primary" href="/admin/tripulantesVizu/{{_id}}" style="float: right">Visualizar</a>
         </div>
     </div>
 {{else}}
     <h4>Nenhum tripulante cadastrado!</h4>
 {{/each}}
 <br>
-<br>
-<a class="btn btn-primary" href="/admin/painel">Painel</a>
+<a href="/admin/painel" class="btn btn-primary" {{hidden}}>Painel</a>
+<a href="/admin/tripulantes/2" class="btn btn-primary" style="float: right" {{hidden}}>Próximo</a>
+

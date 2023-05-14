@@ -92,7 +92,6 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
                 res.redirect('/')
 
         }catch(err){
-            console.log(err)
             req.flash('error_msg', 'Erro interno, tente novamente')
             res.redirect('/')
         }
@@ -141,7 +140,6 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
                         req.flash('success_msg', 'Aviso de entrada enviado com sucesso')
                         res.redirect('/')
                 }catch(err){
-                console.log(err)
                 req.flash('error_msg', 'Erro interno, tente novamente')
                 res.redirect('/')
                 }
@@ -184,7 +182,6 @@ router.post('/formulario/avisoSaida', eUser, async (req, res) => {
                         req.flash('success_msg', 'Aviso de saida enviado com sucesso')
                         res.redirect('/')
                 }catch(err){
-                console.log(err)
                 req.flash('error_msg', 'Erro interno, tente novamente')
                 res.redirect('/')
                 }

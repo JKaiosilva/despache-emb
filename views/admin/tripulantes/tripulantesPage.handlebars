@@ -1,0 +1,19 @@
+<h4>Lista Tripulantes</h4>
+<br>
+{{#each tripulantes}}
+    <div class="card mt-4">
+        
+        
+        <div class="card-body">
+            <h5>Nome: {{tripulanteNome}}</h5><br>
+            <label>Grau/Função: {{tripulanteGrau}}</label><br>
+            <label>Número da CIR: {{tripulanteNCIR}}</label>
+        </div>
+    </div>
+{{else}}
+    <h6>Nenhum tripulantes cadastrado</h6>
+{{/each}}
+<br>
+<a href="/admin/tripulantes/{{previousPage}}" class="btn btn-primary">Anterior</a>
+<a href="/admin/tripulantes/{{nextPage}}" class="btn btn-primary" style="float: right" {{hidden}}>Próximo</a>
+

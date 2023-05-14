@@ -239,7 +239,8 @@ router.get('/despachos/:page', Admin, async (req, res) => {
                 hidden: hidden
             })
     } catch (err) {
-
+        req.flash('error_msg', 'Erro interno ao mostrar despachos!')
+        res.redirect('/')
     }
 })
 
@@ -397,6 +398,39 @@ router.get('/tripulantes', Admin, async (req, res) => {
 })
 
 
+router.get('/tripulantes/:page', Admin, async(req, res) => {
+
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+    try{
+        const contagem = Tripulante.count()
+        if(parseInt(page) * limit >= contagem){
+            nextPage = ''
+            hidden = 'hidden'
+        }else{
+            nextPage = parseInt(page) + 1
+            hidden = ''
+        }
+
+        if(parseInt(page) == 2){
+            previousPage = ''
+        }else {
+            previousPage = parseInt(page) - 1
+        }
+        const tripulantes = await Tripulante.find().skip(skip).limit(limit).lean().sort({tripulanteNome: 'asc'})
+            res.render('admin/tripulantes/tripulantesPage',
+                {tripulantes: tripulantes,
+                    nextPage: nextPage,
+                        previousPage: previousPage,
+                            hidden: hidden
+                })
+    }catch(err){
+        req.flash('error_msg', 'Erro interno ao mostrar tripulantes!')
+        res.redirect('/')
+    }
+})
+
 
 router.get('/addTripulante', Admin, async (req, res) => {
     try{
@@ -430,6 +464,18 @@ router.post('/addTripulante', Admin, async (req, res) => {
     }
 })
 
+
+router.get('/tripulantesVizu/:id', Admin, async(req, res) => {
+    try{
+        const tripulantes = await Tripulante.findOne({_id: req.params.id}).lean()
+            res.render('admin/tripulantes/tripulantesVizu', 
+                {tripulantes: tripulantes
+            })
+    }catch(err){
+        req.flash('error_msg', 'Erro ao mostrar tripulante.')
+        res.redirect('painel')
+    }
+})
 
 
 router.get('/portos', Admin, async (req, res) => {

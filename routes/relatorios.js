@@ -534,20 +534,16 @@ router.get('/admin/relatorioSaidas', Admin, async (req, res) => {
         const relatorios = await Relatorio.find().lean();
             if(relatorios.length === 0) {
                 await Relatorio(novoRelatorio).save();
-                console.log('do zero');
             } else {
                 const relatorioExistente = relatorios.some((relatorio) => relatorio.mesAnoAtual === novoRelatorio.mesAnoAtual);
                    if(relatorioExistente){
                         await Relatorio.replaceOne({ mesAnoAtual: novoRelatorio.mesAnoAtual }, novoRelatorio);
-                        console.log('replace')
                     }else{
                         await Relatorio(novoRelatorio).save()
-                        console.log('novo')
                 }
             }
        
     }catch(err){
-        console.log(err)
         req.flash('error_msg', 'Erro interno ao gerar relatório')
         res.redirect('/admin/painel')
     }

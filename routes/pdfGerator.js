@@ -99,7 +99,6 @@ router.get('/despacho/:id/pdf', Admin, async (req, res) => {
             tripulantesInfos.push("Grau: " + el.tripulanteGrau + " ")
             tripulantesInfos.push("Numero da CIR: " + el.tripulanteNCIR)
         })
-        console.log(tripulantes)
         const html = `
         <style>
        
@@ -481,7 +480,6 @@ router.get('/avisoEntrada/:id/pdf', Admin, async (req, res) => {
         
         });
     }catch(err){
-        console.log(err)
         req.flash('error_msg', 'Erro ao gerar PDF')
         res.redirect('/')
     }  
@@ -647,7 +645,52 @@ router.get('/avisoSaida/:id/pdf', Admin, async (req, res) => {
       
       });
     }catch(err){
-        console.log(err)
+        req.flash('error_msg', 'Erro ao gerar PDF')
+        res.redirect('/') 
+    }
+})
+
+
+router.get('/tripulantes/:id/pdf', Admin, async(req, res) => {
+    try{
+        const tripulantes = await Tripulante.findOne({_id: req.params.id}).lean()
+
+        const html = `
+        
+        <div class="card">
+    <div class="card-body">
+        <form>
+                <div>
+
+                    <label>Nome completo</label>
+                    <input value="${tripulantes.tripulanteNome}" type="text" disabled>
+                </div>
+                <div>
+                    <label>Grau ou Função</label>
+                    <input value="${tripulantes.tripulanteGrau}" type="text" disabled>
+                    <label>Data de nascimento</label>
+                    <input value="${tripulantes.tripulanteDataNascimento}" type="text" disabled>
+                </div>
+                <div class="input-group mb-3">
+                    <label>N° da CIR</label>
+                    <input value="${tripulantes.tripulanteNCIR}" type="text" disabled>
+                    <label>Validade da CIR</label>
+                    <input value="${tripulantes.tripulanteValidadeCIR}" type="text" disabled>
+                </div>
+                <label class="text-center">Cadastrado em: ${tripulantes.tripulanteDataCadastro}</label>
+        </form>
+    </div>
+</div>
+        
+        `
+        pdf.create(html).toStream((err, stream) => {
+            if (err) return res.send(err);
+            res.attachment(`${tripulantes.saidaNprocesso}.pdf`);
+            res.setHeader('Content-Type', 'application/pdf');
+            stream.pipe(res);
+          
+          });
+    }catch(err){
         req.flash('error_msg', 'Erro ao gerar PDF')
         res.redirect('/') 
     }

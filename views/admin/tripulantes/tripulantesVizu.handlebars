@@ -1,0 +1,33 @@
+<br>
+<h2 class="text-center mb-4">TRIPULANTE</h2>
+<br>
+<div class="card">
+    <div class="card-body">
+        <form class="row gx-3 gy-2 align-items-center">
+                <div class="input-group mb-3">
+
+                    <label class="input-group-text">Nome completo</label>
+                    <input value="{{tripulantes.tripulanteNome}}" class="form-control" type="text" disabled>
+                </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text">Grau ou Função</label>
+                    <input value="{{tripulantes.tripulanteGrau}}" class="form-control" type="text" disabled>
+                    <label class="input-group-text">Data de nascimento</label>
+                    <input value="{{tripulantes.tripulanteDataNascimento}}" class="form-control" type="text" disabled>
+                </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text">N° da CIR</label>
+                    <input value="{{tripulantes.tripulanteNCIR}}" class="form-control" type="text" disabled>
+                    <label class="input-group-text">Validade da CIR</label>
+                    <input value="{{tripulantes.tripulanteValidadeCIR}}" class="form-control" type="text" disabled>
+                </div>
+                <label class="text-center">Cadastrado em: {{tripulantes.tripulanteDataCadastro}}</label>
+
+        </form>
+    </div>
+</div>
+<br>
+<br>
+<a class="btn btn-primary" href="/admin/tripulantes">Tripulantes</a>
+<a class="btn btn-success" href="/tripulantes/{{tripulantes._id}}/pdf" target="_blank" style="float: right">Gerar PDF</a>
+
