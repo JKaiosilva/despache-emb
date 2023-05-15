@@ -524,7 +524,12 @@ router.get('/portoVizu/:id', Admin, async(req, res) => {
     try{
         const dataHoje = moment(Date.now()).format('DD/MM/YYYY')
         const portos = await Porto.findOne({_id: req.params.id}).lean()
-        const despachos = await Despacho.find({despachoPortoEstadia: portos._id}).lean()
+        var despachos = await Despacho.find({despachoPortoEstadia: portos._id}).lean()
+
+         for await(var despacho of despachos){
+            var embarcacoes = await Embarcacao.findById(despacho.embarcacao).lean()
+            despacho.embarcacao = embarcacoes.embarcacaoNome
+        }
 
 
             res.render('admin/portos/portoVizu', 
@@ -532,8 +537,9 @@ router.get('/portoVizu/:id', Admin, async(req, res) => {
                     despachos: despachos
             })
     }catch(err){
+        console.log(err)
         req.flash('error_msg', 'Erro ao mostrar porto.')
-        res.redirect('painel')
+        res.redirect('portos')
     }
 })
 

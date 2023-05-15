@@ -1,12 +1,12 @@
 <br>
-<h2 class="text-center mb-4">CADASTRO DE PORTO</h2>
+<h2 class="text-center mb-4">PORTO</h2>
 <div class="card">
     <div class="card-body">
         <form class="row gx-3 gy-2 align-items-center">
             <input type="hidden" name="usuarioID" value="%= req.user._id %">
                 <div class="input-group mb-3">
                     <label class="input-group-text">Nome do Porto</label>
-                    <input value="{{portos.portoNome}}" class="form-control" type="text">
+                    <input value="{{portos.portoNome}}" class="form-control" type="text" disabled>
                 </div>
                 <div class="input-group mb-3">
                     <label class="input-group-text">Posição X</label>
@@ -43,12 +43,16 @@
                     </script>
         </form>
     </div>
+        <label class="text-center">Posição X: {{portos.positionX}} || Posição Z: {{portos.positionZ}}</label>
+    <br>
 </div>
 <br>
     {{#each despachos}}
         <div class="card mt-4">
             <div class="card-body">
                 <label>Despacho: {{NprocessoDespacho}}</label>
+                <br>
+                <label>Embarcacao: {{embarcacao}}</label>
                 <br>
                 <a class="btn btn-primary" href="/formulario/despachoVizu/{{_id}}" style="float: right">Vizualizar</a>
             </div>
