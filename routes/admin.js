@@ -26,6 +26,8 @@ const fs = require('fs')
 const multer = require('multer')
 const mime = require('mime')
 const pdf = require('html-pdf')
+const axios = require('axios')
+
 
 
 const upload = multer({
@@ -39,9 +41,17 @@ const upload = multer({
 })
 
 
+
+
 router.get('/painel', Admin, async (req, res) => {
     try {
+
+        const tempo = await axios.get(`https://api.openweathermap.org/data/3.0/onecall?lat=-19.0092&lon=-57.6533&lang=pt_br&appid=${process.env.API_KEY}`)
+
         var usuariosOperador = await Usuario.find({ _id: req.user._id }).lean();
+        
+
+
 
         var avisos = await Aviso.find().count();
         var usuarios = await Usuario.find().count();
@@ -52,6 +62,7 @@ router.get('/painel', Admin, async (req, res) => {
         var tripulantes = await Tripulante.find().count()
         var relatorios = await Relatorio.find().count()
         var portos = await Porto.find().count()
+
 
         res.render('admin/painel',
             {
@@ -64,9 +75,12 @@ router.get('/painel', Admin, async (req, res) => {
                 avisoSaidas: avisoSaidas,
                 tripulantes: tripulantes,
                 relatorios: relatorios,
-                portos: portos
+                portos: portos,
+                climaAtual: tempo.data.current,
+                previsaoAmanha: tempo.data.hourly[0]
             })
     } catch (err) {
+        console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar avisos')
         res.redirect('/')
     }
@@ -537,7 +551,6 @@ router.get('/portoVizu/:id', Admin, async(req, res) => {
                     despachos: despachos
             })
     }catch(err){
-        console.log(err)
         req.flash('error_msg', 'Erro ao mostrar porto.')
         res.redirect('portos')
     }

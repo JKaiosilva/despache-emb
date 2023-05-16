@@ -72,7 +72,7 @@ const createScene = function () {
     camera.attachControl(canvas, false);
 
 
-    const modelo3d = BABYLON.SceneLoader.ImportMesh("", "/3dModels/", "Mapa.gltf", scene, function (newMeshes) {
+    const modelo3d = BABYLON.SceneLoader.ImportMesh("", "/3dModels/", "Rio_paraguai_2.gltf", scene, function (newMeshes) {
         camera.target = newMeshes[0];
         });
 

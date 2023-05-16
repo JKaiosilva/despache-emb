@@ -40,9 +40,9 @@ const Add = require('./helpers/AddIndex')
     // Session
 
     app.use(session({
-        secret: 'despacheemb',
+        secret: process.env.SECRET_KEY,
         resave: true,
-        saveUninitialized: true
+        saveUninitialized: false
     }))
 
     app.use(passport.initialize())

@@ -12,6 +12,7 @@ const passport = require('passport')
 const bcrypt = require('bcryptjs')
 const moment = require('moment')
 const {eUser} = require('../helpers/eUser')
+const jwt = require('jsonwebtoken')
 
 // Cadatro de usuário
 
@@ -86,7 +87,7 @@ const {eUser} = require('../helpers/eUser')
                 passport.authenticate('local', {
                     successRedirect: '/',
                     failureRedirect: '/usuarios/login',
-                    failureFlash: true
+                    failureFlash: true,
                 })(req, res, next)
             })
 
