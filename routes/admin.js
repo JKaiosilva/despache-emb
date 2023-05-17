@@ -27,7 +27,7 @@ const multer = require('multer')
 const mime = require('mime')
 const pdf = require('html-pdf')
 const axios = require('axios')
-const tempo = require('./getClima')
+require('dotenv').config();
 
 
 
@@ -47,11 +47,18 @@ const upload = multer({
 router.get('/painel', Admin, async (req, res) => {
     try {
 
+        const API_KEY = process.env.API_KEY
 
         var usuariosOperador = await Usuario.find({ _id: req.user._id }).lean();
-        
-        setInterval(tempo, 3600)
+        tempo = {}
+        await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=-19.0092&lon=-57.6533&appid=${API_KEY}`)
+        .then(response => {
+            tempo.data = response.data
+        })
 
+             
+
+        
 
 
         var avisos = await Aviso.find().count();
@@ -77,8 +84,8 @@ router.get('/painel', Admin, async (req, res) => {
                 tripulantes: tripulantes,
                 relatorios: relatorios,
                 portos: portos,
-                climaAtual: tempo.climaAtual,
-                previsaoAmanha: tempo.previsaoAmanha
+                tempo: tempo
+
             })
     } catch (err) {
         console.log(err)

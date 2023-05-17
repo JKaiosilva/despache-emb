@@ -22,13 +22,13 @@
       <label>Corumbá-MS Data Hoje</label>
       <img style="float:right; max-width: 3rem" src="/img/sol.png">
       <br>
-      <h1>{{climaAtual}}</h1>
+      <h1>{{tempo.data.main.temp}}C°</h1>
       <div>
-        <label>Umidade: 31%</label>
+        <label>Umidade: {{tempo.data.main.humidity}}%</label>
         <label style="float: right">Chuva: 3.37</label>
       </div>
       <div>
-        <label>Vento: 21 m/s</label>
+        <label>Vento: {{tempo.data.wind.speed}} m/s</label>
         <label style="float: right">Rio Paraguai: 3,30 m</label>
       </div>
     </div>
