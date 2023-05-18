@@ -27,6 +27,7 @@ fetch('portoInfo')
       porto.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, async function() {
           // Cria o elemento HTML do card do Bootstrap
           var card = document.createElement("div");
+          card.id = 'cardPorto'
           card.className = "card";
           card.style.position = "fixed";
           card.style.top = (event.clientY + 10) + "px"; // posição vertical do card
@@ -50,7 +51,7 @@ fetch('portoInfo')
       // Adiciona um evento de mouse out no mesh
       porto.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function() {
           // Remove o card da cena
-          document.querySelector(".card").remove();
+          document.querySelector("#cardPorto").remove();
       }));
       porto.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function() {
         window.location.href = `/admin/portoVizu/${portos._id}`

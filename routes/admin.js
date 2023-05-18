@@ -28,7 +28,7 @@ const mime = require('mime')
 const pdf = require('html-pdf')
 const axios = require('axios')
 require('dotenv').config();
-
+const cheerio = require('cheerio')
 
 
 const upload = multer({
@@ -56,10 +56,15 @@ router.get('/painel', Admin, async (req, res) => {
             tempo.data = response.data
         })
 
-             
+        const {data} = await axios.get('https://www.marinha.mil.br/chn-6/');
+        const $ = cheerio.load(data)
 
-        
-
+        const medidaRio = {}
+        $('.table-responsive table tbody').each((i, elem) => {
+            var medida_ladario = $(elem).find('tr[class="even"] td[class="views-field views-field-field-altura"]').last().text().replace('\n            ', '').replace('          ', '');
+            medidaRio.data = medida_ladario
+        })
+        const dataHoje = moment(Date.now()).format('DD/MM/YYYY HH:mm')
 
         var avisos = await Aviso.find().count();
         var usuarios = await Usuario.find().count();
@@ -84,7 +89,9 @@ router.get('/painel', Admin, async (req, res) => {
                 tripulantes: tripulantes,
                 relatorios: relatorios,
                 portos: portos,
-                tempo: tempo
+                tempo: tempo,
+                medidaRio: medidaRio,
+                dataHoje: dataHoje
 
             })
     } catch (err) {
