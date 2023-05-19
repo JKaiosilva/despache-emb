@@ -12,7 +12,13 @@
                     <h4 class="text-center">Dados da Partida</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de Saída</label>
-                        <input name="saidaPortoSaida" class="form-control" type="text">
+                        <select name="saidaPortoSaida" class="form-select">
+                            {{#each portos}}
+                            <option value="{{_id}}">
+                                {{portoNome}}
+                            </option>
+                            {{/each}}
+                        </select>
                         <label class="input-group-text">Data/Hora de Saída</label>
                         <input name="saidaDataHoraSaida" class="form-control" type="date">
                     </div>

@@ -51,7 +51,7 @@ router.get('/painel', Admin, async (req, res) => {
 
         var usuariosOperador = await Usuario.find({ _id: req.user._id }).lean();
         tempo = {}
-        await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=-19.0092&lon=-57.6533&appid=${API_KEY}`)
+        await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=-19.0092&lon=-57.6533&units=metric&appid=${API_KEY}`)
         .then(response => {
             tempo.data = response.data
         })
@@ -613,5 +613,27 @@ router.get('/portoInfo', Admin, async (req, res) => {
 
     }
 })
+
+
+
+/* router.get('/portoInfo', Admin, async (req, res) => {
+    try{
+        const dataHoje = moment(Date.now()).format('MM/YYYY')
+        const avisoSaidas = await AvisoSaida.find({ saidaMesAnoAtual: dataHoje }).lean()
+        const avisoEntradas = await AvisoEntrada.find({ entradaMesAnoAtual: dataHoje }).lean()
+
+        var portos = []
+
+        var portoFindEntrada = await Porto.find({_id: })
+
+    }catch(err){
+
+    }
+}) */
+
+
+
+
+
 
 module.exports = router

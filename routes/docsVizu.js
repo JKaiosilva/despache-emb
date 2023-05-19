@@ -84,11 +84,14 @@ router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
         const avisoEntradas = await AvisoEntrada.findOne({_id: req.params.id}).lean()
         const tripulantes = await Tripulante.find({_id: avisoEntradas.entradaTripulantes}).lean()
         const embarcacoes = await Embarcacao.findOne({_id: avisoEntradas.embarcacao}).lean()
+        const portos = await Porto.findOne({_id: avisoEntradas.entradaPortoChegada}).lean()
+
             res.render('formulario/entradas/avisoEntradaVizu',
                 {avisoEntradas: avisoEntradas,
                     tripulantes: tripulantes,
                         embarcacoes: embarcacoes,
-                            hidden: hidden
+                            portos: portos,
+                                hidden: hidden
                 })
     }catch(err){
         req.flash('error_msg', 'Erro interno ao mostrar formulário')
@@ -107,11 +110,14 @@ router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
         const avisoSaidas = await AvisoSaida.findOne({_id: req.params.id}).lean()
         const tripulantes = await Tripulante.find({_id: avisoSaidas.saidaTripulantes}).lean()
         const embarcacoes = await Embarcacao.findOne({_id: avisoSaidas.embarcacao}).lean()
+        const portos = await Porto.findOne({_id: avisoSaidas.saidaPortoSaida}).lean()
+
             res.render('formulario/saidas/avisoSaidaVizu',
                 {avisoSaidas: avisoSaidas,
                     embarcacoes: embarcacoes,
                         tripulantes: tripulantes,
-                            hidden: hidden
+                            portos: portos,
+                                hidden: hidden
                 })
     }catch(err){
         req.flash('error_msg', 'Erro interno ao mostrar formulário')

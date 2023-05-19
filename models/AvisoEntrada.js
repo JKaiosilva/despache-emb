@@ -10,7 +10,8 @@ const AvisoEntrada = new Schema ({
         type: String
     },
     entradaPortoChegada: {
-        type: String
+        type: Schema.Types.ObjectId,
+        ref: 'portos'
     },
     entradaDataHoraChegada: {
         type: String

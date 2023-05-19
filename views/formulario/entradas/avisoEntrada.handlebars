@@ -12,7 +12,13 @@
                     <h4 class="text-center">Dados da Estadia</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de chegada</label>
-                        <input name="entradaPortoChegada" class="form-control" type="text">
+                        <select name="entradaPortoChegada" class="form-select">
+                            {{#each portos}}
+                                <option value="{{_id}}">
+                            {{portoNome}}
+                                </option>
+                            {{/each}}
+                        </select>
                         <label class="input-group-text">Data/Hora de chegada</label>
                         <input name="entradaDataHoraChegada" class="form-control" type="date">
                     </div>

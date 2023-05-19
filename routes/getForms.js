@@ -74,9 +74,12 @@ router.get('/formulario/avisoSaida', eUser, async(req, res) => {
     try{
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).lean()
         const tripulantes = await Tripulante.find().lean()
+        const portos = await Porto.find().lean()
             res.render('formulario/saidas/avisoSaida',
                 {embarcacoes: embarcacoes,
-                    tripulantes: tripulantes})
+                    tripulantes: tripulantes,
+                        portos: portos
+            })
     }catch(err){
         req.flash('error_msg', 'Erro interno ao mostrar formulario')
         res.redirect('formulario/preform')
@@ -88,9 +91,12 @@ router.get('/formulario/avisoEntrada', eUser, async(req, res) => {
     try{
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).lean()
         const tripulantes = await Tripulante.find().lean()
+        const portos = await Porto.find().lean()
+
             res.render('formulario/entradas/avisoEntrada', 
                 {embarcacoes: embarcacoes,
-                    tripulantes: tripulantes
+                    tripulantes: tripulantes,
+                        portos: portos
             })
     }catch(err){
         req.flash('error_msg', 'Erro interno ao mostrar formulario')

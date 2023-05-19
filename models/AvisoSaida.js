@@ -10,7 +10,8 @@ const AvisoSaida = new Schema({
 
     },
     saidaPortoSaida: {
-
+        type: Schema.Types.ObjectId,
+        ref: 'portos'
     },
     saidaDataHoraSaida: {
 
