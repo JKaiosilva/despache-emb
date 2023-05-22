@@ -1,0 +1,17 @@
+
+<div class="card">
+    <div class="card-body">
+        <form action="/admin/users/usuarioEdit" method="POST">
+            <input name="id" value="{{usuario._id}}" hidden>
+            <label for="nome"> Nome </label>
+                <input name="nome" type="text" value="{{usuario.nome}}" class="form-control">
+            <label for="email">Email: </label>
+                <input name="email" type="email" value="{{usuario.email}}" class="form-control">
+            <label  type="CPF">CPF/CNPJ: </label>
+                <input name="CPF" type="number" value="{{usuario.CPF}}" class="form-control">
+            <label for="senha">Senha:</label>
+                <input name="senha" type="password" class="form-control">
+            <button type="submit" class="btn btn-success mt-4">Editar</button>
+        </form>
+    </div>
+</div>

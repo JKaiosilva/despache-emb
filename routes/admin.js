@@ -29,6 +29,7 @@ const pdf = require('html-pdf')
 const axios = require('axios')
 require('dotenv').config();
 const cheerio = require('cheerio')
+const bcrypt = require('bcryptjs')
 
 
 const upload = multer({
@@ -408,9 +409,62 @@ router.get('/users/usuariosVizu/:id', Admin, (req, res) => {
         res.render('admin/users/usuariosVizu', { usuario: usuario })
     }).catch((err) => {
         req.flash('error_msg', 'Erro ao mostrar usuarios.')
-        res.redirect('admin/listaUsers')
+        res.redirect('admin/users/listaUsers')
     })
 })
+
+
+router.get('/users/usuariosEdit/:id', Admin, async (req, res) => {
+    try{
+        const usuario = await Usuario.findOne({_id: req.params.id}).lean()
+        res.render('admin/users/usuariosEdit', {
+            usuario: usuario
+        })
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', 'Erro ao mostrar usuarios.')
+        res.redirect('admin/users/listaUsers')
+    }
+})
+
+
+router.post('/users/usuarioEdit', Admin, async(req, res) => {
+    try{
+        const id = req.body.id
+        const usuario = await Usuario.find({ _id: id }).lean();
+
+        if (!usuario) {
+          req.flash('error_msg', 'Usuário não encontrado.');
+          return res.redirect('/admin/painel');
+        }
+
+        bcrypt.genSalt(10, (err, salt)  =>  {
+            bcrypt.hash(req.body.senha, salt, async (err, hash)  =>  {
+                if(err){
+                    console.log(err)
+                    req.flash('error_msg', 'Houve um erro ao salvar usuario')
+                }
+                await Usuario.updateOne({_id: id},{
+                    nome: req.body.nome,
+                    email:req.body.email,
+                    CPF: req.body.CPF,
+                    senha: hash
+                })
+            })
+        })
+
+
+        req.flash('success_msg', 'Usuario editado com sucesso')
+        res.redirect('/admin/painel')
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', 'Erro ao editar usuario.')
+        res.redirect('/admin/painel')
+    }
+})
+
+
+
 
 
 router.get('/tripulantes', Admin, async (req, res) => {
