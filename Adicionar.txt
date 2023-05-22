@@ -3,3 +3,21 @@ Tempo de vencimento das documentações
 tipagem dos inputs 
 
 controle de embarcações
+
+
+despacho arquivo mestre( saidas e entradas arquivpos filhos 1-m)
+
+usuario(solicitar tempo de despacho)
+
+admin(define tempo de despacho)
+
+despacho terá período de utilização, apos isso, fica indisponível
+
+
+editar tripulantes, e limitar seleção nos despachos caso o documento esteja vencido
+
+
+editar embarcação, limitar seleção nos documentos caso esteja vencida
+
+
+portos, colocar vizu de entradas e saidas daquele dia

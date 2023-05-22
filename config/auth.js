@@ -3,7 +3,6 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 require('../models/Usuario')
 const Usuario = mongoose.model('usuarios')
-const jwt = require('jsonwebtoken')
 
 
 module.exports = function(passport) {

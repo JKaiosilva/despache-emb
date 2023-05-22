@@ -66,7 +66,7 @@ fetch('portoInfo')
 const createScene = function () {
 
     const scene = new BABYLON.Scene(engine);
-    scene.clearColor = new BABYLON.Color4(0, 0, 0, 0.1);
+    scene.clearColor = new BABYLON.Color4(0, 0, 0, 0.0);
 
     const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 175, new BABYLON.Vector3(0, 100, 0));
     camera.setTarget(BABYLON.Vector3.Zero());

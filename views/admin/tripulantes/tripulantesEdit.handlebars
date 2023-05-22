@@ -1,0 +1,33 @@
+<br>
+<h2 class="text-center mb-4">TRIPULANTE</h2>
+<br>
+<div class="card">
+    <div class="card-body">
+        <form class="row gx-3 gy-2 align-items-center" action="/admin/tripulantesEdit" method="POST">
+            <input name="id" value="{{tripulante._id}}" hidden>
+                <div class="input-group mb-3">
+
+                    <label class="input-group-text">Nome completo</label>
+                    <input name="tripulanteNome" value="{{tripulante.tripulanteNome}}" class="form-control" type="text">
+                </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text">Grau ou Função</label>
+                    <input name="tripulanteGrau" value="{{tripulante.tripulanteGrau}}" class="form-control" type="text">
+                    <label class="input-group-text">Data de nascimento</label>
+                    <input name="tripulanteDataNascimento" value="{{tripulante.tripulanteDataNascimento}}" class="form-control" type="text">
+                </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text">N° da CIR</label>
+                    <input name="tripulanteNCIR" value="{{tripulante.tripulanteNCIR}}" class="form-control" type="text">
+                    <label class="input-group-text">Validade da CIR</label>
+                    <input name="tripulanteValidadeCIR" value="{{tripulante.tripulanteValidadeCIR}}" class="form-control" type="text">
+                </div>
+                <label class="text-center">Cadastrado em: {{tripulante.tripulanteDataCadastro}}</label>
+                        <button type="submit" class="btn btn-success" required>Enviar</button>
+        </form>
+    </div>
+</div>
+<br>
+<br>
+
+

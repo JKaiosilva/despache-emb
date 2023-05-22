@@ -8,6 +8,8 @@
             <h5>Nome: {{tripulanteNome}}</h5><br>
             <label>Grau/Função: {{tripulanteGrau}}</label><br>
             <label>Número da CIR: {{tripulanteNCIR}}</label>
+            <a class="btn btn-primary" href="/admin/tripulantesVizu/{{_id}}" style="float: right">Visualizar</a>
+            <a class="btn btn-warning float-end mx-1" href="/admin/tripulantesEdit/{{_id}}">Editar</a>
         </div>
     </div>
 {{else}}

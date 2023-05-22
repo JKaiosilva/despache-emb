@@ -597,6 +597,37 @@ router.get('/tripulantesVizu/:id', Admin, async(req, res) => {
 })
 
 
+router.get('/tripulantesEdit/:id', Admin, async(req, res) => {
+    try{
+        const tripulante = await Tripulante.findOne({_id: req.params.id}).lean()
+            res.render('admin/tripulantes/tripulantesEdit', {
+                tripulante: tripulante
+            })
+    }catch(err){
+        req.flash('error_msg', 'Erro ao mostrar tripulante.')
+        res.redirect('painel')
+    }
+})
+
+
+router.post('/tripulantesEdit', Admin, async(req, res) => {
+    try{
+        await Tripulante.updateOne({_id: req.body.id}, {
+            tripulanteNome: req.body.tripulanteNome,
+            tripulanteGrau: req.body.tripulanteGrau,
+            tripulanteDataNascimento: req.body.tripulanteDataNascimento,
+            tripulanteNCIR: req.body.tripulanteNCIR,
+            tripulanteValidadeCIR: req.body.tripulanteValidadeCIR,
+        })
+        req.flash('success_msg', 'Tripulante atualizado com sucesso!')
+        res.redirect('painel')
+    }catch(err){
+        req.flash('error_msg', 'Erro ao editar tripulante.')
+        res.redirect('painel')
+    }
+})
+
+
 router.get('/portos', Admin, async (req, res) => {
     try {
         const portos = await Porto.find().lean().sort({ portoNome: 'asc' })
