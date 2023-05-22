@@ -1,0 +1,62 @@
+<br>
+<h2 class="text-center mb-4">Embarcação Cadastrada</h2>
+<div class="card">
+    <div class="card-body">
+        <form class="row gx-3 gy-2 align-items-center" action="/admin/embarcacoesEdit" method="POST">
+            <input  type="hidden" name="id" value="{{embarcacao._id}}">
+            <div>
+                <h4 class="text-center">Dados da Embarcação</h4>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text">Nome da Embarcação</label>
+                        <input value="{{embarcacao.embarcacaoNome}}" name="embarcacaoNome" class="form-control" type="text">
+                        <label class="input-group-text">Tipo da Embarcação</label>
+                        <select name="{{embarcacao.embarcacaoTipo}}" class="form-control" type="text">
+                            <option value="empurrador">Empurrador</option>
+                            <option value="barcaça">Barcaça</option>
+                            <option value="rebocadorEmpurrador">Rebocador/Empurrador</option>
+                            <option value="balsa">Balsa</option>
+                            <option value="cargaGeral">Carga Geral</option>
+                            <option value="draga">Draga</option>
+                            <option value="lancha">Lancha</option>
+                            <option value="embarcacaoPassageiros">Embarcação de Passageiros</option>
+                        </select>
+                    </div>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">Bandeira</label>
+                <select name="{{embarcacao.embarcacaoBandeira}}" class="form-control" type="text">
+                    <option value="Brasileiro">Brasileiro</option>
+                    <option value="Paraguaio">Paraguaio</option>
+                    <option value="Argentino">Argentino</option>
+                    <option value="Uruguaio">Uruguaio</option>
+                    <option value="Boliviano">Boliviano</option>
+                </select>
+                <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
+                <input value="{{embarcacao.embarcacaoNInscricaoautoridadeMB}}" name="embarcacaoNInscricaoautoridadeMB" class="form-control" type="text">
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">Arqueação Bruta</label>
+                <input value="{{embarcacao.embarcacaoArqueacaoBruta}}" name="embarcacaoArqueacaoBruta" class="form-control" type="text">
+                <label class="input-group-text">Comprimento Total</label>
+                <input value="{{embarcacao.embarcacaoComprimentoTotal}}" name="embarcacaoComprimentoTotal" class="form-control" type="text">
+                <label class="input-group-text">Tonelagem Porte Bruto</label>
+                <input value="{{embarcacao.embarcacaoTonelagemPorteBruto}}" name="embarcacaoTonelagemPorteBruto" class="form-control" type="text">
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">Certificado de Registro do Amador(CRA)</label>
+                <input value="{{embarcacao.embarcacaoCertificadoRegistroAmador}}" name="embarcacaoCertificadoRegistroAmador" class="form-control" type="text">
+                <label class="input-group-text">Armador</label>
+                <input value="{{embarcacao.embarcacaoArmador}}" name="embarcacaoArmador" class="form-control" type="text">
+            </div>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text">N° do CRA</label>
+                        <input value="{{embarcacao.embarcacaoNCRA}}" name="embarcacaoNCRA" class="form-control" type="text">
+                        <label class="input-group-text">Validade</label>
+                        <input value="{{embarcacao.embarcacaoValidade}}" name="embarcacaoValidade" class="form-control" type="text">
+                    </div>
+            </div>
+            <button type="submit" class="btn btn-success">Editar</button>
+        </form>
+    </div>
+</div>
+<br>

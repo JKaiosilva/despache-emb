@@ -191,7 +191,7 @@ router.post('/avisos/deletar', Admin, (req, res) => {
 
 router.get('/listaUsers', Admin, (req, res) => {
     Usuario.find().lean().sort({ nome: 'asc' }).then((usuarios) => {
-        res.render('admin/users/listaUsers', { usuarios: usuarios })
+        res.render('admin/users/users', { usuarios: usuarios })
     }).catch((err) => {
         req.flash('error_msg', 'Erro interno ao mostrar usuarios!')
         res.redirect('/')
@@ -404,12 +404,48 @@ router.get('/embarcacoes/:page', Admin, async (req, res) => {
 })
 
 
+router.get('/embarcacoesEdit/:id', Admin, async(req, res) => {
+    try{
+        const embarcacao = await Embarcacao.findOne({_id: req.params.id}).lean()
+        res.render('admin/embarcacoes/embarcacaoEdit', {
+            embarcacao: embarcacao
+        })
+    }catch(err){
+
+    }
+})
+
+
+router.post('/embarcacoesEdit', Admin, async(req, res) => {
+    try{
+        await Embarcacao.updateOne({_id: req.body.id}, {
+            embarcacaoNome: req.body.embarcacaoNome,
+            embarcacaoTipo: req.body.embarcacaoTipo,
+            embarcacaoBandeira: req.body.embarcacaoBandeira,
+            embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,
+            embarcacaoArqueacaoBruta: req.body.embarcacaoArqueacaoBruta,
+            embarcacaoComprimentoTotal: req.body.embarcacaoComprimentoTotal,
+            embarcacaoTonelagemPorteBruto: req.body.embarcacaoTonelagemPorteBruto,
+            embarcacaoCertificadoRegistroAmador: req.body.embarcacaoCertificadoRegistroAmador,
+            embarcacaoArmador: req.body.embarcacaoArmador,
+            embarcacaoNCRA: req.body.embarcacaoNCRA,
+            embarcacaoValidade: req.body.embarcacaoValidade,
+        })
+        req.flash('success_msg', 'Embarcação editada com sucesso!')
+        res.redirect('painel')
+    }catch(err){
+        req.flash('error_msg', 'Erro ao editar embarcação.')
+        res.redirect('painel')
+    }
+})
+
+
 router.get('/users/usuariosVizu/:id', Admin, (req, res) => {
     Usuario.find({ _id: req.params.id }).lean().then((usuario) => {
         res.render('admin/users/usuariosVizu', { usuario: usuario })
     }).catch((err) => {
         req.flash('error_msg', 'Erro ao mostrar usuarios.')
-        res.redirect('admin/users/listaUsers')
+        res.redirect('admin/users/users')
     })
 })
 
@@ -423,7 +459,7 @@ router.get('/users/usuariosEdit/:id', Admin, async (req, res) => {
     }catch(err){
         console.log(err)
         req.flash('error_msg', 'Erro ao mostrar usuarios.')
-        res.redirect('admin/users/listaUsers')
+        res.redirect('admin/users/users')
     }
 })
 
