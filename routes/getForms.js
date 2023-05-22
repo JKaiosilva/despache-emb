@@ -213,10 +213,13 @@ router.get('/embarcacoes/:page', eUser, async (req, res) => {
 
 
 router.get('/entradas', eUser, async (req, res) => {
+
+    const admin = req.user.eAdmin ? true:false;
     try{
         const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
         res.render('formulario/entradas/entradas', 
             {avisoEntradas: avisoEntradas,
+                admin: admin
             })
     }catch(err){
         req.flash('error_msg', 'Erro ao mostrar página')
@@ -229,6 +232,8 @@ router.get('/entradas/:page', eUser, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
+    const admin = req.user.eAdmin ? true : false;
+
         try{
             const contagem = await AvisoEntrada.count()
             if(parseInt(page) * limit >= contagem){
@@ -249,7 +254,8 @@ router.get('/entradas/:page', eUser, async (req, res) => {
                     {avisoEntradas: avisoEntradas,
                         nextPage: nextPage,
                             previousPage: previousPage,
-                                hidden: hidden
+                                hidden: hidden,
+                                    admin: admin
                     })
         }catch(err){
             req.flash('error_msg', 'Erro ao mostrar página')
@@ -259,10 +265,13 @@ router.get('/entradas/:page', eUser, async (req, res) => {
 
 
 router.get('/saidas', eUser, async (req, res) => {
+
+    const admin = req.user.eAdmin ? true : false;
     try{
         const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
             res.render('formulario/saidas/saidas', 
-                {avisoSaidas: avisoSaidas
+                {avisoSaidas: avisoSaidas,
+                    admin: admin
             })
     }catch(err){
         req.flash('error_msg', 'Erro ao mostrar página')
@@ -275,6 +284,8 @@ router.get('/saidas/:page', eUser, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
+    const admin = req.user.eAdmin ? true : false;
+
         try{
             const contagem = await AvisoSaida.count()
             if(parseInt(page) * limit >= contagem){
@@ -295,7 +306,8 @@ router.get('/saidas/:page', eUser, async (req, res) => {
                     {avisoSaidas: avisoSaidas,
                         nextPage: nextPage,
                             previousPage: previousPage,
-                                hidden: hidden
+                                hidden: hidden,
+                                    admin: admin
                     })
         }catch(err){
             req.flash('error_msg', 'Erro ao mostrar página')
@@ -305,10 +317,13 @@ router.get('/saidas/:page', eUser, async (req, res) => {
 
 
 router.get('/despachos', eUser, async (req, res) => {
+
+    const admin = req.user.eAdmin ? true : false;
     try{
         const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
             res.render('formulario/despachos/despachos', 
-                {despachos: despachos
+                {despachos: despachos,
+                    admin: admin
             })
     }catch(err){
         req.flash('error_msg', 'Erro ao mostrar página')
@@ -321,6 +336,8 @@ router.get('/despachos/:page', eUser, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
+    const admin = req.user.eAdmin ? true : false;
+
         try{
             const contagem = await Despacho.count()
             if(parseInt(page) * limit >= contagem){
@@ -341,7 +358,8 @@ router.get('/despachos/:page', eUser, async (req, res) => {
                     {despachos: despachos,
                         nextPage: nextPage,
                             previousPage: previousPage,
-                                hidden: hidden
+                                hidden: hidden,
+                                    admin: admin
                     })
         }catch(err){
             req.flash('error_msg', 'Erro ao mostrar página')

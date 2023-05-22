@@ -18,10 +18,10 @@
             dezHoras = 36000000
             segundos = 20000
 
-            if(horaLocal > {{saidaData}} + dezHoras) {
+            if(horaLocal > {{saidaData}} + dezHoras && {{../admin}}) {
                 console.log('a')
                 const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-danger')
-            }else if(horaLocal > {{saidaData}} + segundos) {
+            }else if(horaLocal > {{saidaData}} + segundos && {{../admin}}) {
                 console.log('b')
                 const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-warning')
             } else {

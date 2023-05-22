@@ -576,20 +576,19 @@ router.get('/portoVizu/:id', Admin, async(req, res) => {
 
 router.get('/portoInfo', Admin, async (req, res) => {
     try {
-        const dataHoje = moment(Date.now()).format('MM/YYYY')
+        const dataHoje = moment(Date.now()).format('YYYY-MM-DD')
         const despachos = await Despacho.find({ depachoMesAnoAtual: dataHoje }).lean()
-        const avisoSaidas = await AvisoSaida.find({ saidaMesAnoAtual: dataHoje }).lean()
+        const avisoSaidas = await AvisoSaida.find({saidaDataHoraSaida: dataHoje}).lean()
         const avisoEntradas = await AvisoEntrada.find({ entradaMesAnoAtual: dataHoje }).lean()
+        var portos = [];
 
-        var portos = []
-
-        for await (const despacho of despachos) {
+        for await (const saida of avisoSaidas) {
             var portoEmb = {}
-            var procurar = await Embarcacao.findOne({ _id: despacho.embarcacao }).lean()
+            var procurar = await Embarcacao.findOne({ _id: saida.embarcacao }).lean()
             if(procurar.embarcacaoTipo != 'barcaça'){
-                portoEmb = { nome: procurar.embarcacaoNome, id: procurar._id.toString(), portoEstadia: despacho.despachoPortoEstadia.toString() }
+                portoEmb = { nome: procurar.embarcacaoNome, id: procurar._id.toString(), portoEstadia: saida.saidaPortoSaida.toString() }
             }else{
-                portoEmb = { nomeBarcaca: procurar.embarcacaoNome, id: procurar._id.toString(), portoEstadia: despacho.despachoPortoEstadia.toString() }
+                portoEmb = { nomeBarcaca: procurar.embarcacaoNome, id: procurar._id.toString(), portoEstadia: saida.saidaPortoSaida.toString() }
             }
             
 
@@ -612,24 +611,27 @@ router.get('/portoInfo', Admin, async (req, res) => {
     } catch (err) {
 
     }
-})
+}) 
 
 
 
-/* router.get('/portoInfo', Admin, async (req, res) => {
+/*  router.get('/portoInfo', Admin, async (req, res) => {
     try{
         const dataHoje = moment(Date.now()).format('MM/YYYY')
-        const avisoSaidas = await AvisoSaida.find({ saidaMesAnoAtual: dataHoje }).lean()
-        const avisoEntradas = await AvisoEntrada.find({ entradaMesAnoAtual: dataHoje }).lean()
+        const avisoSaidas = await AvisoSaida.find({ saidaDataHoraSaida: dataHoje }).lean()
+        const avisoEntradas = await AvisoEntrada.find({ entradaDataHoraChegada: dataHoje }).lean()
 
         var portos = []
 
-        var portoFindEntrada = await Porto.find({_id: })
+        var portoFindEntradas = await Porto.find({_id: entradaPortoChegada}).lean()
+        var portoFindSaidas = await Porto.find({_id: saidaPortoSaida}).lean()
+
+        if(portoFindEntradas.some(portoFind => portoFind.portoNome))
 
     }catch(err){
 
     }
-}) */
+})  */
 
 
 
