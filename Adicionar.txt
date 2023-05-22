@@ -1,37 +1,5 @@
-add 
+Tempo de vencimento das documentações 
 
-painel admn{
-    tempo de validade de documentos, entradas e saidas
-}
+tipagem dos inputs 
 
-
-user {
-    area de acadastro de embarcações (N° Inscrição na Autoridade Marítima do Brasil) e tripulantes (N° da CIR)
-    
-
-}
-
-
-pagina de passo a passo
-
-
-
-compilado de informações dos despachos (sempre aviso de saida) por mes {
-    passageiros totais,
-    quantos embarcações de cada Tipo (nacionais e estrangeiras definido pela bandeira)
-
-}
-
-adicionar bandeira(
-    brasileira,
-    paraguaia,
-    argentina,
-    uruguaia,
-    boliviana
-)
-
-
-adicionar sistema de email para enviar os relatorios
-
-
-restringir gerador de PDFs somente para Adms
+controle de embarcações

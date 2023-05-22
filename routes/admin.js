@@ -615,23 +615,7 @@ router.get('/portoInfo', Admin, async (req, res) => {
 
 
 
-/*  router.get('/portoInfo', Admin, async (req, res) => {
-    try{
-        const dataHoje = moment(Date.now()).format('MM/YYYY')
-        const avisoSaidas = await AvisoSaida.find({ saidaDataHoraSaida: dataHoje }).lean()
-        const avisoEntradas = await AvisoEntrada.find({ entradaDataHoraChegada: dataHoje }).lean()
 
-        var portos = []
-
-        var portoFindEntradas = await Porto.find({_id: entradaPortoChegada}).lean()
-        var portoFindSaidas = await Porto.find({_id: saidaPortoSaida}).lean()
-
-        if(portoFindEntradas.some(portoFind => portoFind.portoNome))
-
-    }catch(err){
-
-    }
-})  */
 
 
 

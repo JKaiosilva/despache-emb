@@ -368,20 +368,6 @@ router.get('/despachos/:page', eUser, async (req, res) => {
 })
 
 
-router.get('/embarcacoesDespacho/:id', eUser, async (req, res) => {
-    const embarcacaoId = await req.params._id;
-
-    try{
-        const despachos = await Despacho.find({embarcacaoId: embarcacoes._id}).limit(5).lean().sort({despachoDataPedido: 'asc'})
-        res.render('formulario/despachos/embarcacoesDespacho', 
-            {despachos: despachos})
-    }catch(err){
-        req.flash('error_msg', 'Erro ao mostrar página')
-        res.redirect('/formulario')
-    }
-})
-
-
 
 
 module.exports = router
