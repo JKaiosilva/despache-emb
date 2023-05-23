@@ -81,6 +81,7 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
                 despachoCarga: req.body.despachoCarga,
                 despachoQuantidadeCaga: req.body.despachoQuantidadeCaga,
                 despachoSomaArqueacaoBruta: req.body.despachoSomaArqueacaoBruta,
+                despachoDataSolicitada: req.body.despachoDataSolicitada,
                 despachoDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
                 despachoData: Date.now(),
                 embarcacao: req.body.embarcacao,

@@ -275,6 +275,25 @@ router.get('/despachos/:page', Admin, async (req, res) => {
 })
 
 
+router.get('/despachosValidate/:id', Admin, async(req, res) => {
+    try{
+        const despachos = await Despacho.findOne({_id: req.params.id}).lean()
+        const embarcacoes = await Embarcacao.findOne({_id: despachos.embarcacao}).lean()
+        const portos = await Porto.findOne({_id: despachos.despachoPortoEstadia}).lean()
+            res.render('admin/despachos/despachoValidate', {
+                despachos: despachos,
+                    embarcacoes: embarcacoes,
+                        portos: portos
+            })
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', 'Erro interno ao mostrar despachos!')
+        res.redirect('/')
+    }
+})
+
+
+
 router.get('/entradas', Admin, (req, res) => {
     AvisoEntrada.find().limit(5).lean().sort({ entradaData: 'desc' }).then((avisoEntradas) => {
         res.render('admin/entradas/entradas', { avisoEntradas: avisoEntradas })

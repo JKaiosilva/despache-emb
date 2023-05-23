@@ -78,6 +78,15 @@ const Despacho = new Schema ({
     despachoSomaArqueacaoBruta: {
         type: String
     },
+    despachoDataSolicitada:{
+        type: String
+    },
+    despachoDataValidade: {
+        type: String
+    },
+    despachoValidado: {
+        type: Boolean
+    },
     despachoDataPedido: {
         type: String,
         default: []

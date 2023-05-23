@@ -13,18 +13,7 @@
             </div>
         </div>
     </div>
-    <script>
-            horaLocal = Date.now()
-            dezHoras = 36000000
-            segundos = 20000
 
-            if(horaLocal > {{saidaData}} + dezHoras && {{../admin}}) {
-                const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-danger')
-            }else if(horaLocal > {{saidaData}} + segundos && {{../admin}}) {
-                const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-warning')
-            } else {
-            }
-</script>
 {{else}}
 <h6>Nenhum Aviso de Saida</h6>
 {{/each}}

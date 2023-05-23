@@ -13,19 +13,7 @@
             </div>
         </div>
     </div>
-    <script>
-            horaLocal = Date.now()
-            dezHoras = 36000000
-            segundos = 20000
 
-            if(horaLocal > {{despachoData}} + dezHoras && {{../admin}}) {
-                const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-danger')
-            }else if(horaLocal > {{despachoData}} + segundos && {{../admin}}) {
-                const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-warning')
-            } else {
-
-            }
-</script>
 {{else}}
 <h6>Nenhum despaho</h6>
 {{/each}}
