@@ -76,30 +76,44 @@
                         <input name="despachoNomeComandante" class="form-control" type="text">
                     </div>
             </div>
+            <div id="selecaoTripulantes">
+            <div class="container">
             <div>
-                <div id="tripulantes" class="card bg-secondary">
-                    <script>
-                        var tripulantesArray = []
-                        function addInputSelect(divName) {
-                        var newdiv = document.createElement('div');
-                        newdiv.innerHTML = '<select onclick="getId()" name="tripulantesSelect" class="form-select">{{#each tripulantes}}<option value="{{_id}}">{{tripulanteNome}}</option>{{/each}}</select>';
-                        document.getElementById(divName).appendChild(newdiv);
-                        }
-                        addInputSelect('lines');
-                        function getId(){
-                        tripulantesArray = []
-                        var tripulantesIds = document.querySelectorAll("[name='tripulantesSelect'] option:checked")
-                        for (var i = 0; i < tripulantesIds.length; i++) {
-                            tripulantesArray.push(tripulantesIds[i].value)
-                            console.log('foi')
-                            document.getElementById('tripulantesArrayIds').setAttribute('value', `${tripulantesArray}`)
-                        }
-                        console.log(tripulantesArray)
-                        }
-                    </script>
+                    <div id="tripulantes">
+                        <script>
+                            var tripulantesArray = []
+                            function addInputSelect(divName) {
+                            var newdiv = document.createElement('div');
+                            newdiv.innerHTML = '<select name="tripulante" class="form-select"><option id="emBranco">Em Branco</option>{{#each tripulantes}}<option id="tripulante" value="{{_id}}">{{tripulanteNome}}</option>{{/each}}</select><br>';
+                            document.getElementById(divName).appendChild(newdiv);
+                            document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
+                            }
+                            addInputSelect('lines');
+                            function getId(){
+                            document.getElementById('emBranco').remove()
+                            tripulantesArray = []
+                            var tripulantesIds = document.querySelectorAll("[name='tripulante']")
+                            for (var i = 0; i < tripulantesIds.length; i++) {
+                                tripulantesArray.push(tripulantesIds[i].value)
+                                document.getElementById('tripulantesArrayIds').setAttribute('value', `${tripulantesArray}`)
+                            }
+                            document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-success bg-opacity-50 border-success')
+                            console.log(tripulantesArray)
+                            }
+                            function deleteTripulante(id){
+                                document.getElementById(id).remove()
+                                document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
+
+                            }
+                        </script>
+                    </div>
+                    <input value="" id="tripulantesArrayIds" name="despachoTripulantes" hidden>
+                    <button class="btn btn-primary mb-4" type="button" onclick="addInputSelect('tripulantes')">Adicionar tripulante</button>
+                    <button class="btn btn-success" type="button" onclick="getId()" style="float: right">Fechar Relação</button>
+                    
                 </div>
-                <input value="" id="tripulantesArrayIds" name="despachoTripulantes" hidden>
-                <button class="btn btn-primary" type="button" onclick="addInputSelect('tripulantes')">Adicionar tripulante</button>
+                </div>
+            </div>
             </div>
             <div>
                 <h4 class="text-center">Comboios</h4>
