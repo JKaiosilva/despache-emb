@@ -26,36 +26,36 @@
                 <h4 class="text-center">Dados da Embarcação</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Nome da Embarcação</label>
-                        <input name="despachoNomeEmbarcação" class="form-control" type="text" value="{{embarcacoes.embarcacaoNome}}">
+                        <input name="despachoNomeEmbarcação" class="form-control" type="text" value="{{embDespacho.embarcacaoNome}}">
                         <label class="input-group-text">Tipo da Embarcação</label>
-                        <input name="despachoTipoEmbarcacao" class="form-control" type="text" value="{{embarcacoes.embarcacaoTipo}}">
+                        <input name="despachoTipoEmbarcacao" class="form-control" type="text" value="{{embDespacho.embarcacaoTipo}}">
                     </div>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Bandeira</label>
-                <input name="despachoBandeira" class="form-control" type="text" value="{{embarcacoes.embarcacaoBandeira}}">
+                <input name="despachoBandeira" class="form-control" type="text" value="{{embDespacho.embarcacaoBandeira}}">
                 <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-                <input name="despachoNInscricaoautoridadeMB" class="form-control" type="text" value="{{embarcacoes.embarcacaoNInscricaoautoridadeMB}}">
+                <input name="despachoNInscricaoautoridadeMB" class="form-control" type="text" value="{{embDespacho.embarcacaoNInscricaoautoridadeMB}}">
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Arqueação Bruta</label>
-                <input name="despachoArqueacaoBruta" class="form-control" type="text" value="{{embarcacoes.embarcacaoArqueacaoBruta}}">
+                <input name="despachoArqueacaoBruta" class="form-control" type="text" value="{{embDespacho.embarcacaoArqueacaoBruta}}">
                 <label class="input-group-text">Comprimento Total</label>
-                <input name="despachoComprimentoTotal" class="form-control" type="text" value="{{embarcacoes.embarcacaoComprimentoTotal}}">
+                <input name="despachoComprimentoTotal" class="form-control" type="text" value="{{embDespacho.embarcacaoComprimentoTotal}}">
                 <label class="input-group-text">Tonelagem Porte Bruto</label>
-                <input name="despachoTonelagemPorteBruto" class="form-control" type="text" value="{{embarcacoes.embarcacaoTonelagemPorteBruto}}">
+                <input name="despachoTonelagemPorteBruto" class="form-control" type="text" value="{{embDespacho.embarcacaoTonelagemPorteBruto}}">
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Certificado de Registro do Amador(CRA)</label>
-                <input name="despachoCertificadoRegistroAmador" class="form-control" type="text" value="{{embarcacoes.embarcacaoCertificadoRegistroAmador}}">
+                <input name="despachoCertificadoRegistroAmador" class="form-control" type="text" value="{{embDespacho.embarcacaoCertificadoRegistroAmador}}">
                 <label class="input-group-text">Armador</label>
-                <input name="despachoArmador" class="form-control" type="text" value="{{embarcacoes.embarcacaoArmador}}">
+                <input name="despachoArmador" class="form-control" type="text" value="{{embDespacho.embarcacaoArmador}}">
             </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">N° do CRA</label>
-                        <input name="despacgoNCRA" class="form-control" type="text" value="{{embarcacoes.embarcacaoNCRA}}">
+                        <input name="despacgoNCRA" class="form-control" type="text" value="{{embDespacho.embarcacaoNCRA}}">
                         <label class="input-group-text">Validade</label>
-                        <input name="despachoValidade" class="form-control" type="text" value="{{embarcacoes.embarcacaoValidade}}">
+                        <input name="despachoValidade" class="form-control" type="text" value="{{embDespacho.embarcacaoValidade}}">
                     </div>
             
             <div>
@@ -111,42 +111,61 @@
                         <input name="despachoNomeComandante" class="form-control" type="text" value="{{despachos.despachoNomeComandante}}">
                     </div>
             </div>
-            {{#each tripulantes}}
-            <div>
-                <div id="tripulantes" class="card bg-secondary mt-4">
-                    <span>Tripulante: {{add @index 1}}</span>
-                    <input class="form-control" type="text" value="Nome: {{tripulanteNome}}" disabled>
-                    <input class="form-control" type="text" value="Grau: {{tripulanteGrau}}" disabled>
-                    <input class="form-control" type="text" value="Numero da CIR: {{tripulanteNCIR}}" disabled>
+            <div id="selecaoTripulantes">
+                <div class="container">
+                {{#each tripulantes}}
+                <br>
+                <div id="{{_id}}" calss=" m-4">
+                    <div class="card bg-secondary">
+                        <div>
+                            
+                            <span class="m-1">Tripulante: {{add @index 1}}</span>
+                            <button type="button" style="float: right" class="btn btn-danger m-1" onclick="deleteTripulante('{{_id}}')">Remover</button>
+                        </div>
+                        <input class="form-control" type="text" value="Nome: {{tripulanteNome}}" disabled>
+                        <input class="form-control" type="text" value="Grau: {{tripulanteGrau}}" disabled>
+                        <input class="form-control" type="text" value="Numero da CIR: {{tripulanteNCIR}}" disabled>
+                        <input name="tripulante" value="{{_id}}" hidden>
+                    </div>
+                </div>
+                <br>
+                {{/each}}
+                <div>
+                    <div id="tripulantes">
+                        <script>
+                            var tripulantesArray = []
+                            function addInputSelect(divName) {
+                            var newdiv = document.createElement('div');
+                            newdiv.innerHTML = '<select name="tripulante" class="form-select">{{#each tripulantes}}<option id="tripulante" value="{{_id}}">{{tripulanteNome}}</option>{{/each}}</select><br>';
+                            document.getElementById(divName).appendChild(newdiv);
+                            document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
+                            }
+                            addInputSelect('lines');
+                            function getId(){
+                            tripulantesArray = []
+                            var tripulantesIds = document.querySelectorAll("[name='tripulante']")
+                            for (var i = 0; i < tripulantesIds.length; i++) {
+                                tripulantesArray.push(tripulantesIds[i].value)
+                                document.getElementById('tripulantesArrayIds').setAttribute('value', `${tripulantesArray}`)
+                            }
+                            document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-success bg-opacity-50 border-success')
+                            console.log(tripulantesArray)
+                            }
+                            function deleteTripulante(id){
+                                document.getElementById(id).remove()
+                                document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
+
+                            }
+                        </script>
+                    </div>
+                    <input value="" id="tripulantesArrayIds" name="despachoTripulantes" hidden>
+                    <button class="btn btn-primary mb-4" type="button" onclick="addInputSelect('tripulantes')">Adicionar tripulante</button>
+                    <button class="btn btn-success" type="button" onclick="getId()" style="float: right">Fechar Relação</button>
+                    
+                </div>
                 </div>
             </div>
             <br>
-            {{/each}}
-            <div>
-                <div id="tripulantes" class="card bg-secondary">
-                    <script>
-                        var tripulantesArray = [{{tripDespacho._id}}]
-                        function addInputSelect(divName) {
-                        var newdiv = document.createElement('div');
-                        newdiv.innerHTML = '<select onclick="getId()" name="tripulantesSelect" class="form-select">{{#each tripulantes}}<option value="{{_id}}">{{tripulanteNome}}</option>{{/each}}</select>';
-                        document.getElementById(divName).appendChild(newdiv);
-                        }
-                        addInputSelect('lines');
-                        function getId(){
-                        tripulantesArray = []
-                        var tripulantesIds = document.querySelectorAll("[name='tripulantesSelect'] option:checked")
-                        for (var i = 0; i < tripulantesIds.length; i++) {
-                            tripulantesArray.push(tripulantesIds[i].value)
-                            console.log('foi')
-                            document.getElementById('tripulantesArrayIds').setAttribute('value', `${tripulantesArray}`)
-                        }
-                        console.log(tripulantesArray)
-                        }
-                    </script>
-                </div>
-                <input value="" id="tripulantesArrayIds" name="despachoTripulantes" hidden>
-                <button class="btn btn-primary" type="button" onclick="addInputSelect('tripulantes')">Adicionar tripulante</button>
-            </div>
             <div>
                 <h4 class="text-center">Comboios</h4>
                 <span>No caso de navegação em comboio, preencher as informações abaixo sobre as embarcações não propulsadas componentes do comboio</span>
