@@ -4,42 +4,42 @@
     <div class="card-body">
         <form class="row gx-3 gy-2 align-items-center" action="despacho" method="POST">
             <input type="hidden" name="usuarioID" value="%= req.user._id %">
-            <div class="input-group mb-3">
-                <label class="input-group-text">N° Processo de Despacho</label>
-                <input name="NprocessoDespacho" class="form-control" type="text">
-            </div>
-            <br>
-            <div>
-                <h4 class="text-center">Dados de Despacho (data off Clearence)</h4>
+                <div class="input-group mb-3">
+                    <label class="input-group-text">N° Processo de Despacho</label>
+                    <input name="NprocessoDespacho" class="form-control" type="text">
+                </div>
+                <br>
+                <div>
+                    <h4 class="text-center">Dados de Despacho (data off Clearence)</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de Estadia</label>
-                        <select name="despachoPortoEstadia" class="form-select">
-                            {{#each portos}}
-                            <option value="{{_id}}">
-                                {{portoNome}}
-                            </option>
-                            {{/each}}
-                        </select>
+                            <select name="despachoPortoEstadia" class="form-select">
+                                {{#each portos}}
+                                    <option value="{{_id}}">
+                                        {{portoNome}}
+                                    </option>
+                                {{/each}}
+                            </select>
                         <label class="input-group-text">Data/Hora Estimada de Partida</label>
                         <input name="despachoDataHoraPartida" class="form-control" type="date">
                     </div>
-            </div>
+                </div>
             <br>
             <h4 class="text-center">Dados de Representante da Embarcação</h4>
-            <div class="input-group mb-3">
-                <label class="input-group-text">Nome</label>
-                <input name="despachoNomeRepresentanteEmbarcacao" class="form-control" type="text">
-                <label class="input-group-text">CPF/CNPJ</label>
-                <input name="despachoCPFCNPJRepresentanteEmbarcacao" class="form-control" type="text">
-             </div>
-            <div class="input-group mb-3">
+                <div class="input-group mb-3">
+                    <label class="input-group-text">Nome</label>
+                    <input name="despachoNomeRepresentanteEmbarcacao" class="form-control" type="text">
+                    <label class="input-group-text">CPF/CNPJ</label>
+                    <input name="despachoCPFCNPJRepresentanteEmbarcacao" class="form-control" type="text">
+                </div>
+                <div class="input-group mb-3">
                     <label class="input-group-text">Telephone</label>
-                    <input name="despachoTelefoneRepresentanteEmbarcacao" class="form-control" type="text">
+                        <input name="despachoTelefoneRepresentanteEmbarcacao" class="form-control" type="text">
                     <label class="input-group-text">Endereço</label>
-                    <input name="despachoEnderecoRepresentanteEmbarcacao" class="form-control" type="text">
+                        <input name="despachoEnderecoRepresentanteEmbarcacao" class="form-control" type="text">
                     <label class="input-group-text">E-mail</label>
-                    <input name="despachoEmailRepresentanteEmbarcacao" class="form-control" type="text">
-            </div>
+                        <input name="despachoEmailRepresentanteEmbarcacao" class="form-control" type="text">
+                </div>
             </div>
             <div>
                 <h4 class="text-center">Informações Complementares</h4>
@@ -87,9 +87,11 @@
                             var newdiv = document.createElement('div');
                             var divId = "div" + divCounter
                             newdiv.setAttribute('id', divId)
-                            newdiv.innerHTML = '<select name="tripulante" class="btn-group"><option id="emBranco">Em Branco</option>{{#each tripulantes}}<option id="tripulante" value="{{_id}}">{{tripulanteNome}}</option>{{/each}}</select><button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divId + '\')">Excluir</button><br>';                            
+                            newdiv.innerHTML = '<select name="tripulante" class="btn-group"><option id="emBranco" value="emBranco">Em Branco</option>{{#each tripulantes}}<option id="tripulante" value="{{_id}}">{{tripulanteNome}}</option>{{/each}}</select><button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divId + '\')">Excluir</button>';                            
                             document.getElementById(divName).appendChild(newdiv);
                             document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
+                            var submiteButton = document.getElementById('submitButton')
+                            submiteButton.disabled = true
                             divCounter++
                             }
 
@@ -98,23 +100,44 @@
                                 var emBranco = document.getElementById(divId)
                                 emBranco.remove()
                                 document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
+                                var submiteButton = document.getElementById('submitButton')
+                                submiteButton.disabled = true
                             }
 
 
                             addInputSelect('lines');
+
                             function getId(){
+                            
+
+                            
                             tripulantesArray = []
                             
                             
                             var tripulantesIds = document.querySelectorAll("[name='tripulante']")
+                            if(tripulantesArray.length === 0 ){
+                                    var submiteButton = document.getElementById('submitButton')
+                                    submiteButton.disabled = true
+                                }else{
+                                    var submiteButton = document.getElementById('submitButton')
+                                    submiteButton.disabled = false
+                                }
                             for (var i = 0; i < tripulantesIds.length; i++) {
+                                if(tripulantesIds[i].value == 'emBranco'){
+                                    var submiteButton = document.getElementById('submitButton')
+                                    submiteButton.disabled = true
+                                }
                                 tripulantesArray.push(tripulantesIds[i].value)
                                 document.getElementById('tripulantesArrayIds').setAttribute('value', `${tripulantesArray}`)
                             }
                             document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-success bg-opacity-50 border-success')
                             console.log(tripulantesArray)
+                            
                             }
+                            
                             function deleteTripulante(id){
+                                var submiteButton = document.getElementById('submitButton')
+                                submiteButton.disabled = true
                                 tripulantesArray = []
                                 document.getElementById(id).remove()
                                 document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
@@ -124,6 +147,7 @@
                     </div>
                     <input value="" id="tripulantesArrayIds" name="despachoTripulantes" hidden>
                     <button class="btn btn-primary mb-4" type="button" onclick="addInputSelect('tripulantes')">Adicionar tripulante</button>
+                    
                     <button class="btn btn-success" type="button" onclick="getId()" style="float: right">Fechar Relação</button>
                     
                 </div>
@@ -155,9 +179,7 @@
                         </div>
             </div>
                 <Label>Estou ciente de que responderei administrativamente, civil e penalmente pelos eventuais dados incorretos constantes da presente declaração</Label>
-            </div>
-            <br>
-            <div>
+                <div>
                 <select name="embarcacao" class="form-select">
                     {{#each embarcacoes}}
                         <option value="{{_id}}">{{embarcacaoNome}}</option>
@@ -172,7 +194,10 @@
                 <input name="despachoDataSolicitada" class="form-control" type="date">
             </div>
             <br>
-            <button type="submit" class="btn btn-success" required>Enviar</button>
+            <button type="submit" id="submitButton" class="btn btn-success" disabled>Enviar</button>
+            </div>
+            <br>
+            
         </form>
     </div>
 </div>

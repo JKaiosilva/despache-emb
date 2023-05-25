@@ -306,7 +306,6 @@ router.post('/despachoValidate', Admin, async(req, res) => {
     const cleanString = req.body.despachoTripulantes.replace(/[\n' \[\]]/g, '');
     const tripulantes = cleanString.split(',');
     const despachoTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
-    
     try{
         await Despacho.updateOne({_id: req.body.id}, {
             NprocessoDespacho: req.body.NprocessoDespacho,

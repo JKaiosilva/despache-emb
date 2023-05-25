@@ -141,14 +141,15 @@
                     <div id="tripulantes">
                         <script>
                             var divCounter = 0
-                            var tripulantesArray = []
                             function addInputSelect(divName) {
                             var newdiv = document.createElement('div');
                             var divId = "div" + divCounter
                             newdiv.setAttribute('id', divId)
-                            newdiv.innerHTML = '<select name="tripulante" class="btn-group"><option id="emBranco">Em Branco</option>{{#each tripulantes}}<option id="tripulante" value="{{_id}}">{{tripulanteNome}}</option>{{/each}}</select><button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divId + '\')">Excluir</button>';                            
+                            newdiv.innerHTML = '<select name="tripulante" class="btn-group"><option id="emBranco" value="emBranco">Em Branco</option>{{#each tripulantes}}<option id="tripulante" value="{{_id}}">{{tripulanteNome}}</option>{{/each}}</select><button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divId + '\')">Excluir</button>';                            
                             document.getElementById(divName).appendChild(newdiv);
                             document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
+                            var submiteButton = document.getElementById('submitButton')
+                            submiteButton.disabled = true
                             divCounter++
                             }
 
@@ -157,23 +158,38 @@
                                 var emBranco = document.getElementById(divId)
                                 emBranco.remove()
                                 document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
+                                var submiteButton = document.getElementById('submitButton')
+                                submiteButton.disabled = true
                             }
 
 
                             addInputSelect('lines');
+
                             function getId(){
-                            tripulantesArray = []
                             
-                            
+                            var tripulantesArray = []
+
                             var tripulantesIds = document.querySelectorAll("[name='tripulante']")
+                            if(tripulantesArray.length != 0 ){
+                                var submiteButton = document.getElementById('submitButton')
+                                submiteButton.disabled = false
+                                }
                             for (var i = 0; i < tripulantesIds.length; i++) {
+                                if(tripulantesIds[i].value == 'emBranco'){
+                                    var submiteButton = document.getElementById('submitButton')
+                                    submiteButton.disabled = true
+                                }
                                 tripulantesArray.push(tripulantesIds[i].value)
                                 document.getElementById('tripulantesArrayIds').setAttribute('value', `${tripulantesArray}`)
                             }
                             document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-success bg-opacity-50 border-success')
                             console.log(tripulantesArray)
+                            
                             }
+                            
                             function deleteTripulante(id){
+                                var submiteButton = document.getElementById('submitButton')
+                                submiteButton.disabled = true
                                 tripulantesArray = []
                                 document.getElementById(id).remove()
                                 document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
@@ -183,7 +199,7 @@
                     </div>
                     <input value="" id="tripulantesArrayIds" name="despachoTripulantes" hidden>
                     <button class="btn btn-primary mb-4" type="button" onclick="addInputSelect('tripulantes')">Adicionar tripulante</button>
-                    <button class="btn btn-success" type="button" onclick="getId()" style="float: right">Fechar Relação</button>
+                    <button class="btn btn-success" type="button" onclick="getId()" style="float: right" required>Fechar Relação</button>
                     
                 </div>
                 </div>
@@ -237,7 +253,7 @@
                     <label class="input-group-text">Vencimento do despacho</label>
                     <input value="{{despachos.despachoDataValidade}}" class="form-control" type="date" placeholder="Este campo será preenchido após verificação do despachante" required>
                 </div>
-                <button type="submit" class="btn btn-success" required>Validar</button>
+                <button type="submit" id="submitButton" class="btn btn-success" disabled>Validar</button>
         </form>
     </div>
 </div>
