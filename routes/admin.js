@@ -277,19 +277,21 @@ router.get('/despachos/:page', Admin, async (req, res) => {
 
 router.get('/despachosValidate/:id', Admin, async(req, res) => {
     try{
-        const despachos = await Despacho.findOne({_id: req.params.id}).lean()
-        const embDespacho = await Embarcacao.findOne({_id: despachos.embarcacao}).lean()
-        const embarcacoes = await Embarcacao.find().lean()
-        const portos = await Porto.findOne({_id: despachos.despachoPortoEstadia}).lean()
-        const tripDespacho = await Tripulante.find({_id: despachos.despachoTripulantes}).lean()
-        const tripulantes = await Tripulante.find().lean()
+        const despachos = await Despacho.findOne({_id: req.params.id}).lean();
+        const embDespacho = await Embarcacao.findOne({_id: despachos.embarcacao}).lean();
+        const embarcacoes = await Embarcacao.find().lean();
+        const portos = await Porto.find().lean();
+        const portoDespacho = await Porto.findOne({_id: despachos.despachoPortoEstadia}).lean();
+        const tripDespacho = await Tripulante.find({_id: despachos.despachoTripulantes}).lean();
+        const tripulantes = await Tripulante.find().lean();
             res.render('admin/despachos/despachoValidate', {
                 despachos: despachos,
                     embarcacoes: embarcacoes,
                         portos: portos,
-                            embDespacho: embDespacho,
-                                tripDespacho: tripDespacho,
-                                    tripulantes: tripulantes
+                            portoDespacho: portoDespacho,
+                                embDespacho: embDespacho,
+                                    tripDespacho: tripDespacho,
+                                        tripulantes: tripulantes
 
             })
     }catch(err){
@@ -334,7 +336,10 @@ router.post('/despachoValidate', Admin, async(req, res) => {
             despachoDataValidade: req.body.despachoDataValidade,
             despachoValidade: Date.parse(req.body.despachoDataValidade)
         })
+        req.flash('success_msg', 'Despacho Validade com sucesso!')
+        res.redirect('painel')
     }catch(err){
+        console.log(err)
         req.flash('error_msg', 'Erro ao validar despachos!')
         res.redirect('painel')
     }

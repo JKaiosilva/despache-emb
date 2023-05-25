@@ -15,8 +15,15 @@
             <div>
                 <h4 class="text-center">Dados de Despacho (data off Clearence)</h4>
                     <div class="input-group mb-3">
-                        <label class="input-group-text">Porto de Estadia</label>
-                        <input name="despachoPortoEstadia" class="form-control" type="text" value="{{portos.portoNome}}">
+                        <label class="input-group-text">{{portoDespacho.portoNome}}</label><br>
+                        <label class="input-group-text">Redefinir porto de Estadia</label>
+                        <select name="despachoPortoEstadia" class="form-select">
+                            {{#each portos}}
+                            <option value="{{_id}}">
+                                {{portoNome}}
+                            </option>
+                            {{/each}}
+                        </select>
                         <label class="input-group-text">Data/Hora Estimada de Partida</label>
                         <input name="despachoDataHoraPartida" class="form-control" type="date" value="{{despachos.despachoDataHoraPartida}}">
                     </div>
@@ -113,10 +120,10 @@
             </div>
             <div id="selecaoTripulantes">
                 <div class="container">
-                {{#each tripulantes}}
-                <br>
+                {{#each tripDespacho}}
+                
                 <div id="{{_id}}" calss=" m-4">
-                    <div class="card bg-secondary">
+                    <div class="card bg-secondary m-4">
                         <div>
                             
                             <span class="m-1">Tripulante: {{add @index 1}}</span>
@@ -128,21 +135,36 @@
                         <input name="tripulante" value="{{_id}}" hidden>
                     </div>
                 </div>
-                <br>
+                
                 {{/each}}
                 <div>
                     <div id="tripulantes">
                         <script>
+                            var divCounter = 0
                             var tripulantesArray = []
                             function addInputSelect(divName) {
                             var newdiv = document.createElement('div');
-                            newdiv.innerHTML = '<select name="tripulante" class="form-select">{{#each tripulantes}}<option id="tripulante" value="{{_id}}">{{tripulanteNome}}</option>{{/each}}</select><br>';
+                            var divId = "div" + divCounter
+                            newdiv.setAttribute('id', divId)
+                            newdiv.innerHTML = '<select name="tripulante" class="btn-group"><option id="emBranco">Em Branco</option>{{#each tripulantes}}<option id="tripulante" value="{{_id}}">{{tripulanteNome}}</option>{{/each}}</select><button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divId + '\')">Excluir</button>';                            
                             document.getElementById(divName).appendChild(newdiv);
                             document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
+                            divCounter++
                             }
+
+                            function deleteBranco(divId){
+                                tripulantesArray = []
+                                var emBranco = document.getElementById(divId)
+                                emBranco.remove()
+                                document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
+                            }
+
+
                             addInputSelect('lines');
                             function getId(){
                             tripulantesArray = []
+                            
+                            
                             var tripulantesIds = document.querySelectorAll("[name='tripulante']")
                             for (var i = 0; i < tripulantesIds.length; i++) {
                                 tripulantesArray.push(tripulantesIds[i].value)
@@ -152,6 +174,7 @@
                             console.log(tripulantesArray)
                             }
                             function deleteTripulante(id){
+                                tripulantesArray = []
                                 document.getElementById(id).remove()
                                 document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
 
@@ -212,7 +235,7 @@
                 </div>
                 <div class="input-group mb-3">
                     <label class="input-group-text">Vencimento do despacho</label>
-                    <input value="{{despachos.despachoDataValidade}}" class="form-control" type="date" placeholder="Este campo será preenchido após verificação do despachante">
+                    <input value="{{despachos.despachoDataValidade}}" class="form-control" type="date" placeholder="Este campo será preenchido após verificação do despachante" required>
                 </div>
                 <button type="submit" class="btn btn-success" required>Validar</button>
         </form>

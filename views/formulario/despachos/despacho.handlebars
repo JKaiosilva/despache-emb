@@ -81,17 +81,31 @@
             <div>
                     <div id="tripulantes">
                         <script>
+                            var divCounter = 0
                             var tripulantesArray = []
                             function addInputSelect(divName) {
                             var newdiv = document.createElement('div');
-                            newdiv.innerHTML = '<select name="tripulante" class="form-select"><option id="emBranco">Em Branco</option>{{#each tripulantes}}<option id="tripulante" value="{{_id}}">{{tripulanteNome}}</option>{{/each}}</select><br>';
+                            var divId = "div" + divCounter
+                            newdiv.setAttribute('id', divId)
+                            newdiv.innerHTML = '<select name="tripulante" class="btn-group"><option id="emBranco">Em Branco</option>{{#each tripulantes}}<option id="tripulante" value="{{_id}}">{{tripulanteNome}}</option>{{/each}}</select><button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divId + '\')">Excluir</button><br>';                            
                             document.getElementById(divName).appendChild(newdiv);
                             document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
+                            divCounter++
                             }
+
+                            function deleteBranco(divId){
+                                tripulantesArray = []
+                                var emBranco = document.getElementById(divId)
+                                emBranco.remove()
+                                document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
+                            }
+
+
                             addInputSelect('lines');
                             function getId(){
-                            document.getElementById('emBranco').remove()
                             tripulantesArray = []
+                            
+                            
                             var tripulantesIds = document.querySelectorAll("[name='tripulante']")
                             for (var i = 0; i < tripulantesIds.length; i++) {
                                 tripulantesArray.push(tripulantesIds[i].value)
@@ -101,6 +115,7 @@
                             console.log(tripulantesArray)
                             }
                             function deleteTripulante(id){
+                                tripulantesArray = []
                                 document.getElementById(id).remove()
                                 document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
 
@@ -141,7 +156,7 @@
             </div>
                 <Label>Estou ciente de que responderei administrativamente, civil e penalmente pelos eventuais dados incorretos constantes da presente declaração</Label>
             </div>
-
+            <br>
             <div>
                 <select name="embarcacao" class="form-select">
                     {{#each embarcacoes}}
