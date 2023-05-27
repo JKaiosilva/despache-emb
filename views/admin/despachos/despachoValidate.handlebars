@@ -150,6 +150,7 @@
                             document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
                             var submiteButton = document.getElementById('submitButton')
                             submiteButton.disabled = true
+                            document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
                             divCounter++
                             }
 
@@ -160,40 +161,49 @@
                                 document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
                                 var submiteButton = document.getElementById('submitButton')
                                 submiteButton.disabled = true
+                                document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
                             }
-
 
                             addInputSelect('lines');
 
                             function getId(){
                             
+                            var submiteButton = document.getElementById('submitButton')
+                            submiteButton.disabled = false
+
                             var tripulantesArray = []
 
                             var tripulantesIds = document.querySelectorAll("[name='tripulante']")
-                            if(tripulantesArray.length != 0 ){
-                                var submiteButton = document.getElementById('submitButton')
-                                submiteButton.disabled = false
+                                        for (var i = 0; i < tripulantesIds.length; i++) {
+                                            if(tripulantesIds[i].value == 'emBranco'){
+                                                var submiteButton = document.getElementById('submitButton')
+                                                submiteButton.disabled = true
+                                                
+                                            }
+                                    tripulantesArray.push(tripulantesIds[i].value)
+                                    document.getElementById('tripulantesArrayIds').setAttribute('value', `${tripulantesArray}`)
                                 }
-                            for (var i = 0; i < tripulantesIds.length; i++) {
-                                if(tripulantesIds[i].value == 'emBranco'){
+                                if(tripulantesArray.length == 0 ){
                                     var submiteButton = document.getElementById('submitButton')
                                     submiteButton.disabled = true
+                                    document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
                                 }
-                                tripulantesArray.push(tripulantesIds[i].value)
-                                document.getElementById('tripulantesArrayIds').setAttribute('value', `${tripulantesArray}`)
-                            }
-                            document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-success bg-opacity-50 border-success')
-                            console.log(tripulantesArray)
+                                if(tripulantesArray.find('emBranco')){
+                                    document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-warning bg-opacity-50 border-danger')
+                                }else{
+                                    document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-success bg-opacity-50 border-success')
+                                }
+                                console.log(tripulantesArray)
                             
+                                
                             }
-                            
                             function deleteTripulante(id){
                                 var submiteButton = document.getElementById('submitButton')
                                 submiteButton.disabled = true
                                 tripulantesArray = []
                                 document.getElementById(id).remove()
                                 document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
-
+                                document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
                             }
                         </script>
                     </div>
