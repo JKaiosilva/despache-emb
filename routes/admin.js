@@ -47,25 +47,47 @@ const upload = multer({
 
 router.get('/painel', Admin, async (req, res) => {
     try {
-
         const API_KEY = process.env.API_KEY
 
         var usuariosOperador = await Usuario.find({ _id: req.user._id }).lean();
+
         tempo = {}
-        await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=-19.0092&lon=-57.6533&units=metric&appid=${API_KEY}`)
-        .then(response => {
+
+        const openweathermap = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=-19.0092&lon=-57.6533&units=metric&appid=${API_KEY}`)
+        .then((response)=> {
             tempo.data = response.data
+        }).catch((err)=>{
+            if (err.code === 'ENOTFOUND') {
+                console.log('Erro de conexão com a API OpenWeatherMap');
+                tempo.data = null;
+            } else {
+                throw err;
+            }
         })
 
-        const {data} = await axios.get('https://www.marinha.mil.br/chn-6/');
-        const $ = cheerio.load(data)
 
-        const medidaRio = {}
-        $('.table-responsive table tbody').each((i, elem) => {
-            var medida_ladario = $(elem).find('tr[class="even"] td[class="views-field views-field-field-altura"]').last().text().replace('\n            ', '').replace('          ', '');
-            medidaRio.data = medida_ladario
+        const medidaRio = {};
+
+        const RioParaguai = await axios.get('https://www.marinha.mil.br/chn-6/')
+        .then(({data}) => {
+                const $ = cheerio.load(data);
+    
+                $('.table-responsive table tbody').each((i, elem) => {
+                    var medida_ladario = $(elem).find('tr[class="even"] td[class="views-field views-field-field-altura"]').last().text().replace('\n            ', '').replace('          ', '');
+                    medidaRio.data = medida_ladario;
+                });
+        }).catch((err)=> {
+            if (err.code === 'ENOTFOUND') {
+                console.log('Erro de conexão com a API OpenWeatherMap');
+                medidaRio.data = null;
+            } else {
+                throw err;
+            }
         })
-        const dataHoje = moment(Date.now()).format('DD/MM/YYYY HH:mm')
+
+
+
+        const dataHoje = moment(Date.now()).format('DD/MM/YYYY HH:mm');
 
         var avisos = await Aviso.find().count();
         var usuarios = await Usuario.find().count();
@@ -77,31 +99,28 @@ router.get('/painel', Admin, async (req, res) => {
         var relatorios = await Relatorio.find().count()
         var portos = await Porto.find().count()
 
-
-        res.render('admin/painel',
-            {
-                avisos: avisos,
-                usuariosOperador: usuariosOperador,
-                usuarios: usuarios,
-                embarcacoes: embarcacoes,
-                despachos: despachos,
-                avisoEntradas: avisoEntradas,
-                avisoSaidas: avisoSaidas,
-                tripulantes: tripulantes,
-                relatorios: relatorios,
-                portos: portos,
-                tempo: tempo,
-                medidaRio: medidaRio,
-                dataHoje: dataHoje
-
-            })
+        res.render('admin/painel', {
+            avisos: avisos,
+            usuariosOperador: usuariosOperador,
+            usuarios: usuarios,
+            embarcacoes: embarcacoes,
+            despachos: despachos,
+            avisoEntradas: avisoEntradas,
+            avisoSaidas: avisoSaidas,
+            tripulantes: tripulantes,
+            relatorios: relatorios,
+            portos: portos,
+            tempo: tempo,
+            medidaRio: medidaRio,
+            dataHoje: dataHoje
+        });
     } catch (err) {
-        console.log(err)
-        req.flash('error_msg', 'Erro interno ao mostrar avisos')
-        res.redirect('/')
+        console.log(err);
+        req.flash('error_msg', 'Erro interno ao mostrar avisos');
+        res.redirect('/');
     }
+});
 
-})
 
 
 router.get('/avisos', Admin, async (req, res) => {
@@ -303,10 +322,11 @@ router.get('/despachosValidate/:id', Admin, async(req, res) => {
 
 
 router.post('/despachoValidate', Admin, async(req, res) => {
+   try{
     const cleanString = req.body.despachoTripulantes.replace(/[\n' \[\]]/g, '');
     const tripulantes = cleanString.split(',');
     const despachoTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
-    try{
+ 
         await Despacho.updateOne({_id: req.body.id}, {
             NprocessoDespacho: req.body.NprocessoDespacho,
             despachoPortoEstadia: req.body.despachoPortoEstadia,
@@ -384,7 +404,90 @@ router.get('/entradasPage/:page', Admin, async (req, res) => {
                 hidden: hidden
             })
     } catch (err) {
+        req.flash('error_msg', 'Erro interno ao mostrar avisos de entrada!')
+        res.redirect('/')
+    }
+})
 
+
+router.get('/entradasValidate/:id', Admin, async(req, res) => {
+    try{
+        const avisoEntradas = await AvisoEntrada.findOne({_id: req.params.id}).lean()
+        const tripulantesValid = await Tripulante.find({_id: avisoEntradas.entradaTripulantes}).lean()
+        const embarcacoesValid = await Embarcacao.findOne({_id: avisoEntradas.embarcacao}).lean()
+        const portosValid = await Porto.findOne({_id: avisoEntradas.entradaPortoChegada}).lean()
+        const despachoValid = await Despacho.findOne({_id: avisoEntradas.entradaDespacho}).lean()
+
+        const tripulantes = await Tripulante.find().lean()
+        const embarcacoes = await Embarcacao.find().lean()
+        const portos = await Porto.find().lean()
+        const despachos = await Despacho.find().lean()
+
+
+            res.render('admin/entradas/avisoEntradaValidate',
+                {avisoEntradas: avisoEntradas,
+                    tripulantesValid: tripulantesValid,
+                        embarcacoesValid: embarcacoesValid,
+                            despachoValid: despachoValid,
+                                portosValid: portosValid,
+                                    tripulantes: tripulantes,
+                                        embarcacoes: embarcacoes,
+                                            portos: portos,
+                                                despachos: despachos
+                })
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', 'Erro interno ao mostrar aviso de entrada!')
+        res.redirect('/')
+    }
+})
+
+
+router.post('/entradasValidate', Admin, async(req, res) => {
+    try{
+        const cleanString = req.body.entradaTripulantes.replace(/[\n' \[\]]/g, '');
+        const tripulantes = cleanString.split(',');
+        const entradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+    
+        await AvisoEntrada.updateOne({_id: req.body.id}, {
+            entradaDespacho: req.body.entradaDespacho,
+            entradaNprocesso: req.body.entradaNprocesso,
+            entradaPortoChegada: req.body.entradaPortoChegada,
+            entradaDataHoraChegada: req.body.entradaDataHoraChegada,
+            entradaPosicaoPortoAtual: req.body.entradaPosicaoPortoAtual,
+            entradaPortoOrigem: req.body.entradaPortoOrigem,
+            entradaPortoDestino: req.body.entradaPortoDestino,
+            entradaDataHoraEstimadaSaida: req.body.entradaDataHoraEstimadaSaida,
+            entradaNomeRepresentanteEmbarcacao: req.body.entradaNomeRepresentanteEmbarcacao,
+            entradaCPFCNPJRepresentanteEmbarcacao: req.body.entradaCPFCNPJRepresentanteEmbarcacao,
+            entradaTelefoneRepresentanteEmbarcacao: req.body.entradaTelefoneRepresentanteEmbarcacao,
+            entradaEnderecoRepresentanteEmbarcacao: req.body.entradaEnderecoRepresentanteEmbarcacao,
+            entradaEmailRepresentanteEmbarcacao: req.body.entradaEmailRepresentanteEmbarcacao,
+            entradaDadosUltimaInpecaoNaval: req.body.entradaDadosUltimaInpecaoNaval,
+            entradaDeficienciasRetificadasPorto: req.body.entradaDeficienciasRetificadasPorto,
+            entradaTransporteCagaPerigosa: req.body.entradaTransporteCagaPerigosa,
+            entradaObservacoes: req.body.entradaObservacoes,
+            entradaTripulantes: entradaTripulantes,
+            entradaPassageiros: "Nome: "+ req.body.entradaPassageirosNome+
+            " || Data de Nascimento: " + req.body.entradaPassageirosDataNascimento+
+            " || Sexo: " + req.body.entradaPassageirosSexo,
+            entradaComboios: "Nome: "+ req.body.entradaComboiosNome+
+            " || Numero de Inscrição: "+ req.body.entradaComboiosNIncricao+
+            " || Arqueação Bruta: "+ req.body.entradaComboiosArqueacaoBruta+
+            " || Carga: "+ req.body.entradaComboiosCarga+
+            " || Quantidade da Caga: "+ req.body.entradaComboiosQuantidadeCarga,
+            entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+            embarcacao: req.body.embarcacao,
+            entradaData: Date.now(),
+            entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+
+        })
+            req.flash('success_msg', 'Aviso de entrada validado com sucesso')
+            res.redirect('/')
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', 'Erro ao validar despachos!')
+        res.redirect('painel')
     }
 })
 
@@ -805,13 +908,6 @@ router.get('/portoInfo', Admin, async (req, res) => {
 
     }
 }) 
-
-
-
-
-
-
-
 
 
 

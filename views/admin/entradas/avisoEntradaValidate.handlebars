@@ -1,11 +1,18 @@
+
 <br>
 <h2 class="text-center mb-4">AVISO DE ENTRADA – NAVEGAÇÃO INTERIOR</h2>
+<h4 class="text-center mb-4">Aviso de Entrada enviado em: {{avisoEntradas.entradaDataPedido}}</h4>
+
 <div class="card">
     <div class="card-body">
-        <form class="row gx-3 gy-2 align-items-center" action="avisoEntrada" method="POST">
-            <input type="hidden" name="usuarioID" value="%= req.user._id %">
+        <form class="row gx-3 gy-2 align-items-center">
+            <input type="hidden" name="id" value="{{avisoEntradas._id}}">
+            <div class="input-group mb-3">
+                    <label class="input-group-text">Despacho referente</label>
+                    <input value="{{despachoValid.NprocessoDespacho}}" class="form-control" disabled>
+                </div>
                 <div class="input-group mb-3">
-                    <label class="input-group-text" class="input-group-text">Despacho referente</label>
+                    <label class="input-group-text" class="input-group-text">Redefinir Despacho referente</label>
                         <select name="entradaDespacho" class="form-select">
                             {{#each despachos}}
                                 <option value="{{_id}}">
@@ -15,88 +22,119 @@
                         </select>
                 </div>
                 <div class="input-group mb-3">
-                    <label class="input-group-text" class="input-group-text">N° Pocesso de Entrada</label>
-                    <input name="entradaNprocesso" class="form-control" type="text">
+                    <label class="input-group-text" class="input-group-text">N° Pocesso de Despacho</label>
+                    <input name="entradaNprocesso" class="form-control" type="text" value="{{avisoEntradas.entradaNprocesso}}">
                 </div>
                 <div>
                     <h4 class="text-center">Dados da Estadia</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de chegada</label>
-                        <select name="entradaPortoChegada" class="form-select">
-                            {{#each portos}}
-                                <option value="{{_id}}">
-                            {{portoNome}}
-                                </option>
-                            {{/each}}
-                        </select>
+                        <input class="form-control" type="text" value="{{portosValid.portoNome}}" disabled>
+                        <label class="input-group-text">Redefinir Porto de chegada</label>
+                            <select name="entradaPortoChegada" class="form-select">
+                                {{#each portos}}
+                                    <option value="{{_id}}">
+                                {{portoNome}}
+                                    </option>
+                                {{/each}}
+                            </select>
                         <label class="input-group-text">Data/Hora de chegada</label>
-                        <input name="entradaDataHoraChegada" class="form-control" type="date">
+                        <input name="entradaDataHoraChegada" class="form-control" type="date" value="{{avisoEntradas.entradaDataHoraChegada}}">
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Posição no Porto Atual</label>
-                        <input name="entradaPosicaoPortoAtual" class="form-control" type="text">
+                        <input name="entradaPosicaoPortoAtual" class="form-control" type="text" value="{{avisoEntradas.entradaPosicaoPortoAtual}}">
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de Origem</label>
-                        <input name="entradaPortoOrigem" class="form-control" type="text">
+                        <input name="entradaPortoOrigem" class="form-control" type="text" value="{{avisoEntradas.entradaPortoOrigem}}">
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de Destino</label>
-                        <input name="entradaPortoDestino" class="form-control" type="text">
+                        <input name="entradaPortoDestino" class="form-control" type="text" value="{{avisoEntradas.entradaPortoDestino}}">
                         <label class="input-group-text">Data/Hora Estimada de Saída para Porto de destino</label>
-                        <input name="entradaDataHoraEstimadaSaida" class="form-control" type="date">
+                        <input name="entradaDataHoraEstimadaSaida" class="form-control" type="date" value="{{avisoEntradas.entradaDataHoraEstimadaSaida}}">
                     </div>
+                <div>
+                    <h4 class="text-center">Dados da Embarcação</h4>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Nome da Embarcação</label>
+                            <input name="entradaNomeEmbarcacao" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoNome}}">
+                            <label class="input-group-text">Tipo da Embarcação</label>
+                            <input name="entradaTipoEmbarcacao" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoTipo}}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Bandeira</label>
+                            <input name="entradaBandeira" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoBandeira}}">
+                            <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
+                            <input name="entradaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoNInscricaoautoridadeMB}}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Arqueação Buta</label>
+                            <input name="entradaArqueacaoBruta" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoArqueacaoBruta}}">
+                            <label class="input-group-text">Tonelagem Porte Bruto</label>
+                            <input name="entradaTonelagemPorteBruto" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoTonelagemPorteBruto}}">
+                        </div>
+                </div>
                     <h4 class="text-center">Dados do Representante da Embarcação</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Nome</label>
-                        <input name="entradaNomeRepresentanteEmbarcacao" class="form-control" type="text">
+                        <input name="entradaNomeRepresentanteEmbarcacao" class="form-control" type="text" value="{{avisoEntradas.entradaNomeRepresentanteEmbarcacao}}">
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">CPF/CNPJ</label>
-                        <input name="entradaCPFCNPJRepresentanteEmbarcacao" class="form-control" type="text">
+                        <input name="entradaCPFCNPJRepresentanteEmbarcacao" class="form-control" type="text" value="{{avisoEntradas.entradaCPFCNPJRepresentanteEmbarcacao}}">
                         <label class="input-group-text">Telefone</label>
-                        <input name="entradaTelefoneRepresentanteEmbarcacao" class="form-control" type="text">
+                        <input name="entradaTelefoneRepresentanteEmbarcacao" class="form-control" type="text" value="{{avisoEntradas.entradaTelefoneRepresentanteEmbarcacao}}">
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Endereço</label>
-                        <input name="entradaEnderecoRepresentanteEmbarcacao" class="form-control" type="text">
+                        <input name="entradaEnderecoRepresentanteEmbarcacao" class="form-control" type="text" value="{{avisoEntradas.entradaEnderecoRepresentanteEmbarcacao}}">
                         <label class="input-group-text">Email</label>
-                        <input name="entradaEmailRepresentanteEmbarcacao" class="form-control" type="text">
+                        <input name="entradaEmailRepresentanteEmbarcacao" class="form-control" type="text" value="{{avisoEntradas.entradaEmailRepresentanteEmbarcacao}}">
                     </div>
                 </div>
                 <div>
                     <h4 class="text-center">Informações Complementares</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Dados da Ultima Inspeção Naval</label>
-                        <input name="entradaDadosUltimaInpecaoNaval" class="form-control" type="text">
+                        <input name="entradaDadosUltimaInpecaoNaval" class="form-control" type="text" value="{{avisoEntradas.entradaDadosUltimaInpecaoNaval}}">
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Deficiências a serem retificadas neste porto?</label>
-                        <input name="entradaDeficienciasRetificadasPorto" class="form-control" type="text">
+                        <input name="entradaDeficienciasRetificadasPorto" class="form-control" type="text" value="{{avisoEntradas.entradaDeficienciasRetificadasPorto}}">
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Transporte de Carga Perigosa</label>
-                        <input name="entradaTransporteCagaPerigosa" class="form-control" type="text">
+                        <input name="entradaTransporteCagaPerigosa" class="form-control" type="text" value="{{avisoEntradas.entradaTransporteCagaPerigosa}}">
                     </div>
                 </div>
                 <div>
                     <h4 class="text-center">Observações</h4>
                     <div class="input-group mb-3">
-                        <textarea name="entradaObservacoes" class="form-control" type="text"></textarea>
+                        <input name="entradaObservacoes" class="form-control" type="text" value="{{avisoEntradas.entradaObservacoes}}">
                     </div>
                 </div>
-                <div>
-                <h4 class="text-center mt-3">Lista de Tripulantes</h4>
-                    <div class="input-group mb-3">
-                        <label class="input-group-text">N° de Tripulantes - incluindo o Comandante</label>
-                        <input name="despachoNTripulantes" class="form-control" type="text">
-                        <label class="input-group-text">Nome do Comandante</label>
-                        <input name="despachoNomeComandante" class="form-control" type="text">
+                <div id="selecaoTripulantes">
+                <div class="container">
+                {{#each tripulantesValid}}
+                
+                <div id="{{_id}}" calss=" m-4">
+                    <div class="card bg-secondary m-4">
+                        <div>
+                            
+                            <span class="m-1">Tripulante: {{add @index 1}}</span>
+                            <button type="button" style="float: right" class="btn btn-danger m-1" onclick="deleteTripulante('{{_id}}')">Remover</button>
+                        </div>
+                        <input class="form-control" type="text" value="Nome: {{tripulanteNome}}" disabled>
+                        <input class="form-control" type="text" value="Grau: {{tripulanteGrau}}" disabled>
+                        <input class="form-control" type="text" value="Numero da CIR: {{tripulanteNCIR}}" disabled>
+                        <input name="tripulante" value="{{_id}}" hidden>
                     </div>
-            </div>
-            <div id="selecaoTripulantes">
-            <div class="container">
-            <div>
+                </div>
+                
+                {{/each}}
+                <div>
                     <div id="tripulantes">
                         <script>
                            var divCounter = 0
@@ -175,7 +213,6 @@
                 </div>
                 </div>
             </div>
-            </div>
                 <div>
                     <div id="passageiros" class="card bg-secondary">
                         <h4 class="text-center">Lista de Passageiros</h4>
@@ -230,22 +267,27 @@
                     </div>
                     <button class="btn btn-primary" type="button" onclick="addInputcomboios('comboios')">Adicioanar comboio</button>
                     </div>
-                <div>
-                    <label class="input-group-text">Estou ciente de que responderei administrativa, 
-                        civil e penalmente pelos 
-                        eventuais dados incorretos constantes da presente declaração</label>
+                    <div>
+                        <label>Embarcação</label>
+                        <input value="{{embarcacoesValid.embarcacaoNome}}" disabled>
+                    </div>
+                    <div>
+                        <label  class="input-group-text">Redefinir Embarcação</label>
+                        <select name="embarcacao" class="form-select">
+                            {{#each embarcacoes}}
+                                <option value="{{_id}}">{{embarcacaoNome}}</option>
+                            {{else}}
+                                <option value="0">Nenhuma embarcação cadastrada</option>
+                            {{/each}}
+                        </select>
                 </div>
-                <div>
-                    <select name="embarcacao" class="form-select">
-                        {{#each embarcacoes}}
-                            <option value="{{_id}}">{{embarcacaoNome}}</option>
-                        {{else}}
-                            <option value="0">Nenhuma embarcação cadastrada</option>
-                        {{/each}}
-                    </select>
-                </div>
-                <br>
-                <button type="submit" id="submitButton" class="btn btn-success" disabled>Enviar</button>
+                <button type="submit" id="submitButton" class="btn btn-success" disabled>Validar</button>
         </form>
     </div>
 </div>
+<br>
+<div class="text-center" {{hidden}}>
+ <a class="btn btn-success" href="/avisoEntrada/{{avisoEntradas._id}}/pdf" target="_blank" style="float: right">Gerar PDF</a>
+</div>
+<input class="btn btn-success" type="button" value="Voltar" style="float: left" onClick="history.go(-1)"> 
+<br>

@@ -105,6 +105,7 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
                 try{
                     const novoAvisoEntrada = {
                         usuarioID: req.user._id,
+                        entradaDespacho: req.body.entradaDespacho,
                         entradaNprocesso: req.body.entradaNprocesso,
                         entradaPortoChegada: req.body.entradaPortoChegada,
                         entradaDataHoraChegada: req.body.entradaDataHoraChegada,

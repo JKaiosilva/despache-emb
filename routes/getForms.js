@@ -28,35 +28,26 @@ router.get('/formulario', eUser, async (req, res) => {
     try{
         const dataHoje = Date.now()
 
-
         const embarcacoesValid = await Embarcacao.find({usuarioID: req.user._id}).lean().sort({EmbarcacaoNome: 'asc'})
         const despachosValid = await Despacho.find({usuarioID: req.user._id}).lean().sort({despachoData: 'desc'})
-
 
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({EmbarcacaoNome: 'asc'})
         const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
         const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
         const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
         
-        if(embarcacoesValid.length === 0 ){
-            hidden = 'hidden'
-            alertHidden = ''
-        }else if(embarcacoesValid.some(el => el.embarcacaoValidadeNumber < dataHoje) || embarcacoesValid.find(el => el.embarcacaoValidadeNumber == null)){
-            hidden = 'hidden'
-            alertHidden = ''
-
-        }else if(despachosValid.length === 0){
+        if(embarcacoesValid.some(el => el.embarcacaoValidadeNumber > dataHoje)){
             hidden = ''
-            docHidden = 'hidden'
             alertHidden = ''
-        }else if(despachosValid.some(el => el.despachoDataValidadeNumber < dataHoje) || despachosValid.some(el => el.despachoDataValidadeNumber == null)){
-            hidden = ''
-            docHidden = 'hidden'
-            alertHidden = ''
-        }else{
             docHidden = ''
+        }else if(despachosValid.some(el => el.despachoDataValidadeNumber > dataHoje)){
             hidden = ''
+            docHidden = ''
             alertHidden = 'hidden'
+        }else{
+            hidden = 'hidden'
+            docHidden = 'hidden'
+            alertHidden = ''
         }
             res.render('formulario/preform', 
             {despachos: despachos, 
@@ -115,6 +106,8 @@ router.get('/formulario/avisoSaida', eUser, async(req, res) => {
 
 router.get('/formulario/avisoEntrada', eUser, async(req, res) => {
     try{
+        const dataHoje = Date.now()
+        const despachos = await Despacho.find({usuarioID: req.user._id, despachoDataValidadeNumber: {$gte: dataHoje}}).lean()
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).lean()
         const tripulantes = await Tripulante.find().lean()
         const portos = await Porto.find().lean()
@@ -122,7 +115,8 @@ router.get('/formulario/avisoEntrada', eUser, async(req, res) => {
             res.render('formulario/entradas/avisoEntrada', 
                 {embarcacoes: embarcacoes,
                     tripulantes: tripulantes,
-                        portos: portos
+                        portos: portos,
+                            despachos: despachos
             })
     }catch(err){
         req.flash('error_msg', 'Erro interno ao mostrar formulario')

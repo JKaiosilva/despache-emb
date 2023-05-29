@@ -85,13 +85,15 @@ router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
         const tripulantes = await Tripulante.find({_id: avisoEntradas.entradaTripulantes}).lean()
         const embarcacoes = await Embarcacao.findOne({_id: avisoEntradas.embarcacao}).lean()
         const portos = await Porto.findOne({_id: avisoEntradas.entradaPortoChegada}).lean()
+        const despacho = await Despacho.findOne({_id: avisoEntradas.entradaDespacho}).lean()
 
             res.render('formulario/entradas/avisoEntradaVizu',
                 {avisoEntradas: avisoEntradas,
                     tripulantes: tripulantes,
                         embarcacoes: embarcacoes,
-                            portos: portos,
-                                hidden: hidden
+                            despacho: despacho,
+                                portos: portos,
+                                    hidden: hidden
                 })
     }catch(err){
         req.flash('error_msg', 'Erro interno ao mostrar formulário')

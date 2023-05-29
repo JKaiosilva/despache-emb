@@ -7,9 +7,9 @@ controle de embarcações
 
 despacho arquivo mestre( saidas e entradas arquivpos filhos 1-m)
 
-usuario(solicitar tempo de despacho)
+usuario(solicitar tempo de despacho) ok
 
-admin(define tempo de despacho)
+admin(define tempo de despacho) ok
 
 despacho terá período de utilização, apos isso, fica indisponível
 
