@@ -11,7 +11,7 @@
             <li>confira se os seus documentos estão atualizados no banco de dados.</li>
             <br>
             <div class="container text-center">
-                <label class=" bg-warning text-center" {{alertHidden}}>Os campos de solicitação de formulário serão liberados após confirmação dos dados por parte do despachante</label>
+                <label class=" bg-warning text-center" {{alertHidden2}} {{alertHidden}}>Os campos de solicitação de formulário serão liberados após confirmação dos dados por parte do despachante</label>
 
             <div class="row justify-content-around">
 
@@ -34,7 +34,7 @@
                         </div>
 
 
-                        <div class="card mt-4" style="max-width: 15rem" {{docHidden}}>
+                        <div class="card mt-4" style="max-width: 15rem" {{hidden}} {{docHidden}}>
                         <a href="/formulario/avisoEntrada" style="text-decoration:none">
                         <div class="cad-body text-center" style="max-width: 15rem; padding: 3rem">
                             <img src="/img/docEntrada.svg" class="img-fluid rounded-center"  alt="...">
@@ -44,7 +44,7 @@
                         </div>
 
 
-                        <div class="card mt-4" style="max-width: 15rem" {{docHidden}}>
+                        <div class="card mt-4" style="max-width: 15rem" {{hidden}} {{docHidden}}>
                         <a href="/formulario/avisoSaida" style="text-decoration:none">
                         <div class="cad-body text-center" style="max-width: 15rem; padding: 3rem">
                             <img src="/img/docSaida.svg" class="img-fluid rounded-center"  alt="...">

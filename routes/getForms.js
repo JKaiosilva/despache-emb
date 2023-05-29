@@ -44,22 +44,20 @@ router.get('/formulario', eUser, async (req, res) => {
         }else if(embarcacoesValid.some(el => el.embarcacaoValidadeNumber < dataHoje) || embarcacoesValid.find(el => el.embarcacaoValidadeNumber == null)){
             hidden = 'hidden'
             alertHidden = ''
-        }else{
-            hidden = ''
-            alertHidden = 'hidden'
-        }
 
-        if(despachosValid.length === 0){
+        }else if(despachosValid.length === 0){
+            hidden = ''
             docHidden = 'hidden'
             alertHidden = ''
         }else if(despachosValid.some(el => el.despachoDataValidadeNumber < dataHoje) || despachosValid.some(el => el.despachoDataValidadeNumber == null)){
+            hidden = ''
             docHidden = 'hidden'
             alertHidden = ''
         }else{
             docHidden = ''
+            hidden = ''
             alertHidden = 'hidden'
         }
-
             res.render('formulario/preform', 
             {despachos: despachos, 
                 avisoEntradas: avisoEntradas, 
@@ -67,7 +65,8 @@ router.get('/formulario', eUser, async (req, res) => {
                         embarcacoes: embarcacoes,
                             hidden: hidden,
                                 alertHidden: alertHidden,
-                                    docHidden: docHidden
+                                    docHidden: docHidden,
+                                        
             })
     }catch(err){
         console.log(err)
