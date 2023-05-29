@@ -333,6 +333,7 @@ router.post('/despachoValidate', Admin, async(req, res) => {
             despachoSomaArqueacaoBruta: req.body.despachoSomaArqueacaoBruta,
             despachoDataSolicitada: req.body.despachoDataSolicitada,
             despachoDataValidade: req.body.despachoDataValidade,
+            despachoDataValidadeNumber: Date.parse(req.body.despachoDataValidade),
             despachoValidade: Date.parse(req.body.despachoDataValidade)
         })
         req.flash('success_msg', 'Despacho Validade com sucesso!')
@@ -499,7 +500,8 @@ router.post('/embarcacoesEdit', Admin, async(req, res) => {
             embarcacaoCertificadoRegistroAmador: req.body.embarcacaoCertificadoRegistroAmador,
             embarcacaoArmador: req.body.embarcacaoArmador,
             embarcacaoNCRA: req.body.embarcacaoNCRA,
-            embarcacaoValidade: req.body.embarcacaoValidade,
+            embarcacaoValidade: req.body.embarcacaoValidadeNumber,
+            embarcacaoValidadeNumber: Date.parse(req.body.embarcacaoValidadeNumber)
         })
         req.flash('success_msg', 'Embarcação editada com sucesso!')
         res.redirect('painel')

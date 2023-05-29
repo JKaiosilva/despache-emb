@@ -34,7 +34,6 @@ const moment = require('moment')
                 embarcacaoCertificadoRegistroAmador: req.body.embarcacaoCertificadoRegistroAmador,
                 embarcacaoArmador: req.body.embarcacaoArmador,
                 embarcacaoNCRA: req.body.embarcacaoNCRA,
-                embarcacaoValidade: req.body.embarcacaoValidade,
                 embarcacaoDataCadastro: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
                 embarcacaoData: Date.now(),
                 embarcacaoMesAnoAtual: moment(Date.now()).format('MM/YYYY')

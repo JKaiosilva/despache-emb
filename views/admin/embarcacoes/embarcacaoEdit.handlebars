@@ -52,7 +52,9 @@
                         <label class="input-group-text">N° do CRA</label>
                         <input value="{{embarcacao.embarcacaoNCRA}}" name="embarcacaoNCRA" class="form-control" type="text">
                         <label class="input-group-text">Validade</label>
-                        <input value="{{embarcacao.embarcacaoValidade}}" name="embarcacaoValidade" class="form-control" type="text">
+                        <input value="{{embarcacao.embarcacaoValidade}}" class="form-control" type="text" disabled>
+                        <label class="input-group-text">Alterar Validade</label>
+                        <input name="embarcacaoValidadeNumber" class="form-control" type="date">
                     </div>
             </div>
             <button type="submit" class="btn btn-success">Editar</button>

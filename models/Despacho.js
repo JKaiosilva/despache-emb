@@ -84,8 +84,8 @@ const Despacho = new Schema ({
     despachoDataValidade: {
         type: String
     },
-    despachoValidado: {
-        type: Boolean
+    despachoDataValidadeNumber: {
+        type: String
     },
     despachoDataPedido: {
         type: String,

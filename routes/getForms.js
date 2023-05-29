@@ -21,19 +21,43 @@ const Porto = mongoose.model('portos')
 
 const {eUser} = require('../helpers/eUser')
 const pdf = require('html-pdf')
+const moment = require('moment')
 
 
 router.get('/formulario', eUser, async (req, res) => {
     try{
+        const dataHoje = Date.now()
+
+
+        const embarcacoesValid = await Embarcacao.find({usuarioID: req.user._id}).lean().sort({EmbarcacaoNome: 'asc'})
+        const despachosValid = await Despacho.find({usuarioID: req.user._id}).lean().sort({despachoData: 'desc'})
+
+
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({EmbarcacaoNome: 'asc'})
         const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
         const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
         const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
         
-        if(embarcacoes.length === 0){
+        if(embarcacoesValid.length === 0 ){
             hidden = 'hidden'
+            alertHidden = ''
+        }else if(embarcacoesValid.some(el => el.embarcacaoValidadeNumber < dataHoje) || embarcacoesValid.find(el => el.embarcacaoValidadeNumber == null)){
+            hidden = 'hidden'
+            alertHidden = ''
         }else{
             hidden = ''
+            alertHidden = 'hidden'
+        }
+
+        if(despachosValid.length === 0){
+            docHidden = 'hidden'
+            alertHidden = ''
+        }else if(despachosValid.some(el => el.despachoDataValidadeNumber < dataHoje) || despachosValid.some(el => el.despachoDataValidadeNumber == null)){
+            docHidden = 'hidden'
+            alertHidden = ''
+        }else{
+            docHidden = ''
+            alertHidden = 'hidden'
         }
 
             res.render('formulario/preform', 
@@ -41,9 +65,12 @@ router.get('/formulario', eUser, async (req, res) => {
                 avisoEntradas: avisoEntradas, 
                     avisoSaidas: avisoSaidas, 
                         embarcacoes: embarcacoes,
-                            hidden: hidden
+                            hidden: hidden,
+                                alertHidden: alertHidden,
+                                    docHidden: docHidden
             })
     }catch(err){
+        console.log(err)
         req.flash('error_msg', 'Não foi possivel mostrar os formularios')
         res.redirect('/')
     }
