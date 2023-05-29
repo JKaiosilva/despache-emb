@@ -36,18 +36,18 @@ router.get('/formulario', eUser, async (req, res) => {
         const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
         const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
         
-        if(embarcacoesValid.some(el => el.embarcacaoValidadeNumber > dataHoje)){
-            hidden = ''
+        if(!embarcacoesValid.find(el => el.embarcacaoValidadeNumber > dataHoje)){
+            hidden = 'hidden'
             alertHidden = ''
-            docHidden = ''
-        }else if(despachosValid.some(el => el.despachoDataValidadeNumber > dataHoje)){
+            docHidden = 'hidden'
+        }else if(!despachosValid.find(el => el.despachoDataValidadeNumber > dataHoje)){
+            hidden = ''
+            docHidden = 'hidden'
+            alertHidden = ''
+        }else{
             hidden = ''
             docHidden = ''
             alertHidden = 'hidden'
-        }else{
-            hidden = 'hidden'
-            docHidden = 'hidden'
-            alertHidden = ''
         }
             res.render('formulario/preform', 
             {despachos: despachos, 
