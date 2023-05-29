@@ -90,7 +90,7 @@ router.get('/pages/termosUso', async (req, res) => {
 router.get('/formulario/avisoSaida', eUser, async(req, res) => {
     try{
         const dataHoje = Date.now()
-        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).lean()
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id, embarcacaoValidadeNumber: {$gte: dataHoje}}).lean()
         const tripulantes = await Tripulante.find({tripulanteValidadeCIRNumber: {$gte: dataHoje}}).lean()
         const portos = await Porto.find().lean()
             res.render('formulario/saidas/avisoSaida',
@@ -109,7 +109,7 @@ router.get('/formulario/avisoEntrada', eUser, async(req, res) => {
     try{
         const dataHoje = Date.now()
         const despachos = await Despacho.find({usuarioID: req.user._id, despachoDataValidadeNumber: {$gte: dataHoje}}).lean()
-        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).lean()
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id, embarcacaoValidadeNumber: {$gte: dataHoje}}).lean()
         const tripulantes = await Tripulante.find({tripulanteValidadeCIRNumber: {$gte: dataHoje}}).lean()
         const portos = await Porto.find().lean()
 
@@ -130,7 +130,7 @@ router.get('/formulario/despacho', eUser, async(req, res) => {
     try{
         const dataHoje = Date.now()
         const tripulantes = await Tripulante.find({tripulanteValidadeCIRNumber: {$gte: dataHoje}}).lean()
-        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).lean()
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id, embarcacaoValidadeNumber: {$gte: dataHoje}}).lean()
         const portos = await Porto.find().lean()
         res.render('formulario/despachos/despacho', 
             {embarcacoes: embarcacoes,
