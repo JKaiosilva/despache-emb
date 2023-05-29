@@ -745,6 +745,7 @@ router.post('/addTripulante', Admin, async (req, res) => {
             tripulanteDataNascimento: req.body.tripulanteDataNascimento,
             tripulanteNCIR: req.body.tripulanteNCIR,
             tripulanteValidadeCIR: req.body.tripulanteValidadeCIR,
+            tripulanteValidadeCIRNumber: Date.parse(req.body.tripulanteValidadeCIR),
             tripulanteDataCadastro: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
             tripulanteDataNumber: Date.now(),
             tripulanteMesAnoAtual: moment(Date.now()).format('MM/YYYY')
@@ -793,6 +794,7 @@ router.post('/tripulantesEdit', Admin, async(req, res) => {
             tripulanteDataNascimento: req.body.tripulanteDataNascimento,
             tripulanteNCIR: req.body.tripulanteNCIR,
             tripulanteValidadeCIR: req.body.tripulanteValidadeCIR,
+            tripulanteValidadeCIRNumber: Date.parse(req.body.tripulanteValidadeCIR),
         })
         req.flash('success_msg', 'Tripulante atualizado com sucesso!')
         res.redirect('painel')

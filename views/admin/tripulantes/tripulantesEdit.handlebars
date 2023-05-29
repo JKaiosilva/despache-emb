@@ -20,7 +20,9 @@
                     <label class="input-group-text">N° da CIR</label>
                     <input name="tripulanteNCIR" value="{{tripulante.tripulanteNCIR}}" class="form-control" type="text">
                     <label class="input-group-text">Validade da CIR</label>
-                    <input name="tripulanteValidadeCIR" value="{{tripulante.tripulanteValidadeCIR}}" class="form-control" type="text">
+                    <input name="tripulanteValidadeCIR" value="{{tripulante.tripulanteValidadeCIR}}" class="form-control" type="text" disabled>
+                    <label class="input-group-text">Redefinir Validade da CIR</label>
+                    <input name="tripulanteValidadeCIRNumber" class="form-control" type="date">
                 </div>
                 <label class="text-center">Cadastrado em: {{tripulante.tripulanteDataCadastro}}</label>
                         <button type="submit" class="btn btn-success" required>Enviar</button>

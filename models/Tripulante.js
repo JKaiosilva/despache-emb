@@ -21,6 +21,9 @@ const Tripulante = new Schema ({
     tripulanteValidadeCIR: {
         type: String
     },
+    tripulanteValidadeCIRNumber: {
+        type: String
+    },
     tripulanteDataCadastro: {
         type: String
     },
