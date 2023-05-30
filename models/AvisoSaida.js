@@ -6,6 +6,10 @@ const AvisoSaida = new Schema({
         type: String,
         default: {}
     },
+    saidaDespacho:{
+        type: Schema.Types.ObjectId,
+        ref: 'despachos'
+    },
     saidaNprocesso: {
 
     },
@@ -17,7 +21,8 @@ const AvisoSaida = new Schema({
 
     },
     saidaPortoDestino: {
-
+        type: Schema.Types.ObjectId,
+        ref: 'portos'
     },
     saidaDataHoraChegada: {
 

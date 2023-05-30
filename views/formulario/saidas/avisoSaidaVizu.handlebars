@@ -8,6 +8,10 @@
         <form class="row gx-3 gy-2 align-items-center">
             <input type="hidden" name="usuarioID" value="%= req.user._id %">
                 <div class="input-group mb-3">
+                    <label class="input-group-text">Despacho referente</label>
+                    <input value="{{despacho.NprocessoDespacho}}" class="form-control" disabled>
+                </div>
+                <div class="input-group mb-3">
                     <label class="input-group-text" class="input-group-text">N° Pocesso de Despacho</label>
                     <input name="saidaNprocesso" class="form-control" type="text" value="{{avisoSaidas.saidaNprocesso}}" disabled>
                 </div>
@@ -15,13 +19,13 @@
                     <h4 class="text-center">Dados da Partida</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de Saída</label>
-                        <input name="saidaPortoSaida" class="form-control" type="text" value="{{portos.portoNome}}" disabled>
+                        <input name="saidaPortoSaida" class="form-control" type="text" value="{{portoValidSaida.portoNome}}" disabled>
                         <label class="input-group-text">Data/Hora de Saída</label>
                         <input name="saidaDataHoraSaida" class="form-control" type="date" value="{{avisoSaidas.saidaDataHoraSaida}}" disabled>
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de Destino</label>
-                        <input name="saidaPortoDestino" class="form-control" type="text" value="{{avisoSaidas.saidaPortoDestino}}" disabled>
+                        <input name="saidaPortoDestino" class="form-control" type="text" value="{{portoValidDestino.portoNome}}" disabled>
                         <label class="input-group-text">Data/Hora Estimada de Chegada</label>
                         <input name="saidaDataHoraChegada" class="form-control" type="date" value="{{avisoSaidas.saidaDataHoraChegada}}" disabled>
                     </div>

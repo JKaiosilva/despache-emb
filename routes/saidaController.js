@@ -87,14 +87,18 @@ router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
         const avisoSaidas = await AvisoSaida.findOne({_id: req.params.id}).lean()
         const tripulantes = await Tripulante.find({_id: avisoSaidas.saidaTripulantes}).lean()
         const embarcacoes = await Embarcacao.findOne({_id: avisoSaidas.embarcacao}).lean()
-        const portos = await Porto.findOne({_id: avisoSaidas.saidaPortoSaida}).lean()
+        const portoValidSaida = await Porto.findOne({_id: avisoSaidas.saidaPortoSaida}).lean()
+        const portoValidDestino = await Porto.findOne({_id: avisoSaidas.saidaPortoDestino}).lean()
+        const despacho = await Despacho.findOne({_id: avisoSaidas.saidaDespacho}).lean()
 
             res.render('formulario/saidas/avisoSaidaVizu',
                 {avisoSaidas: avisoSaidas,
                     embarcacoes: embarcacoes,
                         tripulantes: tripulantes,
-                            portos: portos,
-                                hidden: hidden
+                            despacho:despacho,
+                                portoValidSaida: portoValidSaida,
+                                    portoValidDestino: portoValidDestino,
+                                        hidden: hidden
                 })
     }catch(err){
         req.flash('error_msg', 'Erro interno ao mostrar formulário')
@@ -107,17 +111,95 @@ router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
 router.get('/formulario/avisoSaida', eUser, async(req, res) => {
     try{
         const dataHoje = Date.now()
+        const despachos = await Despacho.find({usuarioID: req.user._id, despachoDataValidadeNumber: {$gte: dataHoje}}).lean()
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id, embarcacaoValidadeNumber: {$gte: dataHoje}}).lean()
         const tripulantes = await Tripulante.find({tripulanteValidadeCIRNumber: {$gte: dataHoje}}).lean()
         const portos = await Porto.find().lean()
             res.render('formulario/saidas/avisoSaida',
                 {embarcacoes: embarcacoes,
                     tripulantes: tripulantes,
-                        portos: portos
+                        portos: portos,
+                            despachos: despachos
             })
     }catch(err){
         req.flash('error_msg', 'Erro interno ao mostrar formulario')
         res.redirect('formulario/preform')
+    }
+})
+
+
+router.get('/admin/saidasValidate/:id', Admin, async(req, res) => {
+    try{
+        const avisoSaidas = await AvisoSaida.findOne({_id: req.params.id}).lean()
+        const tripulantesValid = await Tripulante.find({_id: avisoSaidas.saidaTripulantes}).lean()
+        const embarcacaoValid = await Embarcacao.findOne({_id: avisoSaidas.embarcacao}).lean()
+        const portoValidSaida = await Porto.findOne({_id: avisoSaidas.saidaPortoSaida}).lean()
+        const portoValidDestino = await Porto.findOne({_id: avisoSaidas.saidaPortoSaida}).lean()
+        const despachoValid = await Despacho.findOne({_id: avisoSaidas.saidaDespacho}).lean()
+
+        const tripulantes = await Tripulante.find().lean()
+        const embarcacoes = await Embarcacao.find().lean()
+        const portos = await Porto.find().lean()
+        const despachos = await Despacho.find().lean()
+
+        res.render('admin/saidas/avisoSaidaValidate',
+        {avisoSaidas: avisoSaidas,
+            tripulantesValid: tripulantesValid,
+                embarcacaoValid: embarcacaoValid,
+                    despachoValid: despachoValid,
+                        portoValidSaida: portoValidSaida,
+                            portoValidDestino: portoValidDestino,
+                                tripulantes: tripulantes,
+                                    embarcacoes: embarcacoes,
+                                        portos: portos,
+                                            despachos: despachos
+        })
+
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', 'Erro interno ao mostrar aviso de saida!')
+        res.redirect('/')
+    }
+})
+
+
+router.post('/admin/saidasValidate', Admin, async(req, res) => {
+    try{
+        const cleanString = req.body.saidaTripulantes.replace(/[\n' \[\]]/g, '');
+        const tripulantes = cleanString.split(',');
+        const avisoSaidaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+            
+                await AvisoSaida.updateOne({_id: req.body.id}, {
+                    saidaDespacho: req.body.saidaDespacho,
+                    saidaNprocesso: req.body.saidaNprocesso,
+                    saidaPortoSaida: req.body.saidaPortoSaida,
+                    saidaDataHoraSaida: req.body.saidaDataHoraSaida,
+                    saidaPortoDestino: req.body.saidaPortoDestino,
+                    saidaDataHoraChegada: req.body.saidaDataHoraChegada,
+                    saidaNomeRepresentanteEmbarcacao: req.body.saidaNomeRepresentanteEmbarcacao,
+                    saidaCPFCNPJRepresentanteEmbarcacao: req.body.saidaCPFCNPJRepresentanteEmbarcacao,
+                    saidaTelefoneRepresentanteEmbarcacao: req.body.saidaTelefoneRepresentanteEmbarcacao,
+                    saidaEnderecoRepresentanteEmbarcacao: req.body.saidaEnderecoRepresentanteEmbarcacao,
+                    saidaEmailRepresentanteEmbarcacao: req.body.saidaEmailRepresentanteEmbarcacao,
+                    saidaObservacoes: req.body.saidaObservacoes,
+                    saidaSomaPassageiros: req.body.saidaSomaPassageiros,
+                    saidaTripulantes: avisoSaidaTripulantes,
+                    saidaPassageiros: "Nome: "+ req.body.saidaPassageirosNome+
+                    " || Data de Nascimento: " + req.body.saidaPassageirosDataNascimento+
+                    " || Sexo: " + req.body.saidaPassageirosSexo,
+                    saidaComboios: "Nome: "+ req.body.saidaComboiosNome+
+                    " || Numero de Inscrição: "+ req.body.saidaComboiosNIncricao+
+                    " || Arqueação Bruta: "+ req.body.saidaComboiosArqueacaoBruta+
+                    " || Carga: "+ req.body.saidaComboiosCarga+
+                    " || Quantidade da Caga: "+ req.body.saidaComboiosQuantidadeCarga,
+
+                })
+                    req.flash('success_msg', 'Aviso de saida enviado com sucesso')
+                    res.redirect('/')
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', 'Erro interno ao validar aviso de saida!')
+        res.redirect('/')
     }
 })
 
@@ -342,12 +424,13 @@ router.get('/avisoSaida/:id/pdf', Admin, async (req, res) => {
 
 
 router.post('/formulario/avisoSaida', eUser, async (req, res) => {
-    const cleanString = req.body.despachoTripulantes.replace(/[\n' \[\]]/g, '');
+    const cleanString = req.body.saidaTripulantes.replace(/[\n' \[\]]/g, '');
     const tripulantes = cleanString.split(',');
     const avisoSaidaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
         try{
             const novoAvisoSaida = {
                 usuarioID: req.user._id,
+                saidaDespacho: req.body.saidaDespacho,
                 saidaNprocesso: req.body.saidaNprocesso,
                 saidaPortoSaida: req.body.saidaPortoSaida,
                 saidaDataHoraSaida: req.body.saidaDataHoraSaida,

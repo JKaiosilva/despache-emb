@@ -1,12 +1,19 @@
+
 <br>
 <h2 class="text-center mb-4">AVISO DE SAÍDA – NAVEGAÇÃO INTERIOR</h2>
+<h4 class="text-center mb-4">Aviso de Saida enviado em: {{avisoSaidas.saidaDataPedido}}</h4>
+
 <div class="card">
     <div class="card-body">
-        <form class="row gx-3 gy-2 align-items-center" action="avisoSaida" method="POST">
-            <input type="hidden" name="usuarioID" value="%= req.user._id %">
+        <form class="row gx-3 gy-2 align-items-center" action="/admin/saidasValidate" method="POST">
+            <input type="hidden" name="id" value="{{avisoSaidas._id}}">
                 <div class="input-group mb-3">
-                    <label class="input-group-text" class="input-group-text">Despacho referente</label>
-                        <select name="saidaDespacho" class="form-select">
+                    <label class="input-group-text">Despacho referente</label>
+                    <input value="{{despachoValid.NprocessoDespacho}}" class="form-control" disabled>
+                </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text" class="input-group-text">Redefinir Despacho referente</label>
+                        <select name="entradaDespacho" class="form-select">
                             {{#each despachos}}
                                 <option value="{{_id}}">
                             {{NprocessoDespacho}}
@@ -16,60 +23,84 @@
                 </div>
                 <div class="input-group mb-3">
                     <label class="input-group-text" class="input-group-text">N° Pocesso de Despacho</label>
-                    <input name="saidaNprocesso" class="form-control" type="text">
+                    <input name="saidaNprocesso" class="form-control" type="text" value="{{avisoSaidas.saidaNprocesso}}">
                 </div>
                 <div>
                     <h4 class="text-center">Dados da Partida</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de Saída</label>
-                        <select name="saidaPortoSaida" class="form-select">
-                            {{#each portos}}
-                            <option value="{{_id}}">
+                        <input class="form-control" type="text" value="{{portoValidSaida.portoNome}}" disabled>
+                        <label class="input-group-text">Redefinir Porto de Saída</label>
+                            <select name="saidaPortoSaida" class="form-select">
+                                {{#each portos}}
+                                    <option value="{{_id}}">
                                 {{portoNome}}
-                            </option>
-                            {{/each}}
-                        </select>
+                                    </option>
+                                {{/each}}
+                            </select>
                         <label class="input-group-text">Data/Hora de Saída</label>
-                        <input name="saidaDataHoraSaida" class="form-control" type="date">
+                        <input name="saidaDataHoraSaida" class="form-control" type="date" value="{{avisoSaidas.saidaDataHoraSaida}}">
                     </div>
                     <div class="input-group mb-3">
+                        <label class="input-group-text">Redefinir Porto de Destino</label>
+                        <input class="form-control" type="text" value="{{portoValidDestino.portoNome}}" disabled>
                         <label class="input-group-text">Porto de Destino</label>
-                        <select name="saidaPortoDestino" class="form-select">
-                            {{#each portos}}
-                            <option value="{{_id}}">
+                            <select name="entradaPortoChegada" class="form-select">
+                                {{#each portos}}
+                                    <option value="{{_id}}">
                                 {{portoNome}}
-                            </option>
-                            {{/each}}
-                        </select>
+                                    </option>
+                                {{/each}}
+                            </select>
                         <label class="input-group-text">Data/Hora Estimada de Chegada</label>
-                        <input name="saidaDataHoraChegada" class="form-control" type="date">
+                        <input name="saidaDataHoraChegada" class="form-control" type="date" value="{{avisoSaidas.saidaDataHoraChegada}}">
                     </div>
+                    <div class="input-group mb-3">
+                    <h4 class="text-center">Dados da Embarcação</h4>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Nome da Embarcação</label>
+                            <input name="saidaNomeEmbarcacao" class="form-control" type="text" value="{{embarcacaoValid.embarcacaoNome}}">
+                            <label class="input-group-text">Tipo da Embarcação</label>
+                            <input name="saidaTipoEmbarcacao" class="form-control" type="text" value="{{embarcacaoValid.embarcacaoTipo}}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Bandeira</label>
+                            <input name="saidaBandeira" class="form-control" type="text" value="{{embarcacaoValid.embarcacaoBandeira}}">
+                            <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
+                            <input name="saidaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="{{embarcacaoValid.embarcacaoNInscricaoautoridadeMB}}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <label class="input-group-text">Arqueação Buta</label>
+                            <input name="saidaArqueacaoBruta" class="form-control" type="text" value="{{embarcacaoValid.embarcacaoArqueacaoBruta}}">
+                            <label class="input-group-text">Tonelagem Porte Bruto</label>
+                            <input name="saidaTonelagemPorteBruto" class="form-control" type="text" value="{{embarcacaoValid.embarcacaoTonelagemPorteBruto}}">
+                        </div>
+                </div>
                     <h4 class="text-center">Dados do Representante da Embarcação</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Nome</label>
-                        <input name="saidaNomeRepresentanteEmbarcacao" class="form-control" type="text">
+                        <input name="saidaNomeRepresentanteEmbarcacao" class="form-control" type="text" value="{{avisoSaidas.saidaNomeRepresentanteEmbarcacao}}">
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">CPF/CNPJ</label>
-                        <input name="saidaCPFCNPJRepresentanteEmbarcacao" class="form-control" type="text">
+                        <input name="saidaCPFCNPJRepresentanteEmbarcacao" class="form-control" type="text" value="{{avisoSaidas.saidaCPFCNPJRepresentanteEmbarcacao}}">
                         <label class="input-group-text">Telefone</label>
-                        <input name="saidaTelefoneRepresentanteEmbarcacao" class="form-control" type="text">
+                        <input name="saidaTelefoneRepresentanteEmbarcacao" class="form-control" type="text" value="{{avisoSaidas.saidaTelefoneRepresentanteEmbarcacao}}">
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Endereço</label>
-                        <input name="saidaEnderecoRepresentanteEmbarcacao" class="form-control" type="text">
+                        <input name="saidaEnderecoRepresentanteEmbarcacao" class="form-control" type="text" value="{{avisoSaidas.saidaEnderecoRepresentanteEmbarcacao}}">
                         <label class="input-group-text">Email</label>
-                        <input name="saidaEmailRepresentanteEmbarcacao" class="form-control" type="text">
+                        <input name="saidaEmailRepresentanteEmbarcacao" class="form-control" type="text" value="{{avisoSaidas.saidaEmailRepresentanteEmbarcacao}}">
                     </div>
                 </div>
                 <div>
                     <h4 class="text-center">Observações</h4>
                     <div class="input-group mb-3">
-                        <input name="saidaObservacoes" class="form-control" type="text">
+                        <input name="saidaObservacoes" class="form-control" type="text" value="{{avisoSaidas.saidaObservacoes}}">
                     </div>
                 </div>
-
-                                           <div id="selecaoTripulantes">
+                <div id="selecaoTripulantes">
                 <div class="container">
                 {{#each tripulantesValid}}
                 
@@ -170,77 +201,41 @@
                 <div>
                     <div id="passageiros" class="card bg-secondary">
                         <h4 class="text-center">Lista de Passageiros</h4>
-                        <script>
-                            var passageiros = 1;
-                        function addInputpassageiros(divName) {
-                        var newdiv = document.createElement('div');
-                        newdiv.innerHTML  = 'Passageiros : ['+passageiros +']';
-                        newdiv.innerHTML += '<label class="input-group-text">Nome completo</label>'
-                        newdiv.innerHTML += '<input name="saidaPassageirosNome" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">Data de nascimento</label>'
-                        newdiv.innerHTML += '<input name="saidaPassageirosDataNascimento" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">Sexo</label>'
-                        newdiv.innerHTML += '<input name="saidaPassageirosSexo" class="form-control" type="text">'
-
-                        document.getElementById(divName).appendChild(newdiv);
-                        passageiros++;
-                        }
-
-                        addInputpassageiros('lines');
-
-                        </script>
+                        <input name="saidaPassageiros" class="form-control" type="text" value="{{avisoSaidas.saidaPassageiros}}">
                         </div>
-                        <button class="btn btn-primary" type="button" onclick="addInputpassageiros('passageiros')">Adicioanar passageiro</button>
                     </div>
                     <div class="input-group mb-3">
                     <label class="input-group-text">Somatório de Passageiros</label>
-                    <input name="saidaSomaPassageiros" class="form-control" type="number">
-                </div>
+                    <input value="{{avisoSaidas.saidaSomaPassageiros}}" class="form-control" type="number">
+                    </div>
                     <div>
                     <div id="comboios" class="card bg-secondary">
                         <h4 class="text-center">Lista de Comboios</h4>
-                        <script>
-                            var comboios = 1;
-                        function addInputcomboios(divName) {
-                        var newdiv = document.createElement('div');
-                        newdiv.innerHTML  = 'Comboios : ['+comboios +']';
-                        newdiv.innerHTML += '<label class="input-group-text">Nome da embarcação</label>'
-                        newdiv.innerHTML += '<input name="saidaComboiosNome" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">N° de inscrição</label>'
-                        newdiv.innerHTML += '<input name="saidaComboiosNIncricao" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">Arqueação bruta</label>'
-                        newdiv.innerHTML += '<input name="saidaComboiosArqueacaoBruta" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">carga</label>'
-                        newdiv.innerHTML += '<input name="saidaComboiosCarga" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">quantidade e unidade de carga</label>'
-                        newdiv.innerHTML += '<input name="saidaComboiosQuantidadeCarga" class="form-control" type="text">'
-
-                        document.getElementById(divName).appendChild(newdiv);
-                        comboios++;
-                        }
-
-                        addInputcomboios('lines');
-
-                        </script>
+                        <input name="saidaComboios" class="form-control" type="text" value="{{avisoSaidas.saidaComboios}}">
                     </div>
-                    <button class="btn btn-primary" type="button" onclick="addInputcomboios('comboios')">Adicioanar comboio</button>
                     </div>
-                <div>
-                    <label class="input-group-text">Estou ciente de que responderei administrativa, 
-                        civil e penalmente pelos 
-                        eventuais dados incorretos constantes da presente declaração</label>
+                    <div>
+                        <label>Embarcação</label>
+                        <input value="{{embarcacaoValid.embarcacaoNome}}" disabled>
+                    </div>
+                    <div>
+                        <label  class="input-group-text">Redefinir Embarcação</label>
+                        <select name="embarcacao" class="form-select">
+                            {{#each embarcacoes}}
+                                <option value="{{_id}}">{{embarcacaoNome}}</option>
+                            {{else}}
+                                <option value="0">Nenhuma embarcação cadastrada</option>
+                            {{/each}}
+                        </select>
                 </div>
-                <div>
-                    <select name="embarcacao" class="form-select">
-                        {{#each embarcacoes}}
-                            <option value="{{_id}}">{{embarcacaoNome}}</option>
-                        {{else}}
-                            <option value="0">Nenhuma embarcação cadastrada</option>
-                        {{/each}}
-                    </select>
-                </div>
-                <br>
                 <button type="submit" id="submitButton" class="btn btn-success" disabled>Validar</button>
         </form>
     </div>
 </div>
+<br>
+
+<div class="text-center" {{hidden}}>
+ <a class="btn btn-success" href="/avisoSaida/{{avisoSaidas._id}}/pdf" target="_blank" style="float: right">Gerar PDF</a>
+</div>
+<input class="btn btn-success" type="button" value="Voltar" style="float: left" onClick="history.go(-1)"> 
+<br>
