@@ -9,76 +9,35 @@
 <br>
 <br>
 
-{{!-- <div class="card-group ">
-
-
-  <div class="card m-4" id="tempo">
-    <div class="card-body m-4">
-
-      <label>Corumbá-MS Data Hoje</label>
-      <img style="float:right; max-width: 3rem" src="/img/sol.png">
-      <br>
-      <h1>31 C°</h1>
-      <div>
-        <label>Umidade: 31%</label>
-        <label style="float: right">Chuva: 3.37</label>
-      </div>
-      <div>
-        <label>Vento: 21 m/s</label>
-        <label style="float: right">Rio Paraguai: 3,30 m</label>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="card m-4" id="tempo">
-    <div class="card-body m-4">
-
-      <label>Corumbá-MS Data Hoje</label>
-      <img style="float:right; max-width: 3rem" src="/img/sol.png">
-      <br>
-      <h1>31 C°</h1>
-      <div>
-        <label>Umidade: 31%</label>
-        <label style="float: right">Chuva: 3.37</label>
-      </div>
-      <div>
-        <label>Vento: 21 m/s</label>
-        <label style="float: right">Rio Paraguai: 3,30 m</label>
-      </div>
-    </div>
-  </div>
-
-
-</div> --}}
-
 <br>
 
 
-<div class="card">
-  <div class="card-body">
+
 
 <h1>Avisos: </h1>
 <hr>
 {{#each avisos}}
-      <div class="card mt-4" >
-        <img src="data:{{contentType}};base64,{{data}}" style="width: 10rem;">
-        <div class="card-body">
-          <h4 class="card-title">{{titulo}}</h4>
-          <h6>{{descricao}}</h6>
-          <p class="card-text">{{conteudo}}</p>
-          <hr>
-          <h4>{{avisoData}}</h4>
-        </div>
+
+<div class="card m-4">
+  <div class="row g-0">
+    <div class="col-md-4">
+        <img class="m-4" src="data:{{contentType}};base64,{{data}}" style="max-width: 20rem; max-height: 20rem">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{titulo}}</h5>
+        <h6 class="card-text">{{descricao}}</h6>
+        <p class="card-text">{{conteudo}}</p>
+        <smal>{{avisoData}}</smal>
       </div>
+    </div>
+  </div>
+</div>
+
 {{else}}
       <h5>Nenhuma aviso postado</h5>
 {{/each}}
 
-
-
-</div>
-</div>
 {{#if avisos}}
 <br>
   <a href="/page/2" class="btn btn-primary" style="float: right">Próximo</a>

@@ -1,25 +1,29 @@
-<div class="card">
-  <div class="card-body">
 
-    <h1>Avisos: </h1>
-    <hr>
 
-    {{#each avisos}}
-      <div class="card mt-4" >
-        <img src="data:{{contentType}};base64,{{data}}" style="width: 10rem;">
-        <div class="card-body">
-          <h4 class="card-title">{{titulo}}</h4>
-          <h6>{{descricao}}</h6>
-          <p class="card-text">{{conteudo}}</p>
-          <hr>
-          <h4>{{avisoData}}</h4>
-        </div>
+<h1>Avisos: </h1>
+<hr>
+{{#each avisos}}
+
+<div class="card m-4">
+  <div class="row g-0">
+    <div class="col-md-4">
+        <img class="m-4" src="data:{{contentType}};base64,{{data}}" style="max-width: 20rem; max-height: 20rem">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{titulo}}</h5>
+        <h6 class="card-text">{{descricao}}</h6>
+        <p class="card-text">{{conteudo}}</p>
+        <smal>{{avisoData}}</smal>
       </div>
-    {{else}}
-      <h5>Nenhum aviso postado</h5>
-    {{/each}}
+    </div>
   </div>
 </div>
+
+{{else}}
+      <h5>Nenhuma aviso postado</h5>
+{{/each}}
+
 <br>
 <a href="{{previousPage}}" class="btn btn-primary">Anterior</a>
 <a href="{{nextPage}}" class="btn btn-primary" style="float: right"{{hidden}}>Proximo</a>

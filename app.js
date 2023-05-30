@@ -1,35 +1,41 @@
 const express = require('express');
-const handlebars = require('express-handlebars');
 const app = express();
-const postForms = require('./routes/postForms')
-const getForms = require('./routes/getForms')
-const path = require('path');
 const { default: mongoose } = require('mongoose');
+const passport = require('passport');
+
+const db = require('./config/bancodados');
+require('./config/auth')(passport)
+require('dotenv/config');
+require('dotenv').config()
+
+require('./helpers/pagination')
+require('./helpers/AddIndex')
+require('./helpers/eUser')
+const Add = require('./helpers/AddIndex')
+const eUser = require('./helpers/eUser')
+const Admin = require('./helpers/eAdmin')
+const ifAdmin = require('./helpers/barAdmin')
+
+const path = require('path');
 const session = require('express-session');
 const flash = require('connect-flash');
-const passport = require('passport');
-const db = require('./config/bancodados');
-const usuarios = require('./routes/usuario')
-require('./config/auth')(passport)
-const admin = require('./routes/admin')
-const Admin = require('./helpers/eAdmin')
-const eUser = require('./helpers/eUser')
-const pages = require('./routes/postForms')
+const handlebars = require('express-handlebars');
 const Handlebars = require('handlebars')
-const Usuario = mongoose.model('usuarios')
-const Aviso = mongoose.model('avisos')
-require('./models/AvisoEntrada')
-const AvisoEntrada = mongoose.model('avisoEntradas')
-const ifAdmin = require('./helpers/barAdmin')
-require('dotenv/config');
 const multer = require('multer')
-require('dotenv').config()
-require('./helpers/pagination')
-const pdfGerator = require('./routes/pdfGerator')
-const docsVizu = require('./routes/docsVizu')
-const relatorios = require('./routes/relatorios')
-require('./helpers/AddIndex')
-const Add = require('./helpers/AddIndex')
+
+require('./models/Aviso')
+const Aviso = mongoose.model('avisos')
+
+const avisoController = require('./routes/avisoController')
+const despachoController = require('./routes/despachoController')
+const embarcacaoController = require('./routes/embarcacaoController')
+const entradaController = require('./routes/entradaController')
+const portoController = require('./routes/portoController')
+const saidaController = require('./routes/saidaController')
+const serverController = require('./routes/serverController')
+const tripulanteController = require('./routes/tripulanteController')
+const userController = require('./routes/userController')
+
 
 
 
@@ -91,7 +97,7 @@ const Add = require('./helpers/AddIndex')
 
 // Rota
         app.get('/', (req, res) => {
-            Aviso.find().limit(5).lean().sort({data: 'desc'}).then((avisos) => {
+            Aviso.find().limit(5).lean().sort({_id: 'desc'}).then((avisos) => {
                 avisos.forEach((aviso) => {
                     aviso.data = aviso.data.toString('base64')
                 })
@@ -99,16 +105,16 @@ const Add = require('./helpers/AddIndex')
             })
         })
 
-        app.use(relatorios)
-        app.use(docsVizu)
-        app.use(pdfGerator)
-        app.use(getForms)
-        app.use(postForms)
-        app.use('/usuarios', usuarios)
-        app.use('/aviso', Aviso)
-        app.use('/admin', admin)
-        app.use('/pages', pages)
 
+        app.use(avisoController)
+        app.use(despachoController)
+        app.use(embarcacaoController)
+        app.use(entradaController)
+        app.use(portoController)
+        app.use(saidaController)
+        app.use(serverController)
+        app.use(tripulanteController)
+        app.use(userController)
 
 
 // Conectar com Db
