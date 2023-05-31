@@ -168,3 +168,33 @@
 </div>
 <input class="btn btn-success" type="button" value="Voltar" style="float: left" onClick="history.go(-1)"> 
 <br>
+<br>
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                {{#each avisoEntradas}}
+                    <h6>Numero do processo de entrada: {{entradaNprocesso}}</h6>
+                    <label>Data da solicitação: {{entradaDataPedido}}</label>
+                {{else}}
+                    <label>Nenhuma Entrada Solicitada para este despacho</label>
+                {{/each}}
+            </div>
+        </div>
+
+    </div>
+    <br>
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                {{#each avisoSaidas}}
+                    <h6>Numero do processo de saída: {{saidaNprocesso}}</h6>
+                    <label>Data da solicitação: {{saidaDataPedido}}</label>
+                {{else}}
+                    <label>Nenhuma Saida Solicitada para este despacho</label>
+                {{/each}}
+            </div>
+        </div>
+
+    </div>
+</div>

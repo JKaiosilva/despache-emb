@@ -161,12 +161,16 @@ router.post('/admin/despachoValidate', Admin, async(req, res) => {
         const tripulantes = await Tripulante.find({_id: despachos.despachoTripulantes}).lean()
         const embarcacoes = await Embarcacao.findOne({_id: despachos.embarcacao}).lean()
         const portos = await Porto.findOne({_id: despachos.despachoPortoEstadia}).lean()
+        const avisoEntradas = await AvisoEntrada.find({entradaDespacho: despachos._id}).lean()
+        const avisoSaidas = await AvisoSaida.find({saidaDespacho: despachos._id}).lean()
             res.render('formulario/despachos/despachoVizu',
                 {despachos: despachos,
-                    tripulantes: tripulantes,
-                        embarcacoes: embarcacoes,
-                            portos: portos,
-                                hidden: hidden
+                tripulantes: tripulantes,
+                embarcacoes: embarcacoes,
+                portos: portos,
+                avisoEntradas: avisoEntradas,
+                avisoSaidas: avisoSaidas,
+                hidden: hidden
                 })
     }catch(err){
         req.flash('error_msg', 'Erro interno ao mostrar formulário')

@@ -446,7 +446,7 @@ router.get('/avisoEntrada/:id/pdf', Admin, async (req, res) => {
 
 
 router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
-    const cleanString = req.body.despachoTripulantes.replace(/[\n' \[\]]/g, '');
+    const cleanString = req.body.entradaTripulantes.replace(/[\n' \[\]]/g, '');
     const tripulantes = cleanString.split(',');
     const avisoEntradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
 
