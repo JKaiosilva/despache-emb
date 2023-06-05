@@ -176,6 +176,7 @@
                 {{#each avisoEntradas}}
                     <h6>Numero do processo de entrada: {{entradaNprocesso}}</h6>
                     <label>Data da solicitação: {{entradaDataPedido}}</label>
+                    <a class="btn btn-success float-end" href="/formulario/avisoEntradavizu/{{_id}}">Visualizar</a>
                 {{else}}
                     <label>Nenhuma Entrada Solicitada para este despacho</label>
                 {{/each}}
@@ -190,6 +191,7 @@
                 {{#each avisoSaidas}}
                     <h6>Numero do processo de saída: {{saidaNprocesso}}</h6>
                     <label>Data da solicitação: {{saidaDataPedido}}</label>
+                    <a class="btn btn-success float-end" href="/formulario/avisosaidavizu/{{_id}}">Visualizar</a>
                 {{else}}
                     <label>Nenhuma Saida Solicitada para este despacho</label>
                 {{/each}}
