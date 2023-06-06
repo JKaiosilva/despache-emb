@@ -6,8 +6,8 @@ const Comboio = new Schema({
         type: String
     },
     embarcacoes: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Embarcacao',
+            type: Schema.Types.ObjectId,
+            ref: 'Embarcacao',
         carga: {
             type: String
         },

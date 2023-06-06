@@ -10,6 +10,7 @@ require('../models/Tripulante')
 require('../models/Porto');
 require('../models/Relatorio');
 require('../models/Embarcacao')
+require('../models/Comboio')
 
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
@@ -20,6 +21,7 @@ const Embarcacao = mongoose.model('embarcacoes')
 const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
 const Relatorio = mongoose.model('relatorios')
+const Comboio = mongoose.model('comboios')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
@@ -49,6 +51,38 @@ router.get('/formulario/comboio', eUser, async(req, res) => {
 })
 
 
+router.post('/formulario/comboios', eUser, async(req, res) => {
+    try{
+        const carga = req.body.ComboiosCarga
+        const quantidade = req.body.ComboiosQuantidadeCarga
+        const arqueacaoBruta = req.body.ComboiosarqueacaoBruta
+
+        const cleanString = req.body.embarcacoes.replace(/[\n' \[\]]/g, '');
+        const embarcacoes = cleanString.split(',');
+
+
+        const comboioEmbarcacoes = embarcacoes.map((id) => mongoose.Types.ObjectId(id));
+        comboioEmbarcacoes.carga = carga
+        comboioEmbarcacoes.quantidade = quantidade
+        comboioEmbarcacoes.arqueacaoBruta = arqueacaoBruta
+
+        const novoComboio = {
+            usuarioId: req.user._id,
+            embarcacoes: comboioEmbarcacoes, 
+            arqueacaoBruta: arqueacaoBruta,
+            comboioMesAnoAtual: Date.now()
+            
+        }
+        new Comboio(novoComboio).save()
+        req.flash('success_msg', 'Comboio formulado com sucesso!')
+        res.redirect('/')
+
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', 'Error interno ao mostrar pagina')
+        res.redirect('/')
+    }
+})
 
 
 
