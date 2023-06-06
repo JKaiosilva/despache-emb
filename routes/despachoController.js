@@ -466,13 +466,13 @@ router.get('/despacho/:id/pdf', Admin, async (req, res) => {
 
 
 router.post('/formulario/despacho', eUser, async (req, res) => {
-    const cleanString = req.body.despachoTripulantes.replace(/[\n' \[\]]/g, '');
-    const tripulantes = cleanString.split(',');
-    const despachoTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
 
-        
-  
+
     try{
+        const cleanString = req.body.despachoTripulantes.replace(/[\n' \[\]]/g, '');
+        const tripulantes = cleanString.split(',');
+        const despachoTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+
     const novoDespacho = {
         usuarioID: req.user._id,
         NprocessoDespacho: req.body.NprocessoDespacho,
@@ -492,11 +492,9 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
         despachoNTripulantes: req.body.despachoNTripulantes,
         despachoNomeComandante: req.body.despachoNomeComandante,
         despachoTripulantes: despachoTripulantes,
-        despachoNomeEmbarcacao: req.body.despachoNomeEmbarcacao,
-        despachoNEmbN: req.body.despachoNEmbN,
-        despachoArqueacaoBrutaComboio: req.body.despachoArqueacaoBrutaComboio,
-        despachoCarga: req.body.despachoCarga,
-        despachoQuantidadeCaga: req.body.despachoQuantidadeCaga,
+        despachoComboios: req.body.despachoComboios,
+        despachoCarga: req.body.despachoComboiosCarga,
+        despachoQuantidadeCaga: req.body.despachoComboiosQuantidadeCarga,
         despachoSomaArqueacaoBruta: req.body.despachoSomaArqueacaoBruta,
         despachoDataSolicitada: req.body.despachoDataSolicitada,
         despachoDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),

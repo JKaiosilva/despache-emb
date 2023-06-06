@@ -174,11 +174,11 @@
                         var newdiv = document.createElement('div');
                         var divIdComboio = "divComboio" + divCounterComboio
                         newdiv.setAttribute('id', divIdComboio)
-                        newdiv.innerHTML += '<select name="embarcacaoComboio" class="btn-group"><option id="emBranco" value="emBranco">Em Branco</option>{{#each embarcacoes}}<option id="comboio" value="{{_id}}">{{embarcacaoNome}}</option>{{/each}}</select><button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divIdComboio + '\')">Excluir</button>'
+                        newdiv.innerHTML += '<select name="embarcacaoComboio" class="btn-group"><option id="emBranco" value="emBranco">Em Branco</option>{{#each embarcacoes}}<option name="despachoComboios" id="comboio" value="{{embarcacaoNome}}">{{embarcacaoNome}}</option>{{/each}}</select><button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divIdComboio + '\')">Excluir</button>'
                         newdiv.innerHTML += '<label class="input-group-text">carga</label>'
-                        newdiv.innerHTML += '<input name="entradaComboiosCarga" class="form-control" type="text">'
+                        newdiv.innerHTML += '<input name="despachoComboiosCarga" class="form-control" type="text">'
                         newdiv.innerHTML += '<label class="input-group-text">quantidade e unidade de carga</label>'
-                        newdiv.innerHTML += '<input name="entradaComboiosQuantidadeCarga" class="form-control" type="text">'
+                        newdiv.innerHTML += '<input name="despachoComboiosQuantidadeCarga" class="form-control" type="text">'
                         var submiteButton = document.getElementById('submitButton')
 
                         document.getElementById(divName).appendChild(newdiv);
