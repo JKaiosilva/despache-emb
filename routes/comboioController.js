@@ -51,38 +51,41 @@ router.get('/formulario/comboio', eUser, async(req, res) => {
 })
 
 
-router.post('/formulario/comboios', eUser, async(req, res) => {
-    try{
-        const carga = req.body.comboiosCarga
-        const quantidade = req.body.comboiosQuantidadeCarga
-        const arqueacaoBruta = req.body.comboiosarqueacaoBruta
-
-        const cleanString = req.body.embarcacoes.replace(/[\n' \[\]]/g, '');
-        const embarcacoes = cleanString.split(',');
-
-
-        const comboioEmbarcacoes = {}
-        comboioEmbarcacoes.id = embarcacoes.map((id) => mongoose.Types.ObjectId(id));
-        comboioEmbarcacoes.carga = carga
-        comboioEmbarcacoes.quantidade = quantidade
-        comboioEmbarcacoes.arqueacaoBruta = arqueacaoBruta
-
-        const novoComboio = {
-            usuarioId: req.user._id,
-            embarcacoes: comboioEmbarcacoes, 
-            comboioMesAnoAtual: Date.now()
-            
-        }
-        new Comboio(novoComboio).save()
-        req.flash('success_msg', 'Comboio formulado com sucesso!')
-        res.redirect('/')
-
-    }catch(err){
-        console.log(err)
-        req.flash('error_msg', 'Error interno ao mostrar pagina')
-        res.redirect('/')
+router.post('/formulario/comboios', eUser, async (req, res) => {
+    try {
+      const cleanString = req.body.embarcacoes.replace(/[\n' \[\]]/g, '');
+      const embarcacoes = cleanString.split(',');
+  
+      const comboioEmbarcacoes = [];
+  
+      for (var i = 0; i < embarcacoes.length; i++) {
+        const comboioEmbarcacao = {
+          _id: req.body.comboio[i],
+          carga: req.body.comboiosCarga[i],
+          quantidade: req.body.comboiosQuantidadeCarga[i],
+          arqueacaoBruta: req.body.comboiosarqueacaoBruta[i]
+        };
+      
+        comboioEmbarcacoes.push(comboioEmbarcacao);
+      }
+  
+      const novoComboio = new Comboio({
+        usuarioId: req.user._id,
+        embarcacoes: comboioEmbarcacoes,
+        comboioMesAnoAtual: Date.now().toString()
+      });
+  
+      await novoComboio.save();
+  
+      req.flash('success_msg', 'Comboio formulado com sucesso!');
+      res.redirect('/');
+    } catch (err) {
+      console.log(err);
+      req.flash('error_msg', 'Erro interno ao mostrar página');
+      res.redirect('/');
     }
-})
+  });
+  
 
 
 

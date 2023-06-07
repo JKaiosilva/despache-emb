@@ -23,11 +23,11 @@
                                                     newdiv.setAttribute('id', divId)
                                                     newdiv.innerHTML = '<select name="comboio" class="btn-group"><option id="emBranco" value="emBranco">Em Branco</option>{{#each embarcacoes}}<option id="comboio" value="{{_id}}">{{embarcacaoNome}}</option>{{/each}}</select><button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divId + '\')">Excluir</button>';                            
                                                     newdiv.innerHTML += '<label class="input-group-text">carga</label>'
-                                                    newdiv.innerHTML += '<input name="ComboiosCarga" class="form-control" type="text">'
+                                                    newdiv.innerHTML += '<input name="comboiosCarga" class="form-control" type="text">'
                                                     newdiv.innerHTML += '<label class="input-group-text">quantidade e unidade de carga</label>'
-                                                    newdiv.innerHTML += '<input name="ComboiosQuantidadeCarga" class="form-control" type="text">'
+                                                    newdiv.innerHTML += '<input name="comboiosQuantidadeCarga" class="form-control" type="text">'
                                                     newdiv.innerHTML += '<label class="input-group-text">Arqueaçao Bruta</label>'
-                                                    newdiv.innerHTML += '<input name="ComboiosarqueacaoBruta" class="form-control" type="text">'
+                                                    newdiv.innerHTML += '<input name="comboiosarqueacaoBruta" class="form-control" type="text">'
                                                     document.getElementById(divName).appendChild(newdiv);
                                                     document.getElementById('selecaoComboio').setAttribute('class', 'bg')
                                                     var submiteButton = document.getElementById('submitButton')
@@ -58,9 +58,9 @@
                                                     
                                                     var comboiosCarga = []
 
-                                                    var ComboiosQuantidadeCarga = []
+                                                    var comboiosQuantidadeCarga = []
 
-                                                    var ComboiosarqueacaoBruta = []
+                                                    var comboiosarqueacaoBruta = []
 
 
 
@@ -73,24 +73,6 @@
                                                                     }
                                                             comboiosArray.push(comboiosIds[i].value)
                                                             document.getElementById('comboiosArrayIds').setAttribute('value', `${comboiosArray}`)
-                                                        }
-                                                        var comboiosCargas = document.querySelectorAll("[name='ComboiosCarga']")
-                                                        for (var i = 0; i < comboiosCargas.length; i++){
-                                                            comboiosCarga.push(comboiosCargas[i].value)
-                                                            document.getElementById('comboiosCarga').setAttribute('value', `${comboiosCarga}`)
-                                                        }
-                                                        
-                                                        var comboiosQuantidadeCargas = document.querySelectorAll("[name='ComboiosQuantidadeCarga']")
-                                                        for (var i = 0; i < ComboiosQuantidadeCargas.length; i++){
-                                                            ComboiosQuantidadeCarga.push(ComboiosQuantidadeCargas[i].value)
-                                                            document.getElementById('ComboiosQuantidadeCarga').setAttribute('value', `${ComboiosQuantidadeCarga}`)
-
-                                                        }
-
-                                                        var ComboiosarqueacaoBrutas = document.querySelectorAll("[name='ComboiosarqueacaoBruta']")
-                                                        for (var i = 0; i < ComboiosarqueacaoBrutas.length; i++){
-                                                            ComboiosarqueacaoBruta.push(ComboiosarqueacaoBrutas[i].value)
-                                                            document.getElementById('ComboiosarqueacaoBruta').setAttribute('value', `${ComboiosarqueacaoBruta}`)
                                                         }
 
                                                         if(comboiosArray.length == 0 ){
@@ -120,8 +102,8 @@
                                             </div>
                                             <input value="" id="comboiosArrayIds" name="embarcacoes" hidden>
                                             <input value="" id="comboiosCarga" name="comboiosCargas" hidden>
-                                            <input value="" id="ComboiosQuantidadeCarga" name="ComboiosQuantidadeCargas" hidden>
-                                            <input value="" id="ComboiosarqueacaoBruta" name="ComboiosarqueacaoBrutas" hidden>
+                                            <input value="" id="comboiosQuantidadeCarga" name="comboiosQuantidadeCargas" hidden>
+                                            <input value="" id="comboiosarqueacaoBruta" name="comboiosarqueacaoBrutas" hidden>
 
                                             <button class="btn btn-primary mb-4" type="button" onclick="addInputSelect('comboios')">Adicionar embarcaçao</button>
                                             
