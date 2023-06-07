@@ -55,6 +55,14 @@
                                                     submiteButton.disabled = false
 
                                                     var comboiosArray = []
+                                                    
+                                                    var comboiosCarga = []
+
+                                                    var ComboiosQuantidadeCarga = []
+
+                                                    var ComboiosarqueacaoBruta = []
+
+
 
                                                     var comboiosIds = document.querySelectorAll("[name='comboio']")
                                                                 for (var i = 0; i < comboiosIds.length; i++) {
@@ -66,6 +74,25 @@
                                                             comboiosArray.push(comboiosIds[i].value)
                                                             document.getElementById('comboiosArrayIds').setAttribute('value', `${comboiosArray}`)
                                                         }
+                                                        var comboiosCargas = document.querySelectorAll("[name='ComboiosCarga']")
+                                                        for (var i = 0; i < comboiosCargas.length; i++){
+                                                            comboiosCarga.push(comboiosCargas[i].value)
+                                                            document.getElementById('comboiosCarga').setAttribute('value', `${comboiosCarga}`)
+                                                        }
+                                                        
+                                                        var comboiosQuantidadeCargas = document.querySelectorAll("[name='ComboiosQuantidadeCarga']")
+                                                        for (var i = 0; i < ComboiosQuantidadeCargas.length; i++){
+                                                            ComboiosQuantidadeCarga.push(ComboiosQuantidadeCargas[i].value)
+                                                            document.getElementById('ComboiosQuantidadeCarga').setAttribute('value', `${ComboiosQuantidadeCarga}`)
+
+                                                        }
+
+                                                        var ComboiosarqueacaoBrutas = document.querySelectorAll("[name='ComboiosarqueacaoBruta']")
+                                                        for (var i = 0; i < ComboiosarqueacaoBrutas.length; i++){
+                                                            ComboiosarqueacaoBruta.push(ComboiosarqueacaoBrutas[i].value)
+                                                            document.getElementById('ComboiosarqueacaoBruta').setAttribute('value', `${ComboiosarqueacaoBruta}`)
+                                                        }
+
                                                         if(comboiosArray.length == 0 ){
                                                             var submiteButton = document.getElementById('submitButton')
                                                             submiteButton.disabled = true
@@ -92,6 +119,10 @@
                                                 </script>
                                             </div>
                                             <input value="" id="comboiosArrayIds" name="embarcacoes" hidden>
+                                            <input value="" id="comboiosCarga" name="comboiosCargas" hidden>
+                                            <input value="" id="ComboiosQuantidadeCarga" name="ComboiosQuantidadeCargas" hidden>
+                                            <input value="" id="ComboiosarqueacaoBruta" name="ComboiosarqueacaoBrutas" hidden>
+
                                             <button class="btn btn-primary mb-4" type="button" onclick="addInputSelect('comboios')">Adicionar embarcaçao</button>
                                             
                                             <button class="btn btn-success" type="button" onclick="getIdcomboios()" style="float: right">Fechar Relação</button>

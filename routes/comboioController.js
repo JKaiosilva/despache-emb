@@ -53,15 +53,16 @@ router.get('/formulario/comboio', eUser, async(req, res) => {
 
 router.post('/formulario/comboios', eUser, async(req, res) => {
     try{
-        const carga = req.body.ComboiosCarga
-        const quantidade = req.body.ComboiosQuantidadeCarga
-        const arqueacaoBruta = req.body.ComboiosarqueacaoBruta
+        const carga = req.body.comboiosCarga
+        const quantidade = req.body.comboiosQuantidadeCarga
+        const arqueacaoBruta = req.body.comboiosarqueacaoBruta
 
         const cleanString = req.body.embarcacoes.replace(/[\n' \[\]]/g, '');
         const embarcacoes = cleanString.split(',');
 
 
-        const comboioEmbarcacoes = embarcacoes.map((id) => mongoose.Types.ObjectId(id));
+        const comboioEmbarcacoes = {}
+        comboioEmbarcacoes.id = embarcacoes.map((id) => mongoose.Types.ObjectId(id));
         comboioEmbarcacoes.carga = carga
         comboioEmbarcacoes.quantidade = quantidade
         comboioEmbarcacoes.arqueacaoBruta = arqueacaoBruta
@@ -69,7 +70,6 @@ router.post('/formulario/comboios', eUser, async(req, res) => {
         const novoComboio = {
             usuarioId: req.user._id,
             embarcacoes: comboioEmbarcacoes, 
-            arqueacaoBruta: arqueacaoBruta,
             comboioMesAnoAtual: Date.now()
             
         }
