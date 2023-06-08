@@ -9,6 +9,7 @@ require('../models/AvisoSaida')
 require('../models/Tripulante')
 require('../models/Porto');
 require('../models/Relatorio');
+require('../models/Comboio')
 
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
@@ -19,6 +20,7 @@ const Embarcacao = mongoose.model('embarcacoes')
 const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
 const Relatorio = mongoose.model('relatorios')
+const Comboio = mongoose.model('comboios')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
@@ -122,7 +124,10 @@ router.get('/formulario', eUser, async (req, res) => {
         const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
         const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
         const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
-        
+        const comboios = await Comboio.find({usuarioId: req.user._id}).limit(5).lean().sort({comboioMesAnoAtual: 'desc'})
+
+
+
         if(!embarcacoesValid.find(el => el.embarcacaoValidadeNumber > dataHoje)){
             hidden = 'hidden'
             alertHidden = ''
@@ -141,9 +146,10 @@ router.get('/formulario', eUser, async (req, res) => {
                 avisoEntradas: avisoEntradas, 
                     avisoSaidas: avisoSaidas, 
                         embarcacoes: embarcacoes,
-                            hidden: hidden,
-                                alertHidden: alertHidden,
-                                    docHidden: docHidden,
+                            comboios: comboios,
+                                hidden: hidden,
+                                    alertHidden: alertHidden,
+                                        docHidden: docHidden,
                                         
             })
     }catch(err){

@@ -41,7 +41,7 @@ router.get('/formulario/comboio', eUser, async(req, res) => {
     try{
         const dataHoje = Date.now()
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id, embarcacaoValidadeNumber: {$gte: dataHoje}}).lean()
-        res.render('formulario/comboios/comboios', {
+        res.render('formulario/comboios/comboio', {
             embarcacoes: embarcacoes
         })
     }catch(err){
@@ -87,6 +87,33 @@ router.post('/formulario/comboios', eUser, async (req, res) => {
   });
   
 
+router.get('/comboios', eUser, async(req, res) => {
+    try{
+        const comboios = await Comboio.find().lean()
+        res.render('formulario/comboios/comboios', 
+            {comboios: comboios
+        })
+    }catch(err){
+        console.log(err);
+        req.flash('error_msg', 'Erro interno ao mostrar página');
+        res.redirect('/');
+    }
+})
+
+
+
+router.get('/formulario/comboiosVizu/:id', eUser, async(req, res) => {
+    try{
+            const comboios = await Comboio.findOne({_id: req.params.id}).lean()
+            res.render('formulario/comboios/comboiosVizu', 
+                {comboios: comboios
+            })
+    }catch(err){
+        console.log(err);
+        req.flash('error_msg', 'Erro interno ao mostrar página');
+        res.redirect('/');
+    }
+})
 
 
 
