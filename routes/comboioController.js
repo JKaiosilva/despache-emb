@@ -55,12 +55,19 @@ router.post('/formulario/comboios', eUser, async (req, res) => {
     try {
       const cleanString = req.body.embarcacoes.replace(/[\n' \[\]]/g, '');
       const embarcacoes = cleanString.split(',');
-  
+
+
+
       const comboioEmbarcacoes = [];
   
       for (var i = 0; i < embarcacoes.length; i++) {
+        async function pesquisarNome(id){
+          const embarcacao = await Embarcacao.findOne({_id: id}).lean()
+          return embarcacao.embarcacaoNome
+        }
         const comboioEmbarcacao = {
           id: req.body.comboio[i],
+          embarcacaoNome: await pesquisarNome(req.body.comboio[i]),
           carga: req.body.comboiosCarga[i],
           quantidade: req.body.comboiosQuantidadeCarga[i],
           arqueacaoBruta: req.body.comboiosarqueacaoBruta[i]

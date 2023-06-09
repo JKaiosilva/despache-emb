@@ -13,6 +13,9 @@ const Comboio = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Embarcacao',
         },
+        embarcacaoNome: {
+            type: String
+        },
         carga: {
             type: String
         },
