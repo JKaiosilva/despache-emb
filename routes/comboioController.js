@@ -139,13 +139,60 @@ router.get('/formulario/comboiosVizu/:id', eUser, async(req, res) => {
 router.get('/admin/comboiosValidate/:id', Admin, async(req, res) => {
     try{
         const comboios = await Comboio.findOne({_id: req.params.id}).lean()
+        const embsIds = []
+
+        comboios.embarcacoes.forEach((el) => {
+            embsIds.push(el.id)
+        })
+
+        const embarcacoes = await Embarcacao.find({_id: embsIds}).lean()
             res.render('admin/comboios/comboiosValidate', 
-                {comboios: comboios
+                {comboios: comboios,
+                    embarcacoes: embarcacoes
             })
     }catch(err){
         console.log(err);
         req.flash('error_msg', 'Erro interno ao mostrar página');
         res.redirect('/');
+    }
+})
+
+
+router.post('/comboiosValidate', Admin, async(req, res) => {
+    try {
+        const cleanString = req.body.embarcacoes.replace(/[\n' \[\]]/g, '');
+        const embarcacoes = cleanString.split(',');
+  
+        const comboioEmbarcacoes = [];
+    
+        for (var i = 0; i < embarcacoes.length; i++) {
+          async function pesquisarNome(id){
+            const embarcacao = await Embarcacao.findOne({_id: id}).lean()
+            return embarcacao.embarcacaoNome
+          }
+          const comboioEmbarcacao = {
+            id: req.body.comboio[i],
+            embarcacaoNome: await pesquisarNome(req.body.comboio[i]),
+            carga: req.body.comboiosCarga[i],
+            quantidade: req.body.comboiosQuantidadeCarga[i],
+            arqueacaoBruta: req.body.comboiosarqueacaoBruta[i]
+          };
+        
+          comboioEmbarcacoes.push(comboioEmbarcacao);
+        }
+    
+        await Comboio.updateOne({_id: req.body.id}, {
+          comboioNome: req.body.comboioNome,
+          embarcacoes: comboioEmbarcacoes,
+        });
+    
+    
+        req.flash('success_msg', 'Comboio formulado com sucesso!');
+        res.redirect('/');
+    }catch(err){
+        console.log(err);
+        req.flash('error_msg', 'Erro interno ao validar Comboio!');
+        res.redirect('/admin/painel');
     }
 })
 
