@@ -60,7 +60,7 @@ router.post('/formulario/comboios', eUser, async (req, res) => {
   
       for (var i = 0; i < embarcacoes.length; i++) {
         const comboioEmbarcacao = {
-          _id: req.body.comboio[i],
+          id: req.body.comboio[i],
           carga: req.body.comboiosCarga[i],
           quantidade: req.body.comboiosQuantidadeCarga[i],
           arqueacaoBruta: req.body.comboiosarqueacaoBruta[i]
@@ -71,6 +71,7 @@ router.post('/formulario/comboios', eUser, async (req, res) => {
   
       const novoComboio = new Comboio({
         usuarioId: req.user._id,
+        comboioNome: req.body.comboioNome,
         embarcacoes: comboioEmbarcacoes,
         comboioMesAnoAtual: Date.now().toString()
       });

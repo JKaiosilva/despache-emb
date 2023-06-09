@@ -5,11 +5,14 @@ const Comboio = new Schema({
     usuarioId: {
         type: String
     },
+    comboioNome: {
+        type: String
+    },
     embarcacoes: [{
-        
+        id: {
             type: Schema.Types.ObjectId,
             ref: 'Embarcacao',
-        
+        },
         carga: {
             type: String
         },
