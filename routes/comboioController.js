@@ -51,12 +51,10 @@ router.get('/formulario/comboio', eUser, async(req, res) => {
 })
 
 
-router.post('/formulario/comboios', eUser, async (req, res) => {
+router.post('/formulario/comboio', eUser, async (req, res) => {
     try {
       const cleanString = req.body.embarcacoes.replace(/[\n' \[\]]/g, '');
       const embarcacoes = cleanString.split(',');
-
-
 
       const comboioEmbarcacoes = [];
   
@@ -97,7 +95,7 @@ router.post('/formulario/comboios', eUser, async (req, res) => {
 
 router.get('/comboios', eUser, async(req, res) => {
     try{
-        const comboios = await Comboio.find().lean()
+        const comboios = await Comboio.find({usuarioID: req.user._id}).lean()
         res.render('formulario/comboios/comboios', 
             {comboios: comboios
         })
@@ -106,6 +104,20 @@ router.get('/comboios', eUser, async(req, res) => {
         req.flash('error_msg', 'Erro interno ao mostrar página');
         res.redirect('/');
     }
+})
+
+
+router.get('/admin/comboios', Admin, async(req, res) => {
+  try{
+      const comboios = await Comboio.find().lean()
+      res.render('admin/comboios/comboios', 
+          {comboios: comboios
+      })
+  }catch(err){
+      console.log(err);
+      req.flash('error_msg', 'Erro interno ao mostrar página');
+      res.redirect('/');
+  }
 })
 
 
@@ -124,5 +136,17 @@ router.get('/formulario/comboiosVizu/:id', eUser, async(req, res) => {
 })
 
 
+router.get('/admin/comboiosValidate/:id', Admin, async(req, res) => {
+    try{
+        const comboios = await Comboio.findOne({_id: req.params.id}).lean()
+            res.render('admin/comboios/comboiosValidate', 
+                {comboios: comboios
+            })
+    }catch(err){
+        console.log(err);
+        req.flash('error_msg', 'Erro interno ao mostrar página');
+        res.redirect('/');
+    }
+})
 
 module.exports = router
