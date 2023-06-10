@@ -227,7 +227,7 @@ router.get('/saidas/:page', eUser, async (req, res) => {
     const admin = req.user.eAdmin ? true : false;
 
         try{
-            const contagem = await AvisoSaida.count()
+            const contagem = await AvisoSaida.count({usuarioID: req.user._id})
             if(parseInt(page) * limit >= contagem){
                 nextPage = ''
                 hidden = 'hidden'

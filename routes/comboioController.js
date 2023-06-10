@@ -162,10 +162,11 @@ router.post('/comboiosValidate', Admin, async(req, res) => {
     try {
         const cleanString = req.body.embarcacoes.replace(/[\n' \[\]]/g, '');
         const embarcacoes = cleanString.split(',');
-  
+        const comboiosIds = embarcacoes.filter((item, index) => embarcacoes.indexOf(item) === index);
+
         const comboioEmbarcacoes = [];
     
-        for (var i = 0; i < embarcacoes.length; i++) {
+        for (var i = 0; i < comboiosIds.length; i++) {
           async function pesquisarNome(id){
             const embarcacao = await Embarcacao.findOne({_id: id}).lean()
             return embarcacao.embarcacaoNome
@@ -195,5 +196,74 @@ router.post('/comboiosValidate', Admin, async(req, res) => {
         res.redirect('/admin/painel');
     }
 })
+
+
+router.get('/admin/comboios/:page', Admin, async (req, res) => {
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+    try {
+        const contagem = await Comboio.count()
+        if (parseInt(page) * limit >= contagem) {
+            nextPage = ''
+            hidden = 'hidden'
+        } else {
+            nextPage = parseInt(page) + 1
+            hidden = ''
+        }
+
+        if (parseInt(page) == 2) {
+            previousPage = ''
+        } else {
+            previousPage = parseInt(page) - 1
+        }
+        const comboios = await Comboio.find().skip(skip).limit(limit).lean().sort({ comboioMesAnoAtual: 'desc' })
+        res.render('admin/comboios/comboiosPage',
+            {
+                comboios: comboios,
+                nextPage: nextPage,
+                previousPage: previousPage,
+                hidden: hidden
+            })
+    } catch (err) {
+        req.flash('error_msg', 'Erro interno ao mostrar Comboio!')
+        res.redirect('/')
+    }
+})
+
+
+router.get('/comboios/:page', Admin, async (req, res) => {
+  const page = req.params.page || 1;
+  const limit = 5;
+  const skip = (page - 1) * limit;
+  try {
+      const contagem = await Comboio.count({usuarioID: req.user._id})
+      if (parseInt(page) * limit >= contagem) {
+          nextPage = ''
+          hidden = 'hidden'
+      } else {
+          nextPage = parseInt(page) + 1
+          hidden = ''
+      }
+
+      if (parseInt(page) == 2) {
+          previousPage = ''
+      } else {
+          previousPage = parseInt(page) - 1
+      }
+      const comboios = await Comboio.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({ comboioMesAnoAtual: 'desc' })
+      res.render('formulario/comboios/comboiosPage',
+          {
+              comboios: comboios,
+              nextPage: nextPage,
+              previousPage: previousPage,
+              hidden: hidden
+          })
+  } catch (err) {
+      req.flash('error_msg', 'Erro interno ao mostrar Comboio!')
+      res.redirect('/')
+  }
+})
+
 
 module.exports = router

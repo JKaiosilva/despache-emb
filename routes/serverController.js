@@ -117,10 +117,10 @@ router.get('/formulario', eUser, async (req, res) => {
     try{
         const dataHoje = Date.now()
 
-        const embarcacoesValid = await Embarcacao.find({usuarioID: req.user._id}).lean().sort({EmbarcacaoNome: 'asc'})
+        const embarcacoesValid = await Embarcacao.find({usuarioID: req.user._id}).lean().sort({embarcacaoNome: 'asc'})
         const despachosValid = await Despacho.find({usuarioID: req.user._id}).lean().sort({despachoData: 'desc'})
 
-        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({EmbarcacaoNome: 'asc'})
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({embarcacaoNome: 'asc'})
         const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
         const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
         const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})

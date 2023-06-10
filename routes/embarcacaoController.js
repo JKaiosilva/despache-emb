@@ -63,7 +63,7 @@ router.get('/admin/embarcacoes/:page', Admin, async (req, res) => {
         } else {
             previousPage = parseInt(page) - 1
         }
-        const embarcacoes = await Embarcacao.find().skip(skip).limit(limit).lean().sort({ EmbarcacaoNome: 'asc' })
+        const embarcacoes = await Embarcacao.find().skip(skip).limit(limit).lean().sort({ embarcacaoNome: 'asc' })
         res.render('admin/embarcacoes/embarcacoesPage',
             {
                 embarcacoes: embarcacoes,
@@ -155,7 +155,7 @@ router.get('/formulario/addEmbarcacao', eUser, async (req, res) => {
 
 router.get('/embarcacoes', eUser, async (req, res) => {
     try{
-        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({EmbarcacaoNome: 'asc'})
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({embarcacaoNome: 'asc'})
             res.render('formulario/embarcacoes/embarcacoes', 
                 {embarcacoes: embarcacoes
             })
@@ -172,7 +172,7 @@ router.get('/embarcacoes/:page', eUser, async (req, res) => {
     const limit = 5;
     const skip = (page - 1) * limit;
      try{
-        const contagem = await Embarcacao.count()
+        const contagem = await Embarcacao.count({usuarioID: req.user._id})
         if(parseInt(page) * limit >= contagem){
             nextPage = ''
             hidden = 'hidden'
@@ -186,7 +186,7 @@ router.get('/embarcacoes/:page', eUser, async (req, res) => {
         }else{
             previousPage = parseInt(page) - 1
         }
-        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({EmbarcacaoNome: 'asc'})
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({embarcacaoNome: 'asc'})
             res.render('formulario/embarcacoes/embarcacoesPage', 
                 {embarcacoes: embarcacoes,
                     nextPage: nextPage,
