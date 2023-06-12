@@ -9,6 +9,7 @@ require('../models/AvisoSaida')
 require('../models/Tripulante')
 require('../models/Porto');
 require('../models/Relatorio');
+require('../models/Comboio')
 
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
@@ -19,6 +20,7 @@ const Embarcacao = mongoose.model('embarcacoes')
 const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
 const Relatorio = mongoose.model('relatorios')
+const Comboio = mongoose.model('comboios')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
@@ -78,29 +80,32 @@ router.get('/admin/saidasPage/:page', Admin, async (req, res) => {
 
 
 router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
-    try{
-        if(req.user.eAdmin){
+    try {
+        if (req.user.eAdmin) {
             hidden = ''
-        }else{
+        } else {
             hidden = 'hidden'
         }
-        const avisoSaidas = await AvisoSaida.findOne({_id: req.params.id}).lean()
-        const tripulantes = await Tripulante.find({_id: avisoSaidas.saidaTripulantes}).lean()
-        const embarcacoes = await Embarcacao.findOne({_id: avisoSaidas.embarcacao}).lean()
-        const portoValidSaida = await Porto.findOne({_id: avisoSaidas.saidaPortoSaida}).lean()
-        const portoValidDestino = await Porto.findOne({_id: avisoSaidas.saidaPortoDestino}).lean()
-        const despacho = await Despacho.findOne({_id: avisoSaidas.saidaDespacho}).lean()
+        const avisoSaidas = await AvisoSaida.findOne({ _id: req.params.id }).lean()
+        const tripulantes = await Tripulante.find({ _id: avisoSaidas.saidaTripulantes }).lean()
+        const embarcacoes = await Embarcacao.findOne({ _id: avisoSaidas.embarcacao }).lean()
+        const portoValidSaida = await Porto.findOne({ _id: avisoSaidas.saidaPortoSaida }).lean()
+        const portoValidDestino = await Porto.findOne({ _id: avisoSaidas.saidaPortoDestino }).lean()
+        const despacho = await Despacho.findOne({ _id: avisoSaidas.saidaDespacho }).lean()
+        const comboios = await Comboio.findOne({_id: avisoSaidas.saidaComboios}).lean()
 
-            res.render('formulario/saidas/avisoSaidaVizu',
-                {avisoSaidas: avisoSaidas,
-                    embarcacoes: embarcacoes,
-                        tripulantes: tripulantes,
-                            despacho:despacho,
-                                portoValidSaida: portoValidSaida,
-                                    portoValidDestino: portoValidDestino,
-                                        hidden: hidden
-                })
-    }catch(err){
+        res.render('formulario/saidas/avisoSaidaVizu',
+            {
+                avisoSaidas: avisoSaidas,
+                embarcacoes: embarcacoes,
+                tripulantes: tripulantes,
+                despacho: despacho,
+                comboios: comboios,
+                portoValidSaida: portoValidSaida,
+                portoValidDestino: portoValidDestino,
+                hidden: hidden
+            })
+    } catch (err) {
         req.flash('error_msg', 'Erro interno ao mostrar formulário')
         res.redirect('/formulario')
     }
@@ -108,54 +113,62 @@ router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
 
 
 
-router.get('/formulario/avisoSaida', eUser, async(req, res) => {
-    try{
+router.get('/formulario/avisoSaida', eUser, async (req, res) => {
+    try {
         const dataHoje = Date.now()
-        const despachos = await Despacho.find({usuarioID: req.user._id, despachoDataValidadeNumber: {$gte: dataHoje}}).lean()
-        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id, embarcacaoValidadeNumber: {$gte: dataHoje}}).lean()
-        const tripulantes = await Tripulante.find({tripulanteValidadeCIRNumber: {$gte: dataHoje}}).lean()
+        const despachos = await Despacho.find({ usuarioID: req.user._id, despachoDataValidadeNumber: { $gte: dataHoje } }).lean()
+        const embarcacoes = await Embarcacao.find({ usuarioID: req.user._id, embarcacaoValidadeNumber: { $gte: dataHoje } }).lean()
+        const tripulantes = await Tripulante.find({ tripulanteValidadeCIRNumber: { $gte: dataHoje } }).lean()
         const portos = await Porto.find().lean()
-            res.render('formulario/saidas/avisoSaida',
-                {embarcacoes: embarcacoes,
-                    tripulantes: tripulantes,
-                        portos: portos,
-                            despachos: despachos
+        const comboios = await Comboio.find({usuarioID: req.user._id}).lean()
+        res.render('formulario/saidas/avisoSaida',
+            {
+                embarcacoes: embarcacoes,
+                tripulantes: tripulantes,
+                portos: portos,
+                despachos: despachos,
+                comboios: comboios
             })
-    }catch(err){
+    } catch (err) {
         req.flash('error_msg', 'Erro interno ao mostrar formulario')
         res.redirect('formulario/preform')
     }
 })
 
 
-router.get('/admin/saidasValidate/:id', Admin, async(req, res) => {
-    try{
-        const avisoSaidas = await AvisoSaida.findOne({_id: req.params.id}).lean()
-        const tripulantesValid = await Tripulante.find({_id: avisoSaidas.saidaTripulantes}).lean()
-        const embarcacaoValid = await Embarcacao.findOne({_id: avisoSaidas.embarcacao}).lean()
-        const portoValidSaida = await Porto.findOne({_id: avisoSaidas.saidaPortoSaida}).lean()
-        const portoValidDestino = await Porto.findOne({_id: avisoSaidas.saidaPortoSaida}).lean()
-        const despachoValid = await Despacho.findOne({_id: avisoSaidas.saidaDespacho}).lean()
+router.get('/admin/saidasValidate/:id', Admin, async (req, res) => {
+    try {
+        const avisoSaidas = await AvisoSaida.findOne({ _id: req.params.id }).lean()
+        const tripulantesValid = await Tripulante.find({ _id: avisoSaidas.saidaTripulantes }).lean()
+        const embarcacaoValid = await Embarcacao.findOne({ _id: avisoSaidas.embarcacao }).lean()
+        const portoValidSaida = await Porto.findOne({ _id: avisoSaidas.saidaPortoSaida }).lean()
+        const portoValidDestino = await Porto.findOne({ _id: avisoSaidas.saidaPortoDestino }).lean()
+        const despachoValid = await Despacho.findOne({ _id: avisoSaidas.saidaDespacho }).lean()
+        const comboiosValid = await Comboio.findOne({_id: avisoSaidas.saidaComboios}).lean()
 
         const tripulantes = await Tripulante.find().lean()
         const embarcacoes = await Embarcacao.find().lean()
         const portos = await Porto.find().lean()
         const despachos = await Despacho.find().lean()
+        const comboios = await Comboio.find().lean()
 
         res.render('admin/saidas/avisoSaidaValidate',
-        {avisoSaidas: avisoSaidas,
-            tripulantesValid: tripulantesValid,
+            {
+                avisoSaidas: avisoSaidas,
+                tripulantesValid: tripulantesValid,
                 embarcacaoValid: embarcacaoValid,
-                    despachoValid: despachoValid,
-                        portoValidSaida: portoValidSaida,
-                            portoValidDestino: portoValidDestino,
-                                tripulantes: tripulantes,
-                                    embarcacoes: embarcacoes,
-                                        portos: portos,
-                                            despachos: despachos
-        })
+                despachoValid: despachoValid,
+                portoValidSaida: portoValidSaida,
+                portoValidDestino: portoValidDestino,
+                comboiosValid: comboiosValid,
+                tripulantes: tripulantes,
+                embarcacoes: embarcacoes,
+                portos: portos,
+                despachos: despachos,
+                comboios: comboios
+            })
 
-    }catch(err){
+    } catch (err) {
         console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar aviso de saida!')
         res.redirect('/')
@@ -163,40 +176,37 @@ router.get('/admin/saidasValidate/:id', Admin, async(req, res) => {
 })
 
 
-router.post('/admin/saidasValidate', Admin, async(req, res) => {
-    try{
+router.post('/admin/saidasValidate', Admin, async (req, res) => {
+    try {
         const cleanString = req.body.saidaTripulantes.replace(/[\n' \[\]]/g, '');
         const tripulantes = cleanString.split(',');
         const avisoSaidaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
-            
-                await AvisoSaida.updateOne({_id: req.body.id}, {
-                    saidaDespacho: req.body.saidaDespacho,
-                    saidaNprocesso: req.body.saidaNprocesso,
-                    saidaPortoSaida: req.body.saidaPortoSaida,
-                    saidaDataHoraSaida: req.body.saidaDataHoraSaida,
-                    saidaPortoDestino: req.body.saidaPortoDestino,
-                    saidaDataHoraChegada: req.body.saidaDataHoraChegada,
-                    saidaNomeRepresentanteEmbarcacao: req.body.saidaNomeRepresentanteEmbarcacao,
-                    saidaCPFCNPJRepresentanteEmbarcacao: req.body.saidaCPFCNPJRepresentanteEmbarcacao,
-                    saidaTelefoneRepresentanteEmbarcacao: req.body.saidaTelefoneRepresentanteEmbarcacao,
-                    saidaEnderecoRepresentanteEmbarcacao: req.body.saidaEnderecoRepresentanteEmbarcacao,
-                    saidaEmailRepresentanteEmbarcacao: req.body.saidaEmailRepresentanteEmbarcacao,
-                    saidaObservacoes: req.body.saidaObservacoes,
-                    saidaSomaPassageiros: req.body.saidaSomaPassageiros,
-                    saidaTripulantes: avisoSaidaTripulantes,
-                    saidaPassageiros: "Nome: "+ req.body.saidaPassageirosNome+
-                    " || Data de Nascimento: " + req.body.saidaPassageirosDataNascimento+
-                    " || Sexo: " + req.body.saidaPassageirosSexo,
-                    saidaComboios: "Nome: "+ req.body.saidaComboiosNome+
-                    " || Numero de Inscrição: "+ req.body.saidaComboiosNIncricao+
-                    " || Arqueação Bruta: "+ req.body.saidaComboiosArqueacaoBruta+
-                    " || Carga: "+ req.body.saidaComboiosCarga+
-                    " || Quantidade da Caga: "+ req.body.saidaComboiosQuantidadeCarga,
 
-                })
-                    req.flash('success_msg', 'Aviso de saida enviado com sucesso')
-                    res.redirect('/')
-    }catch(err){
+        await AvisoSaida.updateOne({ _id: req.body.id }, {
+            saidaDespacho: req.body.saidaDespacho,
+            saidaNprocesso: req.body.saidaNprocesso,
+            saidaPortoSaida: req.body.saidaPortoSaida,
+            saidaDataHoraSaida: req.body.saidaDataHoraSaida,
+            saidaPortoDestino: req.body.saidaPortoDestino,
+            saidaDataHoraChegada: req.body.saidaDataHoraChegada,
+            saidaNomeRepresentanteEmbarcacao: req.body.saidaNomeRepresentanteEmbarcacao,
+            saidaCPFCNPJRepresentanteEmbarcacao: req.body.saidaCPFCNPJRepresentanteEmbarcacao,
+            saidaTelefoneRepresentanteEmbarcacao: req.body.saidaTelefoneRepresentanteEmbarcacao,
+            saidaEnderecoRepresentanteEmbarcacao: req.body.saidaEnderecoRepresentanteEmbarcacao,
+            saidaEmailRepresentanteEmbarcacao: req.body.saidaEmailRepresentanteEmbarcacao,
+            saidaObservacoes: req.body.saidaObservacoes,
+            saidaSomaPassageiros: req.body.saidaSomaPassageiros,
+            saidaTripulantes: avisoSaidaTripulantes,
+            saidaPassageiros: "Nome: " + req.body.saidaPassageirosNome +
+                " || Data de Nascimento: " + req.body.saidaPassageirosDataNascimento +
+                " || Sexo: " + req.body.saidaPassageirosSexo,
+            saidaComboios: req.body.saidaComboios,
+            embarcacao: req.body.embarcacao
+
+        })
+        req.flash('success_msg', 'Aviso de saida enviado com sucesso')
+        res.redirect('/')
+    } catch (err) {
         console.log(err)
         req.flash('error_msg', 'Erro interno ao validar aviso de saida!')
         res.redirect('/')
@@ -207,13 +217,14 @@ router.post('/admin/saidasValidate', Admin, async(req, res) => {
 router.get('/saidas', eUser, async (req, res) => {
 
     const admin = req.user.eAdmin ? true : false;
-    try{
-        const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
-            res.render('formulario/saidas/saidas', 
-                {avisoSaidas: avisoSaidas,
-                    admin: admin
+    try {
+        const avisoSaidas = await AvisoSaida.find({ usuarioID: req.user._id }).limit(5).lean().sort({ saidaData: 'desc' })
+        res.render('formulario/saidas/saidas',
+            {
+                avisoSaidas: avisoSaidas,
+                admin: admin
             })
-    }catch(err){
+    } catch (err) {
         req.flash('error_msg', 'Erro ao mostrar página')
         res.redirect('/formulario')
     }
@@ -226,50 +237,51 @@ router.get('/saidas/:page', eUser, async (req, res) => {
     const skip = (page - 1) * limit;
     const admin = req.user.eAdmin ? true : false;
 
-        try{
-            const contagem = await AvisoSaida.count({usuarioID: req.user._id})
-            if(parseInt(page) * limit >= contagem){
-                nextPage = ''
-                hidden = 'hidden'
-            }else{
-                nextPage = parseInt(page) + 1
-                hidden = ''
-            }
-
-            if(parseInt(page) == 2){
-                previousPage = ''
-            }else{
-                previousPage = parseInt(page) - 1
-            }
-            const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({saidaData: 'desc'})
-                res.render('formulario/saidas/saidasPage', 
-                    {avisoSaidas: avisoSaidas,
-                        nextPage: nextPage,
-                            previousPage: previousPage,
-                                hidden: hidden,
-                                    admin: admin
-                    })
-        }catch(err){
-            req.flash('error_msg', 'Erro ao mostrar página')
-            res.redirect('/formulario')
+    try {
+        const contagem = await AvisoSaida.count({ usuarioID: req.user._id })
+        if (parseInt(page) * limit >= contagem) {
+            nextPage = ''
+            hidden = 'hidden'
+        } else {
+            nextPage = parseInt(page) + 1
+            hidden = ''
         }
+
+        if (parseInt(page) == 2) {
+            previousPage = ''
+        } else {
+            previousPage = parseInt(page) - 1
+        }
+        const avisoSaidas = await AvisoSaida.find({ usuarioID: req.user._id }).skip(skip).limit(limit).lean().sort({ saidaData: 'desc' })
+        res.render('formulario/saidas/saidasPage',
+            {
+                avisoSaidas: avisoSaidas,
+                nextPage: nextPage,
+                previousPage: previousPage,
+                hidden: hidden,
+                admin: admin
+            })
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao mostrar página')
+        res.redirect('/formulario')
+    }
 })
 
 
 
 router.get('/avisoSaida/:id/pdf', Admin, async (req, res) => {
-    try{
+    try {
         const avisoSaidas = await AvisoSaida.findById(req.params.id).lean()
-        const embarcacoes = await Embarcacao.findOne({_id: avisoSaidas.embarcacao}).lean()
-        const tripulantes = await Tripulante.find({_id: avisoSaidas.saidaTripulantes}).lean()
+        const embarcacoes = await Embarcacao.findOne({ _id: avisoSaidas.embarcacao }).lean()
+        const tripulantes = await Tripulante.find({ _id: avisoSaidas.saidaTripulantes }).lean()
         const tripulantesInfos = []
         var tripulantesArray = tripulantes.forEach((el) => {
             tripulantesInfos.push(`<br>` + "Nome: " + el.tripulanteNome + " ")
             tripulantesInfos.push("Grau: " + el.tripulanteGrau + " ")
             tripulantesInfos.push("Numero da CIR: " + el.tripulanteNCIR)
-            })
+        })
 
-    const html = `
+        const html = `
     <style>
        
         h1 {
@@ -406,18 +418,18 @@ router.get('/avisoSaida/:id/pdf', Admin, async (req, res) => {
                 <input value="${embarcacoes.embarcacaoNome}" disabled>
             </div>
 </form>
-`       
+`
 
         pdf.create(html).toStream((err, stream) => {
-        if (err) return res.send(err);
-        res.attachment(`${avisoSaidas.saidaNprocesso}.pdf`);
-        res.setHeader('Content-Type', 'application/pdf');
-        stream.pipe(res);
-      
-      });
-    }catch(err){
+            if (err) return res.send(err);
+            res.attachment(`${avisoSaidas.saidaNprocesso}.pdf`);
+            res.setHeader('Content-Type', 'application/pdf');
+            stream.pipe(res);
+
+        });
+    } catch (err) {
         req.flash('error_msg', 'Erro ao gerar PDF')
-        res.redirect('/') 
+        res.redirect('/')
     }
 })
 
@@ -427,265 +439,263 @@ router.post('/formulario/avisoSaida', eUser, async (req, res) => {
     const cleanString = req.body.saidaTripulantes.replace(/[\n' \[\]]/g, '');
     const tripulantes = cleanString.split(',');
     const avisoSaidaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
-        try{
-            const novoAvisoSaida = {
-                usuarioID: req.user._id,
-                saidaDespacho: req.body.saidaDespacho,
-                saidaNprocesso: req.body.saidaNprocesso,
-                saidaPortoSaida: req.body.saidaPortoSaida,
-                saidaDataHoraSaida: req.body.saidaDataHoraSaida,
-                saidaPortoDestino: req.body.saidaPortoDestino,
-                saidaDataHoraChegada: req.body.saidaDataHoraChegada,
-                saidaNomeRepresentanteEmbarcacao: req.body.saidaNomeRepresentanteEmbarcacao,
-                saidaCPFCNPJRepresentanteEmbarcacao: req.body.saidaCPFCNPJRepresentanteEmbarcacao,
-                saidaTelefoneRepresentanteEmbarcacao: req.body.saidaTelefoneRepresentanteEmbarcacao,
-                saidaEnderecoRepresentanteEmbarcacao: req.body.saidaEnderecoRepresentanteEmbarcacao,
-                saidaEmailRepresentanteEmbarcacao: req.body.saidaEmailRepresentanteEmbarcacao,
-                saidaObservacoes: req.body.saidaObservacoes,
-                saidaSomaPassageiros: req.body.saidaSomaPassageiros,
-                saidaTripulantes: avisoSaidaTripulantes,
-                saidaPassageiros: "Nome: "+ req.body.saidaPassageirosNome+
-                " || Data de Nascimento: " + req.body.saidaPassageirosDataNascimento+
+    try {
+        const novoAvisoSaida = {
+            usuarioID: req.user._id,
+            saidaDespacho: req.body.saidaDespacho,
+            saidaNprocesso: req.body.saidaNprocesso,
+            saidaPortoSaida: req.body.saidaPortoSaida,
+            saidaDataHoraSaida: req.body.saidaDataHoraSaida,
+            saidaPortoDestino: req.body.saidaPortoDestino,
+            saidaDataHoraChegada: req.body.saidaDataHoraChegada,
+            saidaNomeRepresentanteEmbarcacao: req.body.saidaNomeRepresentanteEmbarcacao,
+            saidaCPFCNPJRepresentanteEmbarcacao: req.body.saidaCPFCNPJRepresentanteEmbarcacao,
+            saidaTelefoneRepresentanteEmbarcacao: req.body.saidaTelefoneRepresentanteEmbarcacao,
+            saidaEnderecoRepresentanteEmbarcacao: req.body.saidaEnderecoRepresentanteEmbarcacao,
+            saidaEmailRepresentanteEmbarcacao: req.body.saidaEmailRepresentanteEmbarcacao,
+            saidaObservacoes: req.body.saidaObservacoes,
+            saidaSomaPassageiros: req.body.saidaSomaPassageiros,
+            saidaTripulantes: avisoSaidaTripulantes,
+            saidaPassageiros: "Nome: " + req.body.saidaPassageirosNome +
+                " || Data de Nascimento: " + req.body.saidaPassageirosDataNascimento +
                 " || Sexo: " + req.body.saidaPassageirosSexo,
-                saidaComboios: "Nome: "+ req.body.saidaComboiosNome+
-                " || Numero de Inscrição: "+ req.body.saidaComboiosNIncricao+
-                " || Arqueação Bruta: "+ req.body.saidaComboiosArqueacaoBruta+
-                " || Carga: "+ req.body.saidaComboiosCarga+
-                " || Quantidade da Caga: "+ req.body.saidaComboiosQuantidadeCarga,
-                saidaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-                embarcacao: req.body.embarcacao,
-                saidaData: Date.now(),
-                saidaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
-            }
-            new AvisoSaida(novoAvisoSaida).save()
-                req.flash('success_msg', 'Aviso de saida enviado com sucesso')
-                res.redirect('/')
-        }catch(err){
+            saidaComboios: req.body.saidaComboios,
+            saidaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+            embarcacao: req.body.embarcacao,
+            saidaData: Date.now(),
+            saidaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+        }
+        new AvisoSaida(novoAvisoSaida).save()
+        req.flash('success_msg', 'Aviso de saida enviado com sucesso')
+        res.redirect('/')
+    } catch (err) {
         req.flash('error_msg', 'Erro interno, tente novamente')
         res.redirect('/')
-        }
-    })
+    }
+})
 
-    router.get('/admin/relatorioSaidas', Admin, async (req, res) => {
-        try{
-                const despachos = await Despacho.find().lean();
-                const avisoEntradas = await AvisoEntrada.find().lean();
-                const avisoSaidas = await AvisoSaida.find().lean();
-                const embarcacoes = await Embarcacao.find().lean();
-                const avisos = await Aviso.find().lean();
-                const usuarios = await Usuario.find().lean();
-                const tripulantes = await Tripulante.find().lean();
-                
-                
-                let despachosCount = despachos.length;
-                let avisoEntradasCount = avisoEntradas.length;
-                let avisoSaidasCount = avisoSaidas.length;
-                let embarcacoesCount = embarcacoes.length;
-                let avisosCount = avisos.length;
-                let usuariosCount = usuarios.length;
-                let tripulantesCount = tripulantes.length;
-    
-    
-                mesAnoAtual = moment(Date.now()).format('MM/YYYY')
-                mesAtualString = moment(Date.now()).format('MMMM')
-    
-                bandeirasTotal = ['Paraguaio', 'Argentino', 'Uruguaio', 'Boliviano', 'Brasileiro']
-                bandeirasExt = ['Paraguaio', 'Argentino', 'Uruguaio', 'Boliviano']
-                bandeirasBRA = ['Brasileiro']
-                bandeirasBO = ['Boliviano']
-                bandeirasPA = ['Paraguai']
-                bandeirasARG = ['Argentino']
-                bandeirasURU = ['Uruguaio']
-    
-                mesEmbarcacaoTotal = 0
-                mesEmbarcacaoExt = 0
-                mesEmbarcacaoBRA = 0
-                mesEmbarcacaoBO = 0
-                mesEmbarcacaoPA = 0
-                mesEmbarcacaoARG = 0
-                mesEmbarcacaoURU = 0 
-    
-                mesEmbarcacaoInternacionalEmp = 0
-                mesEmbarcacaoNacionalEmp = 0
-                mesEmbarcacaoBarcaca = 0
-                mesEmbarcacaoRebocadorEmpurador = 0
-                mesEmbarcacaoBalsa = 0
-                mesEmbarcacaoCargaGeral = 0
-                mesEmbarcacaoDraga = 0
-                mesEmbarcacaoLancha = 0
-                mesEmbarcacaoPassageiros = 0
-                mesPassageiros = 0
-    
-                documentSaidaMesAnoAtual = 0
-    
-                totalEmbarcacaoTotal = 0
-                totalEmbarcacaoExt = 0
-                totalEmbarcacaoBRA = 0
-                totalEmbarcacaoBO = 0
-                totalEmbarcacaoPA = 0 
-                totalEmbarcacaoARG = 0
-                totalEmbarcacaoURU = 0
-                totalEmbarcacaoInternacionalEmp = 0
-                totalEmbarcacaoNacionalEmp = 0
-                totalEmbarcacaoBarcaca = 0
-                totalEmbarcacaoRebocadorEmpurador = 0
-                totalEmbarcacaoBalsa = 0
-                totalEmbarcacaoCargaGeral = 0
-                totalEmbarcacaoDraga = 0
-                totalEmbarcacaoLancha = 0
-                totalEmbarcacaoPassageiros = 0
-                totalPassageiros = 0
-    
-                saidaTotalEmbarcacaoTotal = 0
-                saidaTotalEmbarcacaoExt = 0
-                saidaTotalEmbarcacaoBRA = 0
-                saidaTotalEmbarcacaoBO = 0
-                saidaTotalEmbarcacaoPA = 0
-                saidaTotalEmbarcacaoARG = 0
-                saidaTotalEmbarcacaoURU = 0
-    
-                saidaTotalEmbarcacaoInternacionalEmp = 0
-                saidaTotalEmbarcacaoNacionalEmp = 0
-                saidaTotalEmbarcacaoBarcaca = 0
-                saidaTotalEmbarcacaoRebocadorEmpurador = 0
-                saidaTotalEmbarcacaoBalsa = 0
-                saidaTotalEmbarcacaoCargaGeral = 0
-                saidaTotalEmbarcacaoDraga = 0
-                saidaTotalEmbarcacaoLancha = 0
-                saidaTotalEmbarcacaoPassageiros = 0
-    
-                var mesDespachosCount = despachos.filter((el) => el.depachoMesAnoAtual == mesAnoAtual).length
-                var mesAvisoEntradasCount = avisoEntradas.filter((el) => el.entradaMesAnoAtual == mesAnoAtual).length
-                var mesAvisoSaidasCount = avisoSaidas.filter((el) => el.saidaMesAnoAtual == mesAnoAtual).length
-                var mesEmbarcacoesCount = embarcacoes.filter((el) => el.embarcacaoMesAnoAtual == mesAnoAtual).length
-                var mesAvisosCount = avisos.filter((el) => el.avisoMesAnoAtual == mesAnoAtual).length
-                var mesUsuariosCount = usuarios.filter((el) => el.usuarioMesAnoAtual == mesAnoAtual).length
-                var mesTripulantesCount = tripulantes.filter((el) => el.tripulanteMesAnoAtual == mesAnoAtual).length
-    
-                    for await(formularios of avisoSaidas){
-                        totalPass = parseInt(formularios.saidaSomaPassageiros)
-                        totalPassageiros += totalPass
-                        if (formularios.saidaMesAnoAtual == mesAnoAtual) {
-                            passag = parseInt(formularios.saidaSomaPassageiros);
-                            mesPassageiros += passag;
-                            documentSaidaMesAnoAtual = formularios.saidaMesAnoAtual
-    
-                            let embarcacoes = await Embarcacao.find({_id: formularios.embarcacao}).lean()
-                             for await(const embs of embarcacoes){
-                                if(bandeirasTotal.includes(embs.embarcacaoBandeira)){
-                                    mesEmbarcacaoTotal++
-                                }if(bandeirasExt.includes(embs.embarcacaoBandeira)){
-                                    mesEmbarcacaoExt++
-                                }if(bandeirasBRA.includes(embs.embarcacaoBandeira)){
-                                    mesEmbarcacaoBRA++
-                                }if(bandeirasBO.includes(embs.embarcacaoBandeira)){
-                                    mesEmbarcacaoBO++
-                                }if(bandeirasPA.includes(embs.embarcacaoBandeira)){
-                                    mesEmbarcacaoPA++
-                                }if(bandeirasARG.includes(embs.embarcacaoBandeira)){
-                                    mesEmbarcacaoARG++
-                                }if(bandeirasURU.includes(embs.embarcacaoBandeira)){
-                                    mesEmbarcacaoURU++
-    
-                                }if(['empurrador'].includes(embs.embarcacaoTipo) & bandeirasBRA.indexOf(embs.embarcacaoBandeira)){
-                                    mesEmbarcacaoInternacionalEmp++
-                                }if(['empurrador'].includes(embs.embarcacaoTipo) & bandeirasBRA.includes(embs.embarcacaoBandeira)){
-                                    mesEmbarcacaoNacionalEmp++
-                                }if(['barcaça'].includes(embs.embarcacaoTipo)){
-                                    mesEmbarcacaoBarcaca++
-                                }if(['rebocadorEmpurrador'].includes(embs.embarcacaoTipo)){
-                                    mesEmbarcacaoRebocadorEmpurador++
-                                }if(['balsa'].includes(embs.embarcacaoTipo)){
-                                    mesEmbarcacaoBalsa++
-                                }if(['cargaGeral'].includes(embs.embarcacaoTipo)){
-                                    mesEmbarcacaoCargaGeral++
-                                }if(['draga'].includes(embs.embarcacaoTipo)){
-                                    mesEmbarcacaoDraga++
-                                }if(['lancha'].includes(embs.embarcacaoTipo)){
-                                    mesEmbarcacaoLancha++
-                                }if(['embarcacaoPassageiros'].includes(embs.embarcacaoTipo)){
-                                    mesEmbarcacaoPassageiros++
-                                }
-                        }}}
-        
-                        for await(formularios of avisoSaidas){
-                            let embarcacoes = await Embarcacao.find({_id: formularios.embarcacao}).lean()
-                                 for await(const saidaEmbsTotal of embarcacoes){
-                                    if(bandeirasTotal.includes(saidaEmbsTotal.embarcacaoBandeira)){
-                                        saidaTotalEmbarcacaoTotal++
-                                    }if(bandeirasExt.includes(saidaEmbsTotal.embarcacaoBandeira)){
-                                        saidaTotalEmbarcacaoExt++
-                                    }if(bandeirasBRA.includes(saidaEmbsTotal.embarcacaoBandeira)){
-                                        saidaTotalEmbarcacaoBRA++
-                                    }if(bandeirasBO.includes(saidaEmbsTotal.embarcacaoBandeira)){
-                                        saidaTotalEmbarcacaoBO++
-                                    }if(bandeirasPA.includes(saidaEmbsTotal.embarcacaoBandeira)){
-                                        saidaTotalEmbarcacaoPA++
-                                    }if(bandeirasARG.includes(saidaEmbsTotal.embarcacaoBandeira)){
-                                        saidaTotalEmbarcacaoARG++
-                                    }if(bandeirasURU.includes(saidaEmbsTotal.embarcacaoBandeira)){
-                                        saidaTotalEmbarcacaoURU++
-        
-                                    }if(['empurrador'].includes(saidaEmbsTotal.embarcacaoTipo) & bandeirasBRA.indexOf(saidaEmbsTotal.embarcacaoBandeira)){
-                                        saidaTotalEmbarcacaoInternacionalEmp++
-                                    }if(['empurrador'].includes(saidaEmbsTotal.embarcacaoTipo) & bandeirasBRA.includes(saidaEmbsTotal.embarcacaoBandeira)){
-                                        saidaTotalEmbarcacaoNacionalEmp++
-                                    }if(['barcaça'].includes(saidaEmbsTotal.embarcacaoTipo)){
-                                        saidaTotalEmbarcacaoBarcaca++
-                                    }if(['rebocadorEmpurrador'].includes(saidaEmbsTotal.embarcacaoTipo)){
-                                        saidaTotalEmbarcacaoRebocadorEmpurador++
-                                    }if(['balsa'].includes(saidaEmbsTotal.embarcacaoTipo)){
-                                        saidaTotalEmbarcacaoBalsa++
-                                    }if(['cargaGeral'].includes(saidaEmbsTotal.embarcacaoTipo)){
-                                        saidaTotalEmbarcacaoCargaGeral++
-                                    }if(['draga'].includes(saidaEmbsTotal.embarcacaoTipo)){
-                                        saidaTotalEmbarcacaoDraga++
-                                    }if(['lancha'].includes(saidaEmbsTotal.embarcacaoTipo)){
-                                        saidaTotalEmbarcacaoLancha++
-                                    }if(['embarcacaoPassageiros'].includes(saidaEmbsTotal.embarcacaoTipo)){
-                                        saidaTotalEmbarcacaoPassageiros++
-                                    }
-                                }
-                            }        
-    
-                        for await(const embsTotal of embarcacoes){
-                            if(bandeirasTotal.includes(embsTotal.embarcacaoBandeira)){
-                                totalEmbarcacaoTotal++
-                            }if(bandeirasExt.includes(embsTotal.embarcacaoBandeira)){
-                                totalEmbarcacaoExt++
-                            }if(bandeirasBRA.includes(embsTotal.embarcacaoBandeira)){
-                                totalEmbarcacaoBRA++
-                            }if(bandeirasBO.includes(embsTotal.embarcacaoBandeira)){
-                                totalEmbarcacaoBO++
-                            }if(bandeirasPA.includes(embsTotal.embarcacaoBandeira)){
-                                totalEmbarcacaoPA++
-                            }if(bandeirasARG.includes(embsTotal.embarcacaoBandeira)){
-                                totalEmbarcacaoARG++
-                            }if(bandeirasURU.includes(embsTotal.embarcacaoBandeira)){
-                                totalEmbarcacaoURU++
-    
-                            }if(['empurrador'].includes(embsTotal.embarcacaoTipo) & bandeirasBRA.indexOf(embsTotal.embarcacaoBandeira)){
-                                totalEmbarcacaoInternacionalEmp++
-                            }if(['empurrador'].includes(embsTotal.embarcacaoTipo) & bandeirasBRA.includes(embsTotal.embarcacaoBandeira)){
-                                totalEmbarcacaoNacionalEmp++
-                            }if(['barcaça'].includes(embsTotal.embarcacaoTipo)){
-                                totalEmbarcacaoBarcaca++
-                            }if(['rebocadorEmpurrador'].includes(embsTotal.embarcacaoTipo)){
-                                totalEmbarcacaoRebocadorEmpurador++
-                            }if(['balsa'].includes(embsTotal.embarcacaoTipo)){
-                                totalEmbarcacaoBalsa++
-                            }if(['cargaGeral'].includes(embsTotal.embarcacaoTipo)){
-                                totalEmbarcacaoCargaGeral++
-                            }if(['draga'].includes(embsTotal.embarcacaoTipo)){
-                                totalEmbarcacaoDraga++
-                            }if(['lancha'].includes(embsTotal.embarcacaoTipo)){
-                                totalEmbarcacaoLancha++
-                            }if(['embarcacaoPassageiros'].includes(embsTotal.embarcacaoTipo)){
-                                totalEmbarcacaoPassageiros++
-                            }
-                        }
-    
-                    const html = `<h1>Relatório do Ultimo mês</h1><br>
+router.get('/admin/relatorioSaidas', Admin, async (req, res) => {
+    try {
+        const despachos = await Despacho.find().lean();
+        const avisoEntradas = await AvisoEntrada.find().lean();
+        const avisoSaidas = await AvisoSaida.find().lean();
+        const embarcacoes = await Embarcacao.find().lean();
+        const avisos = await Aviso.find().lean();
+        const usuarios = await Usuario.find().lean();
+        const tripulantes = await Tripulante.find().lean();
+
+
+        let despachosCount = despachos.length;
+        let avisoEntradasCount = avisoEntradas.length;
+        let avisoSaidasCount = avisoSaidas.length;
+        let embarcacoesCount = embarcacoes.length;
+        let avisosCount = avisos.length;
+        let usuariosCount = usuarios.length;
+        let tripulantesCount = tripulantes.length;
+
+
+        mesAnoAtual = moment(Date.now()).format('MM/YYYY')
+        mesAtualString = moment(Date.now()).format('MMMM')
+
+        bandeirasTotal = ['Paraguaio', 'Argentino', 'Uruguaio', 'Boliviano', 'Brasileiro']
+        bandeirasExt = ['Paraguaio', 'Argentino', 'Uruguaio', 'Boliviano']
+        bandeirasBRA = ['Brasileiro']
+        bandeirasBO = ['Boliviano']
+        bandeirasPA = ['Paraguai']
+        bandeirasARG = ['Argentino']
+        bandeirasURU = ['Uruguaio']
+
+        mesEmbarcacaoTotal = 0
+        mesEmbarcacaoExt = 0
+        mesEmbarcacaoBRA = 0
+        mesEmbarcacaoBO = 0
+        mesEmbarcacaoPA = 0
+        mesEmbarcacaoARG = 0
+        mesEmbarcacaoURU = 0
+
+        mesEmbarcacaoInternacionalEmp = 0
+        mesEmbarcacaoNacionalEmp = 0
+        mesEmbarcacaoBarcaca = 0
+        mesEmbarcacaoRebocadorEmpurador = 0
+        mesEmbarcacaoBalsa = 0
+        mesEmbarcacaoCargaGeral = 0
+        mesEmbarcacaoDraga = 0
+        mesEmbarcacaoLancha = 0
+        mesEmbarcacaoPassageiros = 0
+        mesPassageiros = 0
+
+        documentSaidaMesAnoAtual = 0
+
+        totalEmbarcacaoTotal = 0
+        totalEmbarcacaoExt = 0
+        totalEmbarcacaoBRA = 0
+        totalEmbarcacaoBO = 0
+        totalEmbarcacaoPA = 0
+        totalEmbarcacaoARG = 0
+        totalEmbarcacaoURU = 0
+        totalEmbarcacaoInternacionalEmp = 0
+        totalEmbarcacaoNacionalEmp = 0
+        totalEmbarcacaoBarcaca = 0
+        totalEmbarcacaoRebocadorEmpurador = 0
+        totalEmbarcacaoBalsa = 0
+        totalEmbarcacaoCargaGeral = 0
+        totalEmbarcacaoDraga = 0
+        totalEmbarcacaoLancha = 0
+        totalEmbarcacaoPassageiros = 0
+        totalPassageiros = 0
+
+        saidaTotalEmbarcacaoTotal = 0
+        saidaTotalEmbarcacaoExt = 0
+        saidaTotalEmbarcacaoBRA = 0
+        saidaTotalEmbarcacaoBO = 0
+        saidaTotalEmbarcacaoPA = 0
+        saidaTotalEmbarcacaoARG = 0
+        saidaTotalEmbarcacaoURU = 0
+
+        saidaTotalEmbarcacaoInternacionalEmp = 0
+        saidaTotalEmbarcacaoNacionalEmp = 0
+        saidaTotalEmbarcacaoBarcaca = 0
+        saidaTotalEmbarcacaoRebocadorEmpurador = 0
+        saidaTotalEmbarcacaoBalsa = 0
+        saidaTotalEmbarcacaoCargaGeral = 0
+        saidaTotalEmbarcacaoDraga = 0
+        saidaTotalEmbarcacaoLancha = 0
+        saidaTotalEmbarcacaoPassageiros = 0
+
+        var mesDespachosCount = despachos.filter((el) => el.depachoMesAnoAtual == mesAnoAtual).length
+        var mesAvisoEntradasCount = avisoEntradas.filter((el) => el.entradaMesAnoAtual == mesAnoAtual).length
+        var mesAvisoSaidasCount = avisoSaidas.filter((el) => el.saidaMesAnoAtual == mesAnoAtual).length
+        var mesEmbarcacoesCount = embarcacoes.filter((el) => el.embarcacaoMesAnoAtual == mesAnoAtual).length
+        var mesAvisosCount = avisos.filter((el) => el.avisoMesAnoAtual == mesAnoAtual).length
+        var mesUsuariosCount = usuarios.filter((el) => el.usuarioMesAnoAtual == mesAnoAtual).length
+        var mesTripulantesCount = tripulantes.filter((el) => el.tripulanteMesAnoAtual == mesAnoAtual).length
+
+        for await (formularios of avisoSaidas) {
+            totalPass = parseInt(formularios.saidaSomaPassageiros)
+            totalPassageiros += totalPass
+            if (formularios.saidaMesAnoAtual == mesAnoAtual) {
+                passag = parseInt(formularios.saidaSomaPassageiros);
+                mesPassageiros += passag;
+                documentSaidaMesAnoAtual = formularios.saidaMesAnoAtual
+
+                let embarcacoes = await Embarcacao.find({ _id: formularios.embarcacao }).lean()
+                for await (const embs of embarcacoes) {
+                    if (bandeirasTotal.includes(embs.embarcacaoBandeira)) {
+                        mesEmbarcacaoTotal++
+                    } if (bandeirasExt.includes(embs.embarcacaoBandeira)) {
+                        mesEmbarcacaoExt++
+                    } if (bandeirasBRA.includes(embs.embarcacaoBandeira)) {
+                        mesEmbarcacaoBRA++
+                    } if (bandeirasBO.includes(embs.embarcacaoBandeira)) {
+                        mesEmbarcacaoBO++
+                    } if (bandeirasPA.includes(embs.embarcacaoBandeira)) {
+                        mesEmbarcacaoPA++
+                    } if (bandeirasARG.includes(embs.embarcacaoBandeira)) {
+                        mesEmbarcacaoARG++
+                    } if (bandeirasURU.includes(embs.embarcacaoBandeira)) {
+                        mesEmbarcacaoURU++
+
+                    } if (['empurrador'].includes(embs.embarcacaoTipo) & bandeirasBRA.indexOf(embs.embarcacaoBandeira)) {
+                        mesEmbarcacaoInternacionalEmp++
+                    } if (['empurrador'].includes(embs.embarcacaoTipo) & bandeirasBRA.includes(embs.embarcacaoBandeira)) {
+                        mesEmbarcacaoNacionalEmp++
+                    } if (['barcaça'].includes(embs.embarcacaoTipo)) {
+                        mesEmbarcacaoBarcaca++
+                    } if (['rebocadorEmpurrador'].includes(embs.embarcacaoTipo)) {
+                        mesEmbarcacaoRebocadorEmpurador++
+                    } if (['balsa'].includes(embs.embarcacaoTipo)) {
+                        mesEmbarcacaoBalsa++
+                    } if (['cargaGeral'].includes(embs.embarcacaoTipo)) {
+                        mesEmbarcacaoCargaGeral++
+                    } if (['draga'].includes(embs.embarcacaoTipo)) {
+                        mesEmbarcacaoDraga++
+                    } if (['lancha'].includes(embs.embarcacaoTipo)) {
+                        mesEmbarcacaoLancha++
+                    } if (['embarcacaoPassageiros'].includes(embs.embarcacaoTipo)) {
+                        mesEmbarcacaoPassageiros++
+                    }
+                }
+            }
+        }
+
+        for await (formularios of avisoSaidas) {
+            let embarcacoes = await Embarcacao.find({ _id: formularios.embarcacao }).lean()
+            for await (const saidaEmbsTotal of embarcacoes) {
+                if (bandeirasTotal.includes(saidaEmbsTotal.embarcacaoBandeira)) {
+                    saidaTotalEmbarcacaoTotal++
+                } if (bandeirasExt.includes(saidaEmbsTotal.embarcacaoBandeira)) {
+                    saidaTotalEmbarcacaoExt++
+                } if (bandeirasBRA.includes(saidaEmbsTotal.embarcacaoBandeira)) {
+                    saidaTotalEmbarcacaoBRA++
+                } if (bandeirasBO.includes(saidaEmbsTotal.embarcacaoBandeira)) {
+                    saidaTotalEmbarcacaoBO++
+                } if (bandeirasPA.includes(saidaEmbsTotal.embarcacaoBandeira)) {
+                    saidaTotalEmbarcacaoPA++
+                } if (bandeirasARG.includes(saidaEmbsTotal.embarcacaoBandeira)) {
+                    saidaTotalEmbarcacaoARG++
+                } if (bandeirasURU.includes(saidaEmbsTotal.embarcacaoBandeira)) {
+                    saidaTotalEmbarcacaoURU++
+
+                } if (['empurrador'].includes(saidaEmbsTotal.embarcacaoTipo) & bandeirasBRA.indexOf(saidaEmbsTotal.embarcacaoBandeira)) {
+                    saidaTotalEmbarcacaoInternacionalEmp++
+                } if (['empurrador'].includes(saidaEmbsTotal.embarcacaoTipo) & bandeirasBRA.includes(saidaEmbsTotal.embarcacaoBandeira)) {
+                    saidaTotalEmbarcacaoNacionalEmp++
+                } if (['barcaça'].includes(saidaEmbsTotal.embarcacaoTipo)) {
+                    saidaTotalEmbarcacaoBarcaca++
+                } if (['rebocadorEmpurrador'].includes(saidaEmbsTotal.embarcacaoTipo)) {
+                    saidaTotalEmbarcacaoRebocadorEmpurador++
+                } if (['balsa'].includes(saidaEmbsTotal.embarcacaoTipo)) {
+                    saidaTotalEmbarcacaoBalsa++
+                } if (['cargaGeral'].includes(saidaEmbsTotal.embarcacaoTipo)) {
+                    saidaTotalEmbarcacaoCargaGeral++
+                } if (['draga'].includes(saidaEmbsTotal.embarcacaoTipo)) {
+                    saidaTotalEmbarcacaoDraga++
+                } if (['lancha'].includes(saidaEmbsTotal.embarcacaoTipo)) {
+                    saidaTotalEmbarcacaoLancha++
+                } if (['embarcacaoPassageiros'].includes(saidaEmbsTotal.embarcacaoTipo)) {
+                    saidaTotalEmbarcacaoPassageiros++
+                }
+            }
+        }
+
+        for await (const embsTotal of embarcacoes) {
+            if (bandeirasTotal.includes(embsTotal.embarcacaoBandeira)) {
+                totalEmbarcacaoTotal++
+            } if (bandeirasExt.includes(embsTotal.embarcacaoBandeira)) {
+                totalEmbarcacaoExt++
+            } if (bandeirasBRA.includes(embsTotal.embarcacaoBandeira)) {
+                totalEmbarcacaoBRA++
+            } if (bandeirasBO.includes(embsTotal.embarcacaoBandeira)) {
+                totalEmbarcacaoBO++
+            } if (bandeirasPA.includes(embsTotal.embarcacaoBandeira)) {
+                totalEmbarcacaoPA++
+            } if (bandeirasARG.includes(embsTotal.embarcacaoBandeira)) {
+                totalEmbarcacaoARG++
+            } if (bandeirasURU.includes(embsTotal.embarcacaoBandeira)) {
+                totalEmbarcacaoURU++
+
+            } if (['empurrador'].includes(embsTotal.embarcacaoTipo) & bandeirasBRA.indexOf(embsTotal.embarcacaoBandeira)) {
+                totalEmbarcacaoInternacionalEmp++
+            } if (['empurrador'].includes(embsTotal.embarcacaoTipo) & bandeirasBRA.includes(embsTotal.embarcacaoBandeira)) {
+                totalEmbarcacaoNacionalEmp++
+            } if (['barcaça'].includes(embsTotal.embarcacaoTipo)) {
+                totalEmbarcacaoBarcaca++
+            } if (['rebocadorEmpurrador'].includes(embsTotal.embarcacaoTipo)) {
+                totalEmbarcacaoRebocadorEmpurador++
+            } if (['balsa'].includes(embsTotal.embarcacaoTipo)) {
+                totalEmbarcacaoBalsa++
+            } if (['cargaGeral'].includes(embsTotal.embarcacaoTipo)) {
+                totalEmbarcacaoCargaGeral++
+            } if (['draga'].includes(embsTotal.embarcacaoTipo)) {
+                totalEmbarcacaoDraga++
+            } if (['lancha'].includes(embsTotal.embarcacaoTipo)) {
+                totalEmbarcacaoLancha++
+            } if (['embarcacaoPassageiros'].includes(embsTotal.embarcacaoTipo)) {
+                totalEmbarcacaoPassageiros++
+            }
+        }
+
+        const html = `<h1>Relatório do Ultimo mês</h1><br>
                             <table border="10">
                             <br>
                                 <caption>Relatório Mês ${mesAtualString}</caption>
@@ -934,59 +944,59 @@ router.post('/formulario/avisoSaida', eUser, async (req, res) => {
                             </tbody>
                             </table>
                             `
-               
-            pdf.create(html).toStream((err, stream) => {
-                if (err) return res.send(err);
-                res.attachment(`Relatorio.pdf`);
-                res.setHeader('Content-Type', 'application/pdf');
-                stream.pipe(res);
-            })
-    
-            const novoRelatorio = {
-                usuarioID: req.user_id,
-                mesEmbarcacaoInternacionalEmp: mesEmbarcacaoInternacionalEmp,
-                mesEmbarcacaoBarcaca: mesEmbarcacaoBarcaca,
-                totalExtrangeiro: mesEmbarcacaoInternacionalEmp + mesEmbarcacaoBarcaca,
-                mesEmbarcacaoRebocadorEmpurador: mesEmbarcacaoRebocadorEmpurador,
-                mesEmbarcacaoBalsa: mesEmbarcacaoBalsa,
-                mesEmbarcacaoCargaGeral: mesEmbarcacaoCargaGeral,
-                mesEmbarcacaoDraga: mesEmbarcacaoDraga,
-                mesEmbarcacaoNacionalEmp: mesEmbarcacaoNacionalEmp,
-                mesEmbarcacaoLancha: mesEmbarcacaoLancha,
-                mesEmbarcacaoPassageiros: mesEmbarcacaoPassageiros,
-                totalNacional: mesEmbarcacaoRebocadorEmpurador + mesEmbarcacaoBalsa + mesEmbarcacaoCargaGeral + mesEmbarcacaoDraga + mesEmbarcacaoNacionalEmp + mesEmbarcacaoLancha + mesEmbarcacaoPassageiros,
-                mesPassageiros: mesPassageiros,
-                mesAnoAtual: mesAnoAtual,
-                mesAtualString: mesAtualString,
-                relatorioDataNumber: Date.now(),
-                relatorioDataString: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-                mesDespachosCount: mesDespachosCount,
-                mesAvisoEntradasCount: mesAvisoEntradasCount,
-                mesAvisoSaidasCount: mesAvisoSaidasCount,
-                mesEmbarcacoesCount: mesEmbarcacoesCount,
-                mesAvisosCount: mesAvisosCount,
-                mesUsuariosCount: mesUsuariosCount
-            }
-            
-    
-    
-            const relatorios = await Relatorio.find().lean();
-                if(relatorios.length === 0) {
-                    await Relatorio(novoRelatorio).save();
-                } else {
-                    const relatorioExistente = relatorios.some((relatorio) => relatorio.mesAnoAtual === novoRelatorio.mesAnoAtual);
-                       if(relatorioExistente){
-                            await Relatorio.replaceOne({ mesAnoAtual: novoRelatorio.mesAnoAtual }, novoRelatorio);
-                        }else{
-                            await Relatorio(novoRelatorio).save()
-                    }
-                }
-           
-        }catch(err){
-            req.flash('error_msg', 'Erro interno ao gerar relatório')
-            res.redirect('/admin/painel')
+
+        pdf.create(html).toStream((err, stream) => {
+            if (err) return res.send(err);
+            res.attachment(`Relatorio.pdf`);
+            res.setHeader('Content-Type', 'application/pdf');
+            stream.pipe(res);
+        })
+
+        const novoRelatorio = {
+            usuarioID: req.user_id,
+            mesEmbarcacaoInternacionalEmp: mesEmbarcacaoInternacionalEmp,
+            mesEmbarcacaoBarcaca: mesEmbarcacaoBarcaca,
+            totalExtrangeiro: mesEmbarcacaoInternacionalEmp + mesEmbarcacaoBarcaca,
+            mesEmbarcacaoRebocadorEmpurador: mesEmbarcacaoRebocadorEmpurador,
+            mesEmbarcacaoBalsa: mesEmbarcacaoBalsa,
+            mesEmbarcacaoCargaGeral: mesEmbarcacaoCargaGeral,
+            mesEmbarcacaoDraga: mesEmbarcacaoDraga,
+            mesEmbarcacaoNacionalEmp: mesEmbarcacaoNacionalEmp,
+            mesEmbarcacaoLancha: mesEmbarcacaoLancha,
+            mesEmbarcacaoPassageiros: mesEmbarcacaoPassageiros,
+            totalNacional: mesEmbarcacaoRebocadorEmpurador + mesEmbarcacaoBalsa + mesEmbarcacaoCargaGeral + mesEmbarcacaoDraga + mesEmbarcacaoNacionalEmp + mesEmbarcacaoLancha + mesEmbarcacaoPassageiros,
+            mesPassageiros: mesPassageiros,
+            mesAnoAtual: mesAnoAtual,
+            mesAtualString: mesAtualString,
+            relatorioDataNumber: Date.now(),
+            relatorioDataString: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+            mesDespachosCount: mesDespachosCount,
+            mesAvisoEntradasCount: mesAvisoEntradasCount,
+            mesAvisoSaidasCount: mesAvisoSaidasCount,
+            mesEmbarcacoesCount: mesEmbarcacoesCount,
+            mesAvisosCount: mesAvisosCount,
+            mesUsuariosCount: mesUsuariosCount
         }
-    })
+
+
+
+        const relatorios = await Relatorio.find().lean();
+        if (relatorios.length === 0) {
+            await Relatorio(novoRelatorio).save();
+        } else {
+            const relatorioExistente = relatorios.some((relatorio) => relatorio.mesAnoAtual === novoRelatorio.mesAnoAtual);
+            if (relatorioExistente) {
+                await Relatorio.replaceOne({ mesAnoAtual: novoRelatorio.mesAnoAtual }, novoRelatorio);
+            } else {
+                await Relatorio(novoRelatorio).save()
+            }
+        }
+
+    } catch (err) {
+        req.flash('error_msg', 'Erro interno ao gerar relatório')
+        res.redirect('/admin/painel')
+    }
+})
 
 
 module.exports = router

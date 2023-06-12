@@ -61,14 +61,8 @@ const AvisoSaida = new Schema({
         }]
     },
     saidaComboios: {
-        type: Array,
-        arr: [{
-            saidaComboiosNome: String,
-            saidaComboiosNIncricao: String,
-            saidaComboiosArqueacaoBruta: String,
-            saidaComboiosCarga: String,
-            saidaComboiosQuantidadeCarga: String
-        }]
+        type: Schema.Types.ObjectId,
+        ref: 'Comboio'
     },
     saidaDataPedido: {
         type: String,
