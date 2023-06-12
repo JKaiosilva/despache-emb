@@ -29,7 +29,7 @@
                                                             
                                                                 <label class="input-group-text">Redefinir Embarcação</label>
                                                                 <select name="comboio" class="btn-group">
-                                                                    <option id="emBranco" value="emBranco">Em Branco</option>
+                                                                    <option value="{{id}}">Já selecionado: {{embarcacaoNome}}</option>
                                                                     {{#each ../embarcacoes}}
                                                                         <option id="comboio" value="{{_id}}">{{embarcacaoNome}}</option>
                                                                     {{/each}}

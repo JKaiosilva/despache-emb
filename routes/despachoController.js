@@ -89,14 +89,18 @@ router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
         const portoDespacho = await Porto.findOne({_id: despachos.despachoPortoEstadia}).lean();
         const tripDespacho = await Tripulante.find({_id: despachos.despachoTripulantes}).lean();
         const tripulantes = await Tripulante.find().lean();
+        const comboios = await Comboio.find().lean()
+        const comboioDespacho = await Comboio.findOne({_id: despachos.despachoComboios}).lean()
             res.render('admin/despachos/despachoValidate', {
                 despachos: despachos,
-                    embarcacoes: embarcacoes,
-                        portos: portos,
-                            portoDespacho: portoDespacho,
-                                embDespacho: embDespacho,
-                                    tripDespacho: tripDespacho,
-                                        tripulantes: tripulantes
+                embarcacoes: embarcacoes,
+                portos: portos,
+                portoDespacho: portoDespacho,
+                embDespacho: embDespacho,
+                tripDespacho: tripDespacho,
+                tripulantes: tripulantes,
+                comboios: comboios,
+                comboioDespacho: comboioDespacho
 
             })
     }catch(err){
@@ -133,10 +137,8 @@ router.post('/admin/despachoValidate', Admin, async(req, res) => {
              despachoTripulantes: despachoTripulantes,
              despachoNomeEmbarcacao: req.body.despachoNomeEmbarcacao,
              despachoNEmbN: req.body.despachoNEmbN,
-             despachoArqueacaoBrutaComboio: req.body.despachoArqueacaoBrutaComboio,
-             despachoCarga: req.body.despachoCarga,
-             despachoQuantidadeCaga: req.body.despachoQuantidadeCaga,
-             despachoSomaArqueacaoBruta: req.body.despachoSomaArqueacaoBruta,
+             despachoComboios: req.body.despachoComboio,
+             embarcacao: req.body.embarcacao,
              despachoDataSolicitada: req.body.despachoDataSolicitada,
              despachoDataValidade: req.body.despachoDataValidade,
              despachoDataValidadeNumber: Date.parse(req.body.despachoDataValidade),

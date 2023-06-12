@@ -1,131 +1,158 @@
-
 <br>
 <h2 class="text-center mb-4">PEDIDO DE DESPACHO POR PERÍODO – NAVEGAÇÃO INTERIOR</h2>
 <h4 class="text-center mb-4">Despacho enviado em: {{despachos.despachoDataPedido}}</h4>
-
 <div class="card">
     <div class="card-body">
         <form class="row gx-3 gy-2 align-items-center">
             <input type="hidden" name="usuarioID" value="%= req.user._id %">
             <div class="input-group mb-3">
                 <label class="input-group-text">N° Processo de Despacho</label>
-                <input name="NprocessoDespacho" class="form-control" type="text" value="{{despachos.NprocessoDespacho}}" disabled>
+                <input name="NprocessoDespacho" class="form-control" type="text" value="{{despachos.NprocessoDespacho}}"
+                    disabled>
             </div>
             <br>
             <div>
                 <h4 class="text-center">Dados de Despacho (data off Clearence)</h4>
-                    <div class="input-group mb-3">
-                        <label class="input-group-text">Porto de Estadia</label>
-                        <input name="despachoPortoEstadia" class="form-control" type="text" value="{{portos.portoNome}}" disabled>
-                        <label class="input-group-text">Data/Hora Estimada de Partida</label>
-                        <input name="despachoDataHoraPartida" class="form-control" type="date" value="{{despachos.despachoDataHoraPartida}}" disabled>
-                    </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text">Porto de Estadia</label>
+                    <input name="despachoPortoEstadia" class="form-control" type="text" value="{{portos.portoNome}}"
+                        disabled>
+                    <label class="input-group-text">Data/Hora Estimada de Partida</label>
+                    <input name="despachoDataHoraPartida" class="form-control" type="date"
+                        value="{{despachos.despachoDataHoraPartida}}" disabled>
+                </div>
             </div>
             <br>
             <div>
                 <h4 class="text-center">Dados da Embarcação</h4>
-                    <div class="input-group mb-3">
-                        <label class="input-group-text">Nome da Embarcação</label>
-                        <input name="despachoNomeEmbarcação" class="form-control" type="text" value="{{embarcacoes.embarcacaoNome}}" disabled>
-                        <label class="input-group-text">Tipo da Embarcação</label>
-                        <input name="despachoTipoEmbarcacao" class="form-control" type="text" value="{{embarcacoes.embarcacaoTipo}}" disabled>
-                    </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text">Nome da Embarcação</label>
+                    <input name="despachoNomeEmbarcação" class="form-control" type="text"
+                        value="{{embarcacoes.embarcacaoNome}}" disabled>
+                    <label class="input-group-text">Tipo da Embarcação</label>
+                    <input name="despachoTipoEmbarcacao" class="form-control" type="text"
+                        value="{{embarcacoes.embarcacaoTipo}}" disabled>
+                </div>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Bandeira</label>
-                <input name="despachoBandeira" class="form-control" type="text" value="{{embarcacoes.embarcacaoBandeira}}" disabled>
+                <input name="despachoBandeira" class="form-control" type="text"
+                    value="{{embarcacoes.embarcacaoBandeira}}" disabled>
                 <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-                <input name="despachoNInscricaoautoridadeMB" class="form-control" type="text" value="{{embarcacoes.embarcacaoNInscricaoautoridadeMB}}" disabled>
+                <input name="despachoNInscricaoautoridadeMB" class="form-control" type="text"
+                    value="{{embarcacoes.embarcacaoNInscricaoautoridadeMB}}" disabled>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Arqueação Bruta</label>
-                <input name="despachoArqueacaoBruta" class="form-control" type="text" value="{{embarcacoes.embarcacaoArqueacaoBruta}}" disabled>
+                <input name="despachoArqueacaoBruta" class="form-control" type="text"
+                    value="{{embarcacoes.embarcacaoArqueacaoBruta}}" disabled>
                 <label class="input-group-text">Comprimento Total</label>
-                <input name="despachoComprimentoTotal" class="form-control" type="text" value="{{embarcacoes.embarcacaoComprimentoTotal}}" disabled>
+                <input name="despachoComprimentoTotal" class="form-control" type="text"
+                    value="{{embarcacoes.embarcacaoComprimentoTotal}}" disabled>
                 <label class="input-group-text">Tonelagem Porte Bruto</label>
-                <input name="despachoTonelagemPorteBruto" class="form-control" type="text" value="{{embarcacoes.embarcacaoTonelagemPorteBruto}}" disabled>
+                <input name="despachoTonelagemPorteBruto" class="form-control" type="text"
+                    value="{{embarcacoes.embarcacaoTonelagemPorteBruto}}" disabled>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Certificado de Registro do Amador(CRA)</label>
-                <input name="despachoCertificadoRegistroAmador" class="form-control" type="text" value="{{embarcacoes.embarcacaoCertificadoRegistroAmador}}" disabled>
+                <input name="despachoCertificadoRegistroAmador" class="form-control" type="text"
+                    value="{{embarcacoes.embarcacaoCertificadoRegistroAmador}}" disabled>
                 <label class="input-group-text">Armador</label>
-                <input name="despachoArmador" class="form-control" type="text" value="{{embarcacoes.embarcacaoArmador}}" disabled>
+                <input name="despachoArmador" class="form-control" type="text" value="{{embarcacoes.embarcacaoArmador}}"
+                    disabled>
             </div>
-                    <div class="input-group mb-3">
-                        <label class="input-group-text">N° do CRA</label>
-                        <input name="despacgoNCRA" class="form-control" type="text" value="{{embarcacoes.embarcacaoNCRA}}" disabled>
-                        <label class="input-group-text">Validade</label>
-                        <input name="despachoValidade" class="form-control" type="text" value="{{embarcacoes.embarcacaoValidade}}" disabled>
-                    </div>
-            
+            <div class="input-group mb-3">
+                <label class="input-group-text">N° do CRA</label>
+                <input name="despacgoNCRA" class="form-control" type="text" value="{{embarcacoes.embarcacaoNCRA}}"
+                    disabled>
+                <label class="input-group-text">Validade</label>
+                <input name="despachoValidade" class="form-control" type="text"
+                    value="{{embarcacoes.embarcacaoValidade}}" disabled>
+            </div>
+
             <div>
                 <h4 class="text-center">Dados de Representante da Embarcação</h4>
-                    <div class="input-group mb-3">
-                            <label class="input-group-text">Nome</label>
-                            <input name="despachoNomeRepresentanteEmbarcacao" class="form-control" type="text" value="{{despachos.despachoNomeRepresentanteEmbarcacao}}" disabled>
-                            <label class="input-group-text">CPF/CNPJ</label>
-                            <input name="despachoCPFCNPJRepresentanteEmbarcacao" class="form-control" type="text" value="{{despachos.despachoCPFCNPJRepresentanteEmbarcacao}}" disabled>
-                        </div>
-                            <div class="input-group mb-3">
-                                <label class="input-group-text">Telephone</label>
-                                <input name="despachoTelefoneRepresentanteEmbarcacao" class="form-control" type="text" value="{{despachos.despachoTelefoneRepresentanteEmbarcacao}}" disabled>
-                                <label class="input-group-text">Endereço</label>
-                                <input name="despachoEnderecoRepresentanteEmbarcacao" class="form-control" type="text" value="{{despachos.despachoEnderecoRepresentanteEmbarcacao}}" disabled>
-                                <label class="input-group-text">E-mail</label>
-                                <input name="despachoEmailRepresentanteEmbarcacao" class="form-control" type="text" value="{{despachos.despachoEmailRepresentanteEmbarcacao}}" disabled>
-                            </div>
-                    
+                <div class="input-group mb-3">
+                    <label class="input-group-text">Nome</label>
+                    <input name="despachoNomeRepresentanteEmbarcacao" class="form-control" type="text"
+                        value="{{despachos.despachoNomeRepresentanteEmbarcacao}}" disabled>
+                    <label class="input-group-text">CPF/CNPJ</label>
+                    <input name="despachoCPFCNPJRepresentanteEmbarcacao" class="form-control" type="text"
+                        value="{{despachos.despachoCPFCNPJRepresentanteEmbarcacao}}" disabled>
+                </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text">Telephone</label>
+                    <input name="despachoTelefoneRepresentanteEmbarcacao" class="form-control" type="text"
+                        value="{{despachos.despachoTelefoneRepresentanteEmbarcacao}}" disabled>
+                    <label class="input-group-text">Endereço</label>
+                    <input name="despachoEnderecoRepresentanteEmbarcacao" class="form-control" type="text"
+                        value="{{despachos.despachoEnderecoRepresentanteEmbarcacao}}" disabled>
+                    <label class="input-group-text">E-mail</label>
+                    <input name="despachoEmailRepresentanteEmbarcacao" class="form-control" type="text"
+                        value="{{despachos.despachoEmailRepresentanteEmbarcacao}}" disabled>
+                </div>
+
             </div>
-            <div>
                 <h4 class="text-center">Informações Complementares</h4>
-                    <div class="input-group mb-3">
-                        <label class="input-group-text">Data da Última Inspeção Naval</label>
-                        <input name="despachoDataUltimaInspecaoNaval" class="form-control" type="text" value="{{despachos.despachoDataUltimaInspecaoNaval}}" disabled>
-                    </div>
+                <div class="input-group mb-3">
+                    <label class="input-group-text">Data da Última Inspeção Naval</label>
+                    <input name="despachoDataUltimaInspecaoNaval" class="form-control" type="text"
+                        value="{{despachos.despachoDataUltimaInspecaoNaval}}" disabled>
+                </div>
                 <br>
-                    <label class="input-group-text">Deficiências a serem retificadas neste porto?</label>
-                    <input name="despachoDeficiencias" class="form-control" type="text" value="{{despachos.despachoDeficiencias}}" disabled>
+                <label class="input-group-text">Deficiências a serem retificadas neste porto?</label>
+                <input name="despachoDeficiencias" class="form-control" type="text"
+                    value="{{despachos.despachoDeficiencias}}" disabled>
                 <br>
-                    <label class="input-group-text">Transporta Carga Perigosa</label>
-                    <input name="despachoTransportaCargaPerigosa" class="form-control" type="text" value="{{despachos.despachoTransportaCargaPerigosa}}" disabled>
+                <label class="input-group-text">Transporta Carga Perigosa</label>
+                <input name="despachoTransportaCargaPerigosa" class="form-control" type="text"
+                    value="{{despachos.despachoTransportaCargaPerigosa}}" disabled>
                 <br>
-                    <label class="input-group-text">Há algum certificado ou documento temporário da embarcação, cuja validade expire nos proximos 90 dias?</label>
-                    <input name="despachoCertificadoTemporario90dias" class="form-control" type="text" value="{{despachos.despachoCertificadoTemporario90dias}}" disabled>
+                <label class="input-group-text">Há algum certificado ou documento temporário da embarcação, cuja
+                    validade expire nos proximos 90 dias?</label>
+                <input name="despachoCertificadoTemporario90dias" class="form-control" type="text"
+                    value="{{despachos.despachoCertificadoTemporario90dias}}" disabled>
                 <br>
-                    <div class="input-group mb-3">
-                        <label class="input-group-text">Caso afirmativo, informe o(s) certificado(s)/documento(s) e suas respectivas datas de validade</label>
-                        <input name="despachoCasoDocumentoExpirado" class="form-control" type="text" value="{{despachos.despachoCasoDocumentoExpirado}}" disabled>
-                    </div>
-            <div>
-                <h4 class="text-center">Observações</h4>
+                <div class="input-group mb-3">
+                    <label class="input-group-text">Caso afirmativo, informe o(s) certificado(s)/documento(s) e suas
+                        respectivas datas de validade</label>
+                    <input name="despachoCasoDocumentoExpirado" class="form-control" type="text"
+                        value="{{despachos.despachoCasoDocumentoExpirado}}" disabled>
+                </div>
+                <div>
+                    <h4 class="text-center">Observações</h4>
                     <div class="input-group">
                         <input name="despachoOBS" class="form-control" value="{{despachos.despachoOBS}}" disabled>
                     </div>
-            </div>
-            <div>
-                <h4 class="text-center mt-3">Lista de Tripulantes</h4>
+                </div>
+                <div>
+                    <h4 class="text-center mt-3">Lista de Tripulantes</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">N° de Tripulantes - incluindo o Comandante</label>
-                        <input name="despachoNTripulantes" class="form-control" type="text" value="{{despachos.despachoNTripulantes}}" disabled>
+                        <input name="despachoNTripulantes" class="form-control" type="text"
+                            value="{{despachos.despachoNTripulantes}}" disabled>
                         <label class="input-group-text">Nome do Comandante</label>
-                        <input name="despachoNomeComandante" class="form-control" type="text" value="{{despachos.despachoNomeComandante}}" disabled>
+                        <input name="despachoNomeComandante" class="form-control" type="text"
+                            value="{{despachos.despachoNomeComandante}}" disabled>
                     </div>
-            </div>
-            {{#each tripulantes}}
-            <div>
-                <div id="tripulantes" class="card bg-secondary mt-4">
-                    <span>Tripulante: {{add @index 1}}</span>
-                    <input class="form-control" type="text" value="Nome: {{tripulanteNome}}" disabled>
-                    <input class="form-control" type="text" value="Grau: {{tripulanteGrau}}" disabled>
-                    <input class="form-control" type="text" value="Numero da CIR: {{tripulanteNCIR}}" disabled>
                 </div>
-            </div>
-            <br>
-            {{/each}}
-            <div>
-                <h4 class="text-center">Comboios</h4>
-            </div>
-            {{#each comboios.embarcacoes}}
+                {{#each tripulantes}}
+                <div>
+                    <div id="tripulantes" class="card bg-secondary mt-4">
+                        <span>Tripulante: {{add @index 1}}</span>
+                        <input class="form-control" type="text" value="Nome: {{tripulanteNome}}" disabled>
+                        <input class="form-control" type="text" value="Grau: {{tripulanteGrau}}" disabled>
+                        <input class="form-control" type="text" value="Numero da CIR: {{tripulanteNCIR}}" disabled>
+                    </div>
+                </div>
+                <br>
+                
+                {{/each}}
+                <div>
+                    <h4 class="text-center">Comboios</h4>
+                </div>
+                <h6 class="text-center">{{comboios.comboioNome}}</h6>
+                {{#each comboios.embarcacoes}}
                 <div class="bg-secondary">
                     <span>Embarcacão: {{add @index 1}}</span>
                     <div class="input-group">
@@ -146,29 +173,31 @@
                     </div>
                 </div>
                 <br>
-            {{/each}}
-                </div>
-                <div class="input-group">
-                    <label class="input-group-text">Embarcação Principal</label>
-                    <input value="{{embarcacoes.embarcacaoNome}}" class="form-control" disabled>
-                </div>
+                {{/each}}
+                
+                <br>
+            <div class="input-group mt-4">
+                <label class="input-group-text">Embarcação Principal</label>
+                <input value="{{embarcacoes.embarcacaoNome}}" class="form-control" disabled>
+            </div>
 
-                <div class="input-group mb-3">
-                    <label class="input-group-text">Solicitação de Vencimento do despacho</label>
-                    <input value="{{despachos.despachoDataSolicitada}}" class="form-control" type="text" disabled>
-                </div>
-                <div class="input-group mb-3">
-                    <label class="input-group-text">Vencimento do despacho</label>
-                    <input value="{{despachos.despachoDataValidade}}" class="form-control" type="text" placeholder="Este campo será preenchido após verificação do despachante" disabled>
-                </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">Solicitação de Vencimento do despacho</label>
+                <input value="{{despachos.despachoDataSolicitada}}" class="form-control" type="text" disabled>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text">Vencimento do despacho</label>
+                <input value="{{despachos.despachoDataValidade}}" class="form-control" type="text"
+                    placeholder="Este campo será preenchido após verificação do despachante" disabled>
+            </div>
         </form>
     </div>
 </div>
 <br>
 <div class="text-center" {{hidden}}>
- <a class="btn btn-success" href="/despacho/{{despachos._id}}/pdf" target="_blank" style="float: right">Gerar PDF</a>
+    <a class="btn btn-success" href="/despacho/{{despachos._id}}/pdf" target="_blank" style="float: right">Gerar PDF</a>
 </div>
-<input class="btn btn-success" type="button" value="Voltar" style="float: left" onClick="history.go(-1)"> 
+<input class="btn btn-success" type="button" value="Voltar" style="float: left" onClick="history.go(-1)">
 <br>
 <br>
 <div class="row">
@@ -176,11 +205,11 @@
         <div class="card">
             <div class="card-body">
                 {{#each avisoEntradas}}
-                    <h6>Numero do processo de entrada: {{entradaNprocesso}}</h6>
-                    <label>Data da solicitação: {{entradaDataPedido}}</label>
-                    <a class="btn btn-success float-end" href="/formulario/avisoEntradavizu/{{_id}}">Visualizar</a>
+                <h6>Numero do processo de entrada: {{entradaNprocesso}}</h6>
+                <label>Data da solicitação: {{entradaDataPedido}}</label>
+                <a class="btn btn-success float-end" href="/formulario/avisoEntradavizu/{{_id}}">Visualizar</a>
                 {{else}}
-                    <label>Nenhuma Entrada Solicitada para este despacho</label>
+                <label>Nenhuma Entrada Solicitada para este despacho</label>
                 {{/each}}
             </div>
         </div>
@@ -191,11 +220,11 @@
         <div class="card">
             <div class="card-body">
                 {{#each avisoSaidas}}
-                    <h6>Numero do processo de saída: {{saidaNprocesso}}</h6>
-                    <label>Data da solicitação: {{saidaDataPedido}}</label>
-                    <a class="btn btn-success float-end" href="/formulario/avisosaidavizu/{{_id}}">Visualizar</a>
+                <h6>Numero do processo de saída: {{saidaNprocesso}}</h6>
+                <label>Data da solicitação: {{saidaDataPedido}}</label>
+                <a class="btn btn-success float-end" href="/formulario/avisosaidavizu/{{_id}}">Visualizar</a>
                 {{else}}
-                    <label>Nenhuma Saida Solicitada para este despacho</label>
+                <label>Nenhuma Saida Solicitada para este despacho</label>
                 {{/each}}
             </div>
         </div>
