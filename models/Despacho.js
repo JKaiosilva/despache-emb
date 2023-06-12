@@ -66,17 +66,9 @@ const Despacho = new Schema ({
     despachoNEmbN: {
         type: String
     },
-    despachoArqueacaoBrutaComboio: {
-        type: String
-    },
-    despachoCarga: {
-        type: String
-    },
-    despachoQuantidadeCaga: {
-        type: String
-    },
-    despachoSomaArqueacaoBruta: {
-        type: String
+    despachoComboios: {
+        type: Schema.Types.ObjectId,
+        ref: 'Comboio'
     },
     despachoDataSolicitada:{
         type: String

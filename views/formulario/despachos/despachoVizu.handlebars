@@ -124,33 +124,35 @@
             {{/each}}
             <div>
                 <h4 class="text-center">Comboios</h4>
-                <span>No caso de navegação em comboio, preencher as informações abaixo sobre as embarcações não propulsadas componentes do comboio</span>
             </div>
-            <div>
-                <div class="input-group mb-3">
-                    <label class="input-group-text">Nome da Embarcação</label>
-                    <input name="despachoNomeEmbarcacao" class="form-control" type="text" value="{{despachos.despachoNomeEmbarcacao}}" disabled>
-                    <label class="input-group-text">N° de Inscrição</label>
-                    <input name="despachoNEmbN" class="form-control" type="text" value="{{despachos.despachoNEmbN}}" disabled>
+            {{#each comboios.embarcacoes}}
+                <div class="bg-secondary">
+                    <span>Embarcacão: {{add @index 1}}</span>
+                    <div class="input-group">
+                        <label class="input-group-text">Nome da Embarcação</label>
+                        <input value="{{embarcacaoNome}}" class="form-control" disabled>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-group-text">carga</label>
+                        <input value="{{carga}}" class="form-control" type="text" disabled>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-group-text">quantidade e unidade de carga</label>
+                        <input value="{{quantidade}}" class="form-control" type="text" disabled>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-group-text">Arqueação Bruta</label>
+                        <input value="{{arqueacaoBruta}}" class="form-control" type="text" disabled>
+                    </div>
                 </div>
-                <div class="input-group mb-3">
-                    <label class="input-group-text">Arqueação Bruta</label>
-                    <input name="despachoArqueacaoBrutaComboio" class="form-control" type="text" value="{{despachos.despachoArqueacaoBrutaComboio}}" disabled>
-                    <label class="input-group-text">Carga</label>
-                    <input name="despachoCarga" class="form-control" type="text" value="{{despachos.despachoCarga}}" disabled>
-                    <label class="input-group-text">Quantidade e Unidade de Carga</label>
-                    <input name="despachoQuantidadeCaga" class="form-control" type="text" value="{{despachos.despachoQuantidadeCaga}}" disabled>
+                <br>
+            {{/each}}
                 </div>
-                        <div class="input-group mb-3">
-                            <label class="input-group-text">Somatório da Arqueação Bruta das embarcações que compõem o comboio, incluindo a embarcação propulsora</label>
-                            <input name="despachoSomaArqueacaoBruta" class="form-control" type="text" value="{{despachos.despachoSomaArqueacaoBruta}}" disabled>
-                        </div>
+                <div class="input-group">
+                    <label class="input-group-text">Embarcação Principal</label>
+                    <input value="{{embarcacoes.embarcacaoNome}}" class="form-control" disabled>
                 </div>
-                </div>
-                <div>
-                    <label>Embarcação</label>
-                    <input value="{{embarcacoes.embarcacaoNome}}" disabled>
-                </div>
+
                 <div class="input-group mb-3">
                     <label class="input-group-text">Solicitação de Vencimento do despacho</label>
                     <input value="{{despachos.despachoDataSolicitada}}" class="form-control" type="text" disabled>

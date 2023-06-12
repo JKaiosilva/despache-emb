@@ -9,6 +9,7 @@ require('../models/AvisoSaida')
 require('../models/Tripulante')
 require('../models/Porto');
 require('../models/Relatorio');
+require('../models/Comboio')
 
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
@@ -19,6 +20,7 @@ const Embarcacao = mongoose.model('embarcacoes')
 const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
 const Relatorio = mongoose.model('relatorios')
+const Comboio = mongoose.model('comboios')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
@@ -163,16 +165,19 @@ router.post('/admin/despachoValidate', Admin, async(req, res) => {
         const portos = await Porto.findOne({_id: despachos.despachoPortoEstadia}).lean()
         const avisoEntradas = await AvisoEntrada.find({entradaDespacho: despachos._id}).lean()
         const avisoSaidas = await AvisoSaida.find({saidaDespacho: despachos._id}).lean()
+        const comboios  = await Comboio.findOne({_id: despachos.despachoComboios}).lean()
             res.render('formulario/despachos/despachoVizu',
                 {despachos: despachos,
                 tripulantes: tripulantes,
                 embarcacoes: embarcacoes,
+                comboios: comboios,
                 portos: portos,
                 avisoEntradas: avisoEntradas,
                 avisoSaidas: avisoSaidas,
                 hidden: hidden
                 })
     }catch(err){
+        console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar formulário')
         res.redirect('/formulario')
     }
@@ -183,12 +188,14 @@ router.get('/formulario/despacho', eUser, async(req, res) => {
     try{
         const dataHoje = Date.now()
         const tripulantes = await Tripulante.find({tripulanteValidadeCIRNumber: {$gte: dataHoje}}).lean()
+        const comboios = await Comboio.find().lean()
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id, embarcacaoValidadeNumber: {$gte: dataHoje}}).lean()
         const portos = await Porto.find().lean()
         res.render('formulario/despachos/despacho', 
             {embarcacoes: embarcacoes,
-                tripulantes: tripulantes,
-                    portos: portos 
+            tripulantes: tripulantes,
+            portos: portos,
+            comboios: comboios
             })
     }catch(err){
         req.flash('error_msg', 'Erro interno ao mostrar formulario')
@@ -492,10 +499,7 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
         despachoNTripulantes: req.body.despachoNTripulantes,
         despachoNomeComandante: req.body.despachoNomeComandante,
         despachoTripulantes: despachoTripulantes,
-        despachoComboios: req.body.despachoComboios,
-        despachoCarga: req.body.despachoComboiosCarga,
-        despachoQuantidadeCaga: req.body.despachoComboiosQuantidadeCarga,
-        despachoSomaArqueacaoBruta: req.body.despachoSomaArqueacaoBruta,
+        despachoComboios: req.body.despachoComboio,
         despachoDataSolicitada: req.body.despachoDataSolicitada,
         despachoDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
         despachoData: Date.now(),
