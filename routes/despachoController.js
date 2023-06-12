@@ -190,7 +190,7 @@ router.get('/formulario/despacho', eUser, async(req, res) => {
     try{
         const dataHoje = Date.now()
         const tripulantes = await Tripulante.find({tripulanteValidadeCIRNumber: {$gte: dataHoje}}).lean()
-        const comboios = await Comboio.find().lean()
+        const comboios = await Comboio.find({usuarioID: req.user._id}).lean()
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id, embarcacaoValidadeNumber: {$gte: dataHoje}}).lean()
         const portos = await Porto.find().lean()
         res.render('formulario/despachos/despacho', 

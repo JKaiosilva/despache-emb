@@ -115,15 +115,32 @@
                         </div>
                     </div>
                     <div>
-                    <div id="comboios" class="card bg-secondary">
-                        <h4 class="text-center">Lista de Comboios</h4>
-                        <input name="entradaComboios" class="form-control" type="text" value="{{avisoEntradas.entradaComboios}}" disabled>
+                    <h4 class="text-center">Comboios</h4>
+                </div>
+                <h6 class="text-center">{{comboios.comboioNome}}</h6>
+                {{#each comboios.embarcacoes}}
+                <div class="bg-secondary">
+                    <span>Embarcacão: {{add @index 1}}</span>
+                    <div class="input-group">
+                        <label class="input-group-text">Nome da Embarcação</label>
+                        <input value="{{embarcacaoNome}}" class="form-control" disabled>
                     </div>
+                    <div class="input-group">
+                        <label class="input-group-text">carga</label>
+                        <input value="{{carga}}" class="form-control" type="text" disabled>
                     </div>
-                    <div>
-                        <label>Embarcação</label>
-                        <input value="{{embarcacoes.embarcacaoNome}}" disabled>
+                    <div class="input-group">
+                        <label class="input-group-text">quantidade e unidade de carga</label>
+                        <input value="{{quantidade}}" class="form-control" type="text" disabled>
                     </div>
+                    <div class="input-group">
+                        <label class="input-group-text">Arqueação Bruta</label>
+                        <input value="{{arqueacaoBruta}}" class="form-control" type="text" disabled>
+                    </div>
+                </div>
+                <br>
+                {{/each}}
+                <br>
         </form>
     </div>
 </div>

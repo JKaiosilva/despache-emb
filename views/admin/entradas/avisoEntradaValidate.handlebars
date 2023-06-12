@@ -5,7 +5,7 @@
 
 <div class="card">
     <div class="card-body">
-        <form class="row gx-3 gy-2 align-items-center">
+        <form class="row gx-3 gy-2 align-items-center" action="/admin/entradasValidate" method="POST">
             <input type="hidden" name="id" value="{{avisoEntradas._id}}">
             <div class="input-group mb-3">
                     <label class="input-group-text">Despacho referente</label>
@@ -14,6 +14,7 @@
                 <div class="input-group mb-3">
                     <label class="input-group-text" class="input-group-text">Redefinir Despacho referente</label>
                         <select name="entradaDespacho" class="form-select">
+                            <option value="{{avisoEntradas.entradaDespacho}}">Já selecionado: {{despachoValid.NprocessoDespacho}}</option>
                             {{#each despachos}}
                                 <option value="{{_id}}">
                             {{NprocessoDespacho}}
@@ -32,6 +33,7 @@
                         <input class="form-control" type="text" value="{{portosValid.portoNome}}" disabled>
                         <label class="input-group-text">Redefinir Porto de chegada</label>
                             <select name="entradaPortoChegada" class="form-select">
+                                <option value="{{avisoEntradas.entradaPortoChegada}}">Já selecionado: {{portosValid.portoNome}}</option>
                                 {{#each portos}}
                                     <option value="{{_id}}">
                                 {{portoNome}}
@@ -59,23 +61,35 @@
                     <h4 class="text-center">Dados da Embarcação</h4>
                         <div class="input-group mb-3">
                             <label class="input-group-text">Nome da Embarcação</label>
-                            <input name="entradaNomeEmbarcacao" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoNome}}">
+                            <input name="entradaNomeEmbarcacao" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoNome}}" disabled>
                             <label class="input-group-text">Tipo da Embarcação</label>
-                            <input name="entradaTipoEmbarcacao" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoTipo}}">
+                            <input name="entradaTipoEmbarcacao" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoTipo}}" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <label class="input-group-text">Bandeira</label>
-                            <input name="entradaBandeira" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoBandeira}}">
+                            <input name="entradaBandeira" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoBandeira}}" disabled>
                             <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-                            <input name="entradaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoNInscricaoautoridadeMB}}">
+                            <input name="entradaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoNInscricaoautoridadeMB}}" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <label class="input-group-text">Arqueação Buta</label>
-                            <input name="entradaArqueacaoBruta" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoArqueacaoBruta}}">
+                            <input name="entradaArqueacaoBruta" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoArqueacaoBruta}}" disabled>
                             <label class="input-group-text">Tonelagem Porte Bruto</label>
-                            <input name="entradaTonelagemPorteBruto" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoTonelagemPorteBruto}}">
+                            <input name="entradaTonelagemPorteBruto" class="form-control" type="text" value="{{embarcacoesValid.embarcacaoTonelagemPorteBruto}}" disabled>
                         </div>
                 </div>
+                <div class="input-group">
+                        <label  class="input-group-text">Redefinir Embarcação</label>
+                        <select name="embarcacao" class="form-select">
+                            <option value="{{avisoEntradas.embarcacao}}">Já Selecionado: {{embarcacoesValid.embarcacaoNome}}</option>
+                            {{#each embarcacoes}}
+                                <option value="{{_id}}">{{embarcacaoNome}}</option>
+                            {{else}}
+                                <option value="0">Nenhuma embarcação cadastrada</option>
+                            {{/each}}
+                        </select>
+                </div>
+                <br>
                     <h4 class="text-center">Dados do Representante da Embarcação</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Nome</label>
@@ -239,48 +253,44 @@
                         <button class="btn btn-primary" type="button" onclick="addInputpassageiros('passageiros')">Adicioanar passageiro</button>
                     </div>
                     <div>
-                    <div id="comboios" class="card bg-secondary">
-                        <h4 class="text-center">Lista de Comboios</h4>
-                        <script>
-                            var comboios = 1;
-                        function addInputcomboios(divName) {
-                        var newdiv = document.createElement('div');
-                        newdiv.innerHTML  = 'Comboios : ['+comboios +']';
-                        newdiv.innerHTML += '<label class="input-group-text">Nome da embarcação</label>'
-                        newdiv.innerHTML += '<input name="entradaComboiosNome" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">N° de inscrição</label>'
-                        newdiv.innerHTML += '<input name="entradaComboiosNIncricao" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">Arqueação bruta</label>'
-                        newdiv.innerHTML += '<input name="entradaComboiosArqueacaoBruta" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">carga</label>'
-                        newdiv.innerHTML += '<input name="entradaComboiosCarga" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">quantidade e unidade de carga</label>'
-                        newdiv.innerHTML += '<input name="entradaComboiosQuantidadeCarga" class="form-control" type="text">'
-
-                        document.getElementById(divName).appendChild(newdiv);
-                        comboios++;
-                        }
-
-                        addInputcomboios('lines');
-
-                        </script>
+                <h4 class="text-center">Comboios</h4>
+            </div>
+            <h6 class="text-center">{{comboiosValid.comboioNome}}</h6>
+            {{#each comboiosValid.embarcacoes}}
+                <div class="bg-secondary">
+                    <span>Embarcacão: {{add @index 1}}</span>
+                    <div class="input-group">
+                        <label class="input-group-text">Nome da Embarcação</label>
+                        <input value="{{embarcacaoNome}}" class="form-control" disabled>
                     </div>
-                    <button class="btn btn-primary" type="button" onclick="addInputcomboios('comboios')">Adicioanar comboio</button>
+                    <div class="input-group">
+                        <label class="input-group-text">carga</label>
+                        <input value="{{carga}}" class="form-control" type="text" disabled>
                     </div>
-                    <div>
-                        <label>Embarcação</label>
-                        <input value="{{embarcacoesValid.embarcacaoNome}}" disabled>
+                    <div class="input-group">
+                        <label class="input-group-text">quantidade e unidade de carga</label>
+                        <input value="{{quantidade}}" class="form-control" type="text" disabled>
                     </div>
-                    <div>
-                        <label  class="input-group-text">Redefinir Embarcação</label>
-                        <select name="embarcacao" class="form-select">
-                            {{#each embarcacoes}}
-                                <option value="{{_id}}">{{embarcacaoNome}}</option>
-                            {{else}}
-                                <option value="0">Nenhuma embarcação cadastrada</option>
-                            {{/each}}
-                        </select>
+                    <div class="input-group">
+                        <label class="input-group-text">Arqueação Bruta</label>
+                        <input value="{{arqueacaoBruta}}" class="form-control" type="text" disabled>
+                    </div>
                 </div>
+                <br>
+            {{/each}}
+
+            <div class="input-group mt-4">
+                <label class="input-group-text">Alterar Comboio</label>
+                <select name="despachoComboio" class="form-select">
+                    <option value="{{avisoEntradas.entradaComboios}}">Já selecionado: {{comboiosValid.comboioNome}}</option>
+                    {{#each comboios}}
+                        <option value="{{_id}}">{{comboioNome}}</option>
+                    {{else}}
+                        <option value="0">Nenhum comboio formulado</option>
+                    {{/each}}
+                </select>
+            </div>
+            <br>
                 <button type="submit" id="submitButton" class="btn btn-success" disabled>Validar</button>
         </form>
     </div>

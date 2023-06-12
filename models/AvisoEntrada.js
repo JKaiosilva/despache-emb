@@ -72,14 +72,8 @@ const AvisoEntrada = new Schema ({
         }]
     },
     entradaComboios: {
-        type: Array,
-        arr: [{
-            entradaComboiosNome: String,
-            entradaComboiosNIncricao: String,
-            entradaComboiosArqueacaoBruta: String,
-            entradaComboiosCarga: String,
-            entradaComboiosQuantidadeCarga: String
-        }]
+        type: Schema.Types.ObjectId,
+        ref: 'Comboio'
     },
     entradaDataPedido: {
         type: String,

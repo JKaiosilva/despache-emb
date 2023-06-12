@@ -9,6 +9,7 @@ require('../models/AvisoSaida')
 require('../models/Tripulante')
 require('../models/Porto');
 require('../models/Relatorio');
+require('../models/Comboio')
 
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
@@ -19,6 +20,7 @@ const Embarcacao = mongoose.model('embarcacoes')
 const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
 const Relatorio = mongoose.model('relatorios')
+const Comboio = mongoose.model('comboios')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
@@ -78,32 +80,36 @@ router.get('/admin/entradasPage/:page', Admin, async (req, res) => {
 })
 
 
-router.get('/admin/entradasValidate/:id', Admin, async(req, res) => {
-    try{
-        const avisoEntradas = await AvisoEntrada.findOne({_id: req.params.id}).lean()
-        const tripulantesValid = await Tripulante.find({_id: avisoEntradas.entradaTripulantes}).lean()
-        const embarcacoesValid = await Embarcacao.findOne({_id: avisoEntradas.embarcacao}).lean()
-        const portosValid = await Porto.findOne({_id: avisoEntradas.entradaPortoChegada}).lean()
-        const despachoValid = await Despacho.findOne({_id: avisoEntradas.entradaDespacho}).lean()
+router.get('/admin/entradasValidate/:id', Admin, async (req, res) => {
+    try {
+        const avisoEntradas = await AvisoEntrada.findOne({ _id: req.params.id }).lean()
+        const tripulantesValid = await Tripulante.find({ _id: avisoEntradas.entradaTripulantes }).lean()
+        const embarcacoesValid = await Embarcacao.findOne({ _id: avisoEntradas.embarcacao }).lean()
+        const portosValid = await Porto.findOne({ _id: avisoEntradas.entradaPortoChegada }).lean()
+        const despachoValid = await Despacho.findOne({ _id: avisoEntradas.entradaDespacho }).lean()
+        const comboiosValid = await Comboio.findOne({_id: avisoEntradas.entradaComboios }).lean()
 
         const tripulantes = await Tripulante.find().lean()
         const embarcacoes = await Embarcacao.find().lean()
         const portos = await Porto.find().lean()
         const despachos = await Despacho.find().lean()
+        const comboios = await Comboio.find().lean()
 
 
-            res.render('admin/entradas/avisoEntradaValidate',
-                {avisoEntradas: avisoEntradas,
-                    tripulantesValid: tripulantesValid,
-                        embarcacoesValid: embarcacoesValid,
-                            despachoValid: despachoValid,
-                                portosValid: portosValid,
-                                    tripulantes: tripulantes,
-                                        embarcacoes: embarcacoes,
-                                            portos: portos,
-                                                despachos: despachos
-                })
-    }catch(err){
+        res.render('admin/entradas/avisoEntradaValidate', {
+            avisoEntradas: avisoEntradas,
+            tripulantesValid: tripulantesValid,
+            embarcacoesValid: embarcacoesValid,
+            despachoValid: despachoValid,
+            portosValid: portosValid,
+            tripulantes: tripulantes,
+            comboiosValid: comboiosValid,
+            embarcacoes: embarcacoes,
+            portos: portos,
+            despachos: despachos,
+            comboios: comboios
+        })
+    } catch (err) {
         console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar aviso de entrada!')
         res.redirect('/')
@@ -111,13 +117,13 @@ router.get('/admin/entradasValidate/:id', Admin, async(req, res) => {
 })
 
 
-router.post('/admin/entradasValidate', Admin, async(req, res) => {
-    try{
+router.post('/admin/entradasValidate', Admin, async (req, res) => {
+    try {
         const cleanString = req.body.entradaTripulantes.replace(/[\n' \[\]]/g, '');
         const tripulantes = cleanString.split(',');
         const entradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
-    
-        await AvisoEntrada.updateOne({_id: req.body.id}, {
+
+        await AvisoEntrada.updateOne({ _id: req.body.id }, {
             entradaDespacho: req.body.entradaDespacho,
             entradaNprocesso: req.body.entradaNprocesso,
             entradaPortoChegada: req.body.entradaPortoChegada,
@@ -136,23 +142,19 @@ router.post('/admin/entradasValidate', Admin, async(req, res) => {
             entradaTransporteCagaPerigosa: req.body.entradaTransporteCagaPerigosa,
             entradaObservacoes: req.body.entradaObservacoes,
             entradaTripulantes: entradaTripulantes,
-            entradaPassageiros: "Nome: "+ req.body.entradaPassageirosNome+
-            " || Data de Nascimento: " + req.body.entradaPassageirosDataNascimento+
-            " || Sexo: " + req.body.entradaPassageirosSexo,
-            entradaComboios: "Nome: "+ req.body.entradaComboiosNome+
-            " || Numero de Inscrição: "+ req.body.entradaComboiosNIncricao+
-            " || Arqueação Bruta: "+ req.body.entradaComboiosArqueacaoBruta+
-            " || Carga: "+ req.body.entradaComboiosCarga+
-            " || Quantidade da Caga: "+ req.body.entradaComboiosQuantidadeCarga,
+            entradaPassageiros: "Nome: " + req.body.entradaPassageirosNome +
+                " || Data de Nascimento: " + req.body.entradaPassageirosDataNascimento +
+                " || Sexo: " + req.body.entradaPassageirosSexo,
+            entradaComboios: req.body.entradaComboios,
             entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
             embarcacao: req.body.embarcacao,
             entradaData: Date.now(),
             entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
 
         })
-            req.flash('success_msg', 'Aviso de entrada validado com sucesso')
-            res.redirect('/')
-    }catch(err){
+        req.flash('success_msg', 'Aviso de entrada validado com sucesso')
+        res.redirect('/')
+    } catch (err) {
         console.log(err)
         req.flash('error_msg', 'Erro ao validar despachos!')
         res.redirect('painel')
@@ -161,48 +163,53 @@ router.post('/admin/entradasValidate', Admin, async(req, res) => {
 
 
 router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
-    try{
-        if(req.user.eAdmin){
+    try {
+        if (req.user.eAdmin) {
             hidden = ''
-        }else{
+        } else {
             hidden = 'hidden'
         }
-        const avisoEntradas = await AvisoEntrada.findOne({_id: req.params.id}).lean()
-        const tripulantes = await Tripulante.find({_id: avisoEntradas.entradaTripulantes}).lean()
-        const embarcacoes = await Embarcacao.findOne({_id: avisoEntradas.embarcacao}).lean()
-        const portos = await Porto.findOne({_id: avisoEntradas.entradaPortoChegada}).lean()
-        const despacho = await Despacho.findOne({_id: avisoEntradas.entradaDespacho}).lean()
+        const avisoEntradas = await AvisoEntrada.findOne({ _id: req.params.id }).lean()
+        const tripulantes = await Tripulante.find({ _id: avisoEntradas.entradaTripulantes }).lean()
+        const embarcacoes = await Embarcacao.findOne({ _id: avisoEntradas.embarcacao }).lean()
+        const portos = await Porto.findOne({ _id: avisoEntradas.entradaPortoChegada }).lean()
+        const despacho = await Despacho.findOne({ _id: avisoEntradas.entradaDespacho }).lean()
+        const comboios = await Comboio.findOne({ _id: avisoEntradas.entradaComboios }).lean()
 
-            res.render('formulario/entradas/avisoEntradaVizu',
-                {avisoEntradas: avisoEntradas,
-                    tripulantes: tripulantes,
-                        embarcacoes: embarcacoes,
-                            despacho: despacho,
-                                portos: portos,
-                                    hidden: hidden
-                })
-    }catch(err){
+
+        res.render('formulario/entradas/avisoEntradaVizu', {
+            avisoEntradas: avisoEntradas,
+            tripulantes: tripulantes,
+            embarcacoes: embarcacoes,
+            despacho: despacho,
+            comboios: comboios,
+            portos: portos,
+            hidden: hidden
+        })
+    } catch (err) {
         req.flash('error_msg', 'Erro interno ao mostrar formulário')
         res.redirect('/formulario')
     }
 })
 
 
-router.get('/formulario/avisoEntrada', eUser, async(req, res) => {
-    try{
+router.get('/formulario/avisoEntrada', eUser, async (req, res) => {
+    try {
         const dataHoje = Date.now()
-        const despachos = await Despacho.find({usuarioID: req.user._id, despachoDataValidadeNumber: {$gte: dataHoje}}).lean()
-        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id, embarcacaoValidadeNumber: {$gte: dataHoje}}).lean()
-        const tripulantes = await Tripulante.find({tripulanteValidadeCIRNumber: {$gte: dataHoje}}).lean()
+        const despachos = await Despacho.find({ usuarioID: req.user._id, despachoDataValidadeNumber: { $gte: dataHoje } }).lean()
+        const embarcacoes = await Embarcacao.find({ usuarioID: req.user._id, embarcacaoValidadeNumber: { $gte: dataHoje } }).lean()
+        const tripulantes = await Tripulante.find({ tripulanteValidadeCIRNumber: { $gte: dataHoje } }).lean()
         const portos = await Porto.find().lean()
+        const comboios = await Comboio.find({ usuarioID: req.user._id }).lean()
 
-            res.render('formulario/entradas/avisoEntrada', 
-                {embarcacoes: embarcacoes,
-                    tripulantes: tripulantes,
-                        portos: portos,
-                            despachos: despachos
-            })
-    }catch(err){
+        res.render('formulario/entradas/avisoEntrada', {
+            embarcacoes: embarcacoes,
+            tripulantes: tripulantes,
+            portos: portos,
+            despachos: despachos,
+            comboios: comboios
+        })
+    } catch (err) {
         req.flash('error_msg', 'Erro interno ao mostrar formulario')
         res.redirect('formulario/preform')
     }
@@ -212,14 +219,15 @@ router.get('/formulario/avisoEntrada', eUser, async(req, res) => {
 
 router.get('/entradas', eUser, async (req, res) => {
 
-    const admin = req.user.eAdmin ? true:false;
-    try{
-        const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
-        res.render('formulario/entradas/entradas', 
-            {avisoEntradas: avisoEntradas,
+    const admin = req.user.eAdmin ? true : false;
+    try {
+        const avisoEntradas = await AvisoEntrada.find({ usuarioID: req.user._id }).limit(5).lean().sort({ entradaData: 'desc' })
+        res.render('formulario/entradas/entradas',
+            {
+                avisoEntradas: avisoEntradas,
                 admin: admin
             })
-    }catch(err){
+    } catch (err) {
         req.flash('error_msg', 'Erro ao mostrar página')
         res.redirect('/formulario')
     }
@@ -232,48 +240,49 @@ router.get('/entradas/:page', eUser, async (req, res) => {
     const skip = (page - 1) * limit;
     const admin = req.user.eAdmin ? true : false;
 
-        try{
-            const contagem = await AvisoEntrada.count({usuarioID: req.user._id})
-            if(parseInt(page) * limit >= contagem){
-                nextPage = ''
-                hidden = 'hidden'
-            }else{
-                nextPage = parseInt(page) + 1
-                hidden = ''
-            }
-
-            if(parseInt(page) == 2){
-                previousPage = ''
-            }else{
-                previousPage = parseInt(page) - 1
-            }
-            const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({entradaData: 'desc'})
-                res.render('formulario/entradas/entradasPage', 
-                    {avisoEntradas: avisoEntradas,
-                        nextPage: nextPage,
-                            previousPage: previousPage,
-                                hidden: hidden,
-                                    admin: admin
-                    })
-        }catch(err){
-            req.flash('error_msg', 'Erro ao mostrar página')
-            res.redirect('/formulario')
+    try {
+        const contagem = await AvisoEntrada.count({ usuarioID: req.user._id })
+        if (parseInt(page) * limit >= contagem) {
+            nextPage = ''
+            hidden = 'hidden'
+        } else {
+            nextPage = parseInt(page) + 1
+            hidden = ''
         }
+
+        if (parseInt(page) == 2) {
+            previousPage = ''
+        } else {
+            previousPage = parseInt(page) - 1
+        }
+        const avisoEntradas = await AvisoEntrada.find({ usuarioID: req.user._id }).skip(skip).limit(limit).lean().sort({ entradaData: 'desc' })
+        res.render('formulario/entradas/entradasPage',
+            {
+                avisoEntradas: avisoEntradas,
+                nextPage: nextPage,
+                previousPage: previousPage,
+                hidden: hidden,
+                admin: admin
+            })
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao mostrar página')
+        res.redirect('/formulario')
+    }
 })
 
 
 router.get('/avisoEntrada/:id/pdf', Admin, async (req, res) => {
-    try{
+    try {
         const avisoEntradas = await AvisoEntrada.findById(req.params.id).lean()
-        const embarcacoes = await Embarcacao.findOne({_id: avisoEntradas.embarcacao}).lean()
-        const tripulantes = await Tripulante.find({_id: avisoEntradas.entradaTripulantes}).lean()
+        const embarcacoes = await Embarcacao.findOne({ _id: avisoEntradas.embarcacao }).lean()
+        const tripulantes = await Tripulante.find({ _id: avisoEntradas.entradaTripulantes }).lean()
         const tripulantesInfos = []
         var tripulantesArray = tripulantes.forEach((el) => {
             tripulantesInfos.push(`<br>` + "Nome: " + el.tripulanteNome + " ")
             tripulantesInfos.push("Grau: " + el.tripulanteGrau + " ")
             tripulantesInfos.push("Numero da CIR: " + el.tripulanteNCIR)
-            })
-      const html = `
+        })
+        const html = `
       <style>
        
       h1 {
@@ -432,16 +441,16 @@ router.get('/avisoEntrada/:id/pdf', Admin, async (req, res) => {
 
  `
         pdf.create(html).toStream((err, stream) => {
-          if (err) return res.send(err);
-          res.attachment(`${avisoEntradas.entradaNprocesso}.pdf`);
-          res.setHeader('Content-Type', 'application/pdf');
-          stream.pipe(res);
-        
+            if (err) return res.send(err);
+            res.attachment(`${avisoEntradas.entradaNprocesso}.pdf`);
+            res.setHeader('Content-Type', 'application/pdf');
+            stream.pipe(res);
+
         });
-    }catch(err){
+    } catch (err) {
         req.flash('error_msg', 'Erro ao gerar PDF')
         res.redirect('/')
-    }  
+    }
 })
 
 
@@ -450,48 +459,44 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
     const tripulantes = cleanString.split(',');
     const avisoEntradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
 
-        try{
-            const novoAvisoEntrada = {
-                usuarioID: req.user._id,
-                entradaDespacho: req.body.entradaDespacho,
-                entradaNprocesso: req.body.entradaNprocesso,
-                entradaPortoChegada: req.body.entradaPortoChegada,
-                entradaDataHoraChegada: req.body.entradaDataHoraChegada,
-                entradaPosicaoPortoAtual: req.body.entradaPosicaoPortoAtual,
-                entradaPortoOrigem: req.body.entradaPortoOrigem,
-                entradaPortoDestino: req.body.entradaPortoDestino,
-                entradaDataHoraEstimadaSaida: req.body.entradaDataHoraEstimadaSaida,
-                entradaNomeRepresentanteEmbarcacao: req.body.entradaNomeRepresentanteEmbarcacao,
-                entradaCPFCNPJRepresentanteEmbarcacao: req.body.entradaCPFCNPJRepresentanteEmbarcacao,
-                entradaTelefoneRepresentanteEmbarcacao: req.body.entradaTelefoneRepresentanteEmbarcacao,
-                entradaEnderecoRepresentanteEmbarcacao: req.body.entradaEnderecoRepresentanteEmbarcacao,
-                entradaEmailRepresentanteEmbarcacao: req.body.entradaEmailRepresentanteEmbarcacao,
-                entradaDadosUltimaInpecaoNaval: req.body.entradaDadosUltimaInpecaoNaval,
-                entradaDeficienciasRetificadasPorto: req.body.entradaDeficienciasRetificadasPorto,
-                entradaTransporteCagaPerigosa: req.body.entradaTransporteCagaPerigosa,
-                entradaObservacoes: req.body.entradaObservacoes,
-                entradaTripulantes: avisoEntradaTripulantes,
-                entradaPassageiros: "Nome: "+ req.body.entradaPassageirosNome+
-                " || Data de Nascimento: " + req.body.entradaPassageirosDataNascimento+
+    try {
+        const novoAvisoEntrada = {
+            usuarioID: req.user._id,
+            entradaDespacho: req.body.entradaDespacho,
+            entradaNprocesso: req.body.entradaNprocesso,
+            entradaPortoChegada: req.body.entradaPortoChegada,
+            entradaDataHoraChegada: req.body.entradaDataHoraChegada,
+            entradaPosicaoPortoAtual: req.body.entradaPosicaoPortoAtual,
+            entradaPortoOrigem: req.body.entradaPortoOrigem,
+            entradaPortoDestino: req.body.entradaPortoDestino,
+            entradaDataHoraEstimadaSaida: req.body.entradaDataHoraEstimadaSaida,
+            entradaNomeRepresentanteEmbarcacao: req.body.entradaNomeRepresentanteEmbarcacao,
+            entradaCPFCNPJRepresentanteEmbarcacao: req.body.entradaCPFCNPJRepresentanteEmbarcacao,
+            entradaTelefoneRepresentanteEmbarcacao: req.body.entradaTelefoneRepresentanteEmbarcacao,
+            entradaEnderecoRepresentanteEmbarcacao: req.body.entradaEnderecoRepresentanteEmbarcacao,
+            entradaEmailRepresentanteEmbarcacao: req.body.entradaEmailRepresentanteEmbarcacao,
+            entradaDadosUltimaInpecaoNaval: req.body.entradaDadosUltimaInpecaoNaval,
+            entradaDeficienciasRetificadasPorto: req.body.entradaDeficienciasRetificadasPorto,
+            entradaTransporteCagaPerigosa: req.body.entradaTransporteCagaPerigosa,
+            entradaObservacoes: req.body.entradaObservacoes,
+            entradaTripulantes: avisoEntradaTripulantes,
+            entradaPassageiros: "Nome: " + req.body.entradaPassageirosNome +
+                " || Data de Nascimento: " + req.body.entradaPassageirosDataNascimento +
                 " || Sexo: " + req.body.entradaPassageirosSexo,
-                entradaComboios: "Nome: "+ req.body.entradaComboiosNome+
-                " || Numero de Inscrição: "+ req.body.entradaComboiosNIncricao+
-                " || Arqueação Bruta: "+ req.body.entradaComboiosArqueacaoBruta+
-                " || Carga: "+ req.body.entradaComboiosCarga+
-                " || Quantidade da Caga: "+ req.body.entradaComboiosQuantidadeCarga,
-                entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-                embarcacao: req.body.embarcacao,
-                entradaData: Date.now(),
-                entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+            entradaComboios: req.body.entradaComboios,
+            entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+            embarcacao: req.body.embarcacao,
+            entradaData: Date.now(),
+            entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
 
-            }
-            new AvisoEntrada(novoAvisoEntrada).save()
-                req.flash('success_msg', 'Aviso de entrada enviado com sucesso')
-                res.redirect('/')
-        }catch(err){
+        }
+        new AvisoEntrada(novoAvisoEntrada).save()
+        req.flash('success_msg', 'Aviso de entrada enviado com sucesso')
+        res.redirect('/')
+    } catch (err) {
         req.flash('error_msg', 'Erro interno, tente novamente')
         res.redirect('/')
-        }
+    }
 })
 
 
