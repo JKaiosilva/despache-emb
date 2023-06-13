@@ -455,11 +455,26 @@ router.get('/avisoEntrada/:id/pdf', Admin, async (req, res) => {
 
 
 router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
-    const cleanString = req.body.entradaTripulantes.replace(/[\n' \[\]]/g, '');
-    const tripulantes = cleanString.split(',');
-    const avisoEntradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
-
     try {
+        const cleanString = req.body.entradaTripulantes.replace(/[\n' \[\]]/g, '');
+        const tripulantes = cleanString.split(',');
+        const avisoEntradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+
+ 
+        const clearPassageiros = req.body.entradaPassageiros.replace(/[\n' \[\]]/g, '');
+        const passageirosLimpo = clearPassageiros.split(',');
+
+        const entradaPassageiros = []
+
+        for (var i = 0; i < passageirosLimpo.length; i++){
+            const passageiros = {
+                nome: passageirosLimpo[i],
+                dataNascimento: req.body.passageiroNascimento[i],
+                sexo: req.body.passageiroSexo[i]
+            }
+            entradaPassageiros.push(passageiros)
+        }
+        console.log(passageirosLimpo)
         const novoAvisoEntrada = {
             usuarioID: req.user._id,
             entradaDespacho: req.body.entradaDespacho,
@@ -480,9 +495,7 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
             entradaTransporteCagaPerigosa: req.body.entradaTransporteCagaPerigosa,
             entradaObservacoes: req.body.entradaObservacoes,
             entradaTripulantes: avisoEntradaTripulantes,
-            entradaPassageiros: "Nome: " + req.body.entradaPassageirosNome +
-                " || Data de Nascimento: " + req.body.entradaPassageirosDataNascimento +
-                " || Sexo: " + req.body.entradaPassageirosSexo,
+            entradaPassageiros: entradaPassageiros,
             entradaComboios: req.body.entradaComboios,
             entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
             embarcacao: req.body.embarcacao,
@@ -494,6 +507,7 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
         req.flash('success_msg', 'Aviso de entrada enviado com sucesso')
         res.redirect('/')
     } catch (err) {
+        console.log(err)
         req.flash('error_msg', 'Erro interno, tente novamente')
         res.redirect('/')
     }
