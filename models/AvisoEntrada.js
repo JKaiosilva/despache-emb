@@ -64,8 +64,15 @@ const AvisoEntrada = new Schema ({
         ref: 'Tripulante'
     }],
     entradaPassageiros: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Passageiro'
+        nome: {
+            type: String
+        },
+        dataNascimento: {
+            type: String
+        },
+        sexo: {
+            type: String
+        }
     }],
     entradaComboios: {
         type: Schema.Types.ObjectId,

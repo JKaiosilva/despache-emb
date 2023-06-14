@@ -461,20 +461,20 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
         const avisoEntradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
 
  
-        const clearPassageiros = req.body.entradaPassageiros.replace(/[\n' \[\]]/g, '');
+        const clearPassageiros = req.body.entradaPassageirosNome.replace(/[\n' \[\]]/g, '');
         const passageirosLimpo = clearPassageiros.split(',');
 
         const entradaPassageiros = []
 
         for (var i = 0; i < passageirosLimpo.length; i++){
             const passageiros = {
-                nome: passageirosLimpo[i],
+                nome: req.body.entradaPassageirosNome[i],
                 dataNascimento: req.body.passageiroNascimento[i],
                 sexo: req.body.passageiroSexo[i]
             }
             entradaPassageiros.push(passageiros)
         }
-        console.log(passageirosLimpo)
+        console.log(entradaPassageiros)
         const novoAvisoEntrada = {
             usuarioID: req.user._id,
             entradaDespacho: req.body.entradaDespacho,

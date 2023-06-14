@@ -218,11 +218,11 @@
                                                     var submiteButton = document.getElementById('submitButton')
                                                     submiteButton.disabled = false
 
-                                                    var passageirosNome = []
+                                                    var passageirosNomeArray = []
                                                     
-                                                    var passageirosNascimento = []
+                                                    var passageirosNascimentoArray = []
 
-                                                    var passageirosSexo = []
+                                                    var passageirosSexoArray = []
 
 
                                                     var passageirosNomes = document.querySelectorAll("[name='passageiroNome']")
@@ -235,26 +235,25 @@
                                                                         submiteButton.disabled = true
                                                                         
                                                                     }
-                                                            passageirosNascimento.push(passageirosNascimentos[i].value) 
-                                                            passageirosSexo.push(passageirosSexos[i].value)
-                                                            passageirosNome.push(passageirosNomes[i].value)
-                                                            document.getElementById('passageiros').setAttribute('value', `${passageirosNome}`)
-                                                            document.getElementById('nascimentos').setAttribute('value', `${passageirosNascimento}`)
-                                                            document.getElementById('sexos').setAttribute('value', `${passageirosSexos}`)
-
+                                                            passageirosNomeArray.push(passageirosNomes[i].value)
+                                                            passageirosNascimentoArray.push(passageirosNascimentos[i].value) 
+                                                            passageirosSexoArray.push(passageirosSexos[i].value)
                                                         }
+                                                            document.getElementById('passageiros').setAttribute('value', `${passageirosNomeArray}`)
+                                                            document.getElementById('dataNascimentos').setAttribute('value', `${passageirosNascimentoArray}`)
+                                                            document.getElementById('sexos').setAttribute('value', `${passageirosSexoArray}`)
 
-                                                        if(passageirosNome.length == 0 ){
+                                                        if(passageirosNomeArray.length == 0 ){
                                                             var submiteButton = document.getElementById('submitButton')
                                                             submiteButton.disabled = true
                                                             document.getElementById('selecaoPassageiros').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
                                                         }
-                                                        if(passageirosNome.find(el => el == 'emBranco')){
+                                                        if(passageirosNomeArray.find(el => el == 'emBranco')){
                                                             document.getElementById('selecaoPassageiros').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
                                                         }else{
                                                             document.getElementById('selecaoPassageiros').setAttribute('class', 'form-control bg-success bg-opacity-50 border-success')
                                                         }
-                                                        console.log(passageirosNome)
+                                                        console.log(passageirosNascimentoArray)
                                                     
                                                         
                                                     }
@@ -271,9 +270,9 @@
                         </div>
                             <button class="btn btn-primary mb-4" type="button" onclick="addPassageiros('selecaoPassageiros')">Adicionar passageiro</button>
                             <button class="btn btn-success" type="button" onclick="getPassageiros()" style="float: right">Fechar Relação</button>
-                        <input name="entradaPassageiros" value="" id="passageiros" hidden>
-                        <input name="entradaNascimentos" value="" id="nascimentos" hidden>
-                        <input name="entradaSexos" value="" id="sexos" hidden>
+                        <input name="entradaPassageirosNome" value="" id="passageiros" hidden>
+                        <input name="entradaPassageirosNascimento" value="" id="dataNascimentos" hidden>
+                        <input name="entradaPassageirosSexos" value="" id="sexos" hidden>
 
 
                 </div>
