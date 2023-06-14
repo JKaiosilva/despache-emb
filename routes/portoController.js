@@ -78,9 +78,16 @@ router.post('/admin/addPorto', Admin, async (req, res) => {
 
 router.get('/admin/portoVizu/:id', Admin, async(req, res) => {
     try{
-        const dataHoje = moment(Date.now()).format('DD/MM/YYYY')
+        const dataHoje = moment(Date.now()).format('YYYY-MM-DD')
         const portos = await Porto.findOne({_id: req.params.id}).lean()
-        var despachos = await Despacho.find({despachoPortoEstadia: portos._id}).lean()
+        const despachos = await Despacho.find({despachoPortoEstadia: portos._id, }).lean()
+        const avisoSaidas = await AvisoSaida.find({saidaDataHoraSaida: dataHoje}).lean()
+
+        for await(var saida of avisoSaidas){
+            var embarcacoes = await Embarcacao.findById(saida.embarcacao).lean()
+            saida.embarcacao = embarcacoes.embarcacaoNome
+        }
+
 
          for await(var despacho of despachos){
             var embarcacoes = await Embarcacao.findById(despacho.embarcacao).lean()
@@ -90,7 +97,8 @@ router.get('/admin/portoVizu/:id', Admin, async(req, res) => {
 
             res.render('admin/portos/portoVizu', 
                 {portos: portos,
-                    despachos: despachos
+                    despachos: despachos,
+                        avisoSaidas: avisoSaidas
             })
     }catch(err){
         req.flash('error_msg', 'Erro ao mostrar porto.')

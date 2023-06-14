@@ -47,18 +47,19 @@
     <br>
 </div>
 <br>
-    {{#each despachos}}
+<h4 class="text-center">Documentos de Saída para este porto</h4>
+    {{#each avisoSaidas}}
         <div class="card mt-4">
             <div class="card-body">
-                <label>Despacho: {{NprocessoDespacho}}</label>
+                <label>Saída: {{saidaNprocesso}}</label>
                 <br>
                 <label>Embarcacao: {{embarcacao}}</label>
                 <br>
-                <a class="btn btn-primary" href="/formulario/despachoVizu/{{_id}}" style="float: right">Vizualizar</a>
+                <a class="btn btn-primary" href="/formulario/avisoSaidaVizu/{{_id}}" style="float: right">Vizualizar</a>
             </div>
         </div>
     {{else}}
-        <h4>Nenhum Despacho neste porto</h4>
+        <h4>Nenhuma Saída neste porto</h4>
     {{/each}}
 <br>
 <br>

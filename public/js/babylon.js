@@ -1,7 +1,7 @@
 const canvas = document.getElementById('renderCanvas');
 const engine = new BABYLON.Engine(canvas, true);
 
-fetch('portoInfo')
+fetch('/portoInfo')
   .then(response => response.json())
   .then((data) => {
     const porto = data;
