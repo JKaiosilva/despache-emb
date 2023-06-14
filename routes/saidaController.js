@@ -182,6 +182,28 @@ router.post('/admin/saidasValidate', Admin, async (req, res) => {
         const tripulantes = cleanString.split(',');
         const avisoSaidaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
 
+        const clearPassageiros = req.body.saidaPassageirosNome
+        const passageirosLimpo = clearPassageiros.split(',');
+
+        const passageirosNome = req.body.saidaPassageirosNome
+        const passageirosNascimento = req.body.saidaPassageirosNascimento
+        const passageirosSexo = req.body.saidaPassageirosSexos
+
+        const passageirosNomes = passageirosNome.split(',')
+        const passageirosNascimentos = passageirosNascimento.split(',')
+        const passageirosSexos = passageirosSexo.split(',')
+
+        const saidaPassageiros = []
+
+        for (var i = 0; i < passageirosLimpo.length; i++){
+            const passageiros = {
+                nome: passageirosNomes[i],
+                dataNascimento: passageirosNascimentos[i],
+                sexo: passageirosSexos[i]
+            }
+            saidaPassageiros.push(passageiros)
+        }
+
         await AvisoSaida.updateOne({ _id: req.body.id }, {
             saidaDespacho: req.body.saidaDespacho,
             saidaNprocesso: req.body.saidaNprocesso,
@@ -197,9 +219,7 @@ router.post('/admin/saidasValidate', Admin, async (req, res) => {
             saidaObservacoes: req.body.saidaObservacoes,
             saidaSomaPassageiros: req.body.saidaSomaPassageiros,
             saidaTripulantes: avisoSaidaTripulantes,
-            saidaPassageiros: "Nome: " + req.body.saidaPassageirosNome +
-                " || Data de Nascimento: " + req.body.saidaPassageirosDataNascimento +
-                " || Sexo: " + req.body.saidaPassageirosSexo,
+            saidaPassageiros: saidaPassageiros,
             saidaComboios: req.body.saidaComboios,
             embarcacao: req.body.embarcacao
 
@@ -436,10 +456,34 @@ router.get('/avisoSaida/:id/pdf', Admin, async (req, res) => {
 
 
 router.post('/formulario/avisoSaida', eUser, async (req, res) => {
-    const cleanString = req.body.saidaTripulantes.replace(/[\n' \[\]]/g, '');
-    const tripulantes = cleanString.split(',');
-    const avisoSaidaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+
     try {
+        const cleanString = req.body.saidaTripulantes.replace(/[\n' \[\]]/g, '');
+        const tripulantes = cleanString.split(',');
+        const avisoSaidaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+
+        const clearPassageiros = req.body.saidaPassageirosNome
+        const passageirosLimpo = clearPassageiros.split(',');
+
+        const passageirosNome = req.body.saidaPassageirosNome
+        const passageirosNascimento = req.body.saidaPassageirosNascimento
+        const passageirosSexo = req.body.saidaPassageirosSexos
+
+        const passageirosNomes = passageirosNome.split(',')
+        const passageirosNascimentos = passageirosNascimento.split(',')
+        const passageirosSexos = passageirosSexo.split(',')
+
+        const saidaPassageiros = []
+
+        for (var i = 0; i < passageirosLimpo.length; i++){
+            const passageiros = {
+                nome: passageirosNomes[i],
+                dataNascimento: passageirosNascimentos[i],
+                sexo: passageirosSexos[i]
+            }
+            saidaPassageiros.push(passageiros)
+        }
+
         const novoAvisoSaida = {
             usuarioID: req.user._id,
             saidaDespacho: req.body.saidaDespacho,
@@ -456,9 +500,7 @@ router.post('/formulario/avisoSaida', eUser, async (req, res) => {
             saidaObservacoes: req.body.saidaObservacoes,
             saidaSomaPassageiros: req.body.saidaSomaPassageiros,
             saidaTripulantes: avisoSaidaTripulantes,
-            saidaPassageiros: "Nome: " + req.body.saidaPassageirosNome +
-                " || Data de Nascimento: " + req.body.saidaPassageirosDataNascimento +
-                " || Sexo: " + req.body.saidaPassageirosSexo,
+            saidaPassageiros: saidaPassageiros,
             saidaComboios: req.body.saidaComboios,
             saidaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
             embarcacao: req.body.embarcacao,

@@ -85,11 +85,23 @@
                     </div>
                     <br>
                 {{/each}}
+                <br>
                 <div>
-                    <div id="passageiros" class="card bg-secondary">
                         <h4 class="text-center">Lista de Passageiros</h4>
-                        <input name="saidaPassageiros" class="form-control" type="text" value="{{avisoSaidas.saidaPassageiros}}" disabled>
-                        </div>
+                        {{#each avisoSaidas.saidaPassageiros}}
+                                <div id="passageiros" class="card bg-secondary mt-4">
+                                    <span>Passageiro: {{add @index 1}}</span>
+                                        <div class="input-group">
+                                            <label class="input-group-text">Nome</label>
+                                                <input value="{{nome}}" class="form-control" type="text" disabled>
+                                            <label class="input-group-text">Data de Nascimento</label>
+                                                <input value="{{dataNascimento}}" class="form-control" type="text" disabled>
+                                            <label class="input-group-text">Sexo</label>
+                                                <input value="{{sexo}}" class="form-control" type="text" disabled>
+                                        </div>
+                                </div>
+                            <br>
+                        {{/each}}
                     </div>
                 <div class="input-group mb-3">
                     <label class="input-group-text">Somatório de Passageiros</label>

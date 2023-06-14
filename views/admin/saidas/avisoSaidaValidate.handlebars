@@ -212,12 +212,126 @@
                 </div>
                 </div>
             </div>
-                <div>
-                    <div id="passageiros" class="card bg-secondary">
-                        <h4 class="text-center">Lista de Passageiros</h4>
-                        <input name="saidaPassageiros" class="form-control" type="text" value="{{avisoSaidas.saidaPassageiros}}">
-                        </div>
+<div>
+                    <h4 class="text-center">Lista de Passageiros</h4>
+                    <div id="selecaoPassageiros" class="">
+
+                        {{#each avisoSaidas.saidaPassageiros}}
+                                <div id="{{_id}}" class="card bg-secondary mt-4">
+                                    <div>                           
+                                        <button type="button" style="float: right" class="btn btn-danger m-1" onclick="deletePassageiro('{{_id}}')">Remover</button>
+                                        <span>Passageiro: {{add @index 1}}</span>
+                                    </div> 
+                                        <div class="input-group">
+                                            <label class="input-group-text">Nome</label>
+                                                <input value="{{nome}}" name="passageiroNome" class="form-control" type="text" disabled>
+                                            <label class="input-group-text">Data de Nascimento</label>
+                                                <input value="{{dataNascimento}}" name="passageiroNascimento" class="form-control" type="text" disabled>
+                                            <label class="input-group-text">Sexo</label>
+                                                <input value="{{sexo}}" name="passageiroSexo" class="form-control" type="text" disabled>
+                                        </div>
+                                </div>
+                            <br>
+                        {{/each}}
                     </div>
+                    <div>
+                                            <script>
+                                                var divCounter = 0
+                                                    function addPassageiros(divName) {
+                                                    var newdiv = document.createElement('div');
+                                                    var divId = "div" + divCounter
+                                                    newdiv.setAttribute('id', divId)
+                                                    newdiv.innerHTML += '<button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divId + '\')">Excluir</button>'
+                                                    newdiv.innerHTML += '<label class="input-group-text">Nome</label>'
+                                                    newdiv.innerHTML += '<input name="passageiroNome" class="form-control" type="text">'
+                                                    newdiv.innerHTML += '<label class="input-group-text">Data de Nascimento</label>'
+                                                    newdiv.innerHTML += '<input name="passageiroNascimento" class="form-control" type="text">'
+                                                    newdiv.innerHTML += '<label class="input-group-text">Sexo</label>'
+                                                    newdiv.innerHTML += '<input name="passageiroSexo" class="form-control" type="text">'
+                                                    document.getElementById(divName).appendChild(newdiv);
+                                                    document.getElementById('selecaoPassageiros').setAttribute('class', 'bg')
+                                                    var submiteButton = document.getElementById('submitButton')
+                                                    submiteButton.disabled = true
+                                                    divCounter++;
+                                                    document.getElementById('selecaoPassageiros').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
+
+                                                    }
+
+                                                    function deleteBranco(divId){
+                                                        passageirosNome = []
+                                                        var emBranco = document.getElementById(divId)
+                                                        emBranco.remove()
+                                                        document.getElementById('selecaoPassageiros').setAttribute('class', 'bg')
+                                                        var submiteButton = document.getElementById('submitButton')
+                                                        submiteButton.disabled = true
+                                                        document.getElementById('selecaoPassageiros').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
+                                                    }
+
+                                                    addPassageiros('lines');
+
+                                                    function getPassageiros(){
+                                                    
+                                                    var submiteButton = document.getElementById('submitButton')
+                                                    submiteButton.disabled = false
+
+                                                    var passageirosNomeArray = []
+                                                    
+                                                    var passageirosNascimentoArray = []
+
+                                                    var passageirosSexoArray = []
+
+
+                                                    var passageirosNomes = document.querySelectorAll("[name='passageiroNome']")
+                                                    var passageirosNascimentos = document.querySelectorAll("[name='passageiroNascimento']")
+                                                    var passageirosSexos = document.querySelectorAll("[name='passageiroSexo']")
+
+                                                                for (var i = 0; i < passageirosNomes.length; i++) {
+                                                                    if(passageirosNomes[i].value == 'emBranco'){
+                                                                        var submiteButton = document.getElementById('submitButton')
+                                                                        submiteButton.disabled = true
+                                                                        
+                                                                    }
+                                                            passageirosNomeArray.push(passageirosNomes[i].value)
+                                                            passageirosNascimentoArray.push(passageirosNascimentos[i].value) 
+                                                            passageirosSexoArray.push(passageirosSexos[i].value)
+                                                        }
+                                                            document.getElementById('passageiros').setAttribute('value', `${passageirosNomeArray}`)
+                                                            document.getElementById('dataNascimentos').setAttribute('value', `${passageirosNascimentoArray}`)
+                                                            document.getElementById('sexos').setAttribute('value', `${passageirosSexoArray}`)
+
+                                                        if(passageirosNomeArray.length == 0 ){
+                                                            var submiteButton = document.getElementById('submitButton')
+                                                            submiteButton.disabled = true
+                                                            document.getElementById('selecaoPassageiros').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
+                                                        }
+                                                        if(passageirosNomeArray.find(el => el == 'emBranco')){
+                                                            document.getElementById('selecaoPassageiros').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
+                                                        }else{
+                                                            document.getElementById('selecaoPassageiros').setAttribute('class', 'form-control bg-success bg-opacity-50 border-success')
+                                                        }
+                                                        console.log(passageirosNascimentoArray)
+                                                    
+                                                        
+                                                    }
+                                                    function deletePassageiro(id){
+                                                        var submiteButton = document.getElementById('submitButton')
+                                                        submiteButton.disabled = true
+                                                        passageirosNome = []
+                                                        document.getElementById(id).remove()
+                                                        document.getElementById('selecaoPassageiros').setAttribute('class', 'bg')
+                                                        document.getElementById('selecaoPassageiros').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
+                                                    }
+                                                                        
+                                                </script>
+                        </div>
+                            <button class="btn btn-primary mb-4" type="button" onclick="addPassageiros('selecaoPassageiros')">Adicionar passageiro</button>
+                            <button class="btn btn-success" type="button" onclick="getPassageiros()" style="float: right">Fechar Relação</button>
+                        <input name="saidaPassageirosNome" value="" id="passageiros" hidden>
+                        <input name="saidaPassageirosNascimento" value="" id="dataNascimentos" hidden>
+                        <input name="saidaPassageirosSexos" value="" id="sexos" hidden>
+
+
+                </div>
                     <div class="input-group mb-3">
                     <label class="input-group-text">Somatório de Passageiros</label>
                     <input value="{{avisoSaidas.saidaSomaPassageiros}}" class="form-control" type="number">
