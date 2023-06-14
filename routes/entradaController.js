@@ -123,6 +123,29 @@ router.post('/admin/entradasValidate', Admin, async (req, res) => {
         const tripulantes = cleanString.split(',');
         const entradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
 
+
+        const clearPassageiros = req.body.entradaPassageirosNome
+        const passageirosLimpo = clearPassageiros.split(',');
+
+        const passageirosNome = req.body.entradaPassageirosNome
+        const passageirosNascimento = req.body.entradaPassageirosNascimento
+        const passageirosSexo = req.body.entradaPassageirosSexos
+
+        const passageirosNomes = passageirosNome.split(',')
+        const passageirosNascimentos = passageirosNascimento.split(',')
+        const passageirosSexos = passageirosSexo.split(',')
+
+        const entradaPassageiros = []
+
+        for (var i = 0; i < passageirosLimpo.length; i++){
+            const passageiros = {
+                nome: passageirosNomes[i],
+                dataNascimento: passageirosNascimentos[i],
+                sexo: passageirosSexos[i]
+            }
+            entradaPassageiros.push(passageiros)
+        }
+
         await AvisoEntrada.updateOne({ _id: req.body.id }, {
             entradaDespacho: req.body.entradaDespacho,
             entradaNprocesso: req.body.entradaNprocesso,
@@ -142,9 +165,7 @@ router.post('/admin/entradasValidate', Admin, async (req, res) => {
             entradaTransporteCagaPerigosa: req.body.entradaTransporteCagaPerigosa,
             entradaObservacoes: req.body.entradaObservacoes,
             entradaTripulantes: entradaTripulantes,
-            entradaPassageiros: "Nome: " + req.body.entradaPassageirosNome +
-                " || Data de Nascimento: " + req.body.entradaPassageirosDataNascimento +
-                " || Sexo: " + req.body.entradaPassageirosSexo,
+            entradaPassageiros: entradaPassageiros,
             entradaComboios: req.body.entradaComboios,
             entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
             embarcacao: req.body.embarcacao,

@@ -97,6 +97,8 @@
                         <input name="entradaObservacoes" class="form-control" type="text" value="{{avisoEntradas.entradaObservacoes}}" disabled>
                     </div>
                 </div>
+                <br>
+                <h4 class="text-center">Lista de Tripulantes</h4>
                 {{#each tripulantes}}
                     <div>
                         <div id="tripulantes" class="card bg-secondary mt-4">
@@ -108,11 +110,23 @@
                     </div>
                     <br>
                 {{/each}}
+                <br>
                 <div>
-                    <div id="passageiros" class="card bg-secondary">
                         <h4 class="text-center">Lista de Passageiros</h4>
-                        <input name="entradaPassageiros" class="form-control" type="text" value="{{avisoEntradas.entradaPassageiros}}" disabled>
-                        </div>
+                        {{#each avisoEntradas.entradaPassageiros}}
+                                <div id="passageiros" class="card bg-secondary mt-4">
+                                    <span>Passageiro: {{add @index 1}}</span>
+                                        <div class="input-group">
+                                            <label class="input-group-text">Nome</label>
+                                                <input value="{{nome}}" class="form-control" type="text" disabled>
+                                            <label class="input-group-text">Data de Nascimento</label>
+                                                <input value="{{dataNascimento}}" class="form-control" type="text" disabled>
+                                            <label class="input-group-text">Sexo</label>
+                                                <input value="{{sexo}}" class="form-control" type="text" disabled>
+                                        </div>
+                                </div>
+                            <br>
+                        {{/each}}
                     </div>
                     <div>
                     <h4 class="text-center">Comboios</h4>
