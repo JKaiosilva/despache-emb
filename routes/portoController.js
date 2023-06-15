@@ -107,6 +107,20 @@ router.get('/admin/portoVizu/:id', Admin, async(req, res) => {
 })
 
 
+router.get('/admin/portoEdit/:id', Admin, async(req, res) => {
+    try{
+        const portos = await Porto.findOne({_id: req.params.id}).lean()
+        res.render('admin/portos/portoEdit', 
+        {
+            portos: portos
+        })
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', 'Erro ao mostrar porto.')
+        res.redirect('portos')
+    }
+})
+
 router.get('/portoInfo', Admin, async (req, res) => {
     try {
         const dataHoje = moment(Date.now()).format('YYYY-MM-DD')

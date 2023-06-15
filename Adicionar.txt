@@ -20,3 +20,8 @@ editar embarcação, limitar seleção nos documentos caso esteja vencida ok
 
 
 portos, colocar vizu de entradas e saidas daquele dia
+
+
+colocar portos 'outros", acrescentar nome e local do porto
+
+edição de portos
