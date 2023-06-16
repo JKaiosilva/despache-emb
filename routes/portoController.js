@@ -121,6 +121,16 @@ router.get('/admin/portoEdit/:id', Admin, async(req, res) => {
     }
 })
 
+
+router.post('/admin/portoEdit', Admin, async(req, res) => {
+    try{
+
+    }catch(err){
+
+    }
+})
+
+
 router.get('/portoInfo', Admin, async (req, res) => {
     try {
         const dataHoje = moment(Date.now()).format('YYYY-MM-DD')
