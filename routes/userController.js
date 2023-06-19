@@ -173,12 +173,13 @@ router.post('/usuarios/cadastro', (req, res) => {
                     CPF: req.body.CPF,
                     senha: req.body.senha,
                     dataCadastro: Date.now(),
-                    usuarioMesAtual: moment(Date.now()).format('MM/YYYY')
+                    usuarioMesAnoAtual: moment(Date.now()).format('MM/YYYY')
                 })
 
                 bcrypt.genSalt(10, (erro, salt) => {
                     bcrypt.hash(novoUsuario.senha, salt, (erro, hash) => {
                         if(erro) {
+                            console.log(erro)
                             req.flash('error_msg', 'Houve um erro ao salvar usuario')
                             res.redirect('/usuarios/cadastro')
                         }
@@ -187,6 +188,7 @@ router.post('/usuarios/cadastro', (req, res) => {
                             req.flash('success_msg', 'Usuario criado com sucesso')
                             res.redirect('/usuarios/login')
                         }).catch((err) => {
+                            console.log(err)
                             req.flash('error_msg', 'Houve um erro ao salvar usuario')
                             res.redirect('/usuarios/cadastro')
                         })
@@ -194,6 +196,7 @@ router.post('/usuarios/cadastro', (req, res) => {
                 })
             }
         }).catch((err) => {
+            console.log(err)
             req.flash('error_msg', 'Houve um erro interno')
             res.redirect('/')
         })

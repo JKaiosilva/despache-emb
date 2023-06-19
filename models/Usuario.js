@@ -13,7 +13,7 @@ const Usuario = new Schema({
     },
     eAdmin: {
         type: Boolean,
-        default: false
+        default: true
     },
     eUser: {
         type: Number,
@@ -23,7 +23,7 @@ const Usuario = new Schema({
         type: String
     },
     dataCadastro: {
-        type: Number,
+        type: String,
         default: []
     },
     usuarioMesAnoAtual: {

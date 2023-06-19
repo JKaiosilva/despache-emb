@@ -15,15 +15,38 @@
             <div>
                 <h4 class="text-center">Dados de Despacho (data off Clearence)</h4>
                     <div class="input-group mb-3">
-                        <label class="input-group-text">{{portoDespacho.portoNome}}</label><br>
-                        <label class="input-group-text">Redefinir porto de Estadia</label>
-                        <select name="despachoPortoEstadia" class="form-select">
-                            {{#each portos}}
-                            <option value="{{_id}}">
-                                {{portoNome}}
-                            </option>
-                            {{/each}}
+                        <label class="input-group-text">Porto de Estadia</label>
+                        <input class="form-control" value="{{portoDespacho.portoNome}}" disabled>
+                        <br>
+                        <label class="input-group-text">Redefinir Porto de Estadia</label>
+                        <select name="despachoPortoEstadia" class="form-select" onchange="outroPorto()">
+                            <option value="{{despachos.despachoPortoEstadia}}">Já Selecionado: {{portoDespacho.portoNome}}</option>
+                        {{#each portos}}
+                        <option value="{{_id}}">
+                            {{portoNome}}
+                        </option>
+                        {{/each}}
+                        <option id="outroPortoOption" value="Outros">Outros...</option>
                         </select>
+                        <br>
+                        <br>
+                        <div id="outroPorto" hidden>
+                        <label class="input-group-text">Adicione outro porto de Estadia</label>
+                        <input name="despachoOutroPortoEstadia" value="{{portoDespacho.portoNome}}" class="form-control" type="text">
+                        </div>
+                        <script>
+                        function outroPorto() {
+                            var outroPortoOption = document.getElementById('outroPortoOption');
+                            var outroPortoDiv = document.getElementById('outroPorto');
+
+                            if (outroPortoOption.value == 'Outros') {
+                            outroPortoDiv.hidden = false;
+                            } else {
+                            outroPortoDiv.hidden = true;
+                            }
+                        }
+                        </script>
+
                         <label class="input-group-text">Data/Hora Estimada de Partida</label>
                         <input name="despachoDataHoraPartida" class="form-control" type="date" value="{{despachos.despachoDataHoraPartida}}">
                     </div>

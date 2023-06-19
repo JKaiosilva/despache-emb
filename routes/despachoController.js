@@ -86,7 +86,11 @@ router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
         const embDespacho = await Embarcacao.findOne({_id: despachos.embarcacao}).lean();
         const embarcacoes = await Embarcacao.find().lean();
         const portos = await Porto.find().lean();
-        const portoDespacho = await Porto.findOne({_id: despachos.despachoPortoEstadia}).lean();
+        const portoDespacho = await Porto.findOne({_id: despachos.despachoPortoEstadia}).lean().catch((err) => {
+            if(err){
+                return {portoNome: despachos.despachoOutroPortoEstadia}
+            }
+        });
         const tripDespacho = await Tripulante.find({_id: despachos.despachoTripulantes}).lean();
         const tripulantes = await Tripulante.find().lean();
         const comboios = await Comboio.find().lean()
@@ -120,6 +124,8 @@ router.post('/admin/despachoValidate', Admin, async(req, res) => {
          await Despacho.updateOne({_id: req.body.id}, {
              NprocessoDespacho: req.body.NprocessoDespacho,
              despachoPortoEstadia: req.body.despachoPortoEstadia,
+             despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
+             despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
              despachoDataHoraPartida: req.body.despachoDataHoraPartida,
              despachoNomeRepresentanteEmbarcacao: req.body.despachoNomeRepresentanteEmbarcacao,
              despachoCPFCNPJRepresentanteEmbarcacao: req.body.despachoCPFCNPJRepresentanteEmbarcacao,
@@ -164,7 +170,11 @@ router.post('/admin/despachoValidate', Admin, async(req, res) => {
         const despachos = await Despacho.findOne({_id: req.params.id}).lean()
         const tripulantes = await Tripulante.find({_id: despachos.despachoTripulantes}).lean()
         const embarcacoes = await Embarcacao.findOne({_id: despachos.embarcacao}).lean()
-        const portos = await Porto.findOne({_id: despachos.despachoPortoEstadia}).lean()
+        const portos = await Porto.findOne({ _id: despachos.despachoPortoEstadia}).lean().catch((err) => {
+            if(err){
+                return {portoNome: despachos.despachoOutroPortoEstadia}
+            }
+        });        
         const avisoEntradas = await AvisoEntrada.find({entradaDespacho: despachos._id}).lean()
         const avisoSaidas = await AvisoSaida.find({saidaDespacho: despachos._id}).lean()
         const comboios  = await Comboio.findOne({_id: despachos.despachoComboios}).lean()
@@ -486,6 +496,7 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
         usuarioID: req.user._id,
         NprocessoDespacho: req.body.NprocessoDespacho,
         despachoPortoEstadia: req.body.despachoPortoEstadia,
+        despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
         despachoDataHoraPartida: req.body.despachoDataHoraPartida,
         despachoNomeRepresentanteEmbarcacao: req.body.despachoNomeRepresentanteEmbarcacao,
         despachoCPFCNPJRepresentanteEmbarcacao: req.body.despachoCPFCNPJRepresentanteEmbarcacao,

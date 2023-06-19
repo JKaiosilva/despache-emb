@@ -11,8 +11,11 @@ const Despacho = new Schema ({
         type: String
     },
     despachoPortoEstadia: {
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.Mixed,
         ref: 'portos'
+    },
+    despachoOutroPortoEstadia: {
+        type: String
     },
     despachoDataHoraPartida: {
         type: String
