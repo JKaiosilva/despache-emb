@@ -85,7 +85,21 @@ router.get('/admin/entradasValidate/:id', Admin, async (req, res) => {
         const avisoEntradas = await AvisoEntrada.findOne({ _id: req.params.id }).lean()
         const tripulantesValid = await Tripulante.find({ _id: avisoEntradas.entradaTripulantes }).lean()
         const embarcacoesValid = await Embarcacao.findOne({ _id: avisoEntradas.embarcacao }).lean()
-        const portosValid = await Porto.findOne({ _id: avisoEntradas.entradaPortoChegada }).lean()
+        const portoChegada = await Porto.findOne({ _id: avisoEntradas.entradaPortoChegada}).lean().catch((err) => {
+            if(err){
+                return {portoNome: avisoEntradas.entradaOutroPortoChegada}
+            }
+          })
+        const portoOrigem = await Porto.findOne({_id: avisoEntradas.entradaPortoOrigem}).lean().catch((err) => {
+            if(err){
+                return {portoNome: avisoEntradas.entradaOutroPortoOrigem}
+            }
+        })
+        const portoDestino = await Porto.findOne({_id: avisoEntradas.entradaPortoDestino}).lean().catch((err) => {
+            if(err){
+                return {portoNome: avisoEntradas.entradaOutroPortoDestino}
+            }
+        })        
         const despachoValid = await Despacho.findOne({ _id: avisoEntradas.entradaDespacho }).lean()
         const comboiosValid = await Comboio.findOne({_id: avisoEntradas.entradaComboios }).lean()
 
@@ -101,7 +115,9 @@ router.get('/admin/entradasValidate/:id', Admin, async (req, res) => {
             tripulantesValid: tripulantesValid,
             embarcacoesValid: embarcacoesValid,
             despachoValid: despachoValid,
-            portosValid: portosValid,
+            portoChegada: portoChegada,
+            portoOrigem: portoOrigem,
+            portoDestino: portoDestino,
             tripulantes: tripulantes,
             comboiosValid: comboiosValid,
             embarcacoes: embarcacoes,
@@ -150,10 +166,13 @@ router.post('/admin/entradasValidate', Admin, async (req, res) => {
             entradaDespacho: req.body.entradaDespacho,
             entradaNprocesso: req.body.entradaNprocesso,
             entradaPortoChegada: req.body.entradaPortoChegada,
+            entradaOutroPortoChegada: req.body.entradaOutroPortoChegada,
             entradaDataHoraChegada: req.body.entradaDataHoraChegada,
             entradaPosicaoPortoAtual: req.body.entradaPosicaoPortoAtual,
             entradaPortoOrigem: req.body.entradaPortoOrigem,
+            entradaOutroPortoOrigem: req.body.entradaOutroPortoOrigem,
             entradaPortoDestino: req.body.entradaPortoDestino,
+            entradaOutroPortoDestino: req.body.entradaOutroPortoDestino,
             entradaDataHoraEstimadaSaida: req.body.entradaDataHoraEstimadaSaida,
             entradaNomeRepresentanteEmbarcacao: req.body.entradaNomeRepresentanteEmbarcacao,
             entradaCPFCNPJRepresentanteEmbarcacao: req.body.entradaCPFCNPJRepresentanteEmbarcacao,
@@ -193,7 +212,21 @@ router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
         const avisoEntradas = await AvisoEntrada.findOne({ _id: req.params.id }).lean()
         const tripulantes = await Tripulante.find({ _id: avisoEntradas.entradaTripulantes }).lean()
         const embarcacoes = await Embarcacao.findOne({ _id: avisoEntradas.embarcacao }).lean()
-        const portos = await Porto.findOne({ _id: avisoEntradas.entradaPortoChegada }).lean()
+        const portoChegada = await Porto.findOne({ _id: avisoEntradas.entradaPortoChegada}).lean().catch((err) => {
+                if(err){
+                    return {portoNome: avisoEntradas.entradaOutroPortoChegada}
+                }
+              })
+        const portoOrigem = await Porto.findOne({_id: avisoEntradas.entradaPortoOrigem}).lean().catch((err) => {
+            if(err){
+                return {portoNome: avisoEntradas.entradaOutroPortoOrigem}
+            }
+        })
+        const portoDestino = await Porto.findOne({_id: avisoEntradas.entradaPortoDestino}).lean().catch((err) => {
+            if(err){
+                return {portoNome: avisoEntradas.entradaOutroPortoDestino}
+            }
+        })
         const despacho = await Despacho.findOne({ _id: avisoEntradas.entradaDespacho }).lean()
         const comboios = await Comboio.findOne({ _id: avisoEntradas.entradaComboios }).lean()
 
@@ -204,10 +237,13 @@ router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
             embarcacoes: embarcacoes,
             despacho: despacho,
             comboios: comboios,
-            portos: portos,
+            portoChegada: portoChegada,
+            portoOrigem: portoOrigem,
+            portoDestino: portoDestino,
             hidden: hidden
         })
     } catch (err) {
+        console.log(err)
         req.flash('error_msg', 'Erro interno ao mostrar formulário')
         res.redirect('/formulario')
     }
@@ -509,10 +545,13 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
             entradaDespacho: req.body.entradaDespacho,
             entradaNprocesso: req.body.entradaNprocesso,
             entradaPortoChegada: req.body.entradaPortoChegada,
+            entradaOutroPortoChegada: req.body.entradaOutroPortoChegada,
             entradaDataHoraChegada: req.body.entradaDataHoraChegada,
             entradaPosicaoPortoAtual: req.body.entradaPosicaoPortoAtual,
             entradaPortoOrigem: req.body.entradaPortoOrigem,
+            entradaOutroPortoOrigem: req.body.entradaOutroPortoOrigem,
             entradaPortoDestino: req.body.entradaPortoDestino,
+            entradaOutroPortoDestino: req.body.entradaOutroPortoDestino,
             entradaDataHoraEstimadaSaida: req.body.entradaDataHoraEstimadaSaida,
             entradaNomeRepresentanteEmbarcacao: req.body.entradaNomeRepresentanteEmbarcacao,
             entradaCPFCNPJRepresentanteEmbarcacao: req.body.entradaCPFCNPJRepresentanteEmbarcacao,

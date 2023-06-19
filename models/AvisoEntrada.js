@@ -14,8 +14,11 @@ const AvisoEntrada = new Schema ({
         type: String
     },
     entradaPortoChegada: {
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.Mixed,
         ref: 'portos'
+    },
+    entradaOutroPortoChegada: {
+        type: String
     },
     entradaDataHoraChegada: {
         type: String
@@ -24,9 +27,17 @@ const AvisoEntrada = new Schema ({
         type: String
     },
     entradaPortoOrigem: {
+        type: Schema.Types.Mixed,
+        ref: 'portos'    
+    },
+    entradaOutroPortoOrigem: {
         type: String
     },
     entradaPortoDestino: {
+        type: Schema.Types.Mixed,
+        ref: 'portos' 
+    },
+    entradaOutroPortoDestino:{
         type: String
     },
     entradaDataHoraEstimadaSaida: {
