@@ -22,25 +22,47 @@
                     <h4 class="text-center">Dados da Partida</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de Saída</label>
-                        <select name="saidaPortoSaida" class="form-select">
+                        <select name="saidaPortoSaida" class="form-select" onchange="outroPorto('campo1')">
                             {{#each portos}}
                             <option value="{{_id}}">
                                 {{portoNome}}
                             </option>
                             {{/each}}
+                            <option id="outroPortoOption" value="Outros">Outros...</option>
                         </select>
+                        <div id="campo1" hidden>
+                            <label class="input-group-text">Adicione outro porto de Saída</label>
+                            <input name="saidaOutroPortoSaida" class="form-control" type="text">
+                        </div>
                         <label class="input-group-text">Data/Hora de Saída</label>
                         <input name="saidaDataHoraSaida" class="form-control" type="date">
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de Destino</label>
-                        <select name="saidaPortoDestino" class="form-select">
+                        <select name="saidaPortoDestino" class="form-select" onchange="outroPorto('campo2')">
                             {{#each portos}}
                             <option value="{{_id}}">
                                 {{portoNome}}
                             </option>
                             {{/each}}
+                            <option id="outroPortoOption" value="Outros">Outros...</option>
                         </select>
+                        <div id="campo2" hidden>
+                            <label class="input-group-text">Adicione outro porto de Destino</label>
+                            <input name="saidaOutroPortoDestino" class="form-control" type="text">
+                        </div>
+                        <script>
+                        function outroPorto(campo) {
+                            var outroPortoOption = document.getElementById('outroPortoOption');
+                            var outroPortoDiv = document.getElementById(campo);
+
+                            if (outroPortoOption.value == 'Outros') {
+                            outroPortoDiv.hidden = false;
+                            } else {
+                            outroPortoDiv.hidden = true;
+                            }
+                        }
+                        </script>
                         <label class="input-group-text">Data/Hora Estimada de Chegada</label>
                         <input name="saidaDataHoraChegada" class="form-control" type="date">
                     </div>

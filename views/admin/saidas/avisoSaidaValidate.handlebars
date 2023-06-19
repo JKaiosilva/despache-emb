@@ -30,31 +30,53 @@
                     <h4 class="text-center">Dados da Partida</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de Saída</label>
-                        <input class="form-control" type="text" value="{{portoValidSaida.portoNome}}" disabled>
+                        <input class="form-control" type="text" value="{{portoSaida.portoNome}}" disabled>
                         <label class="input-group-text">Redefinir Porto de Saída</label>
-                            <select name="saidaPortoSaida" class="form-select">
-                                <option value="{{avisoSaidas.saidaPortoSaida}}">Já Selecionado: {{portoValidSaida.portoNome}}</option>
+                            <select name="saidaPortoSaida" class="form-select" onchange="outroPorto('campo1')">
+                                <option value="{{avisoSaidas.saidaPortoSaida}}">Já Selecionado: {{portoSaida.portoNome}}</option>
                                 {{#each portos}}
                                     <option value="{{_id}}">
                                 {{portoNome}}
                                     </option>
                                 {{/each}}
+                            <option id="outroPortoOption" value="Outros">Outros...</option>
                             </select>
+                        <div id="campo1" hidden>
+                            <label class="input-group-text">Adicione outro porto de Destino</label>
+                            <input value="{{portoSaida.portoNome}}" name="saidaOutroPortoSaida" class="form-control" type="text">
+                        </div>
                         <label class="input-group-text">Data/Hora de Saída</label>
                         <input name="saidaDataHoraSaida" class="form-control" type="date" value="{{avisoSaidas.saidaDataHoraSaida}}">
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de Destino</label>
-                        <input class="form-control" type="text" value="{{portoValidDestino.portoNome}}" disabled>
+                        <input class="form-control" type="text" value="{{portoDestino.portoNome}}" disabled>
                         <label class="input-group-text">Redefinir Porto de Destino</label>
-                            <select name="saidaPortoDestino" class="form-select">
-                                <option value="{{avisoSaidas.saidaPortoDestino}}">Já Selecionado: {{portoValidDestino.portoNome}}</option>
+                            <select name="saidaPortoDestino" class="form-select" onchange="outroPorto('campo2')">
+                                <option value="{{avisoSaidas.saidaPortoDestino}}">Já Selecionado: {{portoDestino.portoNome}}</option>
                                 {{#each portos}}
                                     <option value="{{_id}}">
                                 {{portoNome}}
                                     </option>
                                 {{/each}}
+                                <option id="outroPortoOption" value="Outros">Outros...</option>
                             </select>
+                        <div id="campo2" hidden>
+                            <label class="input-group-text">Adicione outro porto de Destino</label>
+                            <input value="{{portoDestino.portoNome}}" name="saidaOutroPortoDestino" class="form-control" type="text">
+                        </div>
+                        <script>
+                        function outroPorto(campo) {
+                            var outroPortoOption = document.getElementById('outroPortoOption');
+                            var outroPortoDiv = document.getElementById(campo);
+
+                            if (outroPortoOption.value == 'Outros') {
+                            outroPortoDiv.hidden = false;
+                            } else {
+                            outroPortoDiv.hidden = true;
+                            }
+                        }
+                        </script>
                         <label class="input-group-text">Data/Hora Estimada de Chegada</label>
                         <input name="saidaDataHoraChegada" class="form-control" type="date" value="{{avisoSaidas.saidaDataHoraChegada}}">
                     </div>

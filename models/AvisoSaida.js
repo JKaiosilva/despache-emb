@@ -14,15 +14,21 @@ const AvisoSaida = new Schema({
 
     },
     saidaPortoSaida: {
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.Mixed,
         ref: 'portos'
+    },
+    saidaOutroPortoSaida: {
+        type: String
     },
     saidaDataHoraSaida: {
 
     },
     saidaPortoDestino: {
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.Mixed,
         ref: 'portos'
+    },
+    saidaOutroPortoDestino: {
+        type: String
     },
     saidaDataHoraChegada: {
 
