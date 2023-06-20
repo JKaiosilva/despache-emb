@@ -43,18 +43,19 @@ router.get('/formulario/despacho', eUser, async(req, res) => {
     try{
         const dataHoje = Date.now()
         const tripulantes = await Tripulante.find({tripulanteValidadeCIRNumber: {$gte: dataHoje}}).lean()
-        const comboios = await Comboio.find({usuarioID: req.user._id}).lean()
+        const comboios = await Comboio.find({usuarioId: req.user._id}).lean()
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id, embarcacaoValidadeNumber: {$gte: dataHoje}}).lean()
         const portos = await Porto.find().lean()
-        res.render('formulario/despachos/despacho', 
-            {embarcacoes: embarcacoes,
-            tripulantes: tripulantes,
-            portos: portos,
-            comboios: comboios
+            res.render('formulario/despachos/despacho', 
+            {
+                embarcacoes: embarcacoes,
+                tripulantes: tripulantes,
+                portos: portos,
+                comboios: comboios
             })
     }catch(err){
-        req.flash('error_msg', 'Erro interno ao mostrar formulario')
-        res.redirect('formulario/preform')
+        req.flash('error_msg', `Erro ao mostrar formulário de adição de Despacho (${err})`)
+        res.redirect('/formulario')
     }
 })
 
@@ -98,11 +99,11 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
     }
     new Despacho(novoDespacho).save()
         req.flash('success_msg', 'Despacho enviado com sucesso')
-        res.redirect('/')
+        res.redirect('/formulario')
 
 }catch(err){
-    req.flash('error_msg', 'Erro interno, tente novamente')
-    res.redirect('/')
+    req.flash('error_msg', `Erro ao enviar formulário de Despacho (${err})`)
+    res.redirect('/formulario')
 }
 })
 
@@ -129,7 +130,8 @@ router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
         const avisoSaidas = await AvisoSaida.find({saidaDespacho: despachos._id}).lean()
         const comboios  = await Comboio.findOne({_id: despachos.despachoComboios}).lean()
             res.render('formulario/despachos/despachoVizu',
-                {despachos: despachos,
+            {
+                despachos: despachos,
                 tripulantes: tripulantes,
                 embarcacoes: embarcacoes,
                 comboios: comboios,
@@ -137,10 +139,10 @@ router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
                 avisoEntradas: avisoEntradas,
                 avisoSaidas: avisoSaidas,
                 hidden: hidden
-                })
+            })
     }catch(err){
         console.log(err)
-        req.flash('error_msg', 'Erro interno ao mostrar formulário')
+        req.flash('error_msg', `Erro ao visualizar este Despacho (${err})`)
         res.redirect('/formulario')
     }
 })
@@ -155,11 +157,12 @@ router.get('/despachos', eUser, async (req, res) => {
     try{
         const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
             res.render('formulario/despachos/despachos', 
-                {despachos: despachos,
-                    admin: admin
+            {
+                despachos: despachos,
+                admin: admin
             })
     }catch(err){
-        req.flash('error_msg', 'Erro ao mostrar página')
+        req.flash('error_msg', `Erro ao listar Despachos (${err})`)
         res.redirect('/formulario')
     }
 })
@@ -191,14 +194,15 @@ router.get('/despachos/:page', eUser, async (req, res) => {
             }
             const despachos = await Despacho.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({despachoData: 'desc'})
                 res.render('formulario/despachos/despachosPage', 
-                    {despachos: despachos,
-                        nextPage: nextPage,
-                            previousPage: previousPage,
-                                hidden: hidden,
-                                    admin: admin
-                    })
+                {
+                    despachos: despachos,
+                    nextPage: nextPage,
+                    previousPage: previousPage,
+                    hidden: hidden,
+                    admin: admin
+                })
         }catch(err){
-            req.flash('error_msg', 'Erro ao mostrar página')
+            req.flash('error_msg', `Erro ao paginar Despachos (${err})`)
             res.redirect('/formulario')
         }
 })
@@ -236,8 +240,8 @@ router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
             })
     }catch(err){
         console.log(err)
-        req.flash('error_msg', 'Erro interno ao mostrar despachos!')
-        res.redirect('/')
+        req.flash('error_msg', `Erro ao mostrar página de validação de Despacho (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -281,11 +285,11 @@ router.post('/admin/despachoValidate', Admin, async(req, res) => {
              despachoValidade: Date.parse(req.body.despachoDataValidade)
          })
          req.flash('success_msg', 'Despacho Validade com sucesso!')
-         res.redirect('painel')
+         res.redirect('/admin/painel')
      }catch(err){
          console.log(err)
-         req.flash('error_msg', 'Erro ao validar despachos!')
-         res.redirect('painel')
+         req.flash('error_msg', `Erro ao validar este Despacho (${err})`)
+         res.redirect('/admin/painel')
      }
  })
 
@@ -295,10 +299,13 @@ router.post('/admin/despachoValidate', Admin, async(req, res) => {
 
 router.get('/admin/despachos', Admin, (req, res) => {
     Despacho.find().limit(5).lean().sort({ despachoData: 'desc' }).then((despachos) => {
-        res.render('admin/despachos/listaDespacho', { despachos: despachos })
+        res.render('admin/despachos/listaDespacho', 
+        { 
+            despachos: despachos 
+        })
     }).catch((err) => {
-        req.flash('error_msg', 'Erro interno ao mostrar despachos!')
-        res.redirect('/')
+        req.flash('error_msg', `Erro ao listar Despachos (${err})`)
+        res.redirect('/admin/painel')
     })
 })
 
@@ -334,8 +341,8 @@ router.get('/admin/despachos/:page', Admin, async (req, res) => {
                 hidden: hidden
             })
     } catch (err) {
-        req.flash('error_msg', 'Erro interno ao mostrar despachos!')
-        res.redirect('/')
+        req.flash('error_msg', `Erro ao paginar Despachos (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -550,8 +557,8 @@ router.get('/despacho/:id/pdf', Admin, async (req, res) => {
           stream.pipe(res);
         });
     }catch(err){
-        req.flash('error_msg', 'Erro ao gerar PDF')
-        res.redirect('/')
+        req.flash('error_msg', `Erro ao gerar PDF deste Despacho (${err})`)
+        res.redirect('/admin/painel')
     }  
 })
 
