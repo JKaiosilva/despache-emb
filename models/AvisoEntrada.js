@@ -104,6 +104,9 @@ const AvisoEntrada = new Schema ({
     entradaMesAnoAtual: {
         type: String,
         default: []
+    },
+    entradaNovo: {
+        type: Boolean
     }
 })
 

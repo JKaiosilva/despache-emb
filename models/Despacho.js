@@ -97,6 +97,9 @@ const Despacho = new Schema ({
     depachoMesAnoAtual: {
         type: String,
         default: []
+    },
+    despachoNovo: {
+        type: Boolean
     }
 
 })

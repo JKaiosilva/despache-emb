@@ -34,6 +34,10 @@ require('dotenv').config();
 const cheerio = require('cheerio')
 const bcrypt = require('bcryptjs')
 
+
+//----  Configuração para upload de imagens do aviso    ----//
+
+
 const upload = multer({
     storage: multer.diskStorage({
         destination: 'uploads/',
@@ -44,6 +48,65 @@ const upload = multer({
     }),
 })
 
+
+//----  Rota para formulario de adição de aviso    ----//
+
+
+router.get('/admin/addaviso', Admin, (req, res) => {
+    res.render('admin/avisos/addaviso')
+})
+
+
+//----  Rota para postar aviso   ----//
+
+
+router.post('/admin/avisos/novo', upload.single('foto'), async (req, res) => {
+    try {
+        const novoAviso = {
+            titulo: req.body.titulo,
+            descricao: req.body.descricao,
+            conteudo: req.body.conteudo,
+            avisoData: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+            avisoMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+        }
+
+        if (req.file) {
+            const contentType = mime.getType(req.file.originalname);
+            const data = fs.readFileSync(req.file.path);
+            novoAviso.contentType = contentType;
+            novoAviso.data = data.toString('base64');
+            excluir = fs.unlink(`./uploads/${req.file.originalname}`, (err => {
+            }))
+
+        }
+
+        await new Aviso(novoAviso).save();
+        req.flash('success_msg', 'Aviso postado com sucesso')
+        res.redirect('/admin/avisos')
+    } catch (err) {
+        req.flash('error_msg', 'Houve um erro interno ao postar aviso')
+        res.redirect('/admin/avisos')
+    }
+});
+
+
+//----  Rota para deletar aviso   ----//
+
+
+router.post('/admin/avisos/deletar', Admin, (req, res) => {
+    Aviso.deleteOne({ _id: req.body.id }).then(() => {
+        req.flash('success_msg', 'Aviso deletado com sucesso!')
+        res.redirect('/admin/avisos')
+    }).catch((err) => {
+        req.flash('error_msg', 'Erro ao excluier aviso')
+        res.redirect('/admin/avisos')
+    })
+})
+
+
+//----  Rota de listagem de avisos    ----//
+
+
 router.get('/admin/avisos', Admin, async (req, res) => {
     try {
         const avisos = await Aviso.find().limit(5).lean().sort({ avisoData: 'desc' })
@@ -52,6 +115,10 @@ router.get('/admin/avisos', Admin, async (req, res) => {
         res.redirect('/painel')
     }
 })
+
+
+//----  Rota de paginação de avisos    ----//
+
 
 router.get('/admin/avisos/:page', Admin, async (req, res) => {
     const page = req.params.page || 1;
@@ -84,50 +151,6 @@ router.get('/admin/avisos/:page', Admin, async (req, res) => {
 
     }
 })
-
-router.get('/admin/addaviso', Admin, (req, res) => {
-    res.render('admin/avisos/addaviso')
-})
-
-router.post('/admin/avisos/novo', upload.single('foto'), async (req, res) => {
-    try {
-        const novoAviso = {
-            titulo: req.body.titulo,
-            descricao: req.body.descricao,
-            conteudo: req.body.conteudo,
-            avisoData: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-            avisoMesAnoAtual: moment(Date.now()).format('MM/YYYY')
-        }
-
-        if (req.file) {
-            const contentType = mime.getType(req.file.originalname);
-            const data = fs.readFileSync(req.file.path);
-            novoAviso.contentType = contentType;
-            novoAviso.data = data.toString('base64');
-            excluir = fs.unlink(`./uploads/${req.file.originalname}`, (err => {
-            }))
-
-        }
-
-        await new Aviso(novoAviso).save();
-        req.flash('success_msg', 'Aviso postado com sucesso')
-        res.redirect('/admin/avisos')
-    } catch (err) {
-        req.flash('error_msg', 'Houve um erro interno ao postar aviso')
-        res.redirect('/admin/avisos')
-    }
-});
-
-router.post('/admin/avisos/deletar', Admin, (req, res) => {
-    Aviso.deleteOne({ _id: req.body.id }).then(() => {
-        req.flash('success_msg', 'Aviso deletado com sucesso!')
-        res.redirect('/admin/avisos')
-    }).catch((err) => {
-        req.flash('error_msg', 'Erro ao excluier aviso')
-        res.redirect('/admin/avisos')
-    })
-})
-
 
 
 module.exports = router

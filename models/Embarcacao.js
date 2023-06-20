@@ -54,6 +54,9 @@ const Embarcacao = new Schema ({
     embarcacaoMesAnoAtual: {
         type: String,
         default: []
+    },
+    embarcacaoNovo: {
+        type: Boolean
     }
 
 })

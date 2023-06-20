@@ -35,113 +35,17 @@ require('dotenv').config();
 const cheerio = require('cheerio')
 
 
-router.get('/admin/listaUsers', Admin, (req, res) => {
-    Usuario.find().lean().sort({ nome: 'asc' }).then((usuarios) => {
-        res.render('admin/users/users', { usuarios: usuarios })
-    }).catch((err) => {
-        req.flash('error_msg', 'Erro interno ao mostrar usuarios!')
-        res.redirect('/')
-    })
-})
 
 
-router.get('/admin/listaUsers/:page', Admin, async (req, res) => {
-    const page = req.params.page || 1;
-    const limit = 5;
-    const skip = (page - 1) * limit;
-    try {
-        const contagem = await Usuario.count()
-        if (parseInt(page) * limit >= contagem) {
-            nextPage = ''
-            hidden = 'hidden'
-        } else {
-            nextPage = parseInt(page) + 1
-            hidden = ''
-        }
-
-        if (parseInt(page) == 2) {
-            previousPage = ''
-        } else {
-            previousPage = parseInt(page) - 1
-        }
-        const usuarios = await Usuario.find().skip(skip).limit(limit).lean().sort({ nome: 'desc' })
-        res.render('admin/users/usersPage',
-            {
-                usuarios: usuarios,
-                nextPage: nextPage,
-                previousPage: previousPage,
-                hidden: hidden
-            })
-    } catch (err) {
-
-    }
-})
-
-
-router.get('/admin/users/usuariosVizu/:id', Admin, (req, res) => {
-    Usuario.find({ _id: req.params.id }).lean().then((usuario) => {
-        res.render('admin/users/usuariosVizu', { usuario: usuario })
-    }).catch((err) => {
-        req.flash('error_msg', 'Erro ao mostrar usuarios.')
-        res.redirect('admin/users/users')
-    })
-})
-
-
-router.get('/admin/users/usuariosEdit/:id', Admin, async (req, res) => {
-    try{
-        const usuario = await Usuario.findOne({_id: req.params.id}).lean()
-        res.render('admin/users/usuariosEdit', {
-            usuario: usuario
-        })
-    }catch(err){
-        console.log(err)
-        req.flash('error_msg', 'Erro ao mostrar usuarios.')
-        res.redirect('admin/users/users')
-    }
-})
-
-
-router.post('/admin/users/usuarioEdit', Admin, async(req, res) => {
-    try{
-        const id = req.body.id
-        const usuario = await Usuario.find({ _id: id }).lean();
-
-        if (!usuario) {
-          req.flash('error_msg', 'Usuário não encontrado.');
-          return res.redirect('/admin/painel');
-        }
-
-        bcrypt.genSalt(10, (err, salt)  =>  {
-            bcrypt.hash(req.body.senha, salt, async (err, hash)  =>  {
-                if(err){
-                    console.log(err)
-                    req.flash('error_msg', 'Houve um erro ao salvar usuario')
-                }
-                await Usuario.updateOne({_id: id},{
-                    nome: req.body.nome,
-                    email:req.body.email,
-                    CPF: req.body.CPF,
-                    senha: hash
-                })
-            })
-        })
-
-
-        req.flash('success_msg', 'Usuario editado com sucesso')
-        res.redirect('/admin/painel')
-    }catch(err){
-        console.log(err)
-        req.flash('error_msg', 'Erro ao editar usuario.')
-        res.redirect('/admin/painel')
-    }
-})
-
+//----    Rota para formulário de cadastro de Usuário    ----//
 
 
 router.get('/usuarios/cadastro', (req, res) => {
     res.render('usuarios/cadastro')
 })
+
+
+//----    Rota de postagem de cadastro de Usuário   ----//
 
 
 router.post('/usuarios/cadastro', (req, res) => {
@@ -205,9 +109,29 @@ router.post('/usuarios/cadastro', (req, res) => {
 })
 
 
+//----    Rota de visualização de Usuário(admin)   ----//
+
+
+router.get('/admin/users/usuariosVizu/:id', Admin, (req, res) => {
+    Usuario.find({ _id: req.params.id }).lean().then((usuario) => {
+        res.render('admin/users/usuariosVizu', { usuario: usuario })
+    }).catch((err) => {
+        req.flash('error_msg', 'Erro ao mostrar usuarios.')
+        res.redirect('admin/users/users')
+    })
+})
+
+
+//----  Rota para visualização de login de Usuário   ----//
+
+
 router.get('/usuarios/login', (req, res) => {
     res.render('usuarios/login')
 })
+
+
+//----    Rota de postagem de login de Usuário   ----//
+
 
 router.post('/usuarios/login', (req, res, next) => {
     passport.authenticate('local', {
@@ -216,6 +140,114 @@ router.post('/usuarios/login', (req, res, next) => {
         failureFlash: true,
     })(req, res, next)
 })
+
+
+//----    Rota para formulário de edição de Usuário    ----//
+
+
+router.get('/admin/users/usuariosEdit/:id', Admin, async (req, res) => {
+    try{
+        const usuario = await Usuario.findOne({_id: req.params.id}).lean()
+        res.render('admin/users/usuariosEdit', {
+            usuario: usuario
+        })
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', 'Erro ao mostrar usuarios.')
+        res.redirect('admin/users/users')
+    }
+})
+
+
+//----    Rota para postagem de edição de Usuário   ----//
+
+
+router.post('/admin/users/usuarioEdit', Admin, async(req, res) => {
+    try{
+        const id = req.body.id
+        const usuario = await Usuario.find({ _id: id }).lean();
+
+        if (!usuario) {
+          req.flash('error_msg', 'Usuário não encontrado.');
+          return res.redirect('/admin/painel');
+        }
+
+        bcrypt.genSalt(10, (err, salt)  =>  {
+            bcrypt.hash(req.body.senha, salt, async (err, hash)  =>  {
+                if(err){
+                    console.log(err)
+                    req.flash('error_msg', 'Houve um erro ao salvar usuario')
+                }
+                await Usuario.updateOne({_id: id},{
+                    nome: req.body.nome,
+                    email:req.body.email,
+                    CPF: req.body.CPF,
+                    senha: hash
+                })
+            })
+        })
+
+
+        req.flash('success_msg', 'Usuario editado com sucesso')
+        res.redirect('/admin/painel')
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', 'Erro ao editar usuario.')
+        res.redirect('/admin/painel')
+    }
+})
+
+
+//----    Rota de listagem de Usuários    ----//
+
+
+router.get('/admin/listaUsers', Admin, (req, res) => {
+    Usuario.find().lean().sort({ nome: 'asc' }).then((usuarios) => {
+        res.render('admin/users/users', { usuarios: usuarios })
+    }).catch((err) => {
+        req.flash('error_msg', 'Erro interno ao mostrar usuarios!')
+        res.redirect('/')
+    })
+})
+
+
+//----    Rota de paginação de Usuários     ----//
+
+
+router.get('/admin/listaUsers/:page', Admin, async (req, res) => {
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+    try {
+        const contagem = await Usuario.count()
+        if (parseInt(page) * limit >= contagem) {
+            nextPage = ''
+            hidden = 'hidden'
+        } else {
+            nextPage = parseInt(page) + 1
+            hidden = ''
+        }
+
+        if (parseInt(page) == 2) {
+            previousPage = ''
+        } else {
+            previousPage = parseInt(page) - 1
+        }
+        const usuarios = await Usuario.find().skip(skip).limit(limit).lean().sort({ nome: 'desc' })
+        res.render('admin/users/usersPage',
+            {
+                usuarios: usuarios,
+                nextPage: nextPage,
+                previousPage: previousPage,
+                hidden: hidden
+            })
+    } catch (err) {
+
+    }
+})
+
+
+//----   Rota de logout de Usuário   ----//
 
 
 router.get('/usuarios/logout', (req, res) => {
@@ -227,6 +259,9 @@ router.get('/usuarios/logout', (req, res) => {
         res.redirect('/')
     })
 })
+
+
+//----    Rota de visualização de perfil de Usuário(user)     ----//
 
 
 router.get('/usuarios/perfil', eUser, (req, res) => {

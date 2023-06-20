@@ -34,6 +34,104 @@ const cheerio = require('cheerio')
 const bcrypt = require('bcryptjs')
 
 
+
+//----  Rota para formulário de cadastro de Tripulante    ----//
+
+
+router.get('/admin/addTripulante', Admin, async (req, res) => {
+    try{
+        res.render('admin/tripulantes/addTripulante')
+    }catch(err){
+        req.flash('error_msg', 'Erro interno')
+        res.redirect('admin/painel')
+    }
+})
+
+
+//----  Rota de postagem de Tripulante   ----//
+
+
+router.post('/admin/addTripulante', Admin, async (req, res) => {
+    try {
+        const novoTripulante = {
+            usuarioID: req.user._id,
+            tripulanteNome: req.body.tripulanteNome,
+            tripulanteGrau: req.body.tripulanteGrau,
+            tripulanteDataNascimento: req.body.tripulanteDataNascimento,
+            tripulanteNCIR: req.body.tripulanteNCIR,
+            tripulanteValidadeCIR: req.body.tripulanteValidadeCIR,
+            tripulanteValidadeCIRNumber: Date.parse(req.body.tripulanteValidadeCIR),
+            tripulanteDataCadastro: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+            tripulanteDataNumber: Date.now(),
+            tripulanteMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+        }
+        await new Tripulante(novoTripulante).save()
+        req.flash('success_msg', 'Tripulante cadastrado com sucesso')
+        res.redirect('painel')
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao cadastrar tripulante.')
+        res.redirect('painel')
+    }
+})
+
+
+//----  Rota de visualização de Tripulante   ----//
+
+
+router.get('/admin/tripulantesVizu/:id', Admin, async(req, res) => {
+    try{
+        const tripulantes = await Tripulante.findOne({_id: req.params.id}).lean()
+            res.render('admin/tripulantes/tripulantesVizu', 
+                {tripulantes: tripulantes
+            })
+    }catch(err){
+        req.flash('error_msg', 'Erro ao mostrar tripulante.')
+        res.redirect('painel')
+    }
+})
+
+
+//----    Rota de formulário de edição de Tripulante    ----//
+
+
+router.get('/admin/tripulantesEdit/:id', Admin, async(req, res) => {
+    try{
+        const tripulante = await Tripulante.findOne({_id: req.params.id}).lean()
+            res.render('admin/tripulantes/tripulantesEdit', {
+                tripulante: tripulante
+            })
+    }catch(err){
+        req.flash('error_msg', 'Erro ao mostrar tripulante.')
+        res.redirect('painel')
+    }
+})
+
+
+//----  Rota de postagem para edição de Tripulante   ----//
+
+
+router.post('/admin/tripulantesEdit', Admin, async(req, res) => {
+    try{
+        await Tripulante.updateOne({_id: req.body.id}, {
+            tripulanteNome: req.body.tripulanteNome,
+            tripulanteGrau: req.body.tripulanteGrau,
+            tripulanteDataNascimento: req.body.tripulanteDataNascimento,
+            tripulanteNCIR: req.body.tripulanteNCIR,
+            tripulanteValidadeCIR: req.body.tripulanteValidadeCIR,
+            tripulanteValidadeCIRNumber: Date.parse(req.body.tripulanteValidadeCIR),
+        })
+        req.flash('success_msg', 'Tripulante atualizado com sucesso!')
+        res.redirect('painel')
+    }catch(err){
+        req.flash('error_msg', 'Erro ao editar tripulante.')
+        res.redirect('painel')
+    }
+})
+
+
+//----    Rota de listagem de Tripulantes    ----//
+
+
 router.get('/admin/tripulantes', Admin, async (req, res) => {
     try {
         const tripulantes = await Tripulante.find().lean().sort({ tripulanteNome: 'asc' })
@@ -46,6 +144,9 @@ router.get('/admin/tripulantes', Admin, async (req, res) => {
         res.redirect('admin/painel')
     }
 })
+
+
+//----    Rota de paginação de Tripulantes     ----//
 
 
 router.get('/admin/tripulantes/:page', Admin, async(req, res) => {
@@ -82,83 +183,7 @@ router.get('/admin/tripulantes/:page', Admin, async(req, res) => {
 })
 
 
-router.get('/admin/addTripulante', Admin, async (req, res) => {
-    try{
-        res.render('admin/tripulantes/addTripulante')
-    }catch(err){
-        req.flash('error_msg', 'Erro interno')
-        res.redirect('admin/painel')
-    }
-})
-
-
-router.post('/admin/addTripulante', Admin, async (req, res) => {
-    try {
-        const novoTripulante = {
-            usuarioID: req.user._id,
-            tripulanteNome: req.body.tripulanteNome,
-            tripulanteGrau: req.body.tripulanteGrau,
-            tripulanteDataNascimento: req.body.tripulanteDataNascimento,
-            tripulanteNCIR: req.body.tripulanteNCIR,
-            tripulanteValidadeCIR: req.body.tripulanteValidadeCIR,
-            tripulanteValidadeCIRNumber: Date.parse(req.body.tripulanteValidadeCIR),
-            tripulanteDataCadastro: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-            tripulanteDataNumber: Date.now(),
-            tripulanteMesAnoAtual: moment(Date.now()).format('MM/YYYY')
-        }
-        await new Tripulante(novoTripulante).save()
-        req.flash('success_msg', 'Tripulante cadastrado com sucesso')
-        res.redirect('painel')
-    } catch (err) {
-        req.flash('error_msg', 'Erro ao cadastrar tripulante.')
-        res.redirect('painel')
-    }
-})
-
-
-router.get('/admin/tripulantesVizu/:id', Admin, async(req, res) => {
-    try{
-        const tripulantes = await Tripulante.findOne({_id: req.params.id}).lean()
-            res.render('admin/tripulantes/tripulantesVizu', 
-                {tripulantes: tripulantes
-            })
-    }catch(err){
-        req.flash('error_msg', 'Erro ao mostrar tripulante.')
-        res.redirect('painel')
-    }
-})
-
-
-router.get('/admin/tripulantesEdit/:id', Admin, async(req, res) => {
-    try{
-        const tripulante = await Tripulante.findOne({_id: req.params.id}).lean()
-            res.render('admin/tripulantes/tripulantesEdit', {
-                tripulante: tripulante
-            })
-    }catch(err){
-        req.flash('error_msg', 'Erro ao mostrar tripulante.')
-        res.redirect('painel')
-    }
-})
-
-
-router.post('/admin/tripulantesEdit', Admin, async(req, res) => {
-    try{
-        await Tripulante.updateOne({_id: req.body.id}, {
-            tripulanteNome: req.body.tripulanteNome,
-            tripulanteGrau: req.body.tripulanteGrau,
-            tripulanteDataNascimento: req.body.tripulanteDataNascimento,
-            tripulanteNCIR: req.body.tripulanteNCIR,
-            tripulanteValidadeCIR: req.body.tripulanteValidadeCIR,
-            tripulanteValidadeCIRNumber: Date.parse(req.body.tripulanteValidadeCIR),
-        })
-        req.flash('success_msg', 'Tripulante atualizado com sucesso!')
-        res.redirect('painel')
-    }catch(err){
-        req.flash('error_msg', 'Erro ao editar tripulante.')
-        res.redirect('painel')
-    }
-})
+//----    Rota de formulação de PDF de Tripulante   ----//
 
 
 router.get('/tripulantes/:id/pdf', Admin, async(req, res) => {
@@ -205,7 +230,6 @@ router.get('/tripulantes/:id/pdf', Admin, async(req, res) => {
         res.redirect('/') 
     }
 })
-
 
 
 module.exports = router

@@ -36,6 +36,9 @@ const cheerio = require('cheerio')
 const bcrypt = require('bcryptjs')
 
 
+//----    Rota do Painel admin     ----//
+
+
 router.get('/admin/painel', Admin, async (req, res) => {
     try {
         const API_KEY = process.env.API_KEY
@@ -76,8 +79,6 @@ router.get('/admin/painel', Admin, async (req, res) => {
             }
         })
 
-
-
         const dataHoje = moment(Date.now()).format('DD/MM/YYYY HH:mm');
 
         var avisos = await Aviso.find().count();
@@ -113,6 +114,71 @@ router.get('/admin/painel', Admin, async (req, res) => {
 });
 
 
+//----    Rota da página de informações da plataforma     ----//
+
+router.get('/pages/sobrenos', async (req, res) => {
+    try{
+        res.render('pages/sobrenos')
+    }catch(err){
+        req.flash('error_msg', 'Erro interno')
+        res.redirect('/')
+    }
+})
+
+
+//----     Rota dos termos de Uso    ----//
+
+
+router.get('/pages/termosUso', async (req, res) => {
+    try{
+        res.render('pages/termosUso')
+    }catch(err){
+        req.flash('error_msg', 'Erro interno')
+        res.redirect('/')
+    }
+})
+
+
+//----    Rota da paginação dos avisos    ----//
+
+
+router.get('/page/:page', async (req, res) => {
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+        try {
+            const contagem = await Aviso.count()
+                if(parseInt(page) * limit >= contagem){
+                    nextPage = ''
+                    hidden = 'hidden'
+                }else{
+                    nextPage = `/page/${parseInt(page) + 1}`
+                    hidden = ''
+                }
+
+                if(parseInt(page) == 2){
+                    previousPage = '/'
+                }else {
+                    previousPage = `/page/${parseInt(page) -1}`
+                }
+
+                const avisos = await Aviso.find().skip(skip).limit(limit).lean().sort({data: 'desc'})
+                    res.render('pages/page', 
+                        {
+                            avisos: avisos, 
+                            nextPage: nextPage, 
+                            previousPage: previousPage,
+                            hidden: hidden
+
+                            })
+        } catch (err) {
+    }
+})
+
+
+//----    Rota do painel de Formulários do usuário    ----//
+
+
 router.get('/formulario', eUser, async (req, res) => {
     try{
         const dataHoje = Date.now()
@@ -142,14 +208,15 @@ router.get('/formulario', eUser, async (req, res) => {
             alertHidden = 'hidden'
         }
             res.render('formulario/preform', 
-            {despachos: despachos, 
+            {
+                despachos: despachos, 
                 avisoEntradas: avisoEntradas, 
-                    avisoSaidas: avisoSaidas, 
-                        embarcacoes: embarcacoes,
-                            comboios: comboios,
-                                hidden: hidden,
-                                    alertHidden: alertHidden,
-                                        docHidden: docHidden,
+                avisoSaidas: avisoSaidas, 
+                embarcacoes: embarcacoes,
+                comboios: comboios,
+                hidden: hidden,
+                alertHidden: alertHidden,
+                docHidden: docHidden,
                                         
             })
     }catch(err){
@@ -158,87 +225,6 @@ router.get('/formulario', eUser, async (req, res) => {
         res.redirect('/')
     }
 })
-
-
-router.get('/pages/sobrenos', async (req, res) => {
-    try{
-        res.render('pages/sobrenos')
-    }catch(err){
-        req.flash('error_msg', 'Erro interno')
-        res.redirect('/')
-    }
-})
-
-
-router.get('/pages/termosUso', async (req, res) => {
-    try{
-        res.render('pages/termosUso')
-    }catch(err){
-        req.flash('error_msg', 'Erro interno')
-        res.redirect('/')
-    }
-})
-
-
-
-router.get('/page/:page', async (req, res) => {
-    const page = req.params.page || 1;
-    const limit = 5;
-    const skip = (page - 1) * limit;
-        try {
-            const contagem = await Aviso.count()
-                if(parseInt(page) * limit >= contagem){
-                    nextPage = ''
-                    hidden = 'hidden'
-                }else{
-                    nextPage = `/page/${parseInt(page) + 1}`
-                    hidden = ''
-                }
-
-                if(parseInt(page) == 2){
-                    previousPage = '/'
-                }else {
-                    previousPage = `/page/${parseInt(page) -1}`
-                }
-
-                const avisos = await Aviso.find().skip(skip).limit(limit).lean().sort({data: 'desc'})
-                    res.render('pages/page', 
-                        {avisos: avisos, 
-                            nextPage: nextPage, 
-                                previousPage: previousPage,
-                                    hidden: hidden
-
-                            })
-        } catch (err) {
-    }
-})
-
-
-router.get('/admin/relatorios', Admin, async (req, res) => {
-    try{
-        const relatorios = await Relatorio.find().lean().sort({mesAtual: 'asc'})
-            res.render('admin/relatorios/relatorios', 
-                {relatorios: relatorios
-                })
-    }catch(err){
-        req.flash('error_msg', 'Erro interno ao gerar relatório')
-        res.redirect('/admin/painel')
-    }
-})
-
-
-router.get('/admin/relatorios/:id', Admin, async (req, res) => {
-    try{
-        const relatorios = await Relatorio.findOne({_id: req.params.id}).lean()
-            res.render('admin/relatorios/relatoriosVizu', 
-                {relatorios: relatorios
-                })
-    }catch(err){
-        req.flash('error_msg', 'Erro interno ao gerar relatório')
-        res.redirect('/admin/painel')
-    }
-})
-
 
 
 module.exports = router

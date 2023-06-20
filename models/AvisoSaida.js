@@ -88,6 +88,9 @@ const AvisoSaida = new Schema({
     saidaMesAnoAtual: {
         type: String,
         default: []
+    },
+    saidaNovo: {
+        type: Boolean
     }
 
 })

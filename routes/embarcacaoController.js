@@ -34,6 +34,175 @@ const cheerio = require('cheerio')
 const bcrypt = require('bcryptjs')
 
 
+//----  Rota para formulário de Embarcação    ----//
+
+
+router.get('/formulario/addEmbarcacao', eUser, async (req, res) => {
+    try{
+        res.render('formulario/embarcacoes/addEmbarcacao')
+    }catch(err){
+        req.flash('error_msg', 'Erro interno')
+        res.redirect('/')
+    }
+})
+
+
+//----  Rota de Postagem de formulário de Embarcação   ----//
+
+
+router.post('/formulario/addEmbarcacao', eUser, (req, res) => {
+    const novaEmbarcacao = {
+        usuarioID: req.user._id,
+        embarcacaoNome: req.body.embarcacaoNome,
+        embarcacaoTipo: req.body.embarcacaoTipo,
+        embarcacaoBandeira: req.body.embarcacaoBandeira,
+        embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,
+        embarcacaoArqueacaoBruta: req.body.embarcacaoArqueacaoBruta,
+        embarcacaoComprimentoTotal: req.body.embarcacaoComprimentoTotal,
+        embarcacaoTonelagemPorteBruto: req.body.embarcacaoTonelagemPorteBruto,
+        embarcacaoCertificadoRegistroAmador: req.body.embarcacaoCertificadoRegistroAmador,
+        embarcacaoArmador: req.body.embarcacaoArmador,
+        embarcacaoNCRA: req.body.embarcacaoNCRA,
+        embarcacaoDataCadastro: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+        embarcacaoData: Date.now(),
+        embarcacaoMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+    }
+    new Embarcacao(novaEmbarcacao).save().then(() => {
+        req.flash('success_msg', 'Embarcação cadastrada com sucesso')
+        res.redirect('/')
+    }).catch((err) => {
+        req.flash('error_msg', 'Erro ao salvar embarcação')
+        res.redirect('/')
+    })
+})
+
+
+//----  Rota de visualização de Embarcação   ----//
+
+
+router.get('/formulario/embarcacaoVizu/:id', eUser, async(req, res) => {
+    try{
+        if(req.user.eAdmin){
+            hidden = ''
+        }else{
+            hidden = 'hidden'
+        }
+        const embarcacoes = await Embarcacao.findOne({_id: req.params.id}).lean()
+        const despachos = await Despacho.find({embarcacao: embarcacoes._id}).lean()
+        const avisoEntradas = await AvisoEntrada.find({embarcacao: embarcacoes._id}).lean()
+        const avisoSaidas = await AvisoSaida.find({embarcacao: embarcacoes._id}).lean()
+            res.render('formulario/embarcacoes/embarcacaoVizu',
+                {embarcacoes: embarcacoes,
+                    despachos: despachos,
+                        avisoEntradas: avisoEntradas,
+                            avisoSaidas: avisoSaidas,
+                                hidden: hidden
+                })
+    }catch(err){
+        req.flash('error_msg', 'Erro ao mostrar Embarcação')
+        res.redirect('/')
+    }
+})
+
+
+//----  Rota de listagem de Embarcação(user)   ----//
+
+
+router.get('/embarcacoes', eUser, async (req, res) => {
+    try{
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({embarcacaoNome: 'asc'})
+            res.render('formulario/embarcacoes/embarcacoes', 
+                {embarcacoes: embarcacoes
+            })
+    }catch(err){
+        req.flash('error_msg', 'Erro ao mostrar página')
+        res.redirect('/formulario')
+    }
+})
+
+
+//----  Rota de paginação de Embarcação(user)   ----//
+
+
+router.get('/embarcacoes/:page', eUser, async (req, res) => {
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+     try{
+        const contagem = await Embarcacao.count({usuarioID: req.user._id})
+        if(parseInt(page) * limit >= contagem){
+            nextPage = ''
+            hidden = 'hidden'
+        }else{
+            nextPage = parseInt(page) + 1
+            hidden = ''
+        }
+
+        if(parseInt(page) == 2){
+            previousPage = ''
+        }else{
+            previousPage = parseInt(page) - 1
+        }
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({embarcacaoNome: 'asc'})
+            res.render('formulario/embarcacoes/embarcacoesPage', 
+                {embarcacoes: embarcacoes,
+                    nextPage: nextPage,
+                        previousPage: previousPage,
+                            hidden: hidden
+                })
+    }catch(err){
+        req.flash('error_msg', 'Erro ao mostrar página')
+        res.redirect('/formulario')
+     }
+})
+
+
+//----  Rota para formulário de editar Embarcação    ----//
+
+
+router.get('/admin/embarcacoesEdit/:id', Admin, async(req, res) => {
+    try{
+        const embarcacao = await Embarcacao.findOne({_id: req.params.id}).lean()
+        res.render('admin/embarcacoes/embarcacaoEdit', {
+            embarcacao: embarcacao
+        })
+    }catch(err){
+
+    }
+})
+
+
+//----  Rota de postagem de edição de Embarcação   ----//
+
+
+router.post('/admin/embarcacoesEdit', Admin, async(req, res) => {
+    try{
+        await Embarcacao.updateOne({_id: req.body.id}, {
+            embarcacaoNome: req.body.embarcacaoNome,
+            embarcacaoTipo: req.body.embarcacaoTipo,
+            embarcacaoBandeira: req.body.embarcacaoBandeira,
+            embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,
+            embarcacaoArqueacaoBruta: req.body.embarcacaoArqueacaoBruta,
+            embarcacaoComprimentoTotal: req.body.embarcacaoComprimentoTotal,
+            embarcacaoTonelagemPorteBruto: req.body.embarcacaoTonelagemPorteBruto,
+            embarcacaoCertificadoRegistroAmador: req.body.embarcacaoCertificadoRegistroAmador,
+            embarcacaoArmador: req.body.embarcacaoArmador,
+            embarcacaoNCRA: req.body.embarcacaoNCRA,
+            embarcacaoValidade: req.body.embarcacaoValidadeNumber,
+            embarcacaoValidadeNumber: Date.parse(req.body.embarcacaoValidadeNumber)
+        })
+        req.flash('success_msg', 'Embarcação editada com sucesso!')
+        res.redirect('painel')
+    }catch(err){
+        req.flash('error_msg', 'Erro ao editar embarcação.')
+        res.redirect('painel')
+    }
+})
+
+
+//----  Rota de listagem de Embarcação(admin)    ----//
+
+
 router.get('/admin/embarcacoes', Admin, (req, res) => {
     Embarcacao.find().limit(5).lean().sort({ EmbarcacaoNome: 'asc' }).then((embarcacoes) => {
         res.render('admin/embarcacoes/listaEmbarcacoes', { embarcacoes: embarcacoes })
@@ -42,6 +211,9 @@ router.get('/admin/embarcacoes', Admin, (req, res) => {
         res.redirect('/')
     })
 })
+
+
+//----  Rota de paginação de Embarcação(admin)     ----//
 
 
 router.get('/admin/embarcacoes/:page', Admin, async (req, res) => {
@@ -77,127 +249,7 @@ router.get('/admin/embarcacoes/:page', Admin, async (req, res) => {
 })
 
 
-router.get('/admin/embarcacoesEdit/:id', Admin, async(req, res) => {
-    try{
-        const embarcacao = await Embarcacao.findOne({_id: req.params.id}).lean()
-        res.render('admin/embarcacoes/embarcacaoEdit', {
-            embarcacao: embarcacao
-        })
-    }catch(err){
-
-    }
-})
-
-
-router.post('/admin/embarcacoesEdit', Admin, async(req, res) => {
-    try{
-        await Embarcacao.updateOne({_id: req.body.id}, {
-            embarcacaoNome: req.body.embarcacaoNome,
-            embarcacaoTipo: req.body.embarcacaoTipo,
-            embarcacaoBandeira: req.body.embarcacaoBandeira,
-            embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,
-            embarcacaoArqueacaoBruta: req.body.embarcacaoArqueacaoBruta,
-            embarcacaoComprimentoTotal: req.body.embarcacaoComprimentoTotal,
-            embarcacaoTonelagemPorteBruto: req.body.embarcacaoTonelagemPorteBruto,
-            embarcacaoCertificadoRegistroAmador: req.body.embarcacaoCertificadoRegistroAmador,
-            embarcacaoArmador: req.body.embarcacaoArmador,
-            embarcacaoNCRA: req.body.embarcacaoNCRA,
-            embarcacaoValidade: req.body.embarcacaoValidadeNumber,
-            embarcacaoValidadeNumber: Date.parse(req.body.embarcacaoValidadeNumber)
-        })
-        req.flash('success_msg', 'Embarcação editada com sucesso!')
-        res.redirect('painel')
-    }catch(err){
-        req.flash('error_msg', 'Erro ao editar embarcação.')
-        res.redirect('painel')
-    }
-})
-
-
-
-router.get('/formulario/embarcacaoVizu/:id', eUser, async(req, res) => {
-    try{
-        if(req.user.eAdmin){
-            hidden = ''
-        }else{
-            hidden = 'hidden'
-        }
-        const embarcacoes = await Embarcacao.findOne({_id: req.params.id}).lean()
-        const despachos = await Despacho.find({embarcacao: embarcacoes._id}).lean()
-        const avisoEntradas = await AvisoEntrada.find({embarcacao: embarcacoes._id}).lean()
-        const avisoSaidas = await AvisoSaida.find({embarcacao: embarcacoes._id}).lean()
-            res.render('formulario/embarcacoes/embarcacaoVizu',
-                {embarcacoes: embarcacoes,
-                    despachos: despachos,
-                        avisoEntradas: avisoEntradas,
-                            avisoSaidas: avisoSaidas,
-                                hidden: hidden
-                })
-    }catch(err){
-        req.flash('error_msg', 'Erro ao mostrar Embarcação')
-        res.redirect('/')
-    }
-})
-
-
-
-
-router.get('/formulario/addEmbarcacao', eUser, async (req, res) => {
-    try{
-        res.render('formulario/embarcacoes/addEmbarcacao')
-    }catch(err){
-        req.flash('error_msg', 'Erro interno')
-        res.redirect('/')
-    }
-})
-
-
-
-router.get('/embarcacoes', eUser, async (req, res) => {
-    try{
-        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({embarcacaoNome: 'asc'})
-            res.render('formulario/embarcacoes/embarcacoes', 
-                {embarcacoes: embarcacoes
-            })
-    }catch(err){
-        req.flash('error_msg', 'Erro ao mostrar página')
-        res.redirect('/formulario')
-    }
-})
-
-
-
-router.get('/embarcacoes/:page', eUser, async (req, res) => {
-    const page = req.params.page || 1;
-    const limit = 5;
-    const skip = (page - 1) * limit;
-     try{
-        const contagem = await Embarcacao.count({usuarioID: req.user._id})
-        if(parseInt(page) * limit >= contagem){
-            nextPage = ''
-            hidden = 'hidden'
-        }else{
-            nextPage = parseInt(page) + 1
-            hidden = ''
-        }
-
-        if(parseInt(page) == 2){
-            previousPage = ''
-        }else{
-            previousPage = parseInt(page) - 1
-        }
-        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({embarcacaoNome: 'asc'})
-            res.render('formulario/embarcacoes/embarcacoesPage', 
-                {embarcacoes: embarcacoes,
-                    nextPage: nextPage,
-                        previousPage: previousPage,
-                            hidden: hidden
-                })
-    }catch(err){
-        req.flash('error_msg', 'Erro ao mostrar página')
-        res.redirect('/formulario')
-     }
-})
+//----    Rota de formulação de PDF da Embarcação   ----//
 
 
 router.get('/embarcacao/:id/pdf', Admin, (req, res) => {
@@ -255,34 +307,6 @@ router.get('/embarcacao/:id/pdf', Admin, (req, res) => {
       });
   });
 
-})
-
-
-
-router.post('/formulario/addEmbarcacao', eUser, (req, res) => {
-    const novaEmbarcacao = {
-        usuarioID: req.user._id,
-        embarcacaoNome: req.body.embarcacaoNome,
-        embarcacaoTipo: req.body.embarcacaoTipo,
-        embarcacaoBandeira: req.body.embarcacaoBandeira,
-        embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,
-        embarcacaoArqueacaoBruta: req.body.embarcacaoArqueacaoBruta,
-        embarcacaoComprimentoTotal: req.body.embarcacaoComprimentoTotal,
-        embarcacaoTonelagemPorteBruto: req.body.embarcacaoTonelagemPorteBruto,
-        embarcacaoCertificadoRegistroAmador: req.body.embarcacaoCertificadoRegistroAmador,
-        embarcacaoArmador: req.body.embarcacaoArmador,
-        embarcacaoNCRA: req.body.embarcacaoNCRA,
-        embarcacaoDataCadastro: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-        embarcacaoData: Date.now(),
-        embarcacaoMesAnoAtual: moment(Date.now()).format('MM/YYYY')
-    }
-    new Embarcacao(novaEmbarcacao).save().then(() => {
-        req.flash('success_msg', 'Embarcação cadastrada com sucesso')
-        res.redirect('/')
-    }).catch((err) => {
-        req.flash('error_msg', 'Erro ao salvar embarcação')
-        res.redirect('/')
-    })
 })
 
 

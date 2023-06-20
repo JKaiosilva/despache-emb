@@ -36,48 +36,175 @@ const cheerio = require('cheerio')
 const bcrypt = require('bcryptjs')
 
 
-router.get('/admin/despachos', Admin, (req, res) => {
-    Despacho.find().limit(5).lean().sort({ despachoData: 'desc' }).then((despachos) => {
-        res.render('admin/despachos/listaDespacho', { despachos: despachos })
-    }).catch((err) => {
-        req.flash('error_msg', 'Erro interno ao mostrar despachos!')
-        res.redirect('/')
-    })
+//----  Rota para formulário de adição de Despacho    ----//
+
+
+router.get('/formulario/despacho', eUser, async(req, res) => {
+    try{
+        const dataHoje = Date.now()
+        const tripulantes = await Tripulante.find({tripulanteValidadeCIRNumber: {$gte: dataHoje}}).lean()
+        const comboios = await Comboio.find({usuarioID: req.user._id}).lean()
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id, embarcacaoValidadeNumber: {$gte: dataHoje}}).lean()
+        const portos = await Porto.find().lean()
+        res.render('formulario/despachos/despacho', 
+            {embarcacoes: embarcacoes,
+            tripulantes: tripulantes,
+            portos: portos,
+            comboios: comboios
+            })
+    }catch(err){
+        req.flash('error_msg', 'Erro interno ao mostrar formulario')
+        res.redirect('formulario/preform')
+    }
 })
 
 
-router.get('/admin/despachos/:page', Admin, async (req, res) => {
+//----  Rota de postagem de Despacho   ----//
+
+
+router.post('/formulario/despacho', eUser, async (req, res) => {
+    try{
+        const cleanString = req.body.despachoTripulantes.replace(/[\n' \[\]]/g, '');
+        const tripulantes = cleanString.split(',');
+        const despachoTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+
+    const novoDespacho = {
+        usuarioID: req.user._id,
+        NprocessoDespacho: req.body.NprocessoDespacho,
+        despachoPortoEstadia: req.body.despachoPortoEstadia,
+        despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
+        despachoDataHoraPartida: req.body.despachoDataHoraPartida,
+        despachoNomeRepresentanteEmbarcacao: req.body.despachoNomeRepresentanteEmbarcacao,
+        despachoCPFCNPJRepresentanteEmbarcacao: req.body.despachoCPFCNPJRepresentanteEmbarcacao,
+        despachoTelefoneRepresentanteEmbarcacao: req.body.despachoTelefoneRepresentanteEmbarcacao,
+        despachoEnderecoRepresentanteEmbarcacao: req.body.despachoEnderecoRepresentanteEmbarcacao,
+        despachoEmailRepresentanteEmbarcacao: req.body.despachoEmailRepresentanteEmbarcacao,
+        despachoDataUltimaInspecaoNaval: req.body.despachoDataUltimaInspecaoNaval,
+        despachoDeficiencias: req.body.despachoDeficiencias,
+        despachoTransportaCargaPerigosa: req.body.despachoTransportaCargaPerigosa,
+        despachoCertificadoTemporario90dias: req.body.despachoCertificadoTemporario90dias,
+        despachoCasoDocumentoExpirado: req.body.despachoCasoDocumentoExpirado,
+        despachoOBS: req.body.despachoOBS,
+        despachoNTripulantes: req.body.despachoNTripulantes,
+        despachoNomeComandante: req.body.despachoNomeComandante,
+        despachoTripulantes: despachoTripulantes,
+        despachoComboios: req.body.despachoComboio,
+        despachoDataSolicitada: req.body.despachoDataSolicitada,
+        despachoDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+        despachoData: Date.now(),
+        embarcacao: req.body.embarcacao,
+        depachoMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+
+    }
+    new Despacho(novoDespacho).save()
+        req.flash('success_msg', 'Despacho enviado com sucesso')
+        res.redirect('/')
+
+}catch(err){
+    req.flash('error_msg', 'Erro interno, tente novamente')
+    res.redirect('/')
+}
+})
+
+
+//----  Rota de visualização de Despacho   ----//
+
+
+router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
+    try{
+        if(req.user.eAdmin){
+            hidden = ''
+        }else{
+            hidden = 'hidden'
+        }
+        const despachos = await Despacho.findOne({_id: req.params.id}).lean()
+        const tripulantes = await Tripulante.find({_id: despachos.despachoTripulantes}).lean()
+        const embarcacoes = await Embarcacao.findOne({_id: despachos.embarcacao}).lean()
+        const portos = await Porto.findOne({ _id: despachos.despachoPortoEstadia}).lean().catch((err) => {
+            if(err){
+                return {portoNome: despachos.despachoOutroPortoEstadia}
+            }
+        });        
+        const avisoEntradas = await AvisoEntrada.find({entradaDespacho: despachos._id}).lean()
+        const avisoSaidas = await AvisoSaida.find({saidaDespacho: despachos._id}).lean()
+        const comboios  = await Comboio.findOne({_id: despachos.despachoComboios}).lean()
+            res.render('formulario/despachos/despachoVizu',
+                {despachos: despachos,
+                tripulantes: tripulantes,
+                embarcacoes: embarcacoes,
+                comboios: comboios,
+                portos: portos,
+                avisoEntradas: avisoEntradas,
+                avisoSaidas: avisoSaidas,
+                hidden: hidden
+                })
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', 'Erro interno ao mostrar formulário')
+        res.redirect('/formulario')
+    }
+})
+
+
+//----  Rota de listagem de Despacho(user)   ----//
+
+
+router.get('/despachos', eUser, async (req, res) => {
+
+    const admin = req.user.eAdmin ? true : false;
+    try{
+        const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
+            res.render('formulario/despachos/despachos', 
+                {despachos: despachos,
+                    admin: admin
+            })
+    }catch(err){
+        req.flash('error_msg', 'Erro ao mostrar página')
+        res.redirect('/formulario')
+    }
+})
+
+
+//----  Rota de paginação de Despacho(user)   ----//
+
+
+router.get('/despachos/:page', eUser, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
-    try {
-        const contagem = await Despacho.count()
-        if (parseInt(page) * limit >= contagem) {
-            nextPage = ''
-            hidden = 'hidden'
-        } else {
-            nextPage = parseInt(page) + 1
-            hidden = ''
-        }
+    const admin = req.user.eAdmin ? true : false;
 
-        if (parseInt(page) == 2) {
-            previousPage = ''
-        } else {
-            previousPage = parseInt(page) - 1
+        try{
+            const contagem = await Despacho.count({usuarioID: req.user._id})
+            if(parseInt(page) * limit >= contagem){
+                nextPage = ''
+                hidden = 'hidden'
+            }else{
+                nextPage = parseInt(page) + 1
+                hidden = ''
+            }
+
+            if(parseInt(page) == 2){
+                previousPage = ''
+            }else{
+                previousPage = parseInt(page) - 1
+            }
+            const despachos = await Despacho.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({despachoData: 'desc'})
+                res.render('formulario/despachos/despachosPage', 
+                    {despachos: despachos,
+                        nextPage: nextPage,
+                            previousPage: previousPage,
+                                hidden: hidden,
+                                    admin: admin
+                    })
+        }catch(err){
+            req.flash('error_msg', 'Erro ao mostrar página')
+            res.redirect('/formulario')
         }
-        const despachos = await Despacho.find().skip(skip).limit(limit).lean().sort({ despachoData: 'desc' })
-        res.render('admin/despachos/despachosPage',
-            {
-                despachos: despachos,
-                nextPage: nextPage,
-                previousPage: previousPage,
-                hidden: hidden
-            })
-    } catch (err) {
-        req.flash('error_msg', 'Erro interno ao mostrar despachos!')
-        res.redirect('/')
-    }
 })
+
+
+//----  Rota para formulário de validação de Despacho    ----//
 
 
 router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
@@ -113,6 +240,9 @@ router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
         res.redirect('/')
     }
 })
+
+
+//----  Rota para postagem de validação do Despacho   ----//
 
 
 router.post('/admin/despachoValidate', Admin, async(req, res) => {
@@ -160,114 +290,57 @@ router.post('/admin/despachoValidate', Admin, async(req, res) => {
  })
 
 
- router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
-    try{
-        if(req.user.eAdmin){
-            hidden = ''
-        }else{
-            hidden = 'hidden'
-        }
-        const despachos = await Despacho.findOne({_id: req.params.id}).lean()
-        const tripulantes = await Tripulante.find({_id: despachos.despachoTripulantes}).lean()
-        const embarcacoes = await Embarcacao.findOne({_id: despachos.embarcacao}).lean()
-        const portos = await Porto.findOne({ _id: despachos.despachoPortoEstadia}).lean().catch((err) => {
-            if(err){
-                return {portoNome: despachos.despachoOutroPortoEstadia}
-            }
-        });        
-        const avisoEntradas = await AvisoEntrada.find({entradaDespacho: despachos._id}).lean()
-        const avisoSaidas = await AvisoSaida.find({saidaDespacho: despachos._id}).lean()
-        const comboios  = await Comboio.findOne({_id: despachos.despachoComboios}).lean()
-            res.render('formulario/despachos/despachoVizu',
-                {despachos: despachos,
-                tripulantes: tripulantes,
-                embarcacoes: embarcacoes,
-                comboios: comboios,
-                portos: portos,
-                avisoEntradas: avisoEntradas,
-                avisoSaidas: avisoSaidas,
-                hidden: hidden
-                })
-    }catch(err){
-        console.log(err)
-        req.flash('error_msg', 'Erro interno ao mostrar formulário')
-        res.redirect('/formulario')
-    }
+//----  Rota de listagem de Despacho(admin)    ----//
+
+
+router.get('/admin/despachos', Admin, (req, res) => {
+    Despacho.find().limit(5).lean().sort({ despachoData: 'desc' }).then((despachos) => {
+        res.render('admin/despachos/listaDespacho', { despachos: despachos })
+    }).catch((err) => {
+        req.flash('error_msg', 'Erro interno ao mostrar despachos!')
+        res.redirect('/')
+    })
 })
 
 
-router.get('/formulario/despacho', eUser, async(req, res) => {
-    try{
-        const dataHoje = Date.now()
-        const tripulantes = await Tripulante.find({tripulanteValidadeCIRNumber: {$gte: dataHoje}}).lean()
-        const comboios = await Comboio.find({usuarioID: req.user._id}).lean()
-        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id, embarcacaoValidadeNumber: {$gte: dataHoje}}).lean()
-        const portos = await Porto.find().lean()
-        res.render('formulario/despachos/despacho', 
-            {embarcacoes: embarcacoes,
-            tripulantes: tripulantes,
-            portos: portos,
-            comboios: comboios
-            })
-    }catch(err){
-        req.flash('error_msg', 'Erro interno ao mostrar formulario')
-        res.redirect('formulario/preform')
-    }
-})
+//----  Rota de paginação de Despacho(admin)     ----//
 
 
-router.get('/despachos', eUser, async (req, res) => {
-
-    const admin = req.user.eAdmin ? true : false;
-    try{
-        const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
-            res.render('formulario/despachos/despachos', 
-                {despachos: despachos,
-                    admin: admin
-            })
-    }catch(err){
-        req.flash('error_msg', 'Erro ao mostrar página')
-        res.redirect('/formulario')
-    }
-})
-
-
-
-router.get('/despachos/:page', eUser, async (req, res) => {
+router.get('/admin/despachos/:page', Admin, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
-    const admin = req.user.eAdmin ? true : false;
-
-        try{
-            const contagem = await Despacho.count({usuarioID: req.user._id})
-            if(parseInt(page) * limit >= contagem){
-                nextPage = ''
-                hidden = 'hidden'
-            }else{
-                nextPage = parseInt(page) + 1
-                hidden = ''
-            }
-
-            if(parseInt(page) == 2){
-                previousPage = ''
-            }else{
-                previousPage = parseInt(page) - 1
-            }
-            const despachos = await Despacho.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({despachoData: 'desc'})
-                res.render('formulario/despachos/despachosPage', 
-                    {despachos: despachos,
-                        nextPage: nextPage,
-                            previousPage: previousPage,
-                                hidden: hidden,
-                                    admin: admin
-                    })
-        }catch(err){
-            req.flash('error_msg', 'Erro ao mostrar página')
-            res.redirect('/formulario')
+    try {
+        const contagem = await Despacho.count()
+        if (parseInt(page) * limit >= contagem) {
+            nextPage = ''
+            hidden = 'hidden'
+        } else {
+            nextPage = parseInt(page) + 1
+            hidden = ''
         }
+
+        if (parseInt(page) == 2) {
+            previousPage = ''
+        } else {
+            previousPage = parseInt(page) - 1
+        }
+        const despachos = await Despacho.find().skip(skip).limit(limit).lean().sort({ despachoData: 'desc' })
+        res.render('admin/despachos/despachosPage',
+            {
+                despachos: despachos,
+                nextPage: nextPage,
+                previousPage: previousPage,
+                hidden: hidden
+            })
+    } catch (err) {
+        req.flash('error_msg', 'Erro interno ao mostrar despachos!')
+        res.redirect('/')
+    }
 })
 
+
+//---- Rota de formulação de PDF do Despacho   ----//
 
 
 router.get('/despacho/:id/pdf', Admin, async (req, res) => {
@@ -481,56 +554,6 @@ router.get('/despacho/:id/pdf', Admin, async (req, res) => {
         res.redirect('/')
     }  
 })
-
-
-
-router.post('/formulario/despacho', eUser, async (req, res) => {
-
-
-    try{
-        const cleanString = req.body.despachoTripulantes.replace(/[\n' \[\]]/g, '');
-        const tripulantes = cleanString.split(',');
-        const despachoTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
-
-    const novoDespacho = {
-        usuarioID: req.user._id,
-        NprocessoDespacho: req.body.NprocessoDespacho,
-        despachoPortoEstadia: req.body.despachoPortoEstadia,
-        despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
-        despachoDataHoraPartida: req.body.despachoDataHoraPartida,
-        despachoNomeRepresentanteEmbarcacao: req.body.despachoNomeRepresentanteEmbarcacao,
-        despachoCPFCNPJRepresentanteEmbarcacao: req.body.despachoCPFCNPJRepresentanteEmbarcacao,
-        despachoTelefoneRepresentanteEmbarcacao: req.body.despachoTelefoneRepresentanteEmbarcacao,
-        despachoEnderecoRepresentanteEmbarcacao: req.body.despachoEnderecoRepresentanteEmbarcacao,
-        despachoEmailRepresentanteEmbarcacao: req.body.despachoEmailRepresentanteEmbarcacao,
-        despachoDataUltimaInspecaoNaval: req.body.despachoDataUltimaInspecaoNaval,
-        despachoDeficiencias: req.body.despachoDeficiencias,
-        despachoTransportaCargaPerigosa: req.body.despachoTransportaCargaPerigosa,
-        despachoCertificadoTemporario90dias: req.body.despachoCertificadoTemporario90dias,
-        despachoCasoDocumentoExpirado: req.body.despachoCasoDocumentoExpirado,
-        despachoOBS: req.body.despachoOBS,
-        despachoNTripulantes: req.body.despachoNTripulantes,
-        despachoNomeComandante: req.body.despachoNomeComandante,
-        despachoTripulantes: despachoTripulantes,
-        despachoComboios: req.body.despachoComboio,
-        despachoDataSolicitada: req.body.despachoDataSolicitada,
-        despachoDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-        despachoData: Date.now(),
-        embarcacao: req.body.embarcacao,
-        depachoMesAnoAtual: moment(Date.now()).format('MM/YYYY')
-
-    }
-    new Despacho(novoDespacho).save()
-        req.flash('success_msg', 'Despacho enviado com sucesso')
-        res.redirect('/')
-
-}catch(err){
-    req.flash('error_msg', 'Erro interno, tente novamente')
-    res.redirect('/')
-}
-})
-
-
 
 
 module.exports = router

@@ -36,27 +36,193 @@ const cheerio = require('cheerio')
 const bcrypt = require('bcryptjs')
 
 
-router.get('/admin/entradas', Admin, (req, res) => {
-    AvisoEntrada.find().limit(5).lean().sort({ entradaData: 'desc' }).then((avisoEntradas) => {
-        res.render('admin/entradas/entradas', { avisoEntradas: avisoEntradas })
-    }).catch((err) => {
-        req.flash('error_msg', 'Erro interno ao mostrar avisos de entrada!')
-        res.redirect('/')
-    })
+//----    Rota para formular Entrada    ----//
+
+
+router.get('/formulario/avisoEntrada', eUser, async (req, res) => {
+    try {
+        const dataHoje = Date.now()
+        const despachos = await Despacho.find({ usuarioID: req.user._id, despachoDataValidadeNumber: { $gte: dataHoje } }).lean()
+        const embarcacoes = await Embarcacao.find({ usuarioID: req.user._id, embarcacaoValidadeNumber: { $gte: dataHoje } }).lean()
+        const tripulantes = await Tripulante.find({ tripulanteValidadeCIRNumber: { $gte: dataHoje } }).lean()
+        const portos = await Porto.find().lean()
+        const comboios = await Comboio.find({ usuarioID: req.user._id }).lean()
+
+        res.render('formulario/entradas/avisoEntrada', {
+            embarcacoes: embarcacoes,
+            tripulantes: tripulantes,
+            portos: portos,
+            despachos: despachos,
+            comboios: comboios
+        })
+    } catch (err) {
+        req.flash('error_msg', 'Erro interno ao mostrar formulario')
+        res.redirect('formulario/preform')
+    }
 })
 
 
-router.get('/admin/entradasPage/:page', Admin, async (req, res) => {
+//----    Rota para postagem de Entrada   ----//
+
+
+router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
+    try {
+        const cleanString = req.body.entradaTripulantes.replace(/[\n' \[\]]/g, '');
+        const tripulantes = cleanString.split(',');
+        const avisoEntradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+
+ 
+        const clearPassageiros = req.body.entradaPassageirosNome
+        const passageirosLimpo = clearPassageiros.split(',');
+
+        const passageirosNome = req.body.entradaPassageirosNome
+        const passageirosNascimento = req.body.entradaPassageirosNascimento
+        const passageirosSexo = req.body.entradaPassageirosSexos
+
+        const passageirosNomes = passageirosNome.split(',')
+        const passageirosNascimentos = passageirosNascimento.split(',')
+        const passageirosSexos = passageirosSexo.split(',')
+
+        const entradaPassageiros = []
+
+        for (var i = 0; i < passageirosLimpo.length; i++){
+            const passageiros = {
+                nome: passageirosNomes[i],
+                dataNascimento: passageirosNascimentos[i],
+                sexo: passageirosSexos[i]
+            }
+            entradaPassageiros.push(passageiros)
+        }
+        console.log(entradaPassageiros)
+        const novoAvisoEntrada = {
+            usuarioID: req.user._id,
+            entradaDespacho: req.body.entradaDespacho,
+            entradaNprocesso: req.body.entradaNprocesso,
+            entradaPortoChegada: req.body.entradaPortoChegada,
+            entradaOutroPortoChegada: req.body.entradaOutroPortoChegada,
+            entradaDataHoraChegada: req.body.entradaDataHoraChegada,
+            entradaPosicaoPortoAtual: req.body.entradaPosicaoPortoAtual,
+            entradaPortoOrigem: req.body.entradaPortoOrigem,
+            entradaOutroPortoOrigem: req.body.entradaOutroPortoOrigem,
+            entradaPortoDestino: req.body.entradaPortoDestino,
+            entradaOutroPortoDestino: req.body.entradaOutroPortoDestino,
+            entradaDataHoraEstimadaSaida: req.body.entradaDataHoraEstimadaSaida,
+            entradaNomeRepresentanteEmbarcacao: req.body.entradaNomeRepresentanteEmbarcacao,
+            entradaCPFCNPJRepresentanteEmbarcacao: req.body.entradaCPFCNPJRepresentanteEmbarcacao,
+            entradaTelefoneRepresentanteEmbarcacao: req.body.entradaTelefoneRepresentanteEmbarcacao,
+            entradaEnderecoRepresentanteEmbarcacao: req.body.entradaEnderecoRepresentanteEmbarcacao,
+            entradaEmailRepresentanteEmbarcacao: req.body.entradaEmailRepresentanteEmbarcacao,
+            entradaDadosUltimaInpecaoNaval: req.body.entradaDadosUltimaInpecaoNaval,
+            entradaDeficienciasRetificadasPorto: req.body.entradaDeficienciasRetificadasPorto,
+            entradaTransporteCagaPerigosa: req.body.entradaTransporteCagaPerigosa,
+            entradaObservacoes: req.body.entradaObservacoes,
+            entradaTripulantes: avisoEntradaTripulantes,
+            entradaPassageiros: entradaPassageiros,
+            entradaComboios: req.body.entradaComboios,
+            entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
+            embarcacao: req.body.embarcacao,
+            entradaData: Date.now(),
+            entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+
+        }
+        new AvisoEntrada(novoAvisoEntrada).save()
+        req.flash('success_msg', 'Aviso de entrada enviado com sucesso')
+        res.redirect('/')
+    } catch (err) {
+        console.log(err)
+        req.flash('error_msg', 'Erro interno, tente novamente')
+        res.redirect('/')
+    }
+})
+
+
+//----    Rota para visualização da Entrada   ----//
+
+
+router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
+    try {
+        if (req.user.eAdmin) {
+            hidden = ''
+        } else {
+            hidden = 'hidden'
+        }
+        const avisoEntradas = await AvisoEntrada.findOne({ _id: req.params.id }).lean()
+        const tripulantes = await Tripulante.find({ _id: avisoEntradas.entradaTripulantes }).lean()
+        const embarcacoes = await Embarcacao.findOne({ _id: avisoEntradas.embarcacao }).lean()
+        const portoChegada = await Porto.findOne({ _id: avisoEntradas.entradaPortoChegada}).lean().catch((err) => {
+                if(err){
+                    return {portoNome: avisoEntradas.entradaOutroPortoChegada}
+                }
+              })
+        const portoOrigem = await Porto.findOne({_id: avisoEntradas.entradaPortoOrigem}).lean().catch((err) => {
+            if(err){
+                return {portoNome: avisoEntradas.entradaOutroPortoOrigem}
+            }
+        })
+        const portoDestino = await Porto.findOne({_id: avisoEntradas.entradaPortoDestino}).lean().catch((err) => {
+            if(err){
+                return {portoNome: avisoEntradas.entradaOutroPortoDestino}
+            }
+        })
+        const despacho = await Despacho.findOne({ _id: avisoEntradas.entradaDespacho }).lean()
+        const comboios = await Comboio.findOne({ _id: avisoEntradas.entradaComboios }).lean()
+
+
+        res.render('formulario/entradas/avisoEntradaVizu', {
+            avisoEntradas: avisoEntradas,
+            tripulantes: tripulantes,
+            embarcacoes: embarcacoes,
+            despacho: despacho,
+            comboios: comboios,
+            portoChegada: portoChegada,
+            portoOrigem: portoOrigem,
+            portoDestino: portoDestino,
+            hidden: hidden
+        })
+    } catch (err) {
+        console.log(err)
+        req.flash('error_msg', 'Erro interno ao mostrar formulário')
+        res.redirect('/formulario')
+    }
+})
+
+
+//----    Rota para listagem de Entradas(user)   ----//
+
+
+router.get('/entradas', eUser, async (req, res) => {
+
+    const admin = req.user.eAdmin ? true : false;
+    try {
+        const avisoEntradas = await AvisoEntrada.find({ usuarioID: req.user._id }).limit(5).lean().sort({ entradaData: 'desc' })
+        res.render('formulario/entradas/entradas',
+            {
+                avisoEntradas: avisoEntradas,
+                admin: admin
+            })
+    } catch (err) {
+        req.flash('error_msg', 'Erro ao mostrar página')
+        res.redirect('/formulario')
+    }
+})
+
+
+//----    Rota para paginação de Entradas(user)   ----//
+
+
+router.get('/entradas/:page', eUser, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
+    const admin = req.user.eAdmin ? true : false;
+
     try {
-        const contagem = await AvisoEntrada.count()
+        const contagem = await AvisoEntrada.count({ usuarioID: req.user._id })
         if (parseInt(page) * limit >= contagem) {
             nextPage = ''
             hidden = 'hidden'
         } else {
-            nextPage = parseInt(page) + 1;
+            nextPage = parseInt(page) + 1
             hidden = ''
         }
 
@@ -65,19 +231,23 @@ router.get('/admin/entradasPage/:page', Admin, async (req, res) => {
         } else {
             previousPage = parseInt(page) - 1
         }
-        const avisoEntradas = await AvisoEntrada.find().skip(skip).limit(limit).lean().sort({ entradaData: 'desc' })
-        res.render('admin/entradas/entradasPage',
+        const avisoEntradas = await AvisoEntrada.find({ usuarioID: req.user._id }).skip(skip).limit(limit).lean().sort({ entradaData: 'desc' })
+        res.render('formulario/entradas/entradasPage',
             {
                 avisoEntradas: avisoEntradas,
                 nextPage: nextPage,
                 previousPage: previousPage,
-                hidden: hidden
+                hidden: hidden,
+                admin: admin
             })
     } catch (err) {
-        req.flash('error_msg', 'Erro interno ao mostrar avisos de entrada!')
-        res.redirect('/')
+        req.flash('error_msg', 'Erro ao mostrar página')
+        res.redirect('/formulario')
     }
 })
+
+
+//----    Rota para validação de formulário de validação de Entrada    ----//
 
 
 router.get('/admin/entradasValidate/:id', Admin, async (req, res) => {
@@ -131,6 +301,9 @@ router.get('/admin/entradasValidate/:id', Admin, async (req, res) => {
         res.redirect('/')
     }
 })
+
+
+//----    Rota para postagem de validação de Entrada   ----//
 
 
 router.post('/admin/entradasValidate', Admin, async (req, res) => {
@@ -202,108 +375,33 @@ router.post('/admin/entradasValidate', Admin, async (req, res) => {
 })
 
 
-router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
-    try {
-        if (req.user.eAdmin) {
-            hidden = ''
-        } else {
-            hidden = 'hidden'
-        }
-        const avisoEntradas = await AvisoEntrada.findOne({ _id: req.params.id }).lean()
-        const tripulantes = await Tripulante.find({ _id: avisoEntradas.entradaTripulantes }).lean()
-        const embarcacoes = await Embarcacao.findOne({ _id: avisoEntradas.embarcacao }).lean()
-        const portoChegada = await Porto.findOne({ _id: avisoEntradas.entradaPortoChegada}).lean().catch((err) => {
-                if(err){
-                    return {portoNome: avisoEntradas.entradaOutroPortoChegada}
-                }
-              })
-        const portoOrigem = await Porto.findOne({_id: avisoEntradas.entradaPortoOrigem}).lean().catch((err) => {
-            if(err){
-                return {portoNome: avisoEntradas.entradaOutroPortoOrigem}
-            }
-        })
-        const portoDestino = await Porto.findOne({_id: avisoEntradas.entradaPortoDestino}).lean().catch((err) => {
-            if(err){
-                return {portoNome: avisoEntradas.entradaOutroPortoDestino}
-            }
-        })
-        const despacho = await Despacho.findOne({ _id: avisoEntradas.entradaDespacho }).lean()
-        const comboios = await Comboio.findOne({ _id: avisoEntradas.entradaComboios }).lean()
+//----    Rota de listagem de Entradas(admin)    ----//
 
 
-        res.render('formulario/entradas/avisoEntradaVizu', {
-            avisoEntradas: avisoEntradas,
-            tripulantes: tripulantes,
-            embarcacoes: embarcacoes,
-            despacho: despacho,
-            comboios: comboios,
-            portoChegada: portoChegada,
-            portoOrigem: portoOrigem,
-            portoDestino: portoDestino,
-            hidden: hidden
-        })
-    } catch (err) {
-        console.log(err)
-        req.flash('error_msg', 'Erro interno ao mostrar formulário')
-        res.redirect('/formulario')
-    }
+router.get('/admin/entradas', Admin, (req, res) => {
+    AvisoEntrada.find().limit(5).lean().sort({ entradaData: 'desc' }).then((avisoEntradas) => {
+        res.render('admin/entradas/entradas', { avisoEntradas: avisoEntradas })
+    }).catch((err) => {
+        req.flash('error_msg', 'Erro interno ao mostrar avisos de entrada!')
+        res.redirect('/')
+    })
 })
 
 
-router.get('/formulario/avisoEntrada', eUser, async (req, res) => {
-    try {
-        const dataHoje = Date.now()
-        const despachos = await Despacho.find({ usuarioID: req.user._id, despachoDataValidadeNumber: { $gte: dataHoje } }).lean()
-        const embarcacoes = await Embarcacao.find({ usuarioID: req.user._id, embarcacaoValidadeNumber: { $gte: dataHoje } }).lean()
-        const tripulantes = await Tripulante.find({ tripulanteValidadeCIRNumber: { $gte: dataHoje } }).lean()
-        const portos = await Porto.find().lean()
-        const comboios = await Comboio.find({ usuarioID: req.user._id }).lean()
-
-        res.render('formulario/entradas/avisoEntrada', {
-            embarcacoes: embarcacoes,
-            tripulantes: tripulantes,
-            portos: portos,
-            despachos: despachos,
-            comboios: comboios
-        })
-    } catch (err) {
-        req.flash('error_msg', 'Erro interno ao mostrar formulario')
-        res.redirect('formulario/preform')
-    }
-})
+//----    Rota de paginação de Entradas(admin)     ----//
 
 
-
-router.get('/entradas', eUser, async (req, res) => {
-
-    const admin = req.user.eAdmin ? true : false;
-    try {
-        const avisoEntradas = await AvisoEntrada.find({ usuarioID: req.user._id }).limit(5).lean().sort({ entradaData: 'desc' })
-        res.render('formulario/entradas/entradas',
-            {
-                avisoEntradas: avisoEntradas,
-                admin: admin
-            })
-    } catch (err) {
-        req.flash('error_msg', 'Erro ao mostrar página')
-        res.redirect('/formulario')
-    }
-})
-
-
-router.get('/entradas/:page', eUser, async (req, res) => {
+router.get('/admin/entradasPage/:page', Admin, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
-    const admin = req.user.eAdmin ? true : false;
-
     try {
-        const contagem = await AvisoEntrada.count({ usuarioID: req.user._id })
+        const contagem = await AvisoEntrada.count()
         if (parseInt(page) * limit >= contagem) {
             nextPage = ''
             hidden = 'hidden'
         } else {
-            nextPage = parseInt(page) + 1
+            nextPage = parseInt(page) + 1;
             hidden = ''
         }
 
@@ -312,20 +410,22 @@ router.get('/entradas/:page', eUser, async (req, res) => {
         } else {
             previousPage = parseInt(page) - 1
         }
-        const avisoEntradas = await AvisoEntrada.find({ usuarioID: req.user._id }).skip(skip).limit(limit).lean().sort({ entradaData: 'desc' })
-        res.render('formulario/entradas/entradasPage',
+        const avisoEntradas = await AvisoEntrada.find().skip(skip).limit(limit).lean().sort({ entradaData: 'desc' })
+        res.render('admin/entradas/entradasPage',
             {
                 avisoEntradas: avisoEntradas,
                 nextPage: nextPage,
                 previousPage: previousPage,
-                hidden: hidden,
-                admin: admin
+                hidden: hidden
             })
     } catch (err) {
-        req.flash('error_msg', 'Erro ao mostrar página')
-        res.redirect('/formulario')
+        req.flash('error_msg', 'Erro interno ao mostrar avisos de entrada!')
+        res.redirect('/')
     }
 })
+
+
+//----   Rota de formulação de PDF da Entrada   ----//
 
 
 router.get('/avisoEntrada/:id/pdf', Admin, async (req, res) => {
@@ -509,78 +609,6 @@ router.get('/avisoEntrada/:id/pdf', Admin, async (req, res) => {
         res.redirect('/')
     }
 })
-
-
-router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
-    try {
-        const cleanString = req.body.entradaTripulantes.replace(/[\n' \[\]]/g, '');
-        const tripulantes = cleanString.split(',');
-        const avisoEntradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
-
- 
-        const clearPassageiros = req.body.entradaPassageirosNome
-        const passageirosLimpo = clearPassageiros.split(',');
-
-        const passageirosNome = req.body.entradaPassageirosNome
-        const passageirosNascimento = req.body.entradaPassageirosNascimento
-        const passageirosSexo = req.body.entradaPassageirosSexos
-
-        const passageirosNomes = passageirosNome.split(',')
-        const passageirosNascimentos = passageirosNascimento.split(',')
-        const passageirosSexos = passageirosSexo.split(',')
-
-        const entradaPassageiros = []
-
-        for (var i = 0; i < passageirosLimpo.length; i++){
-            const passageiros = {
-                nome: passageirosNomes[i],
-                dataNascimento: passageirosNascimentos[i],
-                sexo: passageirosSexos[i]
-            }
-            entradaPassageiros.push(passageiros)
-        }
-        console.log(entradaPassageiros)
-        const novoAvisoEntrada = {
-            usuarioID: req.user._id,
-            entradaDespacho: req.body.entradaDespacho,
-            entradaNprocesso: req.body.entradaNprocesso,
-            entradaPortoChegada: req.body.entradaPortoChegada,
-            entradaOutroPortoChegada: req.body.entradaOutroPortoChegada,
-            entradaDataHoraChegada: req.body.entradaDataHoraChegada,
-            entradaPosicaoPortoAtual: req.body.entradaPosicaoPortoAtual,
-            entradaPortoOrigem: req.body.entradaPortoOrigem,
-            entradaOutroPortoOrigem: req.body.entradaOutroPortoOrigem,
-            entradaPortoDestino: req.body.entradaPortoDestino,
-            entradaOutroPortoDestino: req.body.entradaOutroPortoDestino,
-            entradaDataHoraEstimadaSaida: req.body.entradaDataHoraEstimadaSaida,
-            entradaNomeRepresentanteEmbarcacao: req.body.entradaNomeRepresentanteEmbarcacao,
-            entradaCPFCNPJRepresentanteEmbarcacao: req.body.entradaCPFCNPJRepresentanteEmbarcacao,
-            entradaTelefoneRepresentanteEmbarcacao: req.body.entradaTelefoneRepresentanteEmbarcacao,
-            entradaEnderecoRepresentanteEmbarcacao: req.body.entradaEnderecoRepresentanteEmbarcacao,
-            entradaEmailRepresentanteEmbarcacao: req.body.entradaEmailRepresentanteEmbarcacao,
-            entradaDadosUltimaInpecaoNaval: req.body.entradaDadosUltimaInpecaoNaval,
-            entradaDeficienciasRetificadasPorto: req.body.entradaDeficienciasRetificadasPorto,
-            entradaTransporteCagaPerigosa: req.body.entradaTransporteCagaPerigosa,
-            entradaObservacoes: req.body.entradaObservacoes,
-            entradaTripulantes: avisoEntradaTripulantes,
-            entradaPassageiros: entradaPassageiros,
-            entradaComboios: req.body.entradaComboios,
-            entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-            embarcacao: req.body.embarcacao,
-            entradaData: Date.now(),
-            entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
-
-        }
-        new AvisoEntrada(novoAvisoEntrada).save()
-        req.flash('success_msg', 'Aviso de entrada enviado com sucesso')
-        res.redirect('/')
-    } catch (err) {
-        console.log(err)
-        req.flash('error_msg', 'Erro interno, tente novamente')
-        res.redirect('/')
-    }
-})
-
 
 
 module.exports = router

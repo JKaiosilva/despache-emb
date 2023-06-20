@@ -37,6 +37,9 @@ const cheerio = require('cheerio')
 const bcrypt = require('bcryptjs')
 
 
+//----  Rota para formulário de adição de Comboio    ----//
+
+
 router.get('/formulario/comboio', eUser, async(req, res) => {
     try{
         const dataHoje = Date.now()
@@ -51,47 +54,70 @@ router.get('/formulario/comboio', eUser, async(req, res) => {
 })
 
 
+//----  Rota para postagem de Comboio   ----//
+
+
 router.post('/formulario/comboio', eUser, async (req, res) => {
     try {
-      const cleanString = req.body.embarcacoes.replace(/[\n' \[\]]/g, '');
-      const embarcacoes = cleanString.split(',');
+        const cleanString = req.body.embarcacoes.replace(/[\n' \[\]]/g, '');
+        const embarcacoes = cleanString.split(',');
 
-      const comboioEmbarcacoes = [];
-  
-      for (var i = 0; i < embarcacoes.length; i++) {
-        async function pesquisarNome(id){
-          const embarcacao = await Embarcacao.findOne({_id: id}).lean()
-          return embarcacao.embarcacaoNome
+        const comboioEmbarcacoes = [];
+    
+        for (var i = 0; i < embarcacoes.length; i++) {
+            async function pesquisarNome(id){
+            const embarcacao = await Embarcacao.findOne({_id: id}).lean()
+            return embarcacao.embarcacaoNome
+            }
+            const comboioEmbarcacao = {
+            id: req.body.comboio[i],
+            embarcacaoNome: await pesquisarNome(req.body.comboio[i]),
+            carga: req.body.comboiosCarga[i],
+            quantidade: req.body.comboiosQuantidadeCarga[i],
+            arqueacaoBruta: req.body.comboiosarqueacaoBruta[i]
+            };
+        
+            comboioEmbarcacoes.push(comboioEmbarcacao);
         }
-        const comboioEmbarcacao = {
-          id: req.body.comboio[i],
-          embarcacaoNome: await pesquisarNome(req.body.comboio[i]),
-          carga: req.body.comboiosCarga[i],
-          quantidade: req.body.comboiosQuantidadeCarga[i],
-          arqueacaoBruta: req.body.comboiosarqueacaoBruta[i]
-        };
-      
-        comboioEmbarcacoes.push(comboioEmbarcacao);
-      }
-  
-      const novoComboio = new Comboio({
-        usuarioId: req.user._id,
-        comboioNome: req.body.comboioNome,
-        embarcacoes: comboioEmbarcacoes,
-        comboioMesAnoAtual: Date.now().toString()
-      });
-  
-      await novoComboio.save();
-  
-      req.flash('success_msg', 'Comboio formulado com sucesso!');
-      res.redirect('/');
+    
+        const novoComboio = new Comboio({
+            usuarioId: req.user._id,
+            comboioNome: req.body.comboioNome,
+            embarcacoes: comboioEmbarcacoes,
+            comboioMesAnoAtual: Date.now().toString()
+        });
+    
+        await novoComboio.save();
+    
+        req.flash('success_msg', 'Comboio formulado com sucesso!');
+        res.redirect('/');
     } catch (err) {
-      console.log(err);
-      req.flash('error_msg', 'Erro interno ao mostrar página');
-      res.redirect('/');
+        console.log(err);
+        req.flash('error_msg', 'Erro interno ao mostrar página');
+        res.redirect('/');
     }
   });
-  
+
+
+//----   Rota para visuaização de Comboio formulado   ----//
+
+
+router.get('/formulario/comboiosVizu/:id', eUser, async(req, res) => {
+    try{
+        const comboios = await Comboio.findOne({_id: req.params.id}).lean()
+            res.render('formulario/comboios/comboiosVizu', 
+                {comboios: comboios
+            })
+    }catch(err){
+        console.log(err);
+        req.flash('error_msg', 'Erro interno ao mostrar página');
+        res.redirect('/');
+    }
+})
+
+
+//----  Rota para listagem de Comboios(user)   ----//
+
 
 router.get('/comboios', eUser, async(req, res) => {
     try{
@@ -107,33 +133,44 @@ router.get('/comboios', eUser, async(req, res) => {
 })
 
 
-router.get('/admin/comboios', Admin, async(req, res) => {
-  try{
-      const comboios = await Comboio.find().lean()
-      res.render('admin/comboios/comboios', 
-          {comboios: comboios
-      })
-  }catch(err){
-      console.log(err);
-      req.flash('error_msg', 'Erro interno ao mostrar página');
-      res.redirect('/');
-  }
-})
+//----  Rota de paginação de Comboio(user)   ----//
 
 
-
-router.get('/formulario/comboiosVizu/:id', eUser, async(req, res) => {
-    try{
-            const comboios = await Comboio.findOne({_id: req.params.id}).lean()
-            res.render('formulario/comboios/comboiosVizu', 
-                {comboios: comboios
+router.get('/comboios/:page', eUser, async (req, res) => {
+    const page = req.params.page || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+    try {
+        const contagem = await Comboio.count({usuarioID: req.user._id})
+        if (parseInt(page) * limit >= contagem) {
+            nextPage = ''
+            hidden = 'hidden'
+        } else {
+            nextPage = parseInt(page) + 1
+            hidden = ''
+        }
+  
+        if (parseInt(page) == 2) {
+            previousPage = ''
+        } else {
+            previousPage = parseInt(page) - 1
+        }
+        const comboios = await Comboio.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({ comboioMesAnoAtual: 'desc' })
+        res.render('formulario/comboios/comboiosPage',
+            {
+                comboios: comboios,
+                nextPage: nextPage,
+                previousPage: previousPage,
+                hidden: hidden
             })
-    }catch(err){
-        console.log(err);
-        req.flash('error_msg', 'Erro interno ao mostrar página');
-        res.redirect('/');
+    } catch (err) {
+        req.flash('error_msg', 'Erro interno ao mostrar Comboio!')
+        res.redirect('/')
     }
 })
+
+
+//----  Rota para formulário de validação de Comboio    ----//
 
 
 router.get('/admin/comboiosValidate/:id', Admin, async(req, res) => {
@@ -156,6 +193,9 @@ router.get('/admin/comboiosValidate/:id', Admin, async(req, res) => {
         res.redirect('/');
     }
 })
+
+
+//----  Rota para validação de Comboio   ----//
 
 
 router.post('/comboiosValidate', Admin, async(req, res) => {
@@ -198,6 +238,26 @@ router.post('/comboiosValidate', Admin, async(req, res) => {
 })
 
 
+//----  Rota para listagem de Comboios(admin)    ----//
+
+
+router.get('/admin/comboios', Admin, async(req, res) => {
+    try{
+        const comboios = await Comboio.find().lean()
+        res.render('admin/comboios/comboios', 
+            {comboios: comboios
+        })
+    }catch(err){
+        console.log(err);
+        req.flash('error_msg', 'Erro interno ao mostrar página');
+        res.redirect('/');
+    }
+  })
+ 
+
+//----  Rota para paginação de Comboio(admin)     ----//
+
+
 router.get('/admin/comboios/:page', Admin, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
@@ -229,40 +289,6 @@ router.get('/admin/comboios/:page', Admin, async (req, res) => {
         req.flash('error_msg', 'Erro interno ao mostrar Comboio!')
         res.redirect('/')
     }
-})
-
-
-router.get('/comboios/:page', Admin, async (req, res) => {
-  const page = req.params.page || 1;
-  const limit = 5;
-  const skip = (page - 1) * limit;
-  try {
-      const contagem = await Comboio.count({usuarioID: req.user._id})
-      if (parseInt(page) * limit >= contagem) {
-          nextPage = ''
-          hidden = 'hidden'
-      } else {
-          nextPage = parseInt(page) + 1
-          hidden = ''
-      }
-
-      if (parseInt(page) == 2) {
-          previousPage = ''
-      } else {
-          previousPage = parseInt(page) - 1
-      }
-      const comboios = await Comboio.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({ comboioMesAnoAtual: 'desc' })
-      res.render('formulario/comboios/comboiosPage',
-          {
-              comboios: comboios,
-              nextPage: nextPage,
-              previousPage: previousPage,
-              hidden: hidden
-          })
-  } catch (err) {
-      req.flash('error_msg', 'Erro interno ao mostrar Comboio!')
-      res.redirect('/')
-  }
 })
 
 

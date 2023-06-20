@@ -29,6 +29,9 @@ const Comboio = new Schema({
     comboioMesAnoAtual: {
         type: String,
         default: []
+    },
+    comboioNovo: {
+        type: Boolean
     }
 })
 

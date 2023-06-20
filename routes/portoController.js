@@ -34,19 +34,7 @@ const cheerio = require('cheerio')
 const bcrypt = require('bcryptjs')
 
 
-
-router.get('/admin/portos', Admin, async (req, res) => {
-    try {
-        const portos = await Porto.find().lean().sort({ portoNome: 'asc' })
-        res.render('admin/portos/portos',
-            {
-                portos: portos
-            })
-    } catch (err) {
-        req.flash('error_msg', 'Erro interno.')
-        res.redirect('painel')
-    }
-})
+//----    Rota para formular Porto    ----//
 
 
 router.get('/admin/addPorto', Admin, async (req, res) => {
@@ -57,6 +45,10 @@ router.get('/admin/addPorto', Admin, async (req, res) => {
         res.redirect('painel')
     }
 })
+
+
+//----    Rota para postagem de Porto   ----//
+
 
 router.post('/admin/addPorto', Admin, async (req, res) => {
     try {
@@ -74,6 +66,9 @@ router.post('/admin/addPorto', Admin, async (req, res) => {
         res.redirect('painel')
     }
 })
+
+
+//----    Rota de visualização de Porto   ----//
 
 
 router.get('/admin/portoVizu/:id', Admin, async(req, res) => {
@@ -107,6 +102,11 @@ router.get('/admin/portoVizu/:id', Admin, async(req, res) => {
 })
 
 
+
+
+//----    Rota de formulário para edição de Porto    ----//
+
+
 router.get('/admin/portoEdit/:id', Admin, async(req, res) => {
     try{
         const portos = await Porto.findOne({_id: req.params.id}).lean()
@@ -122,6 +122,9 @@ router.get('/admin/portoEdit/:id', Admin, async(req, res) => {
 })
 
 
+//----    Rota de postagem de edição do Porto   ----//
+
+
 router.post('/admin/portoEdit', Admin, async(req, res) => {
     try{
 
@@ -129,6 +132,30 @@ router.post('/admin/portoEdit', Admin, async(req, res) => {
 
     }
 })
+
+
+//----    Rota de listagem de Porto(admin)    ----//
+
+
+router.get('/admin/portos', Admin, async (req, res) => {
+    try {
+        const portos = await Porto.find().lean().sort({ portoNome: 'asc' })
+        res.render('admin/portos/portos',
+            {
+                portos: portos
+            })
+    } catch (err) {
+        req.flash('error_msg', 'Erro interno.')
+        res.redirect('painel')
+    }
+})
+
+
+//----    Rota para paginação de Porto(admin)   ----//
+
+
+
+//----    Rota para infos usadas no modelo 3d(BABYLONJS no Painel admin)   ----//
 
 
 router.get('/portoInfo', Admin, async (req, res) => {
@@ -168,6 +195,7 @@ router.get('/portoInfo', Admin, async (req, res) => {
     } catch (err) {
 
     }
-}) 
+})
+
 
 module.exports = router
