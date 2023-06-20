@@ -194,6 +194,7 @@ router.post('/admin/embarcacoesEdit', Admin, async(req, res) => {
         req.flash('success_msg', 'Embarcação editada com sucesso!')
         res.redirect('painel')
     }catch(err){
+        console.log(err)
         req.flash('error_msg', 'Erro ao editar embarcação.')
         res.redirect('painel')
     }

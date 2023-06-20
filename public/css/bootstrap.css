@@ -23,10 +23,10 @@
 
 
  .mapIMG {
-  background-image: url('../img/relevo\ mapa.PNG');
+  background-image: url('../img/Mapa_R_Paraguai.PNG');
   background-size: cover;
-  width: 700px;
-  height: 610px;
+  width: 100vh;
+  height: 84vw;
   background-color: #ddd;
   position: relative;
 }

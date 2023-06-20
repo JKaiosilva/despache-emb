@@ -10,10 +10,10 @@
                 </div>
                 <div class="input-group mb-3">
                     <label class="input-group-text">Posição X</label>
-                    <input id="rangeX" value="{{portos.positionX}}" class="form-control" type="range" min="-115" max="115" disabled>
+                    <input id="rangeX" value="{{portos.positionX}}" class="form-control" type="range" min="-100" max="100" disabled>
                     
                     <label class="input-group-text">Posição Z</label>
-                    <input id="rangeZ" value="{{portos.positionZ}}" class="form-control" type="range" min="-85" max="85" disabled>
+                    <input id="rangeZ" value="{{portos.positionZ}}" class="form-control" type="range" min="-100" max="100" disabled>
                 </div>
                 <div style="display: flex" class="mapIMG">
                     <div class="map">
@@ -32,7 +32,7 @@
                 })
 
                 window.addEventListener('load', function() {
-                const valueZ = - parseInt(rangeZ.value * 4);
+                const valueZ = - parseInt(rangeZ.value * 9.4);
                 const percentZ = valueZ / parseInt(rangeZ.max);
                 const positionZ = percentZ * parseInt(bolinha.parentNode.offsetWidth);
 

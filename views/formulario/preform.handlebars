@@ -69,12 +69,13 @@
     </div>
 </div>
 <br>
+<br>
 <div class="container text-center">
     <div class="row">
         <div class="col">
             <h5>Minhas ultimas Embarcações cadastradas.</h5>
                 {{#each embarcacoes}}
-                    <div class="card mt-4" style="max-width: 20rem">
+                    <div class="card mt-4" style="max-width:">
                         <div class="card-body">
                             <p>Embarcação: {{embarcacaoNome}}</p>
                                 <p>Data de pedido: {{embarcacaoDataCadastro}}</p>
@@ -83,7 +84,7 @@
                     </div>
 
                 {{else}}
-                    <div class="card mt-4" style="max-width: 20rem">
+                    <div class="card mt-4" >
                         <div class="card-body">
                             <p>Nenhuma Embarcação</p>
                         </div>
@@ -95,7 +96,7 @@
         <div class="col">
             <h5>Minhas ultimo Comboios cadastradas.</h5>
                 {{#each comboios}}
-                    <div class="card mt-4" style="max-width: 20rem">
+                    <div class="card mt-4">
                         <div class="card-body">
                             <p>Embarcação: {{comboioNome}}</p>
                                 <p>Data de pedido: {{comboioMesAnoAtual}}</p>
@@ -104,7 +105,7 @@
                     </div>
 
                 {{else}}
-                    <div class="card mt-4" style="max-width: 20rem">
+                    <div class="card mt-4" >
                         <div class="card-body">
                             <p>Nenhuma Comboio</p>
                         </div>
@@ -112,12 +113,14 @@
                 {{/each}}
             <a href="/comboios"><button class="btn btn-primary mt-3">Ver Mais</button></a>
         </div>
-
-
+    </div>
+<br>
+<br>
+    <div class="row">
         <div class="col">
             <h5>Minhas ultimas requisições de despacho.</h5>
                 {{#each despachos}}
-                    <div class="card mt-4" style="max-width: 20rem">
+                    <div class="card mt-4" >
                         <div class="card-body">
                             <p>Despacho: {{NprocessoDespacho}}</p>
                                 <p>Data de pedido: {{despachoDataPedido}}</p>
@@ -126,7 +129,7 @@
                     </div>
 
                 {{else}}
-                    <div class="card mt-4" style="max-width: 20rem">
+                    <div class="card mt-4" >
                         <div class="card-body">
                             <p>Nenhum despacho</p>
                         </div>
@@ -138,7 +141,7 @@
         <div class="col">
             <h5>Minhas ultimas requisições de entrada.</h5>
                 {{#each avisoEntradas}}
-                    <div class="card mt-4" style="max-width: 20rem">
+                    <div class="card mt-4" >
                         <div class="card-body">
                             <p>Entrada: {{entradaNprocesso}}</p>
                                 <p>Data de pedido: {{entradaDataPedido}}</p>
@@ -147,7 +150,7 @@
                     </div>
 
                 {{else}}
-                    <div class="card mt-4" style="max-width: 20rem">
+                    <div class="card mt-4" >
                         <div class="card-body">
                             <p>Nenhum aviso de entrada</p>
                         </div>
@@ -159,7 +162,7 @@
         <div class="col">
             <h5>Minhas ultimas requisições de saída.</h5>
                 {{#each avisoSaidas}}
-                    <div class="card mt-4" style="max-width: 20rem">
+                    <div class="card mt-4" >
                         <div class="card-body">
                             <p>Saída: {{saidaNprocesso}}</p>
                                 <p>Data de pedido: {{saidaDataPedido}}</p>
@@ -168,7 +171,7 @@
                     </div>
 
                 {{else}}
-                    <div class="card mt-4" style="max-width: 20rem">
+                    <div class="card mt-4" >
                         <div class="card-body">
                             <p>Nenhum aviso de saída</p>
                         </div>
@@ -177,6 +180,7 @@
             <a href="/saidas"><button class="btn btn-primary mt-3">Ver Mais</button></a>
         </div>
     </div>
+</div>
 </div>
 
 

@@ -15,9 +15,9 @@ fetch('/portoInfo')
       textura_pontos.diffuseColor = new BABYLON.Color3(0.1, 0.5, 1);
 
       const porto = new BABYLON.MeshBuilder.CreateCapsule("porto", {radius:0.3, height:5, radiusTop:2});
-        porto.position.x = portos.positionX;
-        porto.position.z = portos.positionZ;
-        porto.position.y = 30;
+        porto.position.x = parseInt(portos.positionX) * -1.4;
+        porto.position.z = parseInt(portos.positionZ) * -2.5;
+        porto.position.y = 25;
 
 
         
@@ -68,12 +68,12 @@ const createScene = function () {
     const scene = new BABYLON.Scene(engine);
     scene.clearColor = new BABYLON.Color4(0, 0, 0, 0.0);
 
-    const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 175, new BABYLON.Vector3(0, 100, 0));
+    const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / -2.5, 175, new BABYLON.Vector3(0, 200, 0));
     camera.setTarget(BABYLON.Vector3.Zero());
     camera.attachControl(canvas, false);
 
 
-    const modelo3d = BABYLON.SceneLoader.ImportMesh("", "/3dModels/", "Rio_paraguai_2.gltf", scene, function (newMeshes) {
+    const modelo3d = BABYLON.SceneLoader.ImportMesh("", "/3dModels/", "Rio_paraguai_3.gltf", scene, function (newMeshes) {
         camera.target = newMeshes[0];
         });
 
