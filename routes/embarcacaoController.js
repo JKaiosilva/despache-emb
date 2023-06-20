@@ -39,9 +39,9 @@ const bcrypt = require('bcryptjs')
 
 router.get('/formulario/addEmbarcacao', eUser, async (req, res) => {
     try{
-        res.render('formulario/embarcacoes/addEmbarcacao')
+        res.render('formulario/embarcacoes/addEmbarcacao',)
     }catch(err){
-        req.flash('error_msg', 'Erro interno')
+        req.flash('error_msg', `Ocorreu um erro ao mostrar formulário de adição de Embarcações (${err})`)
         res.redirect('/')
     }
 })
@@ -68,10 +68,11 @@ router.post('/formulario/addEmbarcacao', eUser, (req, res) => {
         embarcacaoMesAnoAtual: moment(Date.now()).format('MM/YYYY')
     }
     new Embarcacao(novaEmbarcacao).save().then(() => {
-        req.flash('success_msg', 'Embarcação cadastrada com sucesso')
+        req.flash('success_msg', 'Embarcação cadastrada com sucesso, verifique-a na área de formulários')
         res.redirect('/')
     }).catch((err) => {
-        req.flash('error_msg', 'Erro ao salvar embarcação')
+        console.log(err)
+        req.flash('error_msg', `Erro ao salvar Embarcação (${err})`)
         res.redirect('/')
     })
 })

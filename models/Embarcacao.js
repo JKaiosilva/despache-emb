@@ -32,7 +32,8 @@ const Embarcacao = new Schema ({
         type: String
     },
     embarcacaoArmador: {
-        type: String
+        type: String,
+        required: true
     },
     embarcacaoNCRA: {
         type: String

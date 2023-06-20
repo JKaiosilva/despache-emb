@@ -52,8 +52,13 @@ const upload = multer({
 //----  Rota para formulario de adição de aviso    ----//
 
 
-router.get('/admin/addaviso', Admin, (req, res) => {
-    res.render('admin/avisos/addaviso')
+router.get('/admin/addaviso', Admin, async (req, res) => {
+    try{
+        res.render('admin/avisos/addaviso')
+    } catch(err){
+        req.flash('error_msg', `Erro ao mostrar página de adição de Avisos (${err})`)
+        res.redirect('/admin/avisos')
+    }
 })
 
 
@@ -85,7 +90,7 @@ router.post('/admin/avisos/novo', upload.single('foto'), async (req, res) => {
         res.redirect('/admin/avisos')
     } catch (err) {
         console.log(err)
-        req.flash('error_msg', 'Houve um erro interno ao postar aviso')
+        req.flash('error_msg', `Erro ao postar aviso (${err})`)
         res.redirect('/admin/avisos')
     }
 });
@@ -99,7 +104,7 @@ router.post('/admin/avisos/deletar', Admin, (req, res) => {
         req.flash('success_msg', 'Aviso deletado com sucesso!')
         res.redirect('/admin/avisos')
     }).catch((err) => {
-        req.flash('error_msg', 'Erro ao excluier aviso')
+        req.flash('error_msg', `Erro ao excluir aviso (${err})`)
         res.redirect('/admin/avisos')
     })
 })
@@ -111,8 +116,11 @@ router.post('/admin/avisos/deletar', Admin, (req, res) => {
 router.get('/admin/avisos', Admin, async (req, res) => {
     try {
         const avisos = await Aviso.find().limit(5).lean().sort({ avisoData: 'desc' })
-        res.render('admin/avisos/avisos', { avisos: avisos })
+        res.render('admin/avisos/avisos', { 
+            avisos: avisos 
+        })
     } catch (err) {
+        req.flash('error_msg', `Erro ao listar avisos (${err})`)
         res.redirect('/painel')
     }
 })
@@ -149,7 +157,8 @@ router.get('/admin/avisos/:page', Admin, async (req, res) => {
                 hidden: hidden
             })
     } catch (err) {
-
+        req.flash('error_msg', `Erro ao paginar Avisos (${err})`)
+        res.redirect('/painel')
     }
 })
 
