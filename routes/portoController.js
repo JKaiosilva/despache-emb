@@ -60,7 +60,7 @@ router.post('/admin/addPorto', Admin, async (req, res) => {
         }
         await new Porto(novoPorto).save()
         req.flash('success_msg', 'Porto cadastrado com sucesso!')
-        res.redirect('painel')
+        res.redirect('portos')
     } catch (err) {
         req.flash('error_msg', 'Erro ao cadastrar porto.')
         res.redirect('painel')
@@ -127,9 +127,17 @@ router.get('/admin/portoEdit/:id', Admin, async(req, res) => {
 
 router.post('/admin/portoEdit', Admin, async(req, res) => {
     try{
-
+        await Porto.updateOne({_id: req.body.id}, {
+            portoNome: req.body.portoNome,
+            positionX: req.body.positionX,
+            positionZ: req.body.positionZ
+        })
+        req.flash('success_msg', 'Porto atualizado com sucesso!')
+        res.redirect('portos')
     }catch(err){
-
+        console.log(err)
+        req.flash('error_msg', 'Erro interno.')
+        res.redirect('painel')
     }
 })
 
@@ -139,7 +147,7 @@ router.post('/admin/portoEdit', Admin, async(req, res) => {
 
 router.get('/admin/portos', Admin, async (req, res) => {
     try {
-        const portos = await Porto.find().lean().sort({ portoNome: 'asc' })
+        const portos = await Porto.find().limit(5).lean().sort({ portoNome: 'asc' })
         res.render('admin/portos/portos',
             {
                 portos: portos
@@ -153,6 +161,41 @@ router.get('/admin/portos', Admin, async (req, res) => {
 
 //----    Rota para paginação de Porto(admin)   ----//
 
+
+router.get('/admin/portos/:page', Admin, async (req, res) => {
+    try{
+        const page = req.params.page || 1;
+        const limit = 5;
+        const skip = (page - 1) * limit;
+        
+        const contagem = await Porto.count()
+            if(parseInt(page) * limit >= contagem) {
+                nextPage = ''
+                hidden = 'hidden'
+            }else {
+                nextPage = parseInt(page) + 1;
+                hidden = ''
+            }
+
+            if(parseInt(page) == 2) {
+                previousPage = ''
+            }else {
+                previousPage = parseInt(page) -1
+            }
+
+            const portos = await Porto.find().skip(skip).limit(limit).lean().sort({portoNome: 'asc'})
+            res.render('admin/portos/portosPage', {
+                portos: portos,
+                nextPage: nextPage,
+                previousPage: previousPage,
+                hidden: hidden
+            })
+    } catch (err){
+        console.log(err)
+        req.flash('error_msg', 'Erro interno.')
+        res.redirect('painel')
+    }
+})
 
 
 //----    Rota para infos usadas no modelo 3d(BABYLONJS no Painel admin)   ----//

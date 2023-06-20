@@ -19,7 +19,7 @@
                         <input class="form-control" value="{{portoDespacho.portoNome}}" disabled>
                         <br>
                         <label class="input-group-text">Redefinir Porto de Estadia</label>
-                        <select name="despachoPortoEstadia" class="form-select" onchange="outroPorto()">
+                        <select id="select1" name="despachoPortoEstadia" class="form-select" onchange="outroPorto('campo1', 'select1')">
                             <option value="{{despachos.despachoPortoEstadia}}">Já Selecionado: {{portoDespacho.portoNome}}</option>
                         {{#each portos}}
                         <option value="{{_id}}">
@@ -30,14 +30,14 @@
                         </select>
                         <br>
                         <br>
-                        <div id="outroPorto" hidden>
+                        <div id="campo1" hidden>
                         <label class="input-group-text">Adicione outro porto de Estadia</label>
                         <input name="despachoOutroPortoEstadia" value="{{portoDespacho.portoNome}}" class="form-control" type="text">
                         </div>
                         <script>
-                        function outroPorto() {
-                            var outroPortoOption = document.getElementById('outroPortoOption');
-                            var outroPortoDiv = document.getElementById('outroPorto');
+                        function outroPorto(campo, select) {
+                            var outroPortoOption = document.getElementById(select);
+                            var outroPortoDiv = document.getElementById(campo);
 
                             if (outroPortoOption.value == 'Outros') {
                             outroPortoDiv.hidden = false;

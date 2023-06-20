@@ -13,7 +13,7 @@
                     <h4 class="text-center">Dados de Despacho (data off Clearence)</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de Estadia</label>
-                        <select name="despachoPortoEstadia" class="form-select" onchange="outroPorto()">
+                        <select id="select1" name="despachoPortoEstadia" class="form-select" onchange="outroPorto('campo1', 'select1')">
                         {{#each portos}}
                         <option value="{{_id}}">
                             {{portoNome}}
@@ -23,14 +23,14 @@
                         </select>
                         <br>
                         <br>
-                        <div id="outroPorto" hidden>
+                        <div id="campo1" hidden>
                         <label class="input-group-text">Adicione outro porto de Estadia</label>
                         <input name="despachoOutroPortoEstadia" class="form-control" type="text">
                         </div>
                         <script>
-                        function outroPorto() {
-                            var outroPortoOption = document.getElementById('outroPortoOption');
-                            var outroPortoDiv = document.getElementById('outroPorto');
+                        function outroPorto(campo, select) {
+                            var outroPortoOption = document.getElementById(select);
+                            var outroPortoDiv = document.getElementById(campo);
 
                             if (outroPortoOption.value == 'Outros') {
                             outroPortoDiv.hidden = false;

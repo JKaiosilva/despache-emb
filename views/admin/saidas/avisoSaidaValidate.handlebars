@@ -32,7 +32,7 @@
                         <label class="input-group-text">Porto de Saída</label>
                         <input class="form-control" type="text" value="{{portoSaida.portoNome}}" disabled>
                         <label class="input-group-text">Redefinir Porto de Saída</label>
-                            <select name="saidaPortoSaida" class="form-select" onchange="outroPorto('campo1')">
+                            <select id="select1" name="saidaPortoSaida" class="form-select" onchange="outroPorto('campo1', 'select1')">
                                 <option value="{{avisoSaidas.saidaPortoSaida}}">Já Selecionado: {{portoSaida.portoNome}}</option>
                                 {{#each portos}}
                                     <option value="{{_id}}">
@@ -52,7 +52,7 @@
                         <label class="input-group-text">Porto de Destino</label>
                         <input class="form-control" type="text" value="{{portoDestino.portoNome}}" disabled>
                         <label class="input-group-text">Redefinir Porto de Destino</label>
-                            <select name="saidaPortoDestino" class="form-select" onchange="outroPorto('campo2')">
+                            <select id="select2"  name="saidaPortoDestino" class="form-select" onchange="outroPorto('campo2', 'select2')">
                                 <option value="{{avisoSaidas.saidaPortoDestino}}">Já Selecionado: {{portoDestino.portoNome}}</option>
                                 {{#each portos}}
                                     <option value="{{_id}}">
@@ -66,8 +66,8 @@
                             <input value="{{portoDestino.portoNome}}" name="saidaOutroPortoDestino" class="form-control" type="text">
                         </div>
                         <script>
-                        function outroPorto(campo) {
-                            var outroPortoOption = document.getElementById('outroPortoOption');
+                        function outroPorto(campo, select) {
+                            var outroPortoOption = document.getElementById(select);
                             var outroPortoDiv = document.getElementById(campo);
 
                             if (outroPortoOption.value == 'Outros') {

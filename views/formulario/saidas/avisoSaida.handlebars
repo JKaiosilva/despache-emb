@@ -22,7 +22,7 @@
                     <h4 class="text-center">Dados da Partida</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de Saída</label>
-                        <select name="saidaPortoSaida" class="form-select" onchange="outroPorto('campo1')">
+                        <select id="select1" name="saidaPortoSaida" class="form-select" onchange="outroPorto('campo1', 'select1')">
                             {{#each portos}}
                             <option value="{{_id}}">
                                 {{portoNome}}
@@ -39,7 +39,7 @@
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de Destino</label>
-                        <select name="saidaPortoDestino" class="form-select" onchange="outroPorto('campo2')">
+                        <select id="select2" name="saidaPortoDestino" class="form-select" onchange="outroPorto('campo2', 'select2')">
                             {{#each portos}}
                             <option value="{{_id}}">
                                 {{portoNome}}
@@ -52,8 +52,8 @@
                             <input name="saidaOutroPortoDestino" class="form-control" type="text">
                         </div>
                         <script>
-                        function outroPorto(campo) {
-                            var outroPortoOption = document.getElementById('outroPortoOption');
+                        function outroPorto(campo, select) {
+                            var outroPortoOption = document.getElementById(select);
                             var outroPortoDiv = document.getElementById(campo);
 
                             if (outroPortoOption.value == 'Outros') {

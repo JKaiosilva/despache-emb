@@ -84,6 +84,7 @@ router.post('/admin/avisos/novo', upload.single('foto'), async (req, res) => {
         req.flash('success_msg', 'Aviso postado com sucesso')
         res.redirect('/admin/avisos')
     } catch (err) {
+        console.log(err)
         req.flash('error_msg', 'Houve um erro interno ao postar aviso')
         res.redirect('/admin/avisos')
     }

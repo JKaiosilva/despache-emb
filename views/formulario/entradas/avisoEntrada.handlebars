@@ -22,7 +22,7 @@
                     <h4 class="text-center">Dados da Estadia</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de chegada</label>
-                        <select name="entradaPortoChegada" class="form-select" onchange="outroPorto('campo1')">
+                        <select id="select1" name="entradaPortoChegada" class="form-select" onchange="outroPorto('campo1', 'select1')">
                             {{#each portos}}
                                 <option value="{{_id}}">
                             {{portoNome}}
@@ -43,7 +43,7 @@
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de Origem</label>
-                        <select name="entradaPortoOrigem" class="form-select" onchange="outroPorto('campo2')">
+                        <select id="select2" name="entradaPortoOrigem" class="form-select" onchange="outroPorto('campo2', 'select2')">
                             {{#each portos}}
                                 <option value="{{_id}}">
                             {{portoNome}}
@@ -58,7 +58,7 @@
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Porto de Destino</label>
-                        <select name="entradaPortoDestino" class="form-select" onchange="outroPorto('campo3')">
+                        <select id="select3" name="entradaPortoDestino" class="form-select" onchange="outroPorto('campo3', 'select3')">
                             {{#each portos}}
                                 <option value="{{_id}}">
                             {{portoNome}}
@@ -71,8 +71,8 @@
                             <input name="entradaOutroPortoDestino" class="form-control" type="text">
                         </div>
                         <script>
-                        function outroPorto(campo) {
-                            var outroPortoOption = document.getElementById('outroPortoOption');
+                        function outroPorto(campo, select) {
+                            var outroPortoOption = document.getElementById(select);
                             var outroPortoDiv = document.getElementById(campo);
 
                             if (outroPortoOption.value == 'Outros') {
