@@ -48,8 +48,8 @@ router.get('/formulario/comboio', eUser, async(req, res) => {
             embarcacoes: embarcacoes
         })
     }catch(err){
-        res.flash('error_msg', 'Error interno ao mostrar pagina')
-        res.redirect('/')
+        res.flash('error_msg', `Erro ao mostrar página de adição de Comboio (${err})`)
+        res.redirect('/formulario')
     }
 })
 
@@ -90,11 +90,11 @@ router.post('/formulario/comboio', eUser, async (req, res) => {
         await novoComboio.save();
     
         req.flash('success_msg', 'Comboio formulado com sucesso!');
-        res.redirect('/');
+        res.redirect('/formulario');
     } catch (err) {
         console.log(err);
-        req.flash('error_msg', 'Erro interno ao mostrar página');
-        res.redirect('/');
+        req.flash('error_msg', `Erro ao formular Comboio (${err})`);
+        res.redirect('/formulario');
     }
   });
 
@@ -106,12 +106,13 @@ router.get('/formulario/comboiosVizu/:id', eUser, async(req, res) => {
     try{
         const comboios = await Comboio.findOne({_id: req.params.id}).lean()
             res.render('formulario/comboios/comboiosVizu', 
-                {comboios: comboios
+            {
+                    comboios: comboios
             })
     }catch(err){
         console.log(err);
-        req.flash('error_msg', 'Erro interno ao mostrar página');
-        res.redirect('/');
+        req.flash('error_msg', `Erro ao visualizar este Comboio (${err})`);
+        res.redirect('/comboios');
     }
 })
 
@@ -127,8 +128,8 @@ router.get('/comboios', eUser, async(req, res) => {
         })
     }catch(err){
         console.log(err);
-        req.flash('error_msg', 'Erro interno ao mostrar página');
-        res.redirect('/');
+        req.flash('error_msg', `Erro ao listar Comboios (${err})`);
+        res.redirect('/formulario');
     }
 })
 
@@ -164,8 +165,8 @@ router.get('/comboios/:page', eUser, async (req, res) => {
                 hidden: hidden
             })
     } catch (err) {
-        req.flash('error_msg', 'Erro interno ao mostrar Comboio!')
-        res.redirect('/')
+        req.flash('error_msg', `Erro ao paginar Comboios (${err})`)
+        res.redirect('/formulario')
     }
 })
 
@@ -184,13 +185,14 @@ router.get('/admin/comboiosValidate/:id', Admin, async(req, res) => {
 
         const embarcacoes = await Embarcacao.find({_id: embsIds}).lean()
             res.render('admin/comboios/comboiosValidate', 
-                {comboios: comboios,
-                    embarcacoes: embarcacoes
+            {
+                comboios: comboios,
+                embarcacoes: embarcacoes
             })
     }catch(err){
         console.log(err);
-        req.flash('error_msg', 'Erro interno ao mostrar página');
-        res.redirect('/');
+        req.flash('error_msg', `Erro ao mostrar página de validação de Comboio (${err})`);
+        res.redirect('/admin/painel');
     }
 })
 
@@ -229,11 +231,11 @@ router.post('/comboiosValidate', Admin, async(req, res) => {
     
     
         req.flash('success_msg', 'Comboio formulado com sucesso!');
-        res.redirect('/');
+        res.redirect('/admin/comboios');
     }catch(err){
         console.log(err);
-        req.flash('error_msg', 'Erro interno ao validar Comboio!');
-        res.redirect('/admin/painel');
+        req.flash('error_msg', `Erro ao validar este Comboio (${err})`);
+        res.redirect('/admin/comboios');
     }
 })
 
@@ -245,12 +247,13 @@ router.get('/admin/comboios', Admin, async(req, res) => {
     try{
         const comboios = await Comboio.find().lean()
         res.render('admin/comboios/comboios', 
-            {comboios: comboios
+        {
+            comboios: comboios
         })
     }catch(err){
         console.log(err);
-        req.flash('error_msg', 'Erro interno ao mostrar página');
-        res.redirect('/');
+        req.flash('error_msg', `Erro ao listar Comboios (${err})`);
+        res.redirect('/admin/painel');
     }
   })
  
@@ -286,8 +289,8 @@ router.get('/admin/comboios/:page', Admin, async (req, res) => {
                 hidden: hidden
             })
     } catch (err) {
-        req.flash('error_msg', 'Erro interno ao mostrar Comboio!')
-        res.redirect('/')
+        req.flash('error_msg', `Erro ao paginar Comboios (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
