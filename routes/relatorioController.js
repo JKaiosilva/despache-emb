@@ -557,7 +557,7 @@ router.get('/admin/relatorioSaidas', Admin, async (req, res) => {
         }
 
     } catch (err) {
-        req.flash('error_msg', 'Erro interno ao gerar relatório')
+        req.flash('error_msg', `Erro ao gerar Relatório (${err})`)
         res.redirect('/admin/painel')
     }
 })
@@ -570,10 +570,11 @@ router.get('/admin/relatorios', Admin, async (req, res) => {
     try{
         const relatorios = await Relatorio.find().lean().sort({mesAtual: 'asc'})
             res.render('admin/relatorios/relatorios', 
-                {relatorios: relatorios
+                {
+                    relatorios: relatorios
                 })
     }catch(err){
-        req.flash('error_msg', 'Erro interno ao gerar relatório')
+        req.flash('error_msg', `Erro ao gerar Relatório (${err})`)
         res.redirect('/admin/painel')
     }
 })
@@ -586,10 +587,11 @@ router.get('/admin/relatorios/:id', Admin, async (req, res) => {
     try{
         const relatorios = await Relatorio.findOne({_id: req.params.id}).lean()
             res.render('admin/relatorios/relatoriosVizu', 
-                {relatorios: relatorios
+                {
+                    relatorios: relatorios
                 })
     }catch(err){
-        req.flash('error_msg', 'Erro interno ao gerar relatório')
+        req.flash('error_msg', `Erro ao mostrar este Relatório (${err})`)
         res.redirect('/admin/painel')
     }
 })
