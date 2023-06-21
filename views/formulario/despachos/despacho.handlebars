@@ -106,7 +106,7 @@
                             var newdiv = document.createElement('div');
                             var divId = "div" + divCounter
                             newdiv.setAttribute('id', divId)
-                            newdiv.innerHTML = '<select name="tripulante" class="btn-group"><option id="emBranco" value="emBranco">Em Branco</option>{{#each tripulantes}}<option id="tripulante" value="{{_id}}">{{tripulanteNome}}</option>{{/each}}</select><button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divId + '\')">Excluir</button>';                            
+                            newdiv.innerHTML = '<select name="tripulante" class="btn-group"><option id="emBranco" value="emBranco">Em Branco</option>{{#each tripulantes}}<option id="tripulante" value="{{_id}}">{{tripulanteNCIR}}</option>{{/each}}</select><button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divId + '\')">Excluir</button>';                            
                             document.getElementById(divName).appendChild(newdiv);
                             document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
                             var submiteButton = document.getElementById('submitButton')
