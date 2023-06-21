@@ -46,18 +46,18 @@ router.get('/formulario/avisoEntrada', eUser, async (req, res) => {
         const embarcacoes = await Embarcacao.find({ usuarioID: req.user._id, embarcacaoValidadeNumber: { $gte: dataHoje } }).lean()
         const tripulantes = await Tripulante.find({ tripulanteValidadeCIRNumber: { $gte: dataHoje } }).lean()
         const portos = await Porto.find().lean()
-        const comboios = await Comboio.find({ usuarioID: req.user._id }).lean()
-
-        res.render('formulario/entradas/avisoEntrada', {
-            embarcacoes: embarcacoes,
-            tripulantes: tripulantes,
-            portos: portos,
-            despachos: despachos,
-            comboios: comboios
-        })
+        const comboios = await Comboio.find({ usuarioId: req.user._id }).lean()
+            res.render('formulario/entradas/avisoEntrada', 
+                {
+                    embarcacoes: embarcacoes,
+                    tripulantes: tripulantes,
+                    portos: portos,
+                    despachos: despachos,
+                    comboios: comboios
+                })
     } catch (err) {
-        req.flash('error_msg', 'Erro interno ao mostrar formulario')
-        res.redirect('formulario/preform')
+        req.flash('error_msg', `Erro ao mostrar formulário de adição de Aviso de Entrada (${err})`)
+        res.redirect('/formulario')
     }
 })
 
@@ -70,7 +70,6 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
         const cleanString = req.body.entradaTripulantes.replace(/[\n' \[\]]/g, '');
         const tripulantes = cleanString.split(',');
         const avisoEntradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
-
  
         const clearPassageiros = req.body.entradaPassageirosNome
         const passageirosLimpo = clearPassageiros.split(',');
@@ -123,15 +122,14 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
             embarcacao: req.body.embarcacao,
             entradaData: Date.now(),
             entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
-
         }
         new AvisoEntrada(novoAvisoEntrada).save()
         req.flash('success_msg', 'Aviso de entrada enviado com sucesso')
-        res.redirect('/')
+        res.redirect('/formulario')
     } catch (err) {
         console.log(err)
-        req.flash('error_msg', 'Erro interno, tente novamente')
-        res.redirect('/')
+        req.flash('error_msg', `Erro ao postar Aviso de Entrada (${err})`)
+        res.redirect('/formulario')
     }
 })
 
@@ -166,22 +164,21 @@ router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
         })
         const despacho = await Despacho.findOne({ _id: avisoEntradas.entradaDespacho }).lean()
         const comboios = await Comboio.findOne({ _id: avisoEntradas.entradaComboios }).lean()
-
-
-        res.render('formulario/entradas/avisoEntradaVizu', {
-            avisoEntradas: avisoEntradas,
-            tripulantes: tripulantes,
-            embarcacoes: embarcacoes,
-            despacho: despacho,
-            comboios: comboios,
-            portoChegada: portoChegada,
-            portoOrigem: portoOrigem,
-            portoDestino: portoDestino,
-            hidden: hidden
-        })
+            res.render('formulario/entradas/avisoEntradaVizu', 
+                {
+                    avisoEntradas: avisoEntradas,
+                    tripulantes: tripulantes,
+                    embarcacoes: embarcacoes,
+                    despacho: despacho,
+                    comboios: comboios,
+                    portoChegada: portoChegada,
+                    portoOrigem: portoOrigem,
+                    portoDestino: portoDestino,
+                    hidden: hidden
+                })
     } catch (err) {
         console.log(err)
-        req.flash('error_msg', 'Erro interno ao mostrar formulário')
+        req.flash('error_msg', `Erro ao visualizar este Aviso de Entrada (${err})`)
         res.redirect('/formulario')
     }
 })
@@ -195,13 +192,13 @@ router.get('/entradas', eUser, async (req, res) => {
     const admin = req.user.eAdmin ? true : false;
     try {
         const avisoEntradas = await AvisoEntrada.find({ usuarioID: req.user._id }).limit(5).lean().sort({ entradaData: 'desc' })
-        res.render('formulario/entradas/entradas',
-            {
-                avisoEntradas: avisoEntradas,
-                admin: admin
-            })
+            res.render('formulario/entradas/entradas',
+                {
+                    avisoEntradas: avisoEntradas,
+                    admin: admin
+                })
     } catch (err) {
-        req.flash('error_msg', 'Erro ao mostrar página')
+        req.flash('error_msg', `Erro ao listar Avisos de Entrada (${err})`)
         res.redirect('/formulario')
     }
 })
@@ -232,16 +229,16 @@ router.get('/entradas/:page', eUser, async (req, res) => {
             previousPage = parseInt(page) - 1
         }
         const avisoEntradas = await AvisoEntrada.find({ usuarioID: req.user._id }).skip(skip).limit(limit).lean().sort({ entradaData: 'desc' })
-        res.render('formulario/entradas/entradasPage',
-            {
-                avisoEntradas: avisoEntradas,
-                nextPage: nextPage,
-                previousPage: previousPage,
-                hidden: hidden,
-                admin: admin
-            })
+            res.render('formulario/entradas/entradasPage',
+                {
+                    avisoEntradas: avisoEntradas,
+                    nextPage: nextPage,
+                    previousPage: previousPage,
+                    hidden: hidden,
+                    admin: admin
+                })
     } catch (err) {
-        req.flash('error_msg', 'Erro ao mostrar página')
+        req.flash('error_msg', `Erro ao paginar Avisos de Entrada (${err})`)
         res.redirect('/formulario')
     }
 })
@@ -278,27 +275,26 @@ router.get('/admin/entradasValidate/:id', Admin, async (req, res) => {
         const portos = await Porto.find().lean()
         const despachos = await Despacho.find().lean()
         const comboios = await Comboio.find().lean()
-
-
-        res.render('admin/entradas/avisoEntradaValidate', {
-            avisoEntradas: avisoEntradas,
-            tripulantesValid: tripulantesValid,
-            embarcacoesValid: embarcacoesValid,
-            despachoValid: despachoValid,
-            portoChegada: portoChegada,
-            portoOrigem: portoOrigem,
-            portoDestino: portoDestino,
-            tripulantes: tripulantes,
-            comboiosValid: comboiosValid,
-            embarcacoes: embarcacoes,
-            portos: portos,
-            despachos: despachos,
-            comboios: comboios
-        })
+            res.render('admin/entradas/avisoEntradaValidate', 
+                {
+                    avisoEntradas: avisoEntradas,
+                    tripulantesValid: tripulantesValid,
+                    embarcacoesValid: embarcacoesValid,
+                    despachoValid: despachoValid,
+                    portoChegada: portoChegada,
+                    portoOrigem: portoOrigem,
+                    portoDestino: portoDestino,
+                    tripulantes: tripulantes,
+                    comboiosValid: comboiosValid,
+                    embarcacoes: embarcacoes,
+                    portos: portos,
+                    despachos: despachos,
+                    comboios: comboios
+                })
     } catch (err) {
         console.log(err)
-        req.flash('error_msg', 'Erro interno ao mostrar aviso de entrada!')
-        res.redirect('/')
+        req.flash('error_msg', `Erro ao mostrar página de validação de Aviso de Entrada (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -366,11 +362,11 @@ router.post('/admin/entradasValidate', Admin, async (req, res) => {
 
         })
         req.flash('success_msg', 'Aviso de entrada validado com sucesso')
-        res.redirect('/')
+        res.redirect('/admin/painel')
     } catch (err) {
         console.log(err)
-        req.flash('error_msg', 'Erro ao validar despachos!')
-        res.redirect('painel')
+        req.flash('error_msg', `Erro ao validar Aviso de Entrada (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -378,13 +374,17 @@ router.post('/admin/entradasValidate', Admin, async (req, res) => {
 //----    Rota de listagem de Entradas(admin)    ----//
 
 
-router.get('/admin/entradas', Admin, (req, res) => {
-    AvisoEntrada.find().limit(5).lean().sort({ entradaData: 'desc' }).then((avisoEntradas) => {
-        res.render('admin/entradas/entradas', { avisoEntradas: avisoEntradas })
-    }).catch((err) => {
-        req.flash('error_msg', 'Erro interno ao mostrar avisos de entrada!')
-        res.redirect('/')
-    })
+router.get('/admin/entradas', Admin, async (req, res) => {
+    try{
+        AvisoEntrada.find().limit(5).lean().sort({ entradaData: 'desc' })
+            res.render('admin/entradas/entradas', 
+                { 
+                    avisoEntradas: avisoEntradas 
+                })
+    }catch(err){
+        req.flash('error_msg', `Erro ao listar Avisos de Entrada (${err})`)
+        res.redirect('/admin/painel')
+    }
 })
 
 
@@ -411,16 +411,16 @@ router.get('/admin/entradasPage/:page', Admin, async (req, res) => {
             previousPage = parseInt(page) - 1
         }
         const avisoEntradas = await AvisoEntrada.find().skip(skip).limit(limit).lean().sort({ entradaData: 'desc' })
-        res.render('admin/entradas/entradasPage',
-            {
-                avisoEntradas: avisoEntradas,
-                nextPage: nextPage,
-                previousPage: previousPage,
-                hidden: hidden
-            })
+            res.render('admin/entradas/entradasPage',
+                {
+                    avisoEntradas: avisoEntradas,
+                    nextPage: nextPage,
+                    previousPage: previousPage,
+                    hidden: hidden
+                })
     } catch (err) {
-        req.flash('error_msg', 'Erro interno ao mostrar avisos de entrada!')
-        res.redirect('/')
+        req.flash('error_msg', `Erro ao paginar Avisos de Entrada (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -605,8 +605,8 @@ router.get('/avisoEntrada/:id/pdf', Admin, async (req, res) => {
 
         });
     } catch (err) {
-        req.flash('error_msg', 'Erro ao gerar PDF')
-        res.redirect('/')
+        req.flash('error_msg', `Erro ao gerar PDF deste Aviso de Entrada (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
