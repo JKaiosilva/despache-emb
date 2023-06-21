@@ -60,24 +60,40 @@ router.get('/formulario/comboio', eUser, async(req, res) => {
 router.post('/formulario/comboio', eUser, async (req, res) => {
     try {
         const cleanString = req.body.embarcacoes.replace(/[\n' \[\]]/g, '');
-        const embarcacoes = cleanString.split(',');
+        const embs = cleanString.split(',');
 
         const comboioEmbarcacoes = [];
     
-        for (var i = 0; i < embarcacoes.length; i++) {
-            async function pesquisarNome(id){
-            const embarcacao = await Embarcacao.findOne({_id: id}).lean()
-            return embarcacao.embarcacaoNome
+        if(embs.length === 1){
+            for (var i = 0; i < embs.length; i++) {
+                async function pesquisarNome(id){
+                const embarcacao = await Embarcacao.findOne({_id: id}).lean()
+                return embarcacao.embarcacaoNome
+                }
+                const comboioEmbarcacao = {
+                id: req.body.comboio,
+                embarcacaoNome: await pesquisarNome(req.body.comboio),
+                carga: req.body.comboiosCarga,
+                quantidade: req.body.comboiosQuantidadeCarga,
+                arqueacaoBruta: req.body.comboiosarqueacaoBruta
+                };
+                comboioEmbarcacoes.push(comboioEmbarcacao);
             }
-            const comboioEmbarcacao = {
-            id: req.body.comboio[i],
-            embarcacaoNome: await pesquisarNome(req.body.comboio[i]),
-            carga: req.body.comboiosCarga[i],
-            quantidade: req.body.comboiosQuantidadeCarga[i],
-            arqueacaoBruta: req.body.comboiosarqueacaoBruta[i]
-            };
-        
-            comboioEmbarcacoes.push(comboioEmbarcacao);
+        }else{
+            for (var i = 0; i < embs.length; i++) {
+                async function pesquisarNome(id){
+                const embarcacao = await Embarcacao.findOne({_id: id}).lean()
+                return embarcacao.embarcacaoNome
+                }
+                const comboioEmbarcacao = {
+                id: req.body.comboio[i],
+                embarcacaoNome: await pesquisarNome(req.body.comboio[i]),
+                carga: req.body.comboiosCarga[i],
+                quantidade: req.body.comboiosQuantidadeCarga[i],
+                arqueacaoBruta: req.body.comboiosarqueacaoBruta[i]
+                };
+                comboioEmbarcacoes.push(comboioEmbarcacao);
+            }
         }
     
         const novoComboio = new Comboio({
@@ -88,7 +104,6 @@ router.post('/formulario/comboio', eUser, async (req, res) => {
         });
     
         await novoComboio.save();
-    
         req.flash('success_msg', 'Comboio formulado com sucesso!');
         res.redirect('/formulario');
     } catch (err) {
@@ -203,25 +218,41 @@ router.get('/admin/comboiosValidate/:id', Admin, async(req, res) => {
 router.post('/comboiosValidate', Admin, async(req, res) => {
     try {
         const cleanString = req.body.embarcacoes.replace(/[\n' \[\]]/g, '');
-        const embarcacoes = cleanString.split(',');
-        const comboiosIds = embarcacoes.filter((item, index) => embarcacoes.indexOf(item) === index);
+        const embs = cleanString.split(',');
+        const comboiosIds = embs.filter((item, index) => embs.indexOf(item) === index);
 
         const comboioEmbarcacoes = [];
     
-        for (var i = 0; i < comboiosIds.length; i++) {
-          async function pesquisarNome(id){
-            const embarcacao = await Embarcacao.findOne({_id: id}).lean()
-            return embarcacao.embarcacaoNome
-          }
-          const comboioEmbarcacao = {
-            id: req.body.comboio[i],
-            embarcacaoNome: await pesquisarNome(req.body.comboio[i]),
-            carga: req.body.comboiosCarga[i],
-            quantidade: req.body.comboiosQuantidadeCarga[i],
-            arqueacaoBruta: req.body.comboiosarqueacaoBruta[i]
-          };
-        
-          comboioEmbarcacoes.push(comboioEmbarcacao);
+        if(embs.length === 1){
+            for (var i = 0; i < embs.length; i++) {
+                async function pesquisarNome(id){
+                const embarcacao = await Embarcacao.findOne({_id: id}).lean()
+                return embarcacao.embarcacaoNome
+                }
+                const comboioEmbarcacao = {
+                id: req.body.comboio,
+                embarcacaoNome: await pesquisarNome(req.body.comboio),
+                carga: req.body.comboiosCarga,
+                quantidade: req.body.comboiosQuantidadeCarga,
+                arqueacaoBruta: req.body.comboiosarqueacaoBruta
+                };
+                comboioEmbarcacoes.push(comboioEmbarcacao);
+            }
+        }else{
+            for (var i = 0; i < embs.length; i++) {
+                async function pesquisarNome(id){
+                const embarcacao = await Embarcacao.findOne({_id: id}).lean()
+                return embarcacao.embarcacaoNome
+                }
+                const comboioEmbarcacao = {
+                id: req.body.comboio[i],
+                embarcacaoNome: await pesquisarNome(req.body.comboio[i]),
+                carga: req.body.comboiosCarga[i],
+                quantidade: req.body.comboiosQuantidadeCarga[i],
+                arqueacaoBruta: req.body.comboiosarqueacaoBruta[i]
+                };
+                comboioEmbarcacoes.push(comboioEmbarcacao);
+            }
         }
     
         await Comboio.updateOne({_id: req.body.id}, {

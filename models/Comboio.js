@@ -10,20 +10,16 @@ const Comboio = new Schema({
     },
     embarcacoes: [{
         id: {
-            type: Schema.Types.ObjectId,
+            type: Schema.Types.Mixed,
             ref: 'Embarcacao',
         },
         embarcacaoNome: {
-            type: String
         },
         carga: {
-            type: String
         },
         quantidade: {
-            type: String
         },
         arqueacaoBruta: {
-            type: String
         }
     }],
     comboioMesAnoAtual: {
