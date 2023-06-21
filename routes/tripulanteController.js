@@ -34,7 +34,6 @@ const cheerio = require('cheerio')
 const bcrypt = require('bcryptjs')
 
 
-
 //----  Rota para formulário de cadastro de Tripulante    ----//
 
 
@@ -42,8 +41,8 @@ router.get('/admin/addTripulante', Admin, async (req, res) => {
     try{
         res.render('admin/tripulantes/addTripulante')
     }catch(err){
-        req.flash('error_msg', 'Erro interno')
-        res.redirect('admin/painel')
+        req.flash('error_msg', `Erro ao mostrar página de adição de Tripulantes (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -67,10 +66,10 @@ router.post('/admin/addTripulante', Admin, async (req, res) => {
         }
         await new Tripulante(novoTripulante).save()
         req.flash('success_msg', 'Tripulante cadastrado com sucesso')
-        res.redirect('painel')
+        res.redirect('/admin/painel')
     } catch (err) {
-        req.flash('error_msg', 'Erro ao cadastrar tripulante.')
-        res.redirect('painel')
+        req.flash('error_msg', `Erro ao cadastrar Tripulante (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -82,11 +81,12 @@ router.get('/admin/tripulantesVizu/:id', Admin, async(req, res) => {
     try{
         const tripulantes = await Tripulante.findOne({_id: req.params.id}).lean()
             res.render('admin/tripulantes/tripulantesVizu', 
-                {tripulantes: tripulantes
-            })
+                {
+                    tripulantes: tripulantes
+                })
     }catch(err){
-        req.flash('error_msg', 'Erro ao mostrar tripulante.')
-        res.redirect('painel')
+        req.flash('error_msg', `Erro ao visualizar Tripualnte (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -97,12 +97,13 @@ router.get('/admin/tripulantesVizu/:id', Admin, async(req, res) => {
 router.get('/admin/tripulantesEdit/:id', Admin, async(req, res) => {
     try{
         const tripulante = await Tripulante.findOne({_id: req.params.id}).lean()
-            res.render('admin/tripulantes/tripulantesEdit', {
-                tripulante: tripulante
-            })
+            res.render('admin/tripulantes/tripulantesEdit', 
+                {
+                    tripulante: tripulante
+                })
     }catch(err){
-        req.flash('error_msg', 'Erro ao mostrar tripulante.')
-        res.redirect('painel')
+        req.flash('error_msg', `Erro ao mostrar página de edição de Tripulante (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -121,10 +122,10 @@ router.post('/admin/tripulantesEdit', Admin, async(req, res) => {
             tripulanteValidadeCIRNumber: Date.parse(req.body.tripulanteValidadeCIR),
         })
         req.flash('success_msg', 'Tripulante atualizado com sucesso!')
-        res.redirect('painel')
+        res.redirect('/admin/painel')
     }catch(err){
-        req.flash('error_msg', 'Erro ao editar tripulante.')
-        res.redirect('painel')
+        req.flash('error_msg', `Erro ao editar Tripulante (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -135,13 +136,13 @@ router.post('/admin/tripulantesEdit', Admin, async(req, res) => {
 router.get('/admin/tripulantes', Admin, async (req, res) => {
     try {
         const tripulantes = await Tripulante.find().lean().sort({ tripulanteNome: 'asc' })
-        res.render('admin/tripulantes/tripulantes',
-            {
-                tripulantes: tripulantes
-            })
+            res.render('admin/tripulantes/tripulantes',
+                {
+                    tripulantes: tripulantes
+                })
     } catch (err) {
-        req.flash('error_msg', 'Erro interno')
-        res.redirect('admin/painel')
+        req.flash('error_msg', `Erro ao listar Tripulantes (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -171,14 +172,15 @@ router.get('/admin/tripulantes/:page', Admin, async(req, res) => {
         }
         const tripulantes = await Tripulante.find().skip(skip).limit(limit).lean().sort({tripulanteNome: 'asc'})
             res.render('admin/tripulantes/tripulantesPage',
-                {tripulantes: tripulantes,
+                {   
+                    tripulantes: tripulantes,
                     nextPage: nextPage,
-                        previousPage: previousPage,
-                            hidden: hidden
+                    previousPage: previousPage,
+                    hidden: hidden
                 })
     }catch(err){
-        req.flash('error_msg', 'Erro interno ao mostrar tripulantes!')
-        res.redirect('/')
+        req.flash('error_msg', `Erro ao paginar Tripulantes (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -186,7 +188,7 @@ router.get('/admin/tripulantes/:page', Admin, async(req, res) => {
 //----    Rota de formulação de PDF de Tripulante   ----//
 
 
-router.get('/tripulantes/:id/pdf', Admin, async(req, res) => {
+router.get('/tripulantes/:id/pdf', Admin, async (req, res) => {
     try{
         const tripulantes = await Tripulante.findOne({_id: req.params.id}).lean()
 
@@ -226,8 +228,8 @@ router.get('/tripulantes/:id/pdf', Admin, async(req, res) => {
           
           });
     }catch(err){
-        req.flash('error_msg', 'Erro ao gerar PDF')
-        res.redirect('/') 
+        req.flash('error_msg', `Erro ao gerar PDF deste Tripulante (${err})`)
+        res.redirect('/admin/painel') 
     }
 })
 
