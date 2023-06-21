@@ -47,17 +47,17 @@ router.get('/formulario/avisoSaida', eUser, async (req, res) => {
         const tripulantes = await Tripulante.find({ tripulanteValidadeCIRNumber: { $gte: dataHoje } }).lean()
         const portos = await Porto.find().lean()
         const comboios = await Comboio.find({usuarioID: req.user._id}).lean()
-        res.render('formulario/saidas/avisoSaida',
-            {
-                embarcacoes: embarcacoes,
-                tripulantes: tripulantes,
-                portos: portos,
-                despachos: despachos,
-                comboios: comboios
-            })
+            res.render('formulario/saidas/avisoSaida',
+                {
+                    embarcacoes: embarcacoes,
+                    tripulantes: tripulantes,
+                    portos: portos,
+                    despachos: despachos,
+                    comboios: comboios
+                })
     } catch (err) {
-        req.flash('error_msg', 'Erro interno ao mostrar formulario')
-        res.redirect('formulario/preform')
+        req.flash('error_msg', `Erro ao mostrar página de adição de Aviso de Saída (${err})`)
+        res.redirect('/formulario')
     }
 })
 
@@ -121,10 +121,10 @@ router.post('/formulario/avisoSaida', eUser, async (req, res) => {
         }
         new AvisoSaida(novoAvisoSaida).save()
         req.flash('success_msg', 'Aviso de saida enviado com sucesso')
-        res.redirect('/')
+        res.redirect('/formulario')
     } catch (err) {
-        req.flash('error_msg', 'Erro interno, tente novamente')
-        res.redirect('/')
+        req.flash('error_msg', `Erro ao postar Aviso de Saída (${err})`)
+        res.redirect('/formulario')
     }
 })
 
@@ -154,20 +154,19 @@ router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
         })
         const despacho = await Despacho.findOne({ _id: avisoSaidas.saidaDespacho }).lean()
         const comboios = await Comboio.findOne({_id: avisoSaidas.saidaComboios}).lean()
-
-        res.render('formulario/saidas/avisoSaidaVizu',
-            {
-                avisoSaidas: avisoSaidas,
-                embarcacoes: embarcacoes,
-                tripulantes: tripulantes,
-                despacho: despacho,
-                comboios: comboios,
-                portoSaida: portoSaida,
-                portoDestino: portoDestino,
-                hidden: hidden
-            })
+            res.render('formulario/saidas/avisoSaidaVizu',
+                {
+                    avisoSaidas: avisoSaidas,
+                    embarcacoes: embarcacoes,
+                    tripulantes: tripulantes,
+                    despacho: despacho,
+                    comboios: comboios,
+                    portoSaida: portoSaida,
+                    portoDestino: portoDestino,
+                    hidden: hidden
+                })
     } catch (err) {
-        req.flash('error_msg', 'Erro interno ao mostrar formulário')
+        req.flash('error_msg', `Erro ao visualizar este Aviso de Saída (${err})`)
         res.redirect('/formulario')
     }
 })
@@ -181,13 +180,13 @@ router.get('/saidas', eUser, async (req, res) => {
     const admin = req.user.eAdmin ? true : false;
     try {
         const avisoSaidas = await AvisoSaida.find({ usuarioID: req.user._id }).limit(5).lean().sort({ saidaData: 'desc' })
-        res.render('formulario/saidas/saidas',
-            {
-                avisoSaidas: avisoSaidas,
-                admin: admin
-            })
+            res.render('formulario/saidas/saidas',
+                {
+                    avisoSaidas: avisoSaidas,
+                    admin: admin
+                })
     } catch (err) {
-        req.flash('error_msg', 'Erro ao mostrar página')
+        req.flash('error_msg', `Erro ao listar Avisos de Saída (${err})`)
         res.redirect('/formulario')
     }
 })
@@ -218,16 +217,16 @@ router.get('/saidas/:page', eUser, async (req, res) => {
             previousPage = parseInt(page) - 1
         }
         const avisoSaidas = await AvisoSaida.find({ usuarioID: req.user._id }).skip(skip).limit(limit).lean().sort({ saidaData: 'desc' })
-        res.render('formulario/saidas/saidasPage',
-            {
-                avisoSaidas: avisoSaidas,
-                nextPage: nextPage,
-                previousPage: previousPage,
-                hidden: hidden,
-                admin: admin
-            })
+            res.render('formulario/saidas/saidasPage',
+                {
+                    avisoSaidas: avisoSaidas,
+                    nextPage: nextPage,
+                    previousPage: previousPage,
+                    hidden: hidden,
+                    admin: admin
+                })
     } catch (err) {
-        req.flash('error_msg', 'Erro ao mostrar página')
+        req.flash('error_msg', `Erro ao paginar Avisos de Saída (${err})`)
         res.redirect('/formulario')
     }
 })
@@ -259,27 +258,25 @@ router.get('/admin/saidasValidate/:id', Admin, async (req, res) => {
         const portos = await Porto.find().lean()
         const despachos = await Despacho.find().lean()
         const comboios = await Comboio.find().lean()
-
-        res.render('admin/saidas/avisoSaidaValidate',
-            {
-                avisoSaidas: avisoSaidas,
-                tripulantesValid: tripulantesValid,
-                embarcacaoValid: embarcacaoValid,
-                despachoValid: despachoValid,
-                portoSaida: portoSaida,
-                portoDestino: portoDestino,
-                comboiosValid: comboiosValid,
-                tripulantes: tripulantes,
-                embarcacoes: embarcacoes,
-                portos: portos,
-                despachos: despachos,
-                comboios: comboios
-            })
-
+            res.render('admin/saidas/avisoSaidaValidate',
+                {
+                    avisoSaidas: avisoSaidas,
+                    tripulantesValid: tripulantesValid,
+                    embarcacaoValid: embarcacaoValid,
+                    despachoValid: despachoValid,
+                    portoSaida: portoSaida,
+                    portoDestino: portoDestino,
+                    comboiosValid: comboiosValid,
+                    tripulantes: tripulantes,
+                    embarcacoes: embarcacoes,
+                    portos: portos,
+                    despachos: despachos,
+                    comboios: comboios
+                })
     } catch (err) {
         console.log(err)
-        req.flash('error_msg', 'Erro interno ao mostrar aviso de saida!')
-        res.redirect('/')
+        req.flash('error_msg', `Erro ao mostrar página de edição deste Aviso de Saída (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -338,11 +335,11 @@ router.post('/admin/saidasValidate', Admin, async (req, res) => {
 
         })
         req.flash('success_msg', 'Aviso de saida enviado com sucesso')
-        res.redirect('/')
+        res.redirect('/admin/painel')
     } catch (err) {
         console.log(err)
-        req.flash('error_msg', 'Erro interno ao validar aviso de saida!')
-        res.redirect('/')
+        req.flash('error_msg', `Erro ao validar este Aviso de Saída (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -352,10 +349,13 @@ router.post('/admin/saidasValidate', Admin, async (req, res) => {
 
 router.get('/admin/saidas', Admin, (req, res) => {
     AvisoSaida.find().limit(5).lean().sort({ saidaData: 'desc' }).then((avisoSaidas) => {
-        res.render('admin/saidas/saidas', { avisoSaidas: avisoSaidas })
+        res.render('admin/saidas/saidas', 
+            { 
+                avisoSaidas: avisoSaidas 
+            })
     }).catch((err) => {
-        req.flash('error_msg', 'Erro interno ao mostrar avisos de saida!')
-        res.redirect('/')
+        req.flash('error_msg', `Erro ao listar Avisos de Saída (${err})`)
+        res.redirect('/admin/painel')
     })
 })
 
@@ -383,15 +383,16 @@ router.get('/admin/saidasPage/:page', Admin, async (req, res) => {
             previousPage = parseInt(page) - 1
         }
         const avisoSaidas = await AvisoSaida.find().skip(skip).limit(limit).lean().sort({ saidaData: 'desc' })
-        res.render('admin/saidas/saidasPage',
-            {
-                avisoSaidas: avisoSaidas,
-                nextPage: nextPage,
-                previousPage: previousPage,
-                hidden: hidden
-            })
+            res.render('admin/saidas/saidasPage',
+                {
+                    avisoSaidas: avisoSaidas,
+                    nextPage: nextPage,
+                    previousPage: previousPage,
+                    hidden: hidden
+                })
     } catch (err) {
-
+        req.flash('error_msg', `Erro ao paginar Avisos de Saída (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -558,8 +559,8 @@ router.get('/avisoSaida/:id/pdf', Admin, async (req, res) => {
 
         });
     } catch (err) {
-        req.flash('error_msg', 'Erro ao gerar PDF')
-        res.redirect('/')
+        req.flash('error_msg', `Erro ao gerar PDF deste Aviso de Saída (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
