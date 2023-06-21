@@ -35,13 +35,17 @@ require('dotenv').config();
 const cheerio = require('cheerio')
 
 
-
-
 //----    Rota para formulário de cadastro de Usuário    ----//
 
 
-router.get('/usuarios/cadastro', (req, res) => {
-    res.render('usuarios/cadastro')
+router.get('/usuarios/cadastro', async (req, res) => {
+    try{
+        res.render('usuarios/cadastro')
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', `Erro ao mostrar página de cadastro (${err})`)
+        res.redirect('/')
+    }
 })
 
 
@@ -101,44 +105,57 @@ router.post('/usuarios/cadastro', (req, res) => {
             }
         }).catch((err) => {
             console.log(err)
-            req.flash('error_msg', 'Houve um erro interno')
+            req.flash('error_msg', `Erro ao cadastrar usuário (${err})`)
             res.redirect('/')
         })
     }
-
 })
 
 
 //----    Rota de visualização de Usuário(admin)   ----//
 
 
-router.get('/admin/users/usuariosVizu/:id', Admin, (req, res) => {
-    Usuario.find({ _id: req.params.id }).lean().then((usuario) => {
-        res.render('admin/users/usuariosVizu', { usuario: usuario })
-    }).catch((err) => {
-        req.flash('error_msg', 'Erro ao mostrar usuarios.')
-        res.redirect('admin/users/users')
-    })
+router.get('/admin/users/usuariosVizu/:id', Admin, async (req, res) => {
+    try{
+        const usuario = await Usuario.find({ _id: req.params.id }).lean()
+            res.render('admin/users/usuariosVizu', 
+                { 
+                    usuario: usuario 
+                })
+    }catch(err){
+        req.flash('error_msg', `Erro ao mostrar Usuário (${err})`)
+        res.redirect('/admin/painel')
+    }
 })
 
 
 //----  Rota para visualização de login de Usuário   ----//
 
 
-router.get('/usuarios/login', (req, res) => {
-    res.render('usuarios/login')
+router.get('/usuarios/login', async (req, res) => {
+    try{
+        res.render('usuarios/login')
+    }catch(err){
+        req.flash('error_msg', `Erro ao mostrar página de login (${err})`)
+        res.redirect('/')
+    }
 })
 
 
 //----    Rota de postagem de login de Usuário   ----//
 
 
-router.post('/usuarios/login', (req, res, next) => {
-    passport.authenticate('local', {
-        successRedirect: '/',
-        failureRedirect: '/usuarios/login',
-        failureFlash: true,
-    })(req, res, next)
+router.post('/usuarios/login', async (req, res, next) => {
+    try{
+        passport.authenticate('local', {
+            successRedirect: '/',
+            failureRedirect: '/usuarios/login',
+            failureFlash: true,
+        })(req, res, next)
+    }catch(err){
+        req.flash('error_msg', `Erro ao fazer login (${err})`)
+        res.redirect('/')
+    }
 })
 
 
@@ -148,13 +165,14 @@ router.post('/usuarios/login', (req, res, next) => {
 router.get('/admin/users/usuariosEdit/:id', Admin, async (req, res) => {
     try{
         const usuario = await Usuario.findOne({_id: req.params.id}).lean()
-        res.render('admin/users/usuariosEdit', {
-            usuario: usuario
-        })
+            res.render('admin/users/usuariosEdit', 
+                {
+                    usuario: usuario
+                })
     }catch(err){
         console.log(err)
-        req.flash('error_msg', 'Erro ao mostrar usuarios.')
-        res.redirect('admin/users/users')
+        req.flash('error_msg', `Erro ao mostrar página de edição de Usuário (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -176,7 +194,7 @@ router.post('/admin/users/usuarioEdit', Admin, async(req, res) => {
             bcrypt.hash(req.body.senha, salt, async (err, hash)  =>  {
                 if(err){
                     console.log(err)
-                    req.flash('error_msg', 'Houve um erro ao salvar usuario')
+                    req.flash('error_msg', `Erro ao editar Usuário (${err})`)
                 }
                 await Usuario.updateOne({_id: id},{
                     nome: req.body.nome,
@@ -187,12 +205,11 @@ router.post('/admin/users/usuarioEdit', Admin, async(req, res) => {
             })
         })
 
-
         req.flash('success_msg', 'Usuario editado com sucesso')
         res.redirect('/admin/painel')
     }catch(err){
         console.log(err)
-        req.flash('error_msg', 'Erro ao editar usuario.')
+        req.flash('error_msg', `Erro ao editar Usuário (${err})`)
         res.redirect('/admin/painel')
     }
 })
@@ -201,13 +218,17 @@ router.post('/admin/users/usuarioEdit', Admin, async(req, res) => {
 //----    Rota de listagem de Usuários    ----//
 
 
-router.get('/admin/listaUsers', Admin, (req, res) => {
-    Usuario.find().lean().sort({ nome: 'asc' }).then((usuarios) => {
-        res.render('admin/users/users', { usuarios: usuarios })
-    }).catch((err) => {
-        req.flash('error_msg', 'Erro interno ao mostrar usuarios!')
-        res.redirect('/')
-    })
+router.get('/admin/listaUsers', Admin, async (req, res) => {
+    try{
+        const usuarios = await Usuario.find().lean().sort({ nome: 'asc' })
+            res.render('admin/users/users', 
+                { 
+                    usuarios: usuarios 
+                })
+    }catch(err){
+        req.flash('error_msg', `Erro ao listar Usuários (${err})`)
+        res.redirect('/admin/painel')
+    }
 })
 
 
@@ -234,15 +255,16 @@ router.get('/admin/listaUsers/:page', Admin, async (req, res) => {
             previousPage = parseInt(page) - 1
         }
         const usuarios = await Usuario.find().skip(skip).limit(limit).lean().sort({ nome: 'desc' })
-        res.render('admin/users/usersPage',
-            {
-                usuarios: usuarios,
-                nextPage: nextPage,
-                previousPage: previousPage,
-                hidden: hidden
-            })
+            res.render('admin/users/usersPage',
+                {
+                    usuarios: usuarios,
+                    nextPage: nextPage,
+                    previousPage: previousPage,
+                    hidden: hidden
+                })
     } catch (err) {
-
+        req.flash('error_msg', `Erro ao paginar Usuários (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -264,15 +286,19 @@ router.get('/usuarios/logout', (req, res) => {
 //----    Rota de visualização de perfil de Usuário(user)     ----//
 
 
-router.get('/usuarios/perfil', eUser, (req, res) => {
-    Usuario.find({_id: req.user._id}).lean().sort().then((usuarios) => {
-        Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({embarcacaoDataCadastro: 'asc'}).then((embarcacoes) => {
-            res.render('usuarios/perfil', {usuarios: usuarios, embarcacoes: embarcacoes})
-        })
-    }).catch((err) => {
-        req.flash('error_msg', 'Não foi possivel obter seus dados')
+router.get('/usuarios/perfil', eUser, async (req, res) => {
+    try{
+        const usuarios = await Usuario.find({_id: req.user._id}).lean().sort()
+        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({embarcacaoDataCadastro: 'asc'})
+            res.render('usuarios/perfil', 
+                {
+                    usuarios: usuarios, 
+                    embarcacoes: embarcacoes
+                })
+    }catch(err){
+        req.flash('error_msg', `Erro ao mostrar perfil de Usuário (${err})`)
         res.redirect('/')
-    })
+    }
 })
 
 
