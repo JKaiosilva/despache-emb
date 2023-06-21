@@ -91,24 +91,24 @@ router.get('/admin/painel', Admin, async (req, res) => {
         var relatorios = await Relatorio.find().count()
         var portos = await Porto.find().count()
 
-        res.render('admin/painel', {
-            avisos: avisos,
-            usuariosOperador: usuariosOperador,
-            usuarios: usuarios,
-            embarcacoes: embarcacoes,
-            despachos: despachos,
-            avisoEntradas: avisoEntradas,
-            avisoSaidas: avisoSaidas,
-            tripulantes: tripulantes,
-            relatorios: relatorios,
-            portos: portos,
-            tempo: tempo,
-            medidaRio: medidaRio,
-            dataHoje: dataHoje
-        });
+            res.render('admin/painel', {
+                avisos: avisos,
+                usuariosOperador: usuariosOperador,
+                usuarios: usuarios,
+                embarcacoes: embarcacoes,
+                despachos: despachos,
+                avisoEntradas: avisoEntradas,
+                avisoSaidas: avisoSaidas,
+                tripulantes: tripulantes,
+                relatorios: relatorios,
+                portos: portos,
+                tempo: tempo,
+                medidaRio: medidaRio,
+                dataHoje: dataHoje
+            });
     } catch (err) {
         console.log(err);
-        req.flash('error_msg', 'Erro interno ao mostrar avisos');
+        req.flash('error_msg', `Erro ao mostrar Painel Administrativo (${err})`);
         res.redirect('/');
     }
 });
@@ -120,7 +120,7 @@ router.get('/pages/sobrenos', async (req, res) => {
     try{
         res.render('pages/sobrenos')
     }catch(err){
-        req.flash('error_msg', 'Erro interno')
+        req.flash('error_msg', `Erro ao mostrar página (${err})`)
         res.redirect('/')
     }
 })
@@ -133,7 +133,7 @@ router.get('/pages/termosUso', async (req, res) => {
     try{
         res.render('pages/termosUso')
     }catch(err){
-        req.flash('error_msg', 'Erro interno')
+        req.flash('error_msg', `Erro ao mostrar termos de uso (${err})`)
         res.redirect('/')
     }
 })
@@ -169,10 +169,11 @@ router.get('/page/:page', async (req, res) => {
                             nextPage: nextPage, 
                             previousPage: previousPage,
                             hidden: hidden
-
-                            })
+                        })
         } catch (err) {
-    }
+            req.flash('error_msg', `Erro ao paginar avisos (${err})`)
+            res.redirect('/')
+        }
 })
 
 
@@ -192,8 +193,6 @@ router.get('/formulario', eUser, async (req, res) => {
         const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
         const comboios = await Comboio.find({usuarioId: req.user._id}).limit(5).lean().sort({comboioMesAnoAtual: 'desc'})
 
-
-
         if(!embarcacoesValid.find(el => el.embarcacaoValidadeNumber > dataHoje)){
             hidden = 'hidden'
             alertHidden = ''
@@ -207,21 +206,20 @@ router.get('/formulario', eUser, async (req, res) => {
             docHidden = ''
             alertHidden = 'hidden'
         }
-            res.render('formulario/preform', 
-            {
-                despachos: despachos, 
-                avisoEntradas: avisoEntradas, 
-                avisoSaidas: avisoSaidas, 
-                embarcacoes: embarcacoes,
-                comboios: comboios,
-                hidden: hidden,
-                alertHidden: alertHidden,
-                docHidden: docHidden,
-                                        
-            })
+                res.render('formulario/preform', 
+                {
+                    despachos: despachos, 
+                    avisoEntradas: avisoEntradas, 
+                    avisoSaidas: avisoSaidas, 
+                    embarcacoes: embarcacoes,
+                    comboios: comboios,
+                    hidden: hidden,
+                    alertHidden: alertHidden,
+                    docHidden: docHidden,                
+                })
     }catch(err){
         console.log(err)
-        req.flash('error_msg', 'Não foi possivel mostrar os formularios')
+        req.flash('error_msg', `Erro ao mostrar página de Formulário (${err})`)
         res.redirect('/')
     }
 })
