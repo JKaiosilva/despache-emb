@@ -41,8 +41,8 @@ router.get('/admin/addPorto', Admin, async (req, res) => {
     try {
         res.render('admin/portos/addPorto')
     } catch (err) {
-        req.flash('error_msg', 'Erro interno.')
-        res.redirect('painel')
+        req.flash('error_msg', `Erro ao mostrar página de adição de Porto (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -60,10 +60,10 @@ router.post('/admin/addPorto', Admin, async (req, res) => {
         }
         await new Porto(novoPorto).save()
         req.flash('success_msg', 'Porto cadastrado com sucesso!')
-        res.redirect('portos')
+        res.redirect('/admin/portos')
     } catch (err) {
-        req.flash('error_msg', 'Erro ao cadastrar porto.')
-        res.redirect('painel')
+        req.flash('error_msg', `Erro ao cadastrar Porto (${err})`)
+        res.redirect('/admin/portos')
     }
 })
 
@@ -83,25 +83,22 @@ router.get('/admin/portoVizu/:id', Admin, async(req, res) => {
             saida.embarcacao = embarcacoes.embarcacaoNome
         }
 
-
          for await(var despacho of despachos){
             var embarcacoes = await Embarcacao.findById(despacho.embarcacao).lean()
             despacho.embarcacao = embarcacoes.embarcacaoNome
         }
 
-
             res.render('admin/portos/portoVizu', 
-                {portos: portos,
+                {
+                    portos: portos,
                     despachos: despachos,
-                        avisoSaidas: avisoSaidas
-            })
+                    avisoSaidas: avisoSaidas
+                })
     }catch(err){
-        req.flash('error_msg', 'Erro ao mostrar porto.')
-        res.redirect('portos')
+        req.flash('error_msg', `Erro ao visualizar este Porto (${err})`)
+        res.redirect('/admin/portos')
     }
 })
-
-
 
 
 //----    Rota de formulário para edição de Porto    ----//
@@ -110,14 +107,14 @@ router.get('/admin/portoVizu/:id', Admin, async(req, res) => {
 router.get('/admin/portoEdit/:id', Admin, async(req, res) => {
     try{
         const portos = await Porto.findOne({_id: req.params.id}).lean()
-        res.render('admin/portos/portoEdit', 
-        {
-            portos: portos
-        })
+            res.render('admin/portos/portoEdit', 
+                {
+                    portos: portos
+                })
     }catch(err){
         console.log(err)
-        req.flash('error_msg', 'Erro ao mostrar porto.')
-        res.redirect('portos')
+        req.flash('error_msg', `Erro ao mostrar página de edição de Porto (${err})`)
+        res.redirect('/admin/portos')
     }
 })
 
@@ -133,11 +130,11 @@ router.post('/admin/portoEdit', Admin, async(req, res) => {
             positionZ: req.body.positionZ
         })
         req.flash('success_msg', 'Porto atualizado com sucesso!')
-        res.redirect('portos')
+        res.redirect('/admin/portos')
     }catch(err){
         console.log(err)
-        req.flash('error_msg', 'Erro interno.')
-        res.redirect('painel')
+        req.flash('error_msg', `Erro ao editar Porto (${err})`)
+        res.redirect('/admin/portos')
     }
 })
 
@@ -148,13 +145,13 @@ router.post('/admin/portoEdit', Admin, async(req, res) => {
 router.get('/admin/portos', Admin, async (req, res) => {
     try {
         const portos = await Porto.find().limit(5).lean().sort({ portoNome: 'asc' })
-        res.render('admin/portos/portos',
-            {
-                portos: portos
-            })
+            res.render('admin/portos/portos',
+                {
+                    portos: portos
+                })
     } catch (err) {
-        req.flash('error_msg', 'Erro interno.')
-        res.redirect('painel')
+        req.flash('error_msg', `Erro ao listar Porto (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -183,17 +180,18 @@ router.get('/admin/portos/:page', Admin, async (req, res) => {
                 previousPage = parseInt(page) -1
             }
 
-            const portos = await Porto.find().skip(skip).limit(limit).lean().sort({portoNome: 'asc'})
-            res.render('admin/portos/portosPage', {
-                portos: portos,
-                nextPage: nextPage,
-                previousPage: previousPage,
-                hidden: hidden
-            })
+        const portos = await Porto.find().skip(skip).limit(limit).lean().sort({portoNome: 'asc'})
+            res.render('admin/portos/portosPage', 
+                {
+                    portos: portos,
+                    nextPage: nextPage,
+                    previousPage: previousPage,
+                    hidden: hidden
+                })
     } catch (err){
         console.log(err)
-        req.flash('error_msg', 'Erro interno.')
-        res.redirect('painel')
+        req.flash('error_msg', `Erro ao paginar Portos (${err})`)
+        res.redirect('/admin/painel')
     }
 })
 
@@ -232,11 +230,9 @@ router.get('/portoInfo', Admin, async (req, res) => {
                 portos.push({ ...porto, embarcacaoNome: [porto.embarcacaoNome], barcaca: [porto.barcaca], embarcacaoId: [porto.embarcacaoId] })
             }
         }
-
         const data = portos
         res.json(data)
     } catch (err) {
-
     }
 })
 
