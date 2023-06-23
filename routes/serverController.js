@@ -51,7 +51,7 @@ router.get('/admin/painel', Admin, async (req, res) => {
         .then((response)=> {
             tempo.data = response.data
         }).catch((err)=>{
-            if (err.code === 'ENOTFOUND') {
+            if (err) {
                 console.log('Erro de conexão com a API OpenWeatherMap');
                 tempo.data = null;
             } else {

@@ -69,6 +69,34 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
         const tripulantes = cleanString.split(',');
         const despachoTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
 
+        const cleanStringFuncao = req.body.despachoTripulantesFuncao.replace(/[\n' \[\]]/g, '');
+        const despachoTripulantesFuncao = cleanStringFuncao.split(',');
+
+        const despachoTripulantesArray = []
+
+        if(tripulantes.length === 1){
+            for(var i = 0; i < tripulantes.length; i++){
+            const tripulante = {
+                id: req.body.despachoTripulantes,
+                despachoTripulanteFuncao: despachoTripulantesFuncao
+            }
+        
+            console.log('condição 1')
+            despachoTripulantesArray.push(tripulante)
+        }
+        }else{
+            for(var i = 0; i < tripulantes.length; i++){
+                const tripulante = {
+                    id: despachoTripulantes[i],
+                    despachoTripulanteFuncao: despachoTripulantesFuncao[i]
+                }
+                console.log('condição 2')
+                despachoTripulantesArray.push(tripulante)
+            }
+        }
+
+
+        console.log(despachoTripulantesFuncao)
     const novoDespacho = {
         usuarioID: req.user._id,
         NprocessoDespacho: req.body.NprocessoDespacho,
@@ -88,7 +116,7 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
         despachoOBS: req.body.despachoOBS,
         despachoNTripulantes: req.body.despachoNTripulantes,
         despachoNomeComandante: req.body.despachoNomeComandante,
-        despachoTripulantes: despachoTripulantes,
+        despachoTripulantes: despachoTripulantesArray,
         despachoComboios: req.body.despachoComboio,
         despachoDataSolicitada: req.body.despachoDataSolicitada,
         despachoDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
@@ -102,6 +130,7 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
         res.redirect('/formulario')
 
 }catch(err){
+    console.log(err)
     req.flash('error_msg', `Erro ao enviar formulário de Despacho (${err})`)
     res.redirect('/formulario')
 }

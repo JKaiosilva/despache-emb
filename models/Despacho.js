@@ -60,8 +60,13 @@ const Despacho = new Schema ({
         type: String
     },
     despachoTripulantes: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Tripulante'
+        id: {
+            type: Schema.Types.Mixed,
+            ref: 'Tripulante',
+        },
+        despachoTripulanteFuncao: {
+
+        }
     }],
     despachoNomeEmbarcacao: {
         type: String

@@ -100,7 +100,7 @@ router.post('/formulario/comboio', eUser, async (req, res) => {
             usuarioId: req.user._id,
             comboioNome: req.body.comboioNome,
             embarcacoes: comboioEmbarcacoes,
-            comboioMesAnoAtual: Date.now().toString()
+            comboioMesAnoAtual: moment(Date.now()).format('DD/MM/YYYY')
         });
     
         await novoComboio.save();
