@@ -6,7 +6,7 @@ var createScene = function () {
     var scene = new BABYLON.Scene(engine);
     scene.clearColor = new BABYLON.Color4(0, 0, 0, 0.0);
 
-    var camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 170, new BABYLON.Vector3(0, 100, 0));
+    var camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 570, new BABYLON.Vector3(0, 100, 0));
     camera.setTarget(BABYLON.Vector3.Zero());
     //Deixar segundo parâmetro como "false" para desabilitar escroll duplicado. 
     camera.attachControl(canvas, false);
@@ -14,7 +14,7 @@ var createScene = function () {
     var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
     light.intensity = 0.6;
 
-   const modelo3d = BABYLON.SceneLoader.ImportMesh("", "/3dModels/", "loy_boat.obj", scene, function (newMeshes) {
+   const modelo3d = BABYLON.SceneLoader.ImportMesh("", "/3dModels/", "boat.glb", scene, function (newMeshes) {
     camera.target = newMeshes[0];
     });
     
@@ -29,10 +29,10 @@ var createScene = function () {
 
     //Colete Salva Vidas
 
-    const colete_salva_vidas = new BABYLON.MeshBuilder.CreateCapsule("colete_salva_vidas", {radius:0.4, height: 3.5, radiusTop:1.5});
-    colete_salva_vidas.position.x = 5;
-    colete_salva_vidas.position.y = 8;
-    colete_salva_vidas.position.z = 0;
+    const colete_salva_vidas = new BABYLON.MeshBuilder.CreateCapsule("colete_salva_vidas", {radius:1, height: 7, radiusTop:4});
+    colete_salva_vidas.position.x = 15;
+    colete_salva_vidas.position.y = 130;
+    colete_salva_vidas.position.z = 100;
     colete_salva_vidas.material = textura_pontos;
 
     var rect1_colete_salva_vidas = new BABYLON.GUI.Rectangle();
@@ -50,7 +50,7 @@ var createScene = function () {
         rect1_colete_salva_vidas.linkWithMesh(colete_salva_vidas);    
   
     var text1 = new BABYLON.GUI.TextBlock();
-        text1.text = "Colete Salva Vidas";
+        text1.text = "Boia";
         text1.color = "white";
         text1.fontSize = 18;
         text1.textWrapping = true;
