@@ -158,97 +158,34 @@
                 <div id="{{_id}}" calss=" m-4">
                     <div class="card bg-secondary m-4">
                         <div>
-                            
                             <span class="m-1">Tripulante: {{add @index 1}}</span>
                             <button type="button" style="float: right" class="btn btn-danger m-1" onclick="deleteTripulante('{{_id}}')">Remover</button>
                         </div>
-                        <input class="form-control" type="text" value="Nome: {{tripulanteNome}}" disabled>
-                        <input class="form-control" type="text" value="Grau: {{tripulanteGrau}}" disabled>
-                        <input class="form-control" type="text" value="Numero da CIR: {{tripulanteNCIR}}" disabled>
+                            <div class="input-group">
+                                <label class="input-group-text">Nome do Tripulante</label>
+                                <input class="form-control" type="text" value="{{tripulanteNome}}" disabled>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text">Função</label>
+                                <input name='tripulanteFuncao' class="form-control" type="text" value="{{funcao}}" disabled>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text">Grau</label>
+                                <input class="form-control" type="text" value="{{tripulanteGrau}}" disabled>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text">Número da CIR</label>
+                                <input class="form-control" type="text" value="{{tripulanteNCIR}}" disabled>
+                            </div>
                         <input name="tripulante" value="{{_id}}" hidden>
                     </div>
                 </div>
                 
                 {{/each}}
-                <div>
-                    <div id="tripulantes">
-                        <script>
-                           var divCounter = 0
-                                function addInputSelect(divName) {
-                                var newdiv = document.createElement('div');
-                                var divId = "div" + divCounter
-                                newdiv.setAttribute('id', divId)
-                                newdiv.innerHTML = '<select name="tripulante" class="btn-group"><option id="emBranco" value="emBranco">Em Branco</option>{{#each tripulantes}}<option id="tripulante" value="{{_id}}">{{tripulanteNome}}</option>{{/each}}</select><button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divId + '\')">Excluir</button>';                            
-                                document.getElementById(divName).appendChild(newdiv);
-                                document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
-                                var submiteButton = document.getElementById('submitButton')
-                                submiteButton.disabled = true
-                                divCounter++;
-                                document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
+                    {{>_tripulantes}}
 
-                                }
-
-                                function deleteBranco(divId){
-                                    tripulantesArray = []
-                                    var emBranco = document.getElementById(divId)
-                                    emBranco.remove()
-                                    document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
-                                    var submiteButton = document.getElementById('submitButton')
-                                    submiteButton.disabled = true
-                                    document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
-                                }
-
-                                addInputSelect('lines');
-
-                                function getId(){
-                                
-                                var submiteButton = document.getElementById('submitButton')
-                                submiteButton.disabled = false
-
-                                var tripulantesArray = []
-
-                                var tripulantesIds = document.querySelectorAll("[name='tripulante']")
-                                            for (var i = 0; i < tripulantesIds.length; i++) {
-                                                if(tripulantesIds[i].value == 'emBranco'){
-                                                    var submiteButton = document.getElementById('submitButton')
-                                                    submiteButton.disabled = true
-                                                    
-                                                }
-                                        tripulantesArray.push(tripulantesIds[i].value)
-                                        document.getElementById('tripulantesArrayIds').setAttribute('value', `${tripulantesArray}`)
-                                    }
-                                    if(tripulantesArray.length == 0 ){
-                                        var submiteButton = document.getElementById('submitButton')
-                                        submiteButton.disabled = true
-                                        document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
-                                    }
-                                    if(tripulantesArray.find(el => el == 'emBranco')){
-                                        document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
-                                    }else{
-                                        document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-success bg-opacity-50 border-success')
-                                    }
-                                    console.log(tripulantesArray)
-                                
-                                    
-                                }
-                                function deleteTripulante(id){
-                                    var submiteButton = document.getElementById('submitButton')
-                                    submiteButton.disabled = true
-                                    tripulantesArray = []
-                                    document.getElementById(id).remove()
-                                    document.getElementById('selecaoTripulantes').setAttribute('class', 'bg')
-                                    document.getElementById('selecaoTripulantes').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
-                                }
-                        </script>
-                    </div>
-                    <input value="" id="tripulantesArrayIds" name="despachoTripulantes" hidden>
-                    <button class="btn btn-primary mb-4" type="button" onclick="addInputSelect('tripulantes')">Adicionar tripulante</button>
-                    <button class="btn btn-success" type="button" onclick="getId()" style="float: right" required>Fechar Relação</button>
-                    
-                </div>
-                </div>
-            </div>
             <br>
+            </div>
             <div>
                 <h4 class="text-center">Comboios</h4>
             </div>

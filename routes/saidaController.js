@@ -68,9 +68,33 @@ router.get('/formulario/avisoSaida', eUser, async (req, res) => {
 router.post('/formulario/avisoSaida', eUser, async (req, res) => {
 
     try {
-        const cleanString = req.body.saidaTripulantes.replace(/[\n' \[\]]/g, '');
+        const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
         const tripulantes = cleanString.split(',');
-        const avisoSaidaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+        const saidaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+
+        const cleanStringFuncao = req.body.documentTripulantesFuncao.replace(/[\n' \[\]]/g, '');
+        const saidaTripulantesFuncao = cleanStringFuncao.split(',');
+
+        const saidaTripulantesArray = []
+
+        if(tripulantes.length === 1){
+            for(var i = 0; i < tripulantes.length; i++){
+            const tripulante = {
+                id: saidaTripulantes,
+                saidaTripulanteFuncao: saidaTripulantesFuncao
+            }
+        
+            saidaTripulantesArray.push(tripulante)
+        }
+        }else{
+            for(var i = 0; i < tripulantes.length; i++){
+                const tripulante = {
+                    id: saidaTripulantes[i],
+                    saidaTripulanteFuncao: saidaTripulantesFuncao[i]
+                }
+                saidaTripulantesArray.push(tripulante)
+            }
+        }
 
         const clearPassageiros = req.body.saidaPassageirosNome
         const passageirosLimpo = clearPassageiros.split(',');
@@ -111,7 +135,7 @@ router.post('/formulario/avisoSaida', eUser, async (req, res) => {
             saidaEmailRepresentanteEmbarcacao: req.body.saidaEmailRepresentanteEmbarcacao,
             saidaObservacoes: req.body.saidaObservacoes,
             saidaSomaPassageiros: req.body.saidaSomaPassageiros,
-            saidaTripulantes: avisoSaidaTripulantes,
+            saidaTripulantes: saidaTripulantesArray,
             saidaPassageiros: saidaPassageiros,
             saidaComboios: req.body.saidaComboios,
             saidaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
@@ -140,7 +164,12 @@ router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
             hidden = 'hidden'
         }
         const avisoSaidas = await AvisoSaida.findOne({ _id: req.params.id }).lean()
-        const tripulantes = await Tripulante.find({ _id: avisoSaidas.saidaTripulantes }).lean()
+        const tripulantes = []
+        for await (var saida of avisoSaidas.saidaTripulantes){
+            const tripulante = await Tripulante.findOne({_id: saida.id}).lean()
+            tripulante.funcao = saida.saidaTripulanteFuncao
+            tripulantes.push(tripulante)
+        }        
         const embarcacoes = await Embarcacao.findOne({ _id: avisoSaidas.embarcacao }).lean()
         const portoSaida = await Porto.findOne({ _id: avisoSaidas.saidaPortoSaida }).lean().catch((err) => {
             if(err){
@@ -238,7 +267,12 @@ router.get('/saidas/:page', eUser, async (req, res) => {
 router.get('/admin/saidasValidate/:id', Admin, async (req, res) => {
     try {
         const avisoSaidas = await AvisoSaida.findOne({ _id: req.params.id }).lean()
-        const tripulantesValid = await Tripulante.find({ _id: avisoSaidas.saidaTripulantes }).lean()
+        const tripulantesValid = []
+        for await (var saida of avisoSaidas.saidaTripulantes){
+            const tripulante = await Tripulante.findOne({_id: saida.id}).lean()
+            tripulante.funcao = saida.saidaTripulanteFuncao
+            tripulantesValid.push(tripulante)
+        }                
         const embarcacaoValid = await Embarcacao.findOne({ _id: avisoSaidas.embarcacao }).lean()
         const portoSaida = await Porto.findOne({ _id: avisoSaidas.saidaPortoSaida }).lean().catch((err) => {
             if(err){
@@ -286,9 +320,33 @@ router.get('/admin/saidasValidate/:id', Admin, async (req, res) => {
 
 router.post('/admin/saidasValidate', Admin, async (req, res) => {
     try {
-        const cleanString = req.body.saidaTripulantes.replace(/[\n' \[\]]/g, '');
+        const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
         const tripulantes = cleanString.split(',');
-        const avisoSaidaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+        const saidaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+
+        const cleanStringFuncao = req.body.documentTripulantesFuncao.replace(/[\n' \[\]]/g, '');
+        const saidaTripulantesFuncao = cleanStringFuncao.split(',');
+
+        const saidaTripulantesArray = []
+
+        if(tripulantes.length === 1){
+            for(var i = 0; i < tripulantes.length; i++){
+            const tripulante = {
+                id: saidaTripulantes,
+                saidaTripulanteFuncao: saidaTripulantesFuncao
+            }
+        
+            saidaTripulantesArray.push(tripulante)
+        }
+        }else{
+            for(var i = 0; i < tripulantes.length; i++){
+                const tripulante = {
+                    id: saidaTripulantes[i],
+                    saidaTripulanteFuncao: saidaTripulantesFuncao[i]
+                }
+                saidaTripulantesArray.push(tripulante)
+            }
+        }
 
         const clearPassageiros = req.body.saidaPassageirosNome
         const passageirosLimpo = clearPassageiros.split(',');
@@ -328,7 +386,7 @@ router.post('/admin/saidasValidate', Admin, async (req, res) => {
             saidaEmailRepresentanteEmbarcacao: req.body.saidaEmailRepresentanteEmbarcacao,
             saidaObservacoes: req.body.saidaObservacoes,
             saidaSomaPassageiros: req.body.saidaSomaPassageiros,
-            saidaTripulantes: avisoSaidaTripulantes,
+            saidaTripulantes: saidaTripulantesArray,
             saidaPassageiros: saidaPassageiros,
             saidaComboios: req.body.saidaComboios,
             embarcacao: req.body.embarcacao

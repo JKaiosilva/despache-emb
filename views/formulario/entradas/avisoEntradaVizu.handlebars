@@ -12,7 +12,7 @@
                     <input value="{{despacho.NprocessoDespacho}}" class="form-control" disabled>
                 </div>
                 <div class="input-group mb-3">
-                    <label class="input-group-text" class="input-group-text">N° Pocesso de Despacho</label>
+                    <label class="input-group-text" class="input-group-text">N° Pocesso de Entrada</label>
                     <input name="entradaNprocesso" class="form-control" type="text" value="{{avisoEntradas.entradaNprocesso}}" disabled>
                 </div>
                 <div>
@@ -102,10 +102,23 @@
                 {{#each tripulantes}}
                     <div>
                         <div id="tripulantes" class="card bg-secondary mt-4">
-                            <span>Tripulante: {{add @index 1}}</span>
-                            <input class="form-control" type="text" value="Nome: {{tripulanteNome}}" disabled>
-                            <input class="form-control" type="text" value="Grau: {{tripulanteGrau}}" disabled>
-                            <input class="form-control" type="text" value="Numero da CIR: {{tripulanteNCIR}}" disabled>
+                            <span class="m-1">Tripulante: {{add @index 1}}</span>
+                            <div class="input-group">
+                                <label class="input-group-text">Nome do Tripulante</label>
+                                <input class="form-control" type="text" value="{{tripulanteNome}}" disabled>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text">Função</label>
+                                <input name='tripulanteFuncao' class="form-control" type="text" value="{{funcao}}" disabled>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text">Grau</label>
+                                <input class="form-control" type="text" value="{{tripulanteGrau}}" disabled>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text">Número da CIR</label>
+                                <input class="form-control" type="text" value="{{tripulanteNCIR}}" disabled>
+                            </div>
                         </div>
                     </div>
                     <br>

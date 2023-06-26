@@ -139,16 +139,29 @@
                 <div>
                     <div id="tripulantes" class="card bg-secondary mt-4">
                         <span>Tripulante: {{add @index 1}}</span>
-                        <input class="form-control" type="text" value="Nome: {{tripulanteNome}}" disabled>
-                        <input class="form-control" type="text" value="Grau: {{tripulanteGrau}}" disabled>
-                        <input class="form-control" type="text" value="Numero da CIR: {{tripulanteNCIR}}" disabled>
+                            <div class="input-group">
+                                <label class="input-group-text">Nome do Tripulante</label>
+                                <input class="form-control" type="text" value="{{tripulanteNome}}" disabled>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text">Função</label>
+                                <input name='tripulanteFuncao' class="form-control" type="text" value="{{funcao}}" disabled>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text">Grau</label>
+                                <input class="form-control" type="text" value="{{tripulanteGrau}}" disabled>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text">Número da CIR</label>
+                                <input class="form-control" type="text" value="{{tripulanteNCIR}}" disabled>
+                            </div>
+                        <input name="tripulante" value="{{_id}}" hidden>
                     </div>
                 </div>
                 <br>
-                
                 {{/each}}
                 <div>
-                    <h4 class="text-center">Comboios</h4>
+                    <h4 class="text-center mt-4">Comboios</h4>
                 </div>
                 <h6 class="text-center">{{comboios.comboioNome}}</h6>
                 {{#each comboios.embarcacoes}}

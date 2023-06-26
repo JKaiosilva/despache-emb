@@ -67,10 +67,34 @@ router.get('/formulario/avisoEntrada', eUser, async (req, res) => {
 
 router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
     try {
-        const cleanString = req.body.entradaTripulantes.replace(/[\n' \[\]]/g, '');
+        const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
         const tripulantes = cleanString.split(',');
-        const avisoEntradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
- 
+        const entradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+
+        const cleanStringFuncao = req.body.documentTripulantesFuncao.replace(/[\n' \[\]]/g, '');
+        const entradaTripulantesFuncao = cleanStringFuncao.split(',');
+
+        const entradaTripulantesArray = []
+
+        if(tripulantes.length === 1){
+            for(var i = 0; i < tripulantes.length; i++){
+            const tripulante = {
+                id: entradaTripulantes,
+                entradaTripulanteFuncao: entradaTripulantesFuncao
+            }
+        
+            entradaTripulantesArray.push(tripulante)
+        }
+        }else{
+            for(var i = 0; i < tripulantes.length; i++){
+                const tripulante = {
+                    id: entradaTripulantes[i],
+                    entradaTripulanteFuncao: entradaTripulantesFuncao[i]
+                }
+                entradaTripulantesArray.push(tripulante)
+            }
+        }
+        console.log(cleanStringFuncao)
         const clearPassageiros = req.body.entradaPassageirosNome
         const passageirosLimpo = clearPassageiros.split(',');
 
@@ -115,7 +139,7 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
             entradaDeficienciasRetificadasPorto: req.body.entradaDeficienciasRetificadasPorto,
             entradaTransporteCagaPerigosa: req.body.entradaTransporteCagaPerigosa,
             entradaObservacoes: req.body.entradaObservacoes,
-            entradaTripulantes: avisoEntradaTripulantes,
+            entradaTripulantes: entradaTripulantesArray,
             entradaPassageiros: entradaPassageiros,
             entradaComboios: req.body.entradaComboios,
             entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
@@ -145,7 +169,12 @@ router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
             hidden = 'hidden'
         }
         const avisoEntradas = await AvisoEntrada.findOne({ _id: req.params.id }).lean()
-        const tripulantes = await Tripulante.find({ _id: avisoEntradas.entradaTripulantes }).lean()
+        const tripulantes = []
+        for await (var entrada of avisoEntradas.entradaTripulantes){
+            const tripulante = await Tripulante.findOne({_id: entrada.id}).lean()
+            tripulante.funcao = entrada.entradaTripulanteFuncao
+            tripulantes.push(tripulante)
+        }
         const embarcacoes = await Embarcacao.findOne({ _id: avisoEntradas.embarcacao }).lean()
         const portoChegada = await Porto.findOne({ _id: avisoEntradas.entradaPortoChegada}).lean().catch((err) => {
                 if(err){
@@ -250,7 +279,12 @@ router.get('/entradas/:page', eUser, async (req, res) => {
 router.get('/admin/entradasValidate/:id', Admin, async (req, res) => {
     try {
         const avisoEntradas = await AvisoEntrada.findOne({ _id: req.params.id }).lean()
-        const tripulantesValid = await Tripulante.find({ _id: avisoEntradas.entradaTripulantes }).lean()
+        const tripulantesValid = []
+        for await (var entrada of avisoEntradas.entradaTripulantes){
+            const tripulante = await Tripulante.findOne({_id: entrada.id}).lean()
+            tripulante.funcao = entrada.entradaTripulanteFuncao
+            tripulantesValid.push(tripulante)
+        }
         const embarcacoesValid = await Embarcacao.findOne({ _id: avisoEntradas.embarcacao }).lean()
         const portoChegada = await Porto.findOne({ _id: avisoEntradas.entradaPortoChegada}).lean().catch((err) => {
             if(err){
@@ -304,10 +338,33 @@ router.get('/admin/entradasValidate/:id', Admin, async (req, res) => {
 
 router.post('/admin/entradasValidate', Admin, async (req, res) => {
     try {
-        const cleanString = req.body.entradaTripulantes.replace(/[\n' \[\]]/g, '');
+        const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
         const tripulantes = cleanString.split(',');
         const entradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
 
+        const cleanStringFuncao = req.body.documentTripulantesFuncao.replace(/[\n' \[\]]/g, '');
+        const entradaTripulantesFuncao = cleanStringFuncao.split(',');
+
+        const entradaTripulantesArray = []
+
+        if(tripulantes.length === 1){
+            for(var i = 0; i < tripulantes.length; i++){
+            const tripulante = {
+                id: entradaTripulantes,
+                entradaTripulanteFuncao: entradaTripulantesFuncao
+            }
+        
+            entradaTripulantesArray.push(tripulante)
+        }
+        }else{
+            for(var i = 0; i < tripulantes.length; i++){
+                const tripulante = {
+                    id: entradaTripulantes[i],
+                    entradaTripulanteFuncao: entradaTripulantesFuncao[i]
+                }
+                entradaTripulantesArray.push(tripulante)
+            }
+        }
 
         const clearPassageiros = req.body.entradaPassageirosNome
         const passageirosLimpo = clearPassageiros.split(',');
@@ -352,7 +409,7 @@ router.post('/admin/entradasValidate', Admin, async (req, res) => {
             entradaDeficienciasRetificadasPorto: req.body.entradaDeficienciasRetificadasPorto,
             entradaTransporteCagaPerigosa: req.body.entradaTransporteCagaPerigosa,
             entradaObservacoes: req.body.entradaObservacoes,
-            entradaTripulantes: entradaTripulantes,
+            entradaTripulantes: entradaTripulantesArray,
             entradaPassageiros: entradaPassageiros,
             entradaComboios: req.body.entradaComboios,
             entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
@@ -376,7 +433,7 @@ router.post('/admin/entradasValidate', Admin, async (req, res) => {
 
 router.get('/admin/entradas', Admin, async (req, res) => {
     try{
-        AvisoEntrada.find().limit(5).lean().sort({ entradaData: 'desc' })
+        const avisoEntradas = await AvisoEntrada.find().limit(5).lean().sort({ entradaData: 'desc' })
             res.render('admin/entradas/entradas', 
                 { 
                     avisoEntradas: avisoEntradas 

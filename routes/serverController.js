@@ -225,4 +225,17 @@ router.get('/formulario', eUser, async (req, res) => {
 })
 
 
+//----     Rota de educação Fluvial     ----//
+
+
+router.get('/edFluvial', async(req, res) => {
+    try{
+        res.render('pages/edFluvial')
+    }catch(err){
+        req.flash('error_msg', `Erro ao mostrar página de Educação Fluvial (${err})`)
+        res.redirect('/')
+    }
+})
+
+
 module.exports = router

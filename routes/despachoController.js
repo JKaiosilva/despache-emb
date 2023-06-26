@@ -65,11 +65,11 @@ router.get('/formulario/despacho', eUser, async(req, res) => {
 
 router.post('/formulario/despacho', eUser, async (req, res) => {
     try{
-        const cleanString = req.body.despachoTripulantes.replace(/[\n' \[\]]/g, '');
+        const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
         const tripulantes = cleanString.split(',');
         const despachoTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
 
-        const cleanStringFuncao = req.body.despachoTripulantesFuncao.replace(/[\n' \[\]]/g, '');
+        const cleanStringFuncao = req.body.documentTripulantesFuncao.replace(/[\n' \[\]]/g, '');
         const despachoTripulantesFuncao = cleanStringFuncao.split(',');
 
         const despachoTripulantesArray = []
@@ -77,11 +77,10 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
         if(tripulantes.length === 1){
             for(var i = 0; i < tripulantes.length; i++){
             const tripulante = {
-                id: req.body.despachoTripulantes,
+                id: despachoTripulantes,
                 despachoTripulanteFuncao: despachoTripulantesFuncao
             }
         
-            console.log('condição 1')
             despachoTripulantesArray.push(tripulante)
         }
         }else{
@@ -90,7 +89,6 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
                     id: despachoTripulantes[i],
                     despachoTripulanteFuncao: despachoTripulantesFuncao[i]
                 }
-                console.log('condição 2')
                 despachoTripulantesArray.push(tripulante)
             }
         }
@@ -148,7 +146,12 @@ router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
             hidden = 'hidden'
         }
         const despachos = await Despacho.findOne({_id: req.params.id}).lean()
-        const tripulantes = await Tripulante.find({_id: despachos.despachoTripulantes}).lean()
+        const tripulantes = []
+        for await (var despacho of despachos.despachoTripulantes){
+            const tripulante = await Tripulante.findOne({_id: despacho.id}).lean()
+            tripulante.funcao = despacho.despachoTripulanteFuncao
+            tripulantes.push(tripulante)
+        }
         const embarcacoes = await Embarcacao.findOne({_id: despachos.embarcacao}).lean()
         const portos = await Porto.findOne({ _id: despachos.despachoPortoEstadia}).lean().catch((err) => {
             if(err){
@@ -158,17 +161,19 @@ router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
         const avisoEntradas = await AvisoEntrada.find({entradaDespacho: despachos._id}).lean()
         const avisoSaidas = await AvisoSaida.find({saidaDespacho: despachos._id}).lean()
         const comboios  = await Comboio.findOne({_id: despachos.despachoComboios}).lean()
+
+        console.log(tripulantes)
             res.render('formulario/despachos/despachoVizu',
-            {
-                despachos: despachos,
-                tripulantes: tripulantes,
-                embarcacoes: embarcacoes,
-                comboios: comboios,
-                portos: portos,
-                avisoEntradas: avisoEntradas,
-                avisoSaidas: avisoSaidas,
-                hidden: hidden
-            })
+                {
+                    despachos: despachos,
+                    tripulantes: tripulantes,
+                    embarcacoes: embarcacoes,
+                    comboios: comboios,
+                    portos: portos,
+                    avisoEntradas: avisoEntradas,
+                    avisoSaidas: avisoSaidas,
+                    hidden: hidden
+                })
     }catch(err){
         console.log(err)
         req.flash('error_msg', `Erro ao visualizar este Despacho (${err})`)
@@ -251,7 +256,12 @@ router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
                 return {portoNome: despachos.despachoOutroPortoEstadia}
             }
         });
-        const tripDespacho = await Tripulante.find({_id: despachos.despachoTripulantes}).lean();
+        const tripDespacho = []
+        for await (var despacho of despachos.despachoTripulantes){
+            const tripulante = await Tripulante.findOne({_id: despacho.id}).lean()
+            tripulante.funcao = despacho.despachoTripulanteFuncao
+            tripDespacho.push(tripulante)
+        }
         const tripulantes = await Tripulante.find().lean();
         const comboios = await Comboio.find().lean()
         const comboioDespacho = await Comboio.findOne({_id: despachos.despachoComboios}).lean()
@@ -280,9 +290,33 @@ router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
 
 router.post('/admin/despachoValidate', Admin, async(req, res) => {
     try{
-     const cleanString = req.body.despachoTripulantes.replace(/[\n' \[\]]/g, '');
-     const tripulantes = cleanString.split(',');
-     const despachoTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+        const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
+        const tripulantes = cleanString.split(',');
+        const despachoTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+
+        const cleanStringFuncao = req.body.documentTripulantesFuncao.replace(/[\n' \[\]]/g, '');
+        const despachoTripulantesFuncao = cleanStringFuncao.split(',');
+
+        const despachoTripulantesArray = []
+
+        if(tripulantes.length === 1){
+            for(var i = 0; i < tripulantes.length; i++){
+            const tripulante = {
+                id: req.body.despachoTripulantes,
+                despachoTripulanteFuncao: despachoTripulantesFuncao
+            }
+        
+            despachoTripulantesArray.push(tripulante)
+        }
+        }else{
+            for(var i = 0; i < tripulantes.length; i++){
+                const tripulante = {
+                    id: despachoTripulantes[i],
+                    despachoTripulanteFuncao: despachoTripulantesFuncao[i]
+                }
+                despachoTripulantesArray.push(tripulante)
+            }
+        }
   
          await Despacho.updateOne({_id: req.body.id}, {
              NprocessoDespacho: req.body.NprocessoDespacho,
@@ -303,7 +337,7 @@ router.post('/admin/despachoValidate', Admin, async(req, res) => {
              despachoOBS: req.body.despachoOBS,
              despachoNTripulantes: req.body.despachoNTripulantes,
              despachoNomeComandante: req.body.despachoNomeComandante,
-             despachoTripulantes: despachoTripulantes,
+             despachoTripulantes: despachoTripulantesArray,
              despachoNomeEmbarcacao: req.body.despachoNomeEmbarcacao,
              despachoNEmbN: req.body.despachoNEmbN,
              despachoComboios: req.body.despachoComboio,
