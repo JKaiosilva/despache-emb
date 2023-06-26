@@ -1,0 +1,20 @@
+<br>
+<h1 class="text-center">Aviso</h1>
+<hr>
+<br>
+<div class="card m-4">
+  <div class="row g-0">
+    <div class="col-md-4">
+        <img class="m-4" src="data:{{aviso.contentType}};base64,{{aviso.data}}" style="max-width: 20rem; max-height: 20rem">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <br>
+        <h4 class="card-title">{{aviso.titulo}}</h4>
+        <h6 class="card-text">{{aviso.descricao}}</h6>
+          <p class="card-text" style="white-space: pre-wrap;">{{aviso.conteudo}}</p>
+        <smal>{{aviso.avisoData}}</smal>
+      </div>
+    </div>
+  </div>
+</div>

@@ -177,6 +177,23 @@ router.get('/page/:page', async (req, res) => {
 })
 
 
+//----     Rota de visualização de Aviso     ----//
+
+
+router.get('/aviso/:id', async(req, res) => {
+    try{
+        const aviso = await Aviso.findOne({_id: req.params.id}).lean()
+        res.render('pages/avisoVizu', 
+            {
+                aviso: aviso
+            })
+    }catch(err){
+        req.flash('error_msg', `Erro ao mostrar aviso (${err})`)
+        res.redirect('/')
+    }
+})
+
+
 //----    Rota do painel de Formulários do usuário    ----//
 
 
