@@ -95,12 +95,12 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
             }
         }
         console.log(cleanStringFuncao)
-        const clearPassageiros = req.body.entradaPassageirosNome
+        const clearPassageiros = req.body.documentPassageirosNome
         const passageirosLimpo = clearPassageiros.split(',');
 
-        const passageirosNome = req.body.entradaPassageirosNome
-        const passageirosNascimento = req.body.entradaPassageirosNascimento
-        const passageirosSexo = req.body.entradaPassageirosSexos
+        const passageirosNome = req.body.documentPassageirosNome
+        const passageirosNascimento = req.body.documentPassageirosNascimento
+        const passageirosSexo = req.body.documentPassageirosSexos
 
         const passageirosNomes = passageirosNome.split(',')
         const passageirosNascimentos = passageirosNascimento.split(',')
@@ -366,12 +366,12 @@ router.post('/admin/entradasValidate', Admin, async (req, res) => {
             }
         }
 
-        const clearPassageiros = req.body.entradaPassageirosNome
+        const clearPassageiros = req.body.documentPassageirosNome
         const passageirosLimpo = clearPassageiros.split(',');
 
-        const passageirosNome = req.body.entradaPassageirosNome
-        const passageirosNascimento = req.body.entradaPassageirosNascimento
-        const passageirosSexo = req.body.entradaPassageirosSexos
+        const passageirosNome = req.body.documentPassageirosNome
+        const passageirosNascimento = req.body.documentPassageirosNascimento
+        const passageirosSexo = req.body.documentPassageirosSexos
 
         const passageirosNomes = passageirosNome.split(',')
         const passageirosNascimentos = passageirosNascimento.split(',')
