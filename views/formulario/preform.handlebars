@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" {{agenciaHidden}}>
     <div class="card-body">
         <div class="text-center">
             <h2>Realizar nova Requisição</h2>
@@ -14,107 +14,71 @@
                 <label class=" bg-warning text-center" {{alertHidden}}>Os campos de solicitação de formulário serão liberados após confirmação dos dados por parte do despachante</label>
 
             <div class="row justify-content-around">
-
                     <div class="card mt-4" style="max-width: 15rem">
-                        <a href="/formulario/addEmbarcacao" style="text-decoration:none">
-                        <div class="card-body text-center" style="max-width: 15rem; padding: 3rem">
-                            <img src="/img/ship.png" class="img-fluid rounded-center"  alt="...">
-                            <h6 class="mt-4 ">Cadastrar Embarcação</h6>
-                        </div>
-                        </a>
-                    </div>
-
-                    <div class="card mt-4" style="max-width: 15rem" {{hidden}}>
-                        <a href="/formulario/comboio" style="text-decoration:none">
-                        <div class="card-body text-center" style="max-width: 15rem; padding: 3rem">
-                            <img src="/img/comboio.png" class="img-fluid rounded-center"  alt="...">
-                            <h6 class="mt-4">Definir Comboio</h6>
-                        </div>
-                        </a>
-                    </div>
-
-                    <div class="card mt-4" style="max-width: 15rem" {{hidden}}>
                         <a href="/formulario/despacho" style="text-decoration:none">
                         <div class="card-body text-center" style="max-width: 15rem; padding: 3rem">
                             <img src="/img/despacho.svg" class="img-fluid rounded-center"  alt="...">
                             <h6 class="mt-4">Novo Despacho</h6>
                         </div>
                         </a>
-                        </div>
+                    </div>
 
-
-                        <div class="card mt-4" style="max-width: 15rem" {{hidden}} {{docHidden}}>
+                    <div class="card mt-4" style="max-width: 15rem" {{docHidden}}>
                         <a href="/formulario/avisoEntrada" style="text-decoration:none">
                         <div class="card-body text-center" style="max-width: 15rem; padding: 3rem">
                             <img src="/img/docEntrada.svg" class="img-fluid rounded-center"  alt="...">
                             <h6 class="mt-4">Novo Aviso Entrada</h6>
                         </div>
                         </a>
-                        </div>
+                    </div>
 
 
-                        <div class="card mt-4" style="max-width: 15rem" {{hidden}} {{docHidden}}>
+                    <div class="card mt-4" style="max-width: 15rem" {{docHidden}} {{agenciaHidden}}>
                         <a href="/formulario/avisoSaida" style="text-decoration:none">
                         <div class="card-body text-center" style="max-width: 15rem; padding: 3rem">
                             <img src="/img/docSaida.svg" class="img-fluid rounded-center"  alt="...">
                             <h6 class="mt-4">Novo Aviso Saida</h6>
                         </div>
                         </a>
-                        </div>
-
-            </div>
+                    </div>
+                </div>
             </div>
             </div>
         </ul>
     </div>
 </div>
+<div class="container" {{despachanteHidden}}>
+    <h4 class="text-center">Despachantes Nesta Agencia.</h4>
+<div class="card">
+    <div class="card-body">
+        {{#each usuarios}}
+            <div class="card">
+                <div class="card-body">
+                    <div class="input-group">
+                        <label class="input-group-text">Nome:</label>
+                        <input value="{{nome}}" class="form-control" disabled>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-group-text">CPF:</label>
+                        <input value="{{CPF}}" class="form-control" disabled>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-group-text">Período do contrato:</label>
+                        <input value="{{periodoContrato}}" class="form-control" disabled>
+                    </div>
+                </div>
+            </div>
+            <br>
+        {{else}}
+
+        {{/each}}
+        <a class="btn btn-success" href="/usuarios/cadastroUser">Cadastrar Despachante</a>
+    </div>
+</div>
+</div>
 <br>
 <br>
 <div class="container text-center">
-    <div class="row">
-        <div class="col">
-            <h5>Minhas ultimas Embarcações cadastradas.</h5>
-                {{#each embarcacoes}}
-                    <div class="card mt-4" style="max-width:">
-                        <div class="card-body">
-                            <p>Embarcação: {{embarcacaoNome}}</p>
-                                <p>Data de pedido: {{embarcacaoDataCadastro}}</p>
-                            <a href="/formulario/embarcacaoVizu/{{_id}}"><button class="btn btn-success mt-3">Visualizar</button></a>
-                        </div>
-                    </div>
-
-                {{else}}
-                    <div class="card mt-4" >
-                        <div class="card-body">
-                            <p>Nenhuma Embarcação</p>
-                        </div>
-                    </div>
-                {{/each}}
-            <a href="/embarcacoes"><button class="btn btn-primary mt-3">Ver Mais</button></a>
-        </div>
-
-        <div class="col">
-            <h5>Minhas ultimo Comboios cadastradas.</h5>
-                {{#each comboios}}
-                    <div class="card mt-4">
-                        <div class="card-body">
-                            <p>Nome do Comboio: {{comboioNome}}</p>
-                                <p>Data de pedido: {{comboioMesAnoAtual}}</p>
-                            <a href="/formulario/comboiosVizu/{{_id}}"><button class="btn btn-success mt-3">Visualizar</button></a>
-                        </div>
-                    </div>
-
-                {{else}}
-                    <div class="card mt-4" >
-                        <div class="card-body">
-                            <p>Nenhuma Comboio</p>
-                        </div>
-                    </div>
-                {{/each}}
-            <a href="/comboios"><button class="btn btn-primary mt-3">Ver Mais</button></a>
-        </div>
-    </div>
-<br>
 <br>
     <div class="row">
         <div class="col">

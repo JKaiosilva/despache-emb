@@ -5,7 +5,10 @@ const AvisoEntrada = new Schema ({
     usuarioID: {
         type: String,
         default: {}
-    },    
+    },
+    agenciaID:{
+        type: String
+    },  
     entradaDespacho: {
         type: Schema.Types.ObjectId,
         ref: 'despachos'

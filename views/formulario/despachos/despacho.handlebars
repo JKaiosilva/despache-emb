@@ -111,16 +111,12 @@
                 </select>
             </div>
             <br>
-            <div class="input-group">
-                <label class="input-group-text">Comboio</label>
-                <select name="despachoComboio" class="form-select">
-                    {{#each comboios}}
-                        <option value="{{_id}}">{{comboioNome}}</option>
-                    {{else}}
-                        <option value="0">Nenhum comboio formulado</option>
-                    {{/each}}
-                </select>
+            <hr>
+            <div>
+                <h4 class="text-center">Definir Comboio</h4>
+                {{>_comboios}}
             </div>
+            <hr>
             <br>
             <div class="input-group mb-3">
                 <label class="input-group-text">Solicitação de Vencimento do despacho</label>

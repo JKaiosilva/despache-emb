@@ -119,6 +119,7 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
         console.log(entradaPassageiros)
         const novoAvisoEntrada = {
             usuarioID: req.user._id,
+            agenciaID: req.user.agencia,
             entradaDespacho: req.body.entradaDespacho,
             entradaNprocesso: req.body.entradaNprocesso,
             entradaPortoChegada: req.body.entradaPortoChegada,

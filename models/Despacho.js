@@ -7,6 +7,9 @@ const Despacho = new Schema ({
         type: String,
         default: {}
     },
+    agenciaID:{
+        type: String
+    },
     NprocessoDespacho: {
         type: String
     },
@@ -18,6 +21,42 @@ const Despacho = new Schema ({
         type: String
     },
     despachoDataHoraPartida: {
+        type: String
+    },
+    embarcacaoNome: {
+        type: String
+    },
+    embarcacaoTipo: {
+        type: String
+    },
+    embarcacaoBandeira: {
+        type: String
+    },
+    embarcacaoNInscricaoautoridadeMB: {
+        type: String
+    },
+    embarcacaoArqueacaoBruta: {
+        type: String
+    },
+    embarcacaoComprimentoTotal: {
+        type: String
+    },
+    embarcacaoTonelagemPorteBruto: {
+        type: String
+    },
+    embarcacaoCertificadoRegistroAmador: {
+        type: String
+    },
+    embarcacaoArmador: {
+        type: String,
+    },
+    embarcacaoNCRA: {
+        type: String
+    },
+    embarcacaoValidade: {
+        type: String
+    },
+    embarcacaoValidadeNumber: {
         type: String
     },
     despachoNomeRepresentanteEmbarcacao: {
@@ -74,10 +113,19 @@ const Despacho = new Schema ({
     despachoNEmbN: {
         type: String
     },
-    despachoComboios: {
-        type: Schema.Types.ObjectId,
-        ref: 'Comboio'
-    },
+    despachoComboios: [{
+        embarcacaoNome: {
+        },
+        NInscricao: {
+
+        },
+        carga: {
+        },
+        quantidade: {
+        },
+        arqueacaoBruta: {
+        }
+    }],
     despachoDataSolicitada:{
         type: String
     },
@@ -94,10 +142,6 @@ const Despacho = new Schema ({
     despachoData: {
         type: Number,
         default: []
-    },
-    embarcacao: {
-        type: Schema.Types.ObjectId,
-        ref: 'embarcacoes'
     },
     depachoMesAnoAtual: {
         type: String,

@@ -197,43 +197,84 @@ router.get('/aviso/:id', async(req, res) => {
 //----    Rota do painel de Formulários do usuário    ----//
 
 
-router.get('/formulario', eUser, async (req, res) => {
+router.get('/formulario', async (req, res) => {
     try{
+
+        const despachante = req.user.eUser
+        const agencia = req.user.eAgencia
+
         const dataHoje = Date.now()
 
-        const embarcacoesValid = await Embarcacao.find({usuarioID: req.user._id}).lean().sort({embarcacaoNome: 'asc'})
-        const despachosValid = await Despacho.find({usuarioID: req.user._id}).lean().sort({despachoData: 'desc'})
+        if(agencia == 1){
+        
+            const despachos = await Despacho.find({agenciaID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
+            const avisoEntradas = await AvisoEntrada.find({agenciaID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
+            const avisoSaidas = await AvisoSaida.find({agenciaID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
+            const usuarios = await Usuario.find({agencia: req.user._id}).limit(5).lean()
 
-        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({embarcacaoNome: 'asc'})
-        const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
-        const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
-        const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
-        const comboios = await Comboio.find({usuarioId: req.user._id}).limit(5).lean().sort({comboioMesAnoAtual: 'desc'})
+            console.log('agencia')
+            agenciaHidden = 'hidden'
+            res.render('formulario/preform', 
+            {
+                despachos: despachos, 
+                avisoEntradas: avisoEntradas,
+                usuarios: usuarios, 
+                avisoSaidas: avisoSaidas, 
+                agenciaHidden: agenciaHidden
+            })
 
-        if(!embarcacoesValid.find(el => el.embarcacaoValidadeNumber > dataHoje)){
-            hidden = 'hidden'
-            alertHidden = ''
-            docHidden = 'hidden'
-        }else if(!despachosValid.find(el => el.despachoDataValidadeNumber > dataHoje)){
-            hidden = ''
-            docHidden = 'hidden'
-            alertHidden = ''
+        }else if(despachante == 1){
+            const despachosValid = await Despacho.find({agenciaID: req.user._id}).lean().sort({despachoData: 'desc'})
+        
+            const despachos = await Despacho.find({agenciaID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
+            const avisoEntradas = await AvisoEntrada.find({agenciaID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
+            const avisoSaidas = await AvisoSaida.find({agenciaID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
+    
+            if(!despachosValid.find(el => el.despachoDataValidadeNumber > dataHoje)){
+                docHidden = 'hidden'
+                alertHidden = ''
+            }else{
+                docHidden = ''
+                alertHidden = 'hidden'
+            }
+            console.log('agencia')
+
+            despachanteHidden = 'hidden'
+
+            res.render('formulario/preform', 
+            {
+                despachos: despachos, 
+                avisoEntradas: avisoEntradas, 
+                avisoSaidas: avisoSaidas,
+                despachanteHidden: despachanteHidden, 
+                alertHidden: alertHidden,
+                docHidden: docHidden,                
+            })
         }else{
-            hidden = ''
-            docHidden = ''
-            alertHidden = 'hidden'
-        }
-                res.render('formulario/preform', 
-                {
-                    despachos: despachos, 
-                    avisoEntradas: avisoEntradas, 
-                    avisoSaidas: avisoSaidas, 
-                    embarcacoes: embarcacoes,
-                    comboios: comboios,
-                    hidden: hidden,
-                    alertHidden: alertHidden,
-                    docHidden: docHidden,                
-                })
+            const despachosValid = await Despacho.find({usuarioID: req.user._id}).lean().sort({despachoData: 'desc'})
+        
+            const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
+            const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
+            const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
+    
+            if(!despachosValid.find(el => el.despachoDataValidadeNumber > dataHoje)){
+                docHidden = 'hidden'
+                alertHidden = ''
+            }else{
+                docHidden = ''
+                alertHidden = 'hidden'
+            }
+            console.log('admin')
+
+            res.render('formulario/preform', 
+            {
+                despachos: despachos, 
+                avisoEntradas: avisoEntradas, 
+                avisoSaidas: avisoSaidas, 
+                alertHidden: alertHidden,
+                docHidden: docHidden,                
+            })
+ }
     }catch(err){
         console.log(err)
         req.flash('error_msg', `Erro ao mostrar página de Formulário (${err})`)

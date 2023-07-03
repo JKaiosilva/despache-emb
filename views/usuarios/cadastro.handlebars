@@ -21,19 +21,41 @@
 <h3>Crie sua conta:</h3>
 <div class="card">
     <div class="card-body">
-        <form action="" method="POST">
+        <form action="/usuarios/cadastroUser" method="POST">
             <label for="nome"> Nome </label>
                 <input type="text" name="nome" class="form-control" required>
             <label for="email">Email: </label>
                 <input type="email" name="email" class="form-control" required>
             <label type="CPF">CPF/CNPJ: </label>
                 <input type="number" name="CPF" class="form-control" required>
-            <label type="senha">Senha: </label>
-                <input type="password" name="senha" class="form-control" required>
-            <label for="senha2">Repita sua senha: </label>
-                <input type="password" name="senha2" class="form-control" required>
+                    <br>
+                </div>
+                <div class="container">
+                    <div id="infosUser">
+                        <span>Informações Necessárias para conta de Despachante</span>
+                            <div class="input-group">
+                                <label class="input-group-text">Período de contrato</label>
+                                <input name="periodoContrato" class="form-control" type="date" value="">
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <label class="input-group-text">Agencia</label>
+                            <select name="agencia" class="form-select" >
+                                {{#each agencias}}
+                                <option value="{{_id}}">
+                                    {{nome}}
+                                </option>
+                                {{/each}}
+                            </select>
+                            </div>
+                        <br>
+                    </div>
+                    <label type="senha">Senha: </label>
+                        <input type="password" name="senha" class="form-control" required>
+                    <label for="senha2">Repita sua senha: </label>
+                        <input type="password" name="senha2" class="form-control" required>
+                </div>
             <button type="submit" class="btn btn-success mt-4">Criar conta</button>
         </form>
     </div>
 </div>
-{{>_saveLocalForm}}

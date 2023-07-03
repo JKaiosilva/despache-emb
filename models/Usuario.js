@@ -12,12 +12,25 @@ const Usuario = new Schema({
         type: Number
     },
     eAdmin: {
-        type: Boolean,
-        default: true
+        type: Number,
+    },
+    eAgencia: {
+        type: Number
     },
     eUser: {
         type: Number,
-        default: 1
+    },
+    proprietario: {
+        type: String
+    },
+    sociosProprietarios: {
+        type: String
+    },
+    periodoContrato: {
+        type: String
+    },
+    agencia: {
+        type: String
     },
     senha: {
         type: String

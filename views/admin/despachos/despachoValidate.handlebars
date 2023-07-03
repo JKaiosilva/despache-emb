@@ -189,13 +189,19 @@
             <div>
                 <h4 class="text-center">Comboios</h4>
             </div>
-            <h6 class="text-center">{{comboioDespacho.comboioNome}}</h6>
-            {{#each comboioDespacho.embarcacoes}}
-                <div class="bg-secondary">
-                    <span>Embarcacão: {{add @index 1}}</span>
+            {{#each despachos.despachoComboios}}
+                <div class="bg-secondary" id="{{_id}}">
+                    <div>
+                        <span class="m-1">Embarcação: {{add @index 1}}</span>
+                        <button type="button" style="float: right" class="btn btn-danger m-1" onclick="deletecomboio('{{_id}}')">Remover</button>
+                    </div>
                     <div class="input-group">
                         <label class="input-group-text">Nome da Embarcação</label>
                         <input value="{{embarcacaoNome}}" class="form-control" disabled>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-group-text">Número de Inscrição</label>
+                        <input value="{{NInscricao}}" class="form-control" type="text" disabled>
                     </div>
                     <div class="input-group">
                         <label class="input-group-text">carga</label>
@@ -212,18 +218,7 @@
                 </div>
                 <br>
             {{/each}}
-
-            <div class="input-group">
-                <label class="input-group-text">Alterar Comboio</label>
-                <select name="despachoComboio" class="form-select">
-                    <option value="{{despachos.despachoComboios}}">Já selecionado: {{comboioDespacho.comboioNome}}</option>
-                    {{#each comboios}}
-                        <option value="{{_id}}">{{comboioNome}}</option>
-                    {{else}}
-                        <option value="0">Nenhum comboio formulado</option>
-                    {{/each}}
-                </select>
-            </div>
+            {{>_comboios}}
             <br>
             </div>
                 <div class="input-group mb-3">

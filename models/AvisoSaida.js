@@ -6,6 +6,9 @@ const AvisoSaida = new Schema({
         type: String,
         default: {}
     },
+    agenciaID:{
+        type: String
+    },
     saidaDespacho:{
         type: Schema.Types.ObjectId,
         ref: 'despachos'

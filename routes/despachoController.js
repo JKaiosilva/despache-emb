@@ -94,13 +94,65 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
         }
 
 
+        const clearEmbNome = req.body.documentComboio.replace(/[\n' \[\]]/g, '');
+        const EmbNome = clearEmbNome.split(',');
+
+        const clearEmbIncricao = req.body.documentNIncricao.replace(/[\n' \[\]]/g, '');
+        const NIncricao = clearEmbIncricao.split(',');
+
+        const clearEmbCarga = req.body.documentComboiosCarga.replace(/[\n' \[\]]/g, '');
+        const EmbCarga = clearEmbCarga.split(',');
+
+        const clearEmbQuantidade = req.body.documentComboiosQuantidadeCarga.replace(/[\n' \[\]]/g, '');
+        const EmbQuantidade = clearEmbQuantidade.split(',');
+
+        const clearArqueacao = req.body.documentComboiosArqueacaoBruta.replace(/[\n' \[\]]/g, '');
+        const EmbArqueacao = clearArqueacao.split(',');
+
+        const comboioEmbarcacoes = [];
+    
+        if(EmbNome.length === 1){
+            for (var i = 0; i < EmbNome.length; i++) {
+                const comboioEmbarcacao = {
+                embarcacaoNome: EmbNome[i],
+                NInscricao: NIncricao[i],
+                carga: EmbCarga[i],
+                quantidade: EmbQuantidade[i],
+                arqueacaoBruta: EmbArqueacao[i]
+                };
+                comboioEmbarcacoes.push(comboioEmbarcacao);
+            }
+        }else{
+            for (var i = 0; i < EmbNome.length; i++) {
+                const comboioEmbarcacao = {
+                    embarcacaoNome: EmbNome[i],
+                    NInscricao: NIncricao[i],
+                    carga: EmbCarga[i],
+                    quantidade: EmbQuantidade[i],
+                    arqueacaoBruta: EmbArqueacao[i]
+                };
+                comboioEmbarcacoes.push(comboioEmbarcacao);
+            }
+        }
+
         console.log(despachoTripulantesFuncao)
     const novoDespacho = {
         usuarioID: req.user._id,
+        agenciaID: req.user.agencia,
         NprocessoDespacho: req.body.NprocessoDespacho,
         despachoPortoEstadia: req.body.despachoPortoEstadia,
         despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
         despachoDataHoraPartida: req.body.despachoDataHoraPartida,
+        embarcacaoNome: req.body.embarcacaoNome,
+        embarcacaoTipo: req.body.embarcacaoTipo,
+        embarcacaoBandeira: req.body.embarcacaoBandeira,
+        embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,
+        embarcacaoArqueacaoBruta: req.body.embarcacaoArqueacaoBruta,
+        embarcacaoComprimentoTotal: req.body.embarcacaoComprimentoTotal,
+        embarcacaoTonelagemPorteBruto: req.body.embarcacaoTonelagemPorteBruto,
+        embarcacaoCertificadoRegistroAmador: req.body.embarcacaoCertificadoRegistroAmador,
+        embarcacaoArmador: req.body.embarcacaoArmador,
+        embarcacaoNCRA: req.body.embarcacaoNCRA,
         despachoNomeRepresentanteEmbarcacao: req.body.despachoNomeRepresentanteEmbarcacao,
         despachoCPFCNPJRepresentanteEmbarcacao: req.body.despachoCPFCNPJRepresentanteEmbarcacao,
         despachoTelefoneRepresentanteEmbarcacao: req.body.despachoTelefoneRepresentanteEmbarcacao,
@@ -115,11 +167,10 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
         despachoNTripulantes: req.body.despachoNTripulantes,
         despachoNomeComandante: req.body.despachoNomeComandante,
         despachoTripulantes: despachoTripulantesArray,
-        despachoComboios: req.body.despachoComboio,
+        despachoComboios: comboioEmbarcacoes,
         despachoDataSolicitada: req.body.despachoDataSolicitada,
         despachoDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
         despachoData: Date.now(),
-        embarcacao: req.body.embarcacao,
         depachoMesAnoAtual: moment(Date.now()).format('MM/YYYY')
 
     }
@@ -152,7 +203,6 @@ router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
             tripulante.funcao = despacho.despachoTripulanteFuncao
             tripulantes.push(tripulante)
         }
-        const embarcacoes = await Embarcacao.findOne({_id: despachos.embarcacao}).lean()
         const portos = await Porto.findOne({ _id: despachos.despachoPortoEstadia}).lean().catch((err) => {
             if(err){
                 return {portoNome: despachos.despachoOutroPortoEstadia}
@@ -160,15 +210,12 @@ router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
         });        
         const avisoEntradas = await AvisoEntrada.find({entradaDespacho: despachos._id}).lean()
         const avisoSaidas = await AvisoSaida.find({saidaDespacho: despachos._id}).lean()
-        const comboios  = await Comboio.findOne({_id: despachos.despachoComboios}).lean()
 
         console.log(tripulantes)
             res.render('formulario/despachos/despachoVizu',
                 {
                     despachos: despachos,
                     tripulantes: tripulantes,
-                    embarcacoes: embarcacoes,
-                    comboios: comboios,
                     portos: portos,
                     avisoEntradas: avisoEntradas,
                     avisoSaidas: avisoSaidas,
@@ -248,8 +295,6 @@ router.get('/despachos/:page', eUser, async (req, res) => {
 router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
     try{
         const despachos = await Despacho.findOne({_id: req.params.id}).lean();
-        const embDespacho = await Embarcacao.findOne({_id: despachos.embarcacao}).lean();
-        const embarcacoes = await Embarcacao.find().lean();
         const portos = await Porto.find().lean();
         const portoDespacho = await Porto.findOne({_id: despachos.despachoPortoEstadia}).lean().catch((err) => {
             if(err){
@@ -263,18 +308,12 @@ router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
             tripDespacho.push(tripulante)
         }
         const tripulantes = await Tripulante.find().lean();
-        const comboios = await Comboio.find().lean()
-        const comboioDespacho = await Comboio.findOne({_id: despachos.despachoComboios}).lean()
             res.render('admin/despachos/despachoValidate', {
                 despachos: despachos,
-                embarcacoes: embarcacoes,
                 portos: portos,
                 portoDespacho: portoDespacho,
-                embDespacho: embDespacho,
                 tripDespacho: tripDespacho,
                 tripulantes: tripulantes,
-                comboios: comboios,
-                comboioDespacho: comboioDespacho
 
             })
     }catch(err){
@@ -324,6 +363,16 @@ router.post('/admin/despachoValidate', Admin, async(req, res) => {
              despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
              despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
              despachoDataHoraPartida: req.body.despachoDataHoraPartida,
+             embarcacaoNome: req.body.embarcacaoNome,
+             embarcacaoTipo: req.body.embarcacaoTipo,
+             embarcacaoBandeira: req.body.embarcacaoBandeira,
+             embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,
+             embarcacaoArqueacaoBruta: req.body.embarcacaoArqueacaoBruta,
+             embarcacaoComprimentoTotal: req.body.embarcacaoComprimentoTotal,
+             embarcacaoTonelagemPorteBruto: req.body.embarcacaoTonelagemPorteBruto,
+             embarcacaoCertificadoRegistroAmador: req.body.embarcacaoCertificadoRegistroAmador,
+             embarcacaoArmador: req.body.embarcacaoArmador,
+             embarcacaoNCRA: req.body.embarcacaoNCRA,
              despachoNomeRepresentanteEmbarcacao: req.body.despachoNomeRepresentanteEmbarcacao,
              despachoCPFCNPJRepresentanteEmbarcacao: req.body.despachoCPFCNPJRepresentanteEmbarcacao,
              despachoTelefoneRepresentanteEmbarcacao: req.body.despachoTelefoneRepresentanteEmbarcacao,

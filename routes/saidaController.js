@@ -120,6 +120,7 @@ router.post('/formulario/avisoSaida', eUser, async (req, res) => {
 
         const novoAvisoSaida = {
             usuarioID: req.user._id,
+            agenciaID: req.user.agencia,
             saidaDespacho: req.body.saidaDespacho,
             saidaNprocesso: req.body.saidaNprocesso,
             saidaPortoSaida: req.body.saidaPortoSaida,

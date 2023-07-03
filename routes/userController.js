@@ -38,9 +38,13 @@ const cheerio = require('cheerio')
 //----    Rota para formulário de cadastro de Usuário    ----//
 
 
-router.get('/usuarios/cadastro', async (req, res) => {
+router.get('/usuarios/cadastroUser', async (req, res) => {
     try{
-        res.render('usuarios/cadastro')
+        const agencias = await Usuario.find({eAgencia: 1}).lean()
+        res.render('usuarios/cadastro', 
+        {
+            agencias: agencias
+        })
     }catch(err){
         console.log(err)
         req.flash('error_msg', `Erro ao mostrar página de cadastro (${err})`)
@@ -52,7 +56,7 @@ router.get('/usuarios/cadastro', async (req, res) => {
 //----    Rota de postagem de cadastro de Usuário   ----//
 
 
-router.post('/usuarios/cadastro', (req, res) => {
+router.post('/usuarios/cadastroUser', (req, res) => {
     var erros = []
 
     if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
@@ -73,12 +77,16 @@ router.post('/usuarios/cadastro', (req, res) => {
         Usuario.findOne({email: req.body.email}).then((usuario) => {
             if(usuario) {
                 req.flash('error_msg', 'Email já cadastrado')
-                res.redirect('/usuarios/cadastro')
+                res.redirect('/usuarios/cadastroUser')
             }else{
                 const novoUsuario = new Usuario({
                     nome: req.body.nome,
-                    email: req.body.email,
+                    email:req.body.email,
                     CPF: req.body.CPF,
+                    eAdmin: 0,
+                    eAgencia: 0,
+                    agencia: req.body.agencia,
+                    eUser: 1,
                     senha: req.body.senha,
                     dataCadastro: Date.now(),
                     usuarioMesAnoAtual: moment(Date.now()).format('MM/YYYY')
@@ -165,9 +173,11 @@ router.post('/usuarios/login', async (req, res, next) => {
 router.get('/admin/users/usuariosEdit/:id', Admin, async (req, res) => {
     try{
         const usuario = await Usuario.findOne({_id: req.params.id}).lean()
+        const agencias = await Usuario.find({eAgencia: 1}).lean()
             res.render('admin/users/usuariosEdit', 
                 {
-                    usuario: usuario
+                    usuario: usuario,
+                    agencias: agencias
                 })
     }catch(err){
         console.log(err)
@@ -200,6 +210,13 @@ router.post('/admin/users/usuarioEdit', Admin, async(req, res) => {
                     nome: req.body.nome,
                     email:req.body.email,
                     CPF: req.body.CPF,
+                    eAdmin: req.body.eAdmin,
+                    eAgencia: req.body.eAgencia,
+                    agencia: req.body.agencia,
+                    eUser: req.body.eUser,
+                    proprietario: req.body.proprietario,
+                    sociosProprietarios: req.body.sociosProprietarios,
+                    periodoContrato: req.body.periodoContrato,
                     senha: hash
                 })
             })
@@ -213,6 +230,89 @@ router.post('/admin/users/usuarioEdit', Admin, async(req, res) => {
         res.redirect('/admin/painel')
     }
 })
+
+
+//----      Rota de visualização de formulario de Agencia       ----//
+
+
+router.get('/admin/addAgencia', Admin, async(req, res) => {
+    try{
+        res.render('admin/users/addAgencia')
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', `Erro ao mostrar página de adição de Agencia: (${err})`)
+        res.redirect('/admin/painel')
+    }
+})
+
+
+//----      Rota para adicionar Agencia
+
+
+router.post('/admin/users/addAgencia', (req, res) => {
+    var erros = []
+
+    if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
+        erros.push({texto: 'Nome inválido'})
+    }if(!req.body.email || typeof req.body.email == undefined || req.body.email == null) {
+        erros.push({texto: 'Email inválido'})
+    }if(!req.body.CPF || typeof req.body.CPF == undefined || req.body.CPF == null || req.body.CPF.length < 11) {
+        erros.push({texto: 'CPF inválido'})
+    }if(!req.body.senha || typeof req.body.senha == undefined || req.body.senha == null) {
+        erros.push({texto: "Senha inválida"})
+    }if(req.body.senha.length < 6) {
+        erros.push({texto: 'Senha muito curta'})
+    }if(req.body.senha != req.body.senha2) { 
+        erros.push({texto: 'Senhas diferentes'})
+    }if(erros.length > 0) {
+        res.render('usuarios/cadastro', {erros: erros})
+    }else {
+        Usuario.findOne({email: req.body.email}).then((usuario) => {
+            if(usuario) {
+                req.flash('error_msg', 'Email já cadastrado')
+                res.redirect('/usuarios/cadastroUser')
+            }else{
+                const novoUsuario = new Usuario({
+                    nome: req.body.nome,
+                    email:req.body.email,
+                    CPF: req.body.CPF,
+                    eAdmin: 0,
+                    eAgencia: 1,
+                    proprietario: req.body.proprietario,
+                    sociosProprietarios: req.body.sociosProprietarios,
+                    eUser: 0,
+                    senha: req.body.senha,
+                    dataCadastro: Date.now(),
+                    usuarioMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+                })
+
+                bcrypt.genSalt(10, (erro, salt) => {
+                    bcrypt.hash(novoUsuario.senha, salt, (erro, hash) => {
+                        if(erro) {
+                            console.log(erro)
+                            req.flash('error_msg', 'Houve um erro ao salvar usuario')
+                            res.redirect('/usuarios/cadastro')
+                        }
+                        novoUsuario.senha = hash
+                        novoUsuario.save().then(() => {
+                            req.flash('success_msg', 'Usuario criado com sucesso')
+                            res.redirect('/usuarios/login')
+                        }).catch((err) => {
+                            console.log(err)
+                            req.flash('error_msg', 'Houve um erro ao salvar usuario')
+                            res.redirect('/usuarios/cadastro')
+                        })
+                    })
+                })
+            }
+        }).catch((err) => {
+            console.log(err)
+            req.flash('error_msg', `Erro ao cadastrar usuário (${err})`)
+            res.redirect('/')
+        })
+    }
+})
+
 
 
 //----    Rota de listagem de Usuários    ----//
