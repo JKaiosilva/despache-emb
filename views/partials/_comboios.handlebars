@@ -1,7 +1,6 @@
 
 
-    <div id="selecaoComboio">
-        <div class="container">
+
             <div>
                 <div id="comboios">
                     <script>
@@ -78,8 +77,11 @@
 
                                 comboiosarqueacaoBruta.push(arqueacao[i].value)
                                 document.getElementById('comboiosarqueacaoBruta').setAttribute('value', `${comboiosarqueacaoBruta}`)
-                            }                        
+                            }   
+                        document.getElementById('selecaoComboio').setAttribute('class', 'form-control bg-success bg-opacity-50 border-success')
+                     
                         }
+
                         function deletecomboio(id){
                             var submiteButton = document.getElementById('submitButton')
                             submiteButton.disabled = true
@@ -102,6 +104,5 @@
                 <button class="btn btn-success" type="button" onclick="getIdcomboios()" style="float: right">Fechar Relação</button>
                 
         </div>
-    </div>
-</div>
+
 

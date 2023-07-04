@@ -178,12 +178,13 @@
                         <input name="entradaObservacoes" class="form-control" type="text" value="{{avisoEntradas.entradaObservacoes}}">
                     </div>
                 </div>
+                <br>
+                <hr>
                 <div id="selecaoTripulantes">
                 <div class="container">
                 <h4 class="text-center">Lista de Tripulantes</h4>
                 {{#each tripulantesValid}}
-                <div id="{{_id}}" calss=" m-4">
-                    <div class="card bg-secondary m-4">
+                <div id="{{_id}}" class="card bg-secondary m-4">
                         <div>
                             <span class="m-1">Tripulante: {{add @index 1}}</span>
                             <button type="button" style="float: right" class="btn btn-danger m-1" onclick="deleteTripulante('{{_id}}')">Remover</button>
@@ -205,18 +206,17 @@
                                 <input class="form-control" type="text" value="{{tripulanteNCIR}}" disabled>
                             </div>
                         <input name="tripulante" value="{{_id}}" hidden>
-                    </div>
                 </div>
                 {{/each}}
                     {{>_tripulantes}}
                     </div>
                 </div>
-                <div>
+                <hr>
+                <div id="selecaoPassageiros">
+                    <div class="container">
                     <h4 class="text-center">Lista de Passageiros</h4>
-                    <div id="selecaoPassageiros" class="">
-
                         {{#each avisoEntradas.entradaPassageiros}}
-                                <div id="{{_id}}" class="card bg-secondary mt-4">
+                                <div id="{{_id}}" class="card bg-secondary m-4">
                                     <div>                           
                                         <button type="button" style="float: right" class="btn btn-danger m-1" onclick="deletePassageiro('{{_id}}')">Remover</button>
                                         <span>Passageiro: {{add @index 1}}</span>
@@ -232,41 +232,46 @@
                                 </div>
                             <br>
                         {{/each}}
+                        {{>_passageiros}}
                     </div>
                 </div>
-                {{>_passageiros}}
+            <hr>
+            <div id="selecaoComboio">
+                <div class="container">
             <div>
                 <h4 class="text-center">Comboios</h4>
             </div>
                 {{#each avisoEntradas.entradaComboios}}
-                <div class="bg-secondary" id="{{_id}}">
+                <div class="bg-secondary m-4" id="{{_id}}">
                     <span>Embarcacão: {{add @index 1}}</span>
                     <button type="button" style="float: right" class="btn btn-danger m-1" onclick="deletecomboio('{{_id}}')">Remover</button>
                     <div class="input-group">
                         <label class="input-group-text">Nome da Embarcação</label>
-                        <input value="{{embarcacaoNome}}" class="form-control" disabled>
+                        <input name="embarcacaoNome" value="{{embarcacaoNome}}" class="form-control" disabled>
                     </div>
                     <div class="input-group">
                         <label class="input-group-text">Número de Inscrição</label>
-                        <input value="{{NInscricao}}" class="form-control" type="text" disabled>
+                        <input name="NIncricao" value="{{NInscricao}}" class="form-control" type="text" disabled>
                     </div>
                     <div class="input-group">
                         <label class="input-group-text">carga</label>
-                        <input value="{{carga}}" class="form-control" type="text" disabled>
+                        <input name="comboiosCarga" value="{{carga}}" class="form-control" type="text" disabled>
                     </div>
                     <div class="input-group">
                         <label class="input-group-text">quantidade e unidade de carga</label>
-                        <input value="{{quantidade}}" class="form-control" type="text" disabled>
+                        <input name="comboiosQuantidadeCarga" value="{{quantidade}}" class="form-control" type="text" disabled>
                     </div>
                     <div class="input-group">
                         <label class="input-group-text">Arqueação Bruta</label>
-                        <input value="{{arqueacaoBruta}}" class="form-control" type="text" disabled>
+                        <input name="comboiosarqueacaoBruta" value="{{arqueacaoBruta}}" class="form-control" type="text" disabled>
                     </div>
                 </div>
                 <br>
                 {{/each}}
                 <br>
                 {{>_comboios}}
+                </div>
+            </div>
             <br>
                 <button type="submit" id="submitButton" class="btn btn-success" disabled>Validar</button>
         </form>
