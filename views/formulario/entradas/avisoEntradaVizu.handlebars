@@ -41,21 +41,21 @@
                     <h4 class="text-center">Dados da Embarcação</h4>
                         <div class="input-group mb-3">
                             <label class="input-group-text">Nome da Embarcação</label>
-                            <input name="entradaNomeEmbarcacao" class="form-control" type="text" value="{{embarcacoes.embarcacaoNome}}" disabled>
+                            <input name="entradaNomeEmbarcacao" class="form-control" type="text" value="{{avisoEntradas.embarcacaoNome}}" disabled>
                             <label class="input-group-text">Tipo da Embarcação</label>
-                            <input name="entradaTipoEmbarcacao" class="form-control" type="text" value="{{embarcacoes.embarcacaoTipo}}" disabled>
+                            <input name="entradaTipoEmbarcacao" class="form-control" type="text" value="{{avisoEntradas.embarcacaoTipo}}" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <label class="input-group-text">Bandeira</label>
-                            <input name="entradaBandeira" class="form-control" type="text" value="{{embarcacoes.embarcacaoBandeira}}" disabled>
+                            <input name="entradaBandeira" class="form-control" type="text" value="{{avisoEntradas.embarcacaoBandeira}}" disabled>
                             <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-                            <input name="entradaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="{{embarcacoes.embarcacaoNInscricaoautoridadeMB}}" disabled>
+                            <input name="entradaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="{{avisoEntradas.embarcacaoNInscricaoautoridadeMB}}" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <label class="input-group-text">Arqueação Buta</label>
-                            <input name="entradaArqueacaoBruta" class="form-control" type="text" value="{{embarcacoes.embarcacaoArqueacaoBruta}}" disabled>
+                            <input name="entradaArqueacaoBruta" class="form-control" type="text" value="{{avisoEntradas.embarcacaoArqueacaoBruta}}" disabled>
                             <label class="input-group-text">Tonelagem Porte Bruto</label>
-                            <input name="entradaTonelagemPorteBruto" class="form-control" type="text" value="{{embarcacoes.embarcacaoTonelagemPorteBruto}}" disabled>
+                            <input name="entradaTonelagemPorteBruto" class="form-control" type="text" value="{{avisoEntradas.embarcacaoTonelagemPorteBruto}}" disabled>
                         </div>
                 </div>
                     <h4 class="text-center">Dados do Representante da Embarcação</h4>
@@ -144,13 +144,16 @@
                     <div>
                     <h4 class="text-center">Comboios</h4>
                 </div>
-                <h6 class="text-center">{{comboios.comboioNome}}</h6>
-                {{#each comboios.embarcacoes}}
+                {{#each avisoEntradas.entradaComboios}}
                 <div class="bg-secondary">
                     <span>Embarcacão: {{add @index 1}}</span>
                     <div class="input-group">
                         <label class="input-group-text">Nome da Embarcação</label>
                         <input value="{{embarcacaoNome}}" class="form-control" disabled>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-group-text">Número de Inscrição</label>
+                        <input value="{{NInscricao}}" class="form-control" type="text" disabled>
                     </div>
                     <div class="input-group">
                         <label class="input-group-text">carga</label>

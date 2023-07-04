@@ -43,15 +43,11 @@ router.get('/formulario/despacho', eUser, async(req, res) => {
     try{
         const dataHoje = Date.now()
         const tripulantes = await Tripulante.find({tripulanteValidadeCIRNumber: {$gte: dataHoje}}).lean()
-        const comboios = await Comboio.find({usuarioId: req.user._id}).lean()
-        const embarcacoes = await Embarcacao.find({usuarioID: req.user._id, embarcacaoValidadeNumber: {$gte: dataHoje}}).lean()
         const portos = await Porto.find().lean()
             res.render('formulario/despachos/despacho', 
             {
-                embarcacoes: embarcacoes,
                 tripulantes: tripulantes,
                 portos: portos,
-                comboios: comboios
             })
     }catch(err){
         req.flash('error_msg', `Erro ao mostrar formulário de adição de Despacho (${err})`)
@@ -77,8 +73,8 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
         if(tripulantes.length === 1){
             for(var i = 0; i < tripulantes.length; i++){
             const tripulante = {
-                id: despachoTripulantes,
-                despachoTripulanteFuncao: despachoTripulantesFuncao
+                id: despachoTripulantes[i],
+                despachoTripulanteFuncao: despachoTripulantesFuncao[i]
             }
         
             despachoTripulantesArray.push(tripulante)
@@ -199,9 +195,17 @@ router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
         const despachos = await Despacho.findOne({_id: req.params.id}).lean()
         const tripulantes = []
         for await (var despacho of despachos.despachoTripulantes){
-            const tripulante = await Tripulante.findOne({_id: despacho.id}).lean()
-            tripulante.funcao = despacho.despachoTripulanteFuncao
-            tripulantes.push(tripulante)
+            Tripulante.findOne({_id: despacho.id}).lean().then((tripulante) =>{
+                if(despacho.despachoTripulanteFuncao == null){
+                    tripulante.funcao = 'indefinido'
+                    tripulantes.push(tripulante)
+                }else{
+                    tripulante.funcao = despacho.despachoTripulanteFuncao
+                    tripulantes.push(tripulante)
+                }
+            })
+
+
         }
         const portos = await Porto.findOne({ _id: despachos.despachoPortoEstadia}).lean().catch((err) => {
             if(err){
@@ -303,14 +307,15 @@ router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
         });
         const tripDespacho = []
         for await (var despacho of despachos.despachoTripulantes){
-            Tripulante.findOne({_id: despacho.id}).lean().then((tripulante) =>{
+            Tripulante.findOne({_id: despacho.id}).lean().then((tripulante) => {
                 if(despacho.despachoTripulanteFuncao == null){
                     tripulante.funcao = 'indefinido'
                     tripDespacho.push(tripulante)
                 }else{
-                    tripulante.funcao = despacho.despachoTripulanteFuncao
-                    tripDespacho.push(tripulante)
+
                 }
+            }).catch((err) => {
+                throw err
             })
 
 
@@ -473,7 +478,6 @@ router.get('/admin/despachos/:page', Admin, async (req, res) => {
 router.get('/despacho/:id/pdf', Admin, async (req, res) => {
     try{
         const despachos = await Despacho.findById(req.params.id).lean()
-        const embarcacoes = await Embarcacao.findOne({_id: despachos.embarcacao}).lean()
         const tripulantes = await Tripulante.find({_id: despachos.despachoTripulantes}).lean()
         const tripulantesInfos = []
         var tripulantesArray = tripulantes.forEach((el) => {

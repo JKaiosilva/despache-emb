@@ -56,49 +56,38 @@
                 <h4 class="text-center">Dados da Embarcação</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Nome da Embarcação</label>
-                        <input class="form-control" type="text" value="{{embDespacho.embarcacaoNome}}" disabled>
+                        <input class="form-control" type="text" value="{{despachos.embarcacaoNome}}" disabled>
                         <label class="input-group-text">Tipo da Embarcação</label>
-                        <input class="form-control" type="text" value="{{embDespacho.embarcacaoTipo}}" disabled>
+                        <input class="form-control" type="text" value="{{despachos.embarcacaoTipo}}" disabled>
                     </div>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Bandeira</label>
-                <input class="form-control" type="text" value="{{embDespacho.embarcacaoBandeira}}" disabled>
+                <input class="form-control" type="text" value="{{despachos.embarcacaoBandeira}}" disabled>
                 <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-                <input class="form-control" type="text" value="{{embDespacho.embarcacaoNInscricaoautoridadeMB}}" disabled>
+                <input class="form-control" type="text" value="{{despachos.embarcacaoNInscricaoautoridadeMB}}" disabled>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Arqueação Bruta</label>
-                <input class="form-control" type="text" value="{{embDespacho.embarcacaoArqueacaoBruta}}" disabled>
+                <input class="form-control" type="text" value="{{despachos.embarcacaoArqueacaoBruta}}" disabled>
                 <label class="input-group-text">Comprimento Total</label>
-                <input class="form-control" type="text" value="{{embDespacho.embarcacaoComprimentoTotal}}" disabled>
+                <input class="form-control" type="text" value="{{despachos.embarcacaoComprimentoTotal}}" disabled>
                 <label class="input-group-text">Tonelagem Porte Bruto</label>
-                <input class="form-control" type="text" value="{{embDespacho.embarcacaoTonelagemPorteBruto}}" disabled>
+                <input class="form-control" type="text" value="{{despachos.embarcacaoTonelagemPorteBruto}}" disabled>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Certificado de Registro do Amador(CRA)</label>
-                <input class="form-control" type="text" value="{{embDespacho.embarcacaoCertificadoRegistroAmador}}" disabled>
+                <input class="form-control" type="text" value="{{despachos.embarcacaoCertificadoRegistroAmador}}" disabled>
                 <label class="input-group-text">Armador</label>
-                <input class="form-control" type="text" value="{{embDespacho.embarcacaoArmador}}" disabled>
+                <input class="form-control" type="text" value="{{despachos.embarcacaoArmador}}" disabled>
             </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">N° do CRA</label>
-                        <input class="form-control" type="text" value="{{embDespacho.embarcacaoNCRA}}" disabled>
+                        <input class="form-control" type="text" value="{{despachos.embarcacaoNCRA}}" disabled>
                         <label class="input-group-text">Validade</label>
-                        <input class="form-control" type="text" value="{{embDespacho.embarcacaoValidade}}" disabled>
+                        <input class="form-control" type="text" value="{{despachos.embarcacaoValidade}}" disabled>
                     </div>
-            <div class="input-group mb-3">
-                    <label class="input-group-text">Redefinir Embarcação</label>
-                <select name="embarcacao" class="form-select">
-                    <option value="{{despachos.embarcacao}}">Já selecionado: {{embDespacho.embarcacaoNome}}</option>
-                    {{#each embarcacoes}}
-                        <option value="{{_id}}">{{embarcacaoNome}}</option>
-                    {{else}}
-                        <option value="0">Nenhuma embarcação cadastrada</option>
-                    {{/each}}
-                </select>
-                </div>
-            <div>
+
                 <h4 class="text-center">Dados de Representante da Embarcação</h4>
                     <div class="input-group mb-3">
                             <label class="input-group-text">Nome</label>

@@ -46,6 +46,42 @@ const AvisoEntrada = new Schema ({
     entradaDataHoraEstimadaSaida: {
         type: String
     },
+    embarcacaoNome: {
+        type: String
+    },
+    embarcacaoTipo: {
+        type: String
+    },
+    embarcacaoBandeira: {
+        type: String
+    },
+    embarcacaoNInscricaoautoridadeMB: {
+        type: String
+    },
+    embarcacaoArqueacaoBruta: {
+        type: String
+    },
+    embarcacaoComprimentoTotal: {
+        type: String
+    },
+    embarcacaoTonelagemPorteBruto: {
+        type: String
+    },
+    embarcacaoCertificadoRegistroAmador: {
+        type: String
+    },
+    embarcacaoArmador: {
+        type: String,
+    },
+    embarcacaoNCRA: {
+        type: String
+    },
+    embarcacaoValidade: {
+        type: String
+    },
+    embarcacaoValidadeNumber: {
+        type: String
+    },
     entradaNomeRepresentanteEmbarcacao: {
         type: String
     },
@@ -93,17 +129,22 @@ const AvisoEntrada = new Schema ({
             type: String
         }
     }],
-    entradaComboios: {
-        type: Schema.Types.ObjectId,
-        ref: 'Comboio'
-    },
+    entradaComboios: [{
+        embarcacaoNome: {
+        },
+        NInscricao: {
+
+        },
+        carga: {
+        },
+        quantidade: {
+        },
+        arqueacaoBruta: {
+        }
+    }],
     entradaDataPedido: {
         type: String,
         default: []
-    },
-    embarcacao: {
-        type: Schema.Types.ObjectId,
-        ref: 'embarcacoes'
     },
     entradaData: {
         type: Number,

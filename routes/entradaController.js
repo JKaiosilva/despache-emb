@@ -42,18 +42,14 @@ const bcrypt = require('bcryptjs')
 router.get('/formulario/avisoEntrada', eUser, async (req, res) => {
     try {
         const dataHoje = Date.now()
-        const despachos = await Despacho.find({ usuarioID: req.user._id, despachoDataValidadeNumber: { $gte: dataHoje } }).lean()
-        const embarcacoes = await Embarcacao.find({ usuarioID: req.user._id, embarcacaoValidadeNumber: { $gte: dataHoje } }).lean()
+        const despachos = await Despacho.find({ agenciaID: req.user.agencia, despachoDataValidadeNumber: { $gte: dataHoje } }).lean()
         const tripulantes = await Tripulante.find({ tripulanteValidadeCIRNumber: { $gte: dataHoje } }).lean()
         const portos = await Porto.find().lean()
-        const comboios = await Comboio.find({ usuarioId: req.user._id }).lean()
             res.render('formulario/entradas/avisoEntrada', 
                 {
-                    embarcacoes: embarcacoes,
                     tripulantes: tripulantes,
                     portos: portos,
                     despachos: despachos,
-                    comboios: comboios
                 })
     } catch (err) {
         req.flash('error_msg', `Erro ao mostrar formulário de adição de Aviso de Entrada (${err})`)
@@ -116,6 +112,48 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
             }
             entradaPassageiros.push(passageiros)
         }
+
+        const clearEmbNome = req.body.documentComboio.replace(/[\n' \[\]]/g, '');
+        const EmbNome = clearEmbNome.split(',');
+
+        const clearEmbIncricao = req.body.documentNIncricao.replace(/[\n' \[\]]/g, '');
+        const NIncricao = clearEmbIncricao.split(',');
+
+        const clearEmbCarga = req.body.documentComboiosCarga.replace(/[\n' \[\]]/g, '');
+        const EmbCarga = clearEmbCarga.split(',');
+
+        const clearEmbQuantidade = req.body.documentComboiosQuantidadeCarga.replace(/[\n' \[\]]/g, '');
+        const EmbQuantidade = clearEmbQuantidade.split(',');
+
+        const clearArqueacao = req.body.documentComboiosArqueacaoBruta.replace(/[\n' \[\]]/g, '');
+        const EmbArqueacao = clearArqueacao.split(',');
+
+        const comboioEmbarcacoes = [];
+    
+        if(EmbNome.length === 1){
+            for (var i = 0; i < EmbNome.length; i++) {
+                const comboioEmbarcacao = {
+                embarcacaoNome: EmbNome[i],
+                NInscricao: NIncricao[i],
+                carga: EmbCarga[i],
+                quantidade: EmbQuantidade[i],
+                arqueacaoBruta: EmbArqueacao[i]
+                };
+                comboioEmbarcacoes.push(comboioEmbarcacao);
+            }
+        }else{
+            for (var i = 0; i < EmbNome.length; i++) {
+                const comboioEmbarcacao = {
+                    embarcacaoNome: EmbNome[i],
+                    NInscricao: NIncricao[i],
+                    carga: EmbCarga[i],
+                    quantidade: EmbQuantidade[i],
+                    arqueacaoBruta: EmbArqueacao[i]
+                };
+                comboioEmbarcacoes.push(comboioEmbarcacao);
+            }
+        }
+
         console.log(entradaPassageiros)
         const novoAvisoEntrada = {
             usuarioID: req.user._id,
@@ -131,6 +169,16 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
             entradaPortoDestino: req.body.entradaPortoDestino,
             entradaOutroPortoDestino: req.body.entradaOutroPortoDestino,
             entradaDataHoraEstimadaSaida: req.body.entradaDataHoraEstimadaSaida,
+            embarcacaoNome: req.body.entradaEmbarcacaoNome,
+            embarcacaoTipo: req.body.embarcacaoTipo,
+            embarcacaoBandeira: req.body.embarcacaoBandeira,
+            embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,
+            embarcacaoArqueacaoBruta: req.body.embarcacaoArqueacaoBruta,
+            embarcacaoComprimentoTotal: req.body.embarcacaoComprimentoTotal,
+            embarcacaoTonelagemPorteBruto: req.body.embarcacaoTonelagemPorteBruto,
+            embarcacaoCertificadoRegistroAmador: req.body.embarcacaoCertificadoRegistroAmador,
+            embarcacaoArmador: req.body.embarcacaoArmador,
+            embarcacaoNCRA: req.body.embarcacaoNCRA,
             entradaNomeRepresentanteEmbarcacao: req.body.entradaNomeRepresentanteEmbarcacao,
             entradaCPFCNPJRepresentanteEmbarcacao: req.body.entradaCPFCNPJRepresentanteEmbarcacao,
             entradaTelefoneRepresentanteEmbarcacao: req.body.entradaTelefoneRepresentanteEmbarcacao,
@@ -142,9 +190,8 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
             entradaObservacoes: req.body.entradaObservacoes,
             entradaTripulantes: entradaTripulantesArray,
             entradaPassageiros: entradaPassageiros,
-            entradaComboios: req.body.entradaComboios,
+            entradaComboios: comboioEmbarcacoes,
             entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-            embarcacao: req.body.embarcacao,
             entradaData: Date.now(),
             entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
         }
@@ -389,6 +436,48 @@ router.post('/admin/entradasValidate', Admin, async (req, res) => {
             entradaPassageiros.push(passageiros)
         }
 
+        
+        const clearEmbNome = req.body.documentComboio.replace(/[\n' \[\]]/g, '');
+        const EmbNome = clearEmbNome.split(',');
+
+        const clearEmbIncricao = req.body.documentNIncricao.replace(/[\n' \[\]]/g, '');
+        const NIncricao = clearEmbIncricao.split(',');
+
+        const clearEmbCarga = req.body.documentComboiosCarga.replace(/[\n' \[\]]/g, '');
+        const EmbCarga = clearEmbCarga.split(',');
+
+        const clearEmbQuantidade = req.body.documentComboiosQuantidadeCarga.replace(/[\n' \[\]]/g, '');
+        const EmbQuantidade = clearEmbQuantidade.split(',');
+
+        const clearArqueacao = req.body.documentComboiosArqueacaoBruta.replace(/[\n' \[\]]/g, '');
+        const EmbArqueacao = clearArqueacao.split(',');
+
+        const comboioEmbarcacoes = [];
+    
+        if(EmbNome.length === 1){
+            for (var i = 0; i < EmbNome.length; i++) {
+                const comboioEmbarcacao = {
+                embarcacaoNome: EmbNome[i],
+                NInscricao: NIncricao[i],
+                carga: EmbCarga[i],
+                quantidade: EmbQuantidade[i],
+                arqueacaoBruta: EmbArqueacao[i]
+                };
+                comboioEmbarcacoes.push(comboioEmbarcacao);
+            }
+        }else{
+            for (var i = 0; i < EmbNome.length; i++) {
+                const comboioEmbarcacao = {
+                    embarcacaoNome: EmbNome[i],
+                    NInscricao: NIncricao[i],
+                    carga: EmbCarga[i],
+                    quantidade: EmbQuantidade[i],
+                    arqueacaoBruta: EmbArqueacao[i]
+                };
+                comboioEmbarcacoes.push(comboioEmbarcacao);
+            }
+        }
+
         await AvisoEntrada.updateOne({ _id: req.body.id }, {
             entradaDespacho: req.body.entradaDespacho,
             entradaNprocesso: req.body.entradaNprocesso,
@@ -401,6 +490,16 @@ router.post('/admin/entradasValidate', Admin, async (req, res) => {
             entradaPortoDestino: req.body.entradaPortoDestino,
             entradaOutroPortoDestino: req.body.entradaOutroPortoDestino,
             entradaDataHoraEstimadaSaida: req.body.entradaDataHoraEstimadaSaida,
+            embarcacaoNome: req.body.entradaEmbarcacaoNome,
+            embarcacaoTipo: req.body.embarcacaoTipo,
+            embarcacaoBandeira: req.body.embarcacaoBandeira,
+            embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,
+            embarcacaoArqueacaoBruta: req.body.embarcacaoArqueacaoBruta,
+            embarcacaoComprimentoTotal: req.body.embarcacaoComprimentoTotal,
+            embarcacaoTonelagemPorteBruto: req.body.embarcacaoTonelagemPorteBruto,
+            embarcacaoCertificadoRegistroAmador: req.body.embarcacaoCertificadoRegistroAmador,
+            embarcacaoArmador: req.body.embarcacaoArmador,
+            embarcacaoNCRA: req.body.embarcacaoNCRA,
             entradaNomeRepresentanteEmbarcacao: req.body.entradaNomeRepresentanteEmbarcacao,
             entradaCPFCNPJRepresentanteEmbarcacao: req.body.entradaCPFCNPJRepresentanteEmbarcacao,
             entradaTelefoneRepresentanteEmbarcacao: req.body.entradaTelefoneRepresentanteEmbarcacao,
@@ -412,9 +511,8 @@ router.post('/admin/entradasValidate', Admin, async (req, res) => {
             entradaObservacoes: req.body.entradaObservacoes,
             entradaTripulantes: entradaTripulantesArray,
             entradaPassageiros: entradaPassageiros,
-            entradaComboios: req.body.entradaComboios,
+            entradaComboios: comboioEmbarcacoes,
             entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-            embarcacao: req.body.embarcacao,
             entradaData: Date.now(),
             entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
 
