@@ -224,20 +224,22 @@ router.get('/formulario', async (req, res) => {
             })
 
         }else if(despachante == 1){
-            const despachosValid = await Despacho.find({agenciaID: req.user.agencia}).lean().sort({despachoData: 'desc'})
+            const despachosValid = await Despacho.find({agenciaID: req.user.agencia, despachoDataValidadeNumber: {$gte: dataHoje}}).lean()
         
             const despachos = await Despacho.find({agenciaID: req.user.agencia}).limit(5).lean().sort({despachoData: 'desc'})
             const avisoEntradas = await AvisoEntrada.find({agenciaID: req.user.agencia}).limit(5).lean().sort({entradaData: 'desc'})
             const avisoSaidas = await AvisoSaida.find({agenciaID: req.user.agencia}).limit(5).lean().sort({saidaData: 'desc'})
     
-            if(!despachosValid.find(el => el.despachoDataValidadeNumber > dataHoje)){
-                docHidden = 'hidden'
-                alertHidden = ''
-            }else{
+            if(despachosValid){
+                console.log('encontrou um valido')
                 docHidden = ''
                 alertHidden = 'hidden'
+            }else{
+                console.log('não encontrou valido')
+                docHidden = 'hidden'
+                alertHidden = ''
             }
-            console.log('agencia')
+            console.log('despachante')
 
             despachanteHidden = 'hidden'
 

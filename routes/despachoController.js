@@ -303,9 +303,17 @@ router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
         });
         const tripDespacho = []
         for await (var despacho of despachos.despachoTripulantes){
-            const tripulante = await Tripulante.findOne({_id: despacho.id}).lean()
-            tripulante.funcao = despacho.despachoTripulanteFuncao
-            tripDespacho.push(tripulante)
+            Tripulante.findOne({_id: despacho.id}).lean().then((tripulante) =>{
+                if(despacho.despachoTripulanteFuncao == null){
+                    tripulante.funcao = 'indefinido'
+                    tripDespacho.push(tripulante)
+                }else{
+                    tripulante.funcao = despacho.despachoTripulanteFuncao
+                    tripDespacho.push(tripulante)
+                }
+            })
+
+
         }
         const tripulantes = await Tripulante.find().lean();
             res.render('admin/despachos/despachoValidate', {
