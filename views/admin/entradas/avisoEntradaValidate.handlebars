@@ -52,6 +52,7 @@
                         <label class="input-group-text">Posição no Porto Atual</label>
                         <input value="{{avisoEntradas.entradaPosicaoPortoAtual}}" name="entradaPosicaoPortoAtual" class="form-control" type="text">
                     </div>
+                </div>
                     <div class="input-group mb-3">
                     <label class="input-group-text" class="input-group-text">Porto de Origem</label>
                     <input class="form-control" type="text" value="{{portoChegada.portoNome}}" disabled>
@@ -156,7 +157,6 @@
                         <label class="input-group-text">Email</label>
                         <input name="entradaEmailRepresentanteEmbarcacao" class="form-control" type="text" value="{{avisoEntradas.entradaEmailRepresentanteEmbarcacao}}">
                     </div>
-                </div>
                 <div>
                     <h4 class="text-center">Informações Complementares</h4>
                     <div class="input-group mb-3">
@@ -178,6 +178,7 @@
                         <input name="entradaObservacoes" class="form-control" type="text" value="{{avisoEntradas.entradaObservacoes}}">
                     </div>
                 </div>
+
                 <br>
                 <hr>
                 <div id="selecaoTripulantes">
@@ -238,9 +239,7 @@
             <hr>
             <div id="selecaoComboio">
                 <div class="container">
-            <div>
                 <h4 class="text-center">Comboios</h4>
-            </div>
                 {{#each avisoEntradas.entradaComboios}}
                 <div class="bg-secondary m-4" id="{{_id}}">
                     <span>Embarcacão: {{add @index 1}}</span>
@@ -276,7 +275,7 @@
                 <button type="submit" id="submitButton" class="btn btn-success" disabled>Validar</button>
         </form>
     </div>
-
+</div>
 <br>
 <div class="text-center" {{hidden}}>
  <a class="btn btn-success" href="/avisoEntrada/{{avisoEntradas._id}}/pdf" target="_blank" style="float: right">Gerar PDF</a>

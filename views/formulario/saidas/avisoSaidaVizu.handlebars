@@ -33,21 +33,21 @@
                     <div class="input-group mb-3">
                         <div class="input-group mb-3">
                             <label class="input-group-text">Nome da Embarcação</label>
-                            <input name="saidaNomeEmbarcacao" class="form-control" type="text" value="{{embarcacoes.embarcacaoNome}}" disabled>
+                            <input name="saidaNomeEmbarcacao" class="form-control" type="text" value="{{avisoSaidas.embarcacaoNome}}" disabled>
                             <label class="input-group-text">Tipo da Embarcação</label>
-                            <input name="saidaTipoEmbarcacao" class="form-control" type="text" value="{{embarcacoes.embarcacaoTipo}}" disabled>
+                            <input name="saidaTipoEmbarcacao" class="form-control" type="text" value="{{avisoSaidas.embarcacaoTipo}}" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <label class="input-group-text">Bandeira</label>
-                            <input name="saidaBandeira" class="form-control" type="text" value="{{embarcacoes.embarcacaoBandeira}}" disabled>
+                            <input name="saidaBandeira" class="form-control" type="text" value="{{avisoSaidas.embarcacaoBandeira}}" disabled>
                             <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-                            <input name="saidaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="{{embarcacoes.embarcacaoNInscricaoautoridadeMB}}" disabled>
+                            <input name="saidaNInscricaoAutoridadeMaritima" class="form-control" type="text" value="{{avisoSaidas.embarcacaoNInscricaoautoridadeMB}}" disabled>
                         </div>
                         <div class="input-group mb-3">
                             <label class="input-group-text">Arqueação Buta</label>
-                            <input name="saidaArqueacaoBruta" class="form-control" type="text" value="{{embarcacoes.embarcacaoArqueacaoBruta}}" disabled>
+                            <input name="saidaArqueacaoBruta" class="form-control" type="text" value="{{avisoSaidas.embarcacaoArqueacaoBruta}}" disabled>
                             <label class="input-group-text">Tonelagem Porte Bruto</label>
-                            <input name="saidaTonelagemPorteBruto" class="form-control" type="text" value="{{embarcacoes.embarcacaoTonelagemPorteBruto}}" disabled>
+                            <input name="saidaTonelagemPorteBruto" class="form-control" type="text" value="{{avisoSaidas.embarcacaoTonelagemPorteBruto}}" disabled>
                         </div>
                 </div>
                     <h4 class="text-center">Dados do Representante da Embarcação</h4>
@@ -124,13 +124,16 @@
                 <div>
                     <h4 class="text-center">Comboios</h4>
                 </div>
-                    <h6 class="text-center">{{comboios.comboioNome}}</h6>
-                {{#each comboios.embarcacoes}}
+                {{#each avisoSaidas.saidaComboios}}
                 <div class="bg-secondary">
                     <span>Embarcacão: {{add @index 1}}</span>
                     <div class="input-group">
                         <label class="input-group-text">Nome da Embarcação</label>
                         <input value="{{embarcacaoNome}}" class="form-control" disabled>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-group-text">Número de Inscrição</label>
+                        <input value="{{NInscricao}}" class="form-control" type="text" disabled>
                     </div>
                     <div class="input-group">
                         <label class="input-group-text">carga</label>
@@ -148,7 +151,6 @@
                 <br>
                 {{/each}}
                 <br>
-
         </form>
     </div>
 </div>

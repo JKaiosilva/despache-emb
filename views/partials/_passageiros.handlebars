@@ -61,7 +61,7 @@
                         passageirosNascimentoArray.push(passageirosNascimentos[i].value) 
                         passageirosSexoArray.push(passageirosSexos[i].value)
                     }
-                    document.getElementById('passageiros').setAttribute('value', `${passageirosNomeArray}`)
+                    document.getElementById('passageirosinput').setAttribute('value', `${passageirosNomeArray}`)
                     document.getElementById('dataNascimentos').setAttribute('value', `${passageirosNascimentoArray}`)
                     document.getElementById('sexos').setAttribute('value', `${passageirosSexoArray}`)
 
@@ -91,7 +91,7 @@
     </div>
     <button class="btn btn-primary mb-4" type="button" onclick="addPassageiros('passageiros')">Adicionar passageiro</button>
     <button class="btn btn-success" type="button" onclick="getPassageiros()" style="float: right">Fechar Relação</button>
-    <input name="documentPassageirosNome" value="" id="passageiros" hidden>
+    <input name="documentPassageirosNome" value="" id="passageirosinput" hidden>
     <input name="documentPassageirosNascimento" value="" id="dataNascimentos" hidden>
     <input name="documentPassageirosSexos" value="" id="sexos" hidden>
 </div>

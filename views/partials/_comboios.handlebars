@@ -1,108 +1,105 @@
 
 
 
-            <div>
-                <div id="comboios">
-                    <script>
-                    var divCounter = 0
-                        function addComboio(divName) {
-                        var newdiv = document.createElement('div');
-                        var divId = "div" + divCounter
-                        newdiv.setAttribute('id', divId)
-                        newdiv.innerHTML = '<button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divId + '\')">Excluir</button>';                            
-                        newdiv.innerHTML += '<label class="input-group-text">Nome da Embarcação</label>'
-                        newdiv.innerHTML += '<input name="embarcacaoNome" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">Número de Inscrição</label>'
-                        newdiv.innerHTML += '<input name="NIncricao" class="form-control" type="text">'                        
-                        newdiv.innerHTML += '<label class="input-group-text">carga</label>'
-                        newdiv.innerHTML += '<input name="comboiosCarga" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">quantidade e unidade de carga</label>'
-                        newdiv.innerHTML += '<input name="comboiosQuantidadeCarga" class="form-control" type="text">'
-                        newdiv.innerHTML += '<label class="input-group-text">Arqueaçao Bruta</label>'
-                        newdiv.innerHTML += '<input name="comboiosarqueacaoBruta" class="form-control" type="text">'
-                        document.getElementById(divName).appendChild(newdiv);
-                        document.getElementById('selecaoComboio').setAttribute('class', 'bg')
-                        var submiteButton = document.getElementById('submitButton')
-                        submiteButton.disabled = true
-                        divCounter++;
-                        document.getElementById('selecaoComboio').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
+<div>
+    <div id="comboios">
+        <script>
+        var divCounter = 0
+            function addComboio(divName) {
+            var newdiv = document.createElement('div');
+            var divId = "div" + divCounter
+            newdiv.setAttribute('id', divId)
+            newdiv.innerHTML = '<button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divId + '\')">Excluir</button>';                            
+            newdiv.innerHTML += '<label class="input-group-text">Nome da Embarcação</label>'
+            newdiv.innerHTML += '<input name="embarcacaoNome" class="form-control" type="text">'
+            newdiv.innerHTML += '<label class="input-group-text">Número de Inscrição</label>'
+            newdiv.innerHTML += '<input name="NIncricao" class="form-control" type="text">'                        
+            newdiv.innerHTML += '<label class="input-group-text">carga</label>'
+            newdiv.innerHTML += '<input name="comboiosCarga" class="form-control" type="text">'
+            newdiv.innerHTML += '<label class="input-group-text">quantidade e unidade de carga</label>'
+            newdiv.innerHTML += '<input name="comboiosQuantidadeCarga" class="form-control" type="text">'
+            newdiv.innerHTML += '<label class="input-group-text">Arqueaçao Bruta</label>'
+            newdiv.innerHTML += '<input name="comboiosarqueacaoBruta" class="form-control" type="text">'
+            document.getElementById(divName).appendChild(newdiv);
+            document.getElementById('selecaoComboio').setAttribute('class', 'bg')
+            var submiteButton = document.getElementById('submitButton')
+            submiteButton.disabled = true
+            divCounter++;
+            document.getElementById('selecaoComboio').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
 
-                        }
+            }
 
-                        function deleteBranco(divId){
-                            comboiosArray = []
-                            var emBranco = document.getElementById(divId)
-                            emBranco.remove()
-                            document.getElementById('selecaoComboio').setAttribute('class', 'bg')
-                            var submiteButton = document.getElementById('submitButton')
-                            submiteButton.disabled = true
-                            document.getElementById('selecaoComboio').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
-                        }
+            function deleteBranco(divId){
+                comboiosArray = []
+                var emBranco = document.getElementById(divId)
+                emBranco.remove()
+                document.getElementById('selecaoComboio').setAttribute('class', 'bg')
+                var submiteButton = document.getElementById('submitButton')
+                submiteButton.disabled = true
+                document.getElementById('selecaoComboio').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
+            }
 
-                        addComboio('lines');
+            addComboio('lines');
 
-                        function getIdcomboios(){
-                        
-                        var submiteButton = document.getElementById('submitButton')
-                        submiteButton.disabled = false
+            function getIdcomboios(){
+            
+            var submiteButton = document.getElementById('submitButton')
+            submiteButton.disabled = false
 
-                        var comboioNomes = []
+            var comboioNomes = []
 
-                        var comboioInscricao = []
-                        
-                        var comboiosCarga = []
+            var comboioInscricao = []
+            
+            var comboiosCarga = []
 
-                        var comboiosQuantidadeCarga = []
+            var comboiosQuantidadeCarga = []
 
-                        var comboiosarqueacaoBruta = []
+            var comboiosarqueacaoBruta = []
 
-                        var comboios = document.querySelectorAll("[name='embarcacaoNome']")
-                        var inscricao = document.querySelectorAll("[name='NIncricao']")
-                        var carga = document.querySelectorAll("[name='comboiosCarga']")
-                        var quantidade = document.querySelectorAll("[name='comboiosQuantidadeCarga']")
-                        var arqueacao = document.querySelectorAll("[name='comboiosarqueacaoBruta']")
+            var comboios = document.querySelectorAll("[name='embarcacaoNome']")
+            var inscricao = document.querySelectorAll("[name='NIncricao']")
+            var carga = document.querySelectorAll("[name='comboiosCarga']")
+            var quantidade = document.querySelectorAll("[name='comboiosQuantidadeCarga']")
+            var arqueacao = document.querySelectorAll("[name='comboiosarqueacaoBruta']")
 
-                            for (var i = 0; i < comboios.length; i++) {
-                                comboioNomes.push(comboios[i].value)
-                                document.getElementById('comboioNomes').setAttribute('value', `${comboioNomes}`)
+                for (var i = 0; i < comboios.length; i++) {
+                    comboioNomes.push(comboios[i].value)
+                    document.getElementById('comboioNomes').setAttribute('value', `${comboioNomes}`)
 
-                                comboioInscricao.push(inscricao[i].value)
-                                document.getElementById('comboioInscricao').setAttribute('value', `${comboioInscricao}`)
+                    comboioInscricao.push(inscricao[i].value)
+                    document.getElementById('comboioInscricao').setAttribute('value', `${comboioInscricao}`)
 
-                                comboiosCarga.push(carga[i].value)
-                                document.getElementById('comboiosCarga').setAttribute('value', `${comboiosCarga}`)
+                    comboiosCarga.push(carga[i].value)
+                    document.getElementById('comboiosCarga').setAttribute('value', `${comboiosCarga}`)
 
-                                comboiosQuantidadeCarga.push(quantidade[i].value)
-                                document.getElementById('comboiosQuantidadeCarga').setAttribute('value', `${comboiosQuantidadeCarga}`)
+                    comboiosQuantidadeCarga.push(quantidade[i].value)
+                    document.getElementById('comboiosQuantidadeCarga').setAttribute('value', `${comboiosQuantidadeCarga}`)
 
-                                comboiosarqueacaoBruta.push(arqueacao[i].value)
-                                document.getElementById('comboiosarqueacaoBruta').setAttribute('value', `${comboiosarqueacaoBruta}`)
-                            }   
-                        document.getElementById('selecaoComboio').setAttribute('class', 'form-control bg-success bg-opacity-50 border-success')
-                     
-                        }
+                    comboiosarqueacaoBruta.push(arqueacao[i].value)
+                    document.getElementById('comboiosarqueacaoBruta').setAttribute('value', `${comboiosarqueacaoBruta}`)
+                }   
+            document.getElementById('selecaoComboio').setAttribute('class', 'form-control bg-success bg-opacity-50 border-success')
+            
+            }
 
-                        function deletecomboio(id){
-                            var submiteButton = document.getElementById('submitButton')
-                            submiteButton.disabled = true
-                            comboioNomes = []
-                            document.getElementById(id).remove()
-                            document.getElementById('selecaoComboio').setAttribute('class', 'bg')
-                            document.getElementById('selecaoComboio').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
-                        }
-                                            
-                    </script>
-                </div>
-                <input value="" id="comboioNomes" name="documentComboio" hidden>
-                <input value="" id="comboioInscricao" name="documentNIncricao" hidden>
-                <input value="" id="comboiosCarga" name="documentComboiosCarga" hidden>
-                <input value="" id="comboiosQuantidadeCarga" name="documentComboiosQuantidadeCarga" hidden>
-                <input value="" id="comboiosarqueacaoBruta" name="documentComboiosArqueacaoBruta" hidden>
-
-                <button class="btn btn-primary mb-4" type="button" onclick="addComboio('comboios')">Adicionar embarcaçao</button>
-                
-                <button class="btn btn-success" type="button" onclick="getIdcomboios()" style="float: right">Fechar Relação</button>
-                
+            function deletecomboio(id){
+                var submiteButton = document.getElementById('submitButton')
+                submiteButton.disabled = true
+                comboioNomes = []
+                document.getElementById(id).remove()
+                document.getElementById('selecaoComboio').setAttribute('class', 'bg')
+                document.getElementById('selecaoComboio').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
+            }
+                                
+        </script>
         </div>
+    <input value="" id="comboioNomes" name="documentComboio" hidden>
+    <input value="" id="comboioInscricao" name="documentNIncricao" hidden>
+    <input value="" id="comboiosCarga" name="documentComboiosCarga" hidden>
+    <input value="" id="comboiosQuantidadeCarga" name="documentComboiosQuantidadeCarga" hidden>
+    <input value="" id="comboiosarqueacaoBruta" name="documentComboiosArqueacaoBruta" hidden>
+    <button class="btn btn-primary mb-4" type="button" onclick="addComboio('comboios')">Adicionar embarcaçao</button>
+    <button class="btn btn-success" type="button" onclick="getIdcomboios()" style="float: right">Fechar Relação</button>        
+</div>
 
 

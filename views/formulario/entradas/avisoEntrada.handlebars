@@ -184,12 +184,26 @@
                         <input name="despachoNomeComandante" class="form-control" type="text">
                     </div>
             </div>
-            {{>_tripulantes}}
+            <div id="selecaoTripulantes">
+                <div class="container">
+                    <h4 class="text-center">Lista de Tripulantes</h4>
+                    {{>_tripulantes}}
+                </div>
+            </div>
             <br>
+            <div id="selecaoPassageiros">
+                <div class="container">
                     <h4 class="text-center">Lista de Passageiros</h4>
                 {{>_passageiros}}
-                    <br>
-                {{>_comboios}}
+                </div>
+            </div>
+            <br>
+                <div id="selecaoComboio">
+                    <div class="container">
+                        <h4 class="text-center">Lista de Comboio</h4>
+                        {{>_comboios}}
+                    </div>
+                </div>
                 <div>
                     <label class="input-group-text">Estou ciente de que responderei administrativa, 
                         civil e penalmente pelos 

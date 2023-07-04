@@ -125,6 +125,7 @@
                         <label class="input-group-text">Caso afirmativo, informe o(s) certificado(s)/documento(s) e suas respectivas datas de validade</label>
                         <input name="despachoCasoDocumentoExpirado" class="form-control" type="text" value="{{despachos.despachoCasoDocumentoExpirado}}">
                     </div>
+            </div>
             <div>
                 <h4 class="text-center">Observações</h4>
                     <div class="input-group">
@@ -143,7 +144,6 @@
             <div id="selecaoTripulantes">
                 <div class="container">
                 {{#each tripDespacho}}
-                
                 <div id="{{_id}}" calss=" m-4">
                     <div class="card bg-secondary m-4">
                         <div>
@@ -171,13 +171,16 @@
                 </div>
                 
                 {{/each}}
-                    {{>_tripulantes}}
-
+            {{>_tripulantes}}
             <br>
             </div>
+            </div>
+
             <div>
                 <h4 class="text-center">Comboios</h4>
             </div>
+            <div id="selecaoComboio">
+                <div class="container">
             {{#each despachos.despachoComboios}}
                 <div class="bg-secondary" id="{{_id}}">
                     <div>
@@ -208,7 +211,7 @@
                 <br>
             {{/each}}
             {{>_comboios}}
-            <br>
+                </div>
             </div>
                 <div class="input-group mb-3">
                     <label class="input-group-text">Solicitação de Vencimento do despacho</label>
@@ -232,4 +235,3 @@
 </div>
 <input class="btn btn-success" type="button" value="Voltar" style="float: left" onClick="history.go(-1)"> 
 <br>
-{{>_saveLocalForm}}

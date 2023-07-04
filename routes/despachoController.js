@@ -139,7 +139,7 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
         despachoPortoEstadia: req.body.despachoPortoEstadia,
         despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
         despachoDataHoraPartida: req.body.despachoDataHoraPartida,
-        embarcacaoNome: req.body.embarcacaoNome,
+        embarcacaoNome: req.body.despachoEmbarcacaoNome,
         embarcacaoTipo: req.body.embarcacaoTipo,
         embarcacaoBandeira: req.body.embarcacaoBandeira,
         embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,
@@ -167,7 +167,8 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
         despachoDataSolicitada: req.body.despachoDataSolicitada,
         despachoDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
         despachoData: Date.now(),
-        depachoMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+        depachoMesAnoAtual: moment(Date.now()).format('MM/YYYY'),
+        despachoDataValidadeNumber: 0,
 
     }
     new Despacho(novoDespacho).save()
@@ -194,19 +195,18 @@ router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
         }
         const despachos = await Despacho.findOne({_id: req.params.id}).lean()
         const tripulantes = []
-        for await (var despacho of despachos.despachoTripulantes){
-            Tripulante.findOne({_id: despacho.id}).lean().then((tripulante) =>{
-                if(despacho.despachoTripulanteFuncao == null){
-                    tripulante.funcao = 'indefinido'
-                    tripulantes.push(tripulante)
-                }else{
-                    tripulante.funcao = despacho.despachoTripulanteFuncao
-                    tripulantes.push(tripulante)
-                }
-            })
-
-
-        }
+        for await (var despacho of despachos.despachoTripulantes) {
+            try {
+              const tripulante = await Tripulante.findOne({_id: despacho.id}).lean();
+              if (despacho.despachoTripulanteFuncao != null && despacho.despachoTripulanteFuncao != undefined) {
+                const funcao = despacho.despachoTripulanteFuncao;
+                tripulante.funcao = funcao;
+                tripulantes.push(tripulante);
+              }
+            } catch (err) {
+              console.error(err);
+            }
+          }
         const portos = await Porto.findOne({ _id: despachos.despachoPortoEstadia}).lean().catch((err) => {
             if(err){
                 return {portoNome: despachos.despachoOutroPortoEstadia}
@@ -306,20 +306,18 @@ router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
             }
         });
         const tripDespacho = []
-        for await (var despacho of despachos.despachoTripulantes){
-            Tripulante.findOne({_id: despacho.id}).lean().then((tripulante) => {
-                if(despacho.despachoTripulanteFuncao == null){
-                    tripulante.funcao = 'indefinido'
-                    tripDespacho.push(tripulante)
-                }else{
-
-                }
-            }).catch((err) => {
-                throw err
-            })
-
-
-        }
+        for await (var despacho of despachos.despachoTripulantes) {
+            try {
+              const tripulante = await Tripulante.findOne({_id: despacho.id}).lean();
+              if (despacho.despachoTripulanteFuncao != null && despacho.despachoTripulanteFuncao != undefined) {
+                const funcao = despacho.despachoTripulanteFuncao;
+                tripulante.funcao = funcao;
+                tripDespacho.push(tripulante);
+              }
+            } catch (err) {
+              console.error(err);
+            }
+          }
         const tripulantes = await Tripulante.find().lean();
             res.render('admin/despachos/despachoValidate', {
                 despachos: despachos,
@@ -354,8 +352,8 @@ router.post('/admin/despachoValidate', Admin, async(req, res) => {
         if(tripulantes.length === 1){
             for(var i = 0; i < tripulantes.length; i++){
             const tripulante = {
-                id: req.body.despachoTripulantes,
-                despachoTripulanteFuncao: despachoTripulantesFuncao
+                id: despachoTripulantes[i],
+                despachoTripulanteFuncao: despachoTripulantesFuncao[i]
             }
         
             despachoTripulantesArray.push(tripulante)

@@ -42,18 +42,14 @@ const bcrypt = require('bcryptjs')
 router.get('/formulario/avisoSaida', eUser, async (req, res) => {
     try {
         const dataHoje = Date.now()
-        const despachos = await Despacho.find({ usuarioID: req.user._id, despachoDataValidadeNumber: { $gte: dataHoje } }).lean()
-        const embarcacoes = await Embarcacao.find({ usuarioID: req.user._id, embarcacaoValidadeNumber: { $gte: dataHoje } }).lean()
+        const despachos = await Despacho.find({ agenciaID: req.user.agencia, despachoDataValidadeNumber: { $gte: dataHoje } }).lean()
         const tripulantes = await Tripulante.find({ tripulanteValidadeCIRNumber: { $gte: dataHoje } }).lean()
         const portos = await Porto.find().lean()
-        const comboios = await Comboio.find({usuarioID: req.user._id}).lean()
             res.render('formulario/saidas/avisoSaida',
                 {
-                    embarcacoes: embarcacoes,
                     tripulantes: tripulantes,
                     portos: portos,
                     despachos: despachos,
-                    comboios: comboios
                 })
     } catch (err) {
         req.flash('error_msg', `Erro ao mostrar página de adição de Aviso de Saída (${err})`)
@@ -96,12 +92,12 @@ router.post('/formulario/avisoSaida', eUser, async (req, res) => {
             }
         }
 
-        const clearPassageiros = req.body.saidaPassageirosNome
+        const clearPassageiros = req.body.documentPassageirosNome
         const passageirosLimpo = clearPassageiros.split(',');
 
-        const passageirosNome = req.body.saidaPassageirosNome
-        const passageirosNascimento = req.body.saidaPassageirosNascimento
-        const passageirosSexo = req.body.saidaPassageirosSexos
+        const passageirosNome = req.body.documentPassageirosNome
+        const passageirosNascimento = req.body.documentPassageirosNascimento
+        const passageirosSexo = req.body.documentPassageirosSexos
 
         const passageirosNomes = passageirosNome.split(',')
         const passageirosNascimentos = passageirosNascimento.split(',')
@@ -118,6 +114,47 @@ router.post('/formulario/avisoSaida', eUser, async (req, res) => {
             saidaPassageiros.push(passageiros)
         }
 
+        const clearEmbNome = req.body.documentComboio.replace(/[\n' \[\]]/g, '');
+        const EmbNome = clearEmbNome.split(',');
+
+        const clearEmbIncricao = req.body.documentNIncricao.replace(/[\n' \[\]]/g, '');
+        const NIncricao = clearEmbIncricao.split(',');
+
+        const clearEmbCarga = req.body.documentComboiosCarga.replace(/[\n' \[\]]/g, '');
+        const EmbCarga = clearEmbCarga.split(',');
+
+        const clearEmbQuantidade = req.body.documentComboiosQuantidadeCarga.replace(/[\n' \[\]]/g, '');
+        const EmbQuantidade = clearEmbQuantidade.split(',');
+
+        const clearArqueacao = req.body.documentComboiosArqueacaoBruta.replace(/[\n' \[\]]/g, '');
+        const EmbArqueacao = clearArqueacao.split(',');
+
+        const comboioEmbarcacoes = [];
+    
+        if(EmbNome.length === 1){
+            for (var i = 0; i < EmbNome.length; i++) {
+                const comboioEmbarcacao = {
+                embarcacaoNome: EmbNome[i],
+                NInscricao: NIncricao[i],
+                carga: EmbCarga[i],
+                quantidade: EmbQuantidade[i],
+                arqueacaoBruta: EmbArqueacao[i]
+                };
+                comboioEmbarcacoes.push(comboioEmbarcacao);
+            }
+        }else{
+            for (var i = 0; i < EmbNome.length; i++) {
+                const comboioEmbarcacao = {
+                    embarcacaoNome: EmbNome[i],
+                    NInscricao: NIncricao[i],
+                    carga: EmbCarga[i],
+                    quantidade: EmbQuantidade[i],
+                    arqueacaoBruta: EmbArqueacao[i]
+                };
+                comboioEmbarcacoes.push(comboioEmbarcacao);
+            }
+        }
+
         const novoAvisoSaida = {
             usuarioID: req.user._id,
             agenciaID: req.user.agencia,
@@ -129,7 +166,7 @@ router.post('/formulario/avisoSaida', eUser, async (req, res) => {
             saidaPortoDestino: req.body.saidaPortoDestino,
             saidaOutroPortoDestino: req.body.saidaOutroPortoDestino,
             saidaDataHoraChegada: req.body.saidaDataHoraChegada,
-            embarcacaoNome: req.body.embarcacaoNome,
+            embarcacaoNome: req.body.saidaEmbarcacaoNome,
             embarcacaoTipo: req.body.embarcacaoTipo,
             embarcacaoBandeira: req.body.embarcacaoBandeira,
             embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,
@@ -148,9 +185,8 @@ router.post('/formulario/avisoSaida', eUser, async (req, res) => {
             saidaSomaPassageiros: req.body.saidaSomaPassageiros,
             saidaTripulantes: saidaTripulantesArray,
             saidaPassageiros: saidaPassageiros,
-            saidaComboios: req.body.saidaComboios,
+            saidaComboios: comboioEmbarcacoes,
             saidaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
-            embarcacao: req.body.embarcacao,
             saidaData: Date.now(),
             saidaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
         }
@@ -158,6 +194,7 @@ router.post('/formulario/avisoSaida', eUser, async (req, res) => {
         req.flash('success_msg', 'Aviso de saida enviado com sucesso')
         res.redirect('/formulario')
     } catch (err) {
+        console.log(err)
         req.flash('error_msg', `Erro ao postar Aviso de Saída (${err})`)
         res.redirect('/formulario')
     }
@@ -181,7 +218,6 @@ router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
             tripulante.funcao = saida.saidaTripulanteFuncao
             tripulantes.push(tripulante)
         }        
-        const embarcacoes = await Embarcacao.findOne({ _id: avisoSaidas.embarcacao }).lean()
         const portoSaida = await Porto.findOne({ _id: avisoSaidas.saidaPortoSaida }).lean().catch((err) => {
             if(err){
                 return {portoNome: avisoSaidas.saidaOutroPortoSaida}
@@ -193,14 +229,11 @@ router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
             }
         })
         const despacho = await Despacho.findOne({ _id: avisoSaidas.saidaDespacho }).lean()
-        const comboios = await Comboio.findOne({_id: avisoSaidas.saidaComboios}).lean()
             res.render('formulario/saidas/avisoSaidaVizu',
                 {
                     avisoSaidas: avisoSaidas,
-                    embarcacoes: embarcacoes,
                     tripulantes: tripulantes,
                     despacho: despacho,
-                    comboios: comboios,
                     portoSaida: portoSaida,
                     portoDestino: portoDestino,
                     hidden: hidden
@@ -284,7 +317,6 @@ router.get('/admin/saidasValidate/:id', Admin, async (req, res) => {
             tripulante.funcao = saida.saidaTripulanteFuncao
             tripulantesValid.push(tripulante)
         }                
-        const embarcacaoValid = await Embarcacao.findOne({ _id: avisoSaidas.embarcacao }).lean()
         const portoSaida = await Porto.findOne({ _id: avisoSaidas.saidaPortoSaida }).lean().catch((err) => {
             if(err){
                 return {portoNome: avisoSaidas.saidaOutroPortoSaida}
@@ -296,27 +328,20 @@ router.get('/admin/saidasValidate/:id', Admin, async (req, res) => {
             }
         })
         const despachoValid = await Despacho.findOne({ _id: avisoSaidas.saidaDespacho }).lean()
-        const comboiosValid = await Comboio.findOne({_id: avisoSaidas.saidaComboios}).lean()
 
         const tripulantes = await Tripulante.find().lean()
-        const embarcacoes = await Embarcacao.find().lean()
         const portos = await Porto.find().lean()
         const despachos = await Despacho.find().lean()
-        const comboios = await Comboio.find().lean()
             res.render('admin/saidas/avisoSaidaValidate',
                 {
                     avisoSaidas: avisoSaidas,
                     tripulantesValid: tripulantesValid,
-                    embarcacaoValid: embarcacaoValid,
                     despachoValid: despachoValid,
                     portoSaida: portoSaida,
                     portoDestino: portoDestino,
-                    comboiosValid: comboiosValid,
                     tripulantes: tripulantes,
-                    embarcacoes: embarcacoes,
                     portos: portos,
                     despachos: despachos,
-                    comboios: comboios
                 })
     } catch (err) {
         console.log(err)
@@ -359,12 +384,12 @@ router.post('/admin/saidasValidate', Admin, async (req, res) => {
             }
         }
 
-        const clearPassageiros = req.body.saidaPassageirosNome
+        const clearPassageiros = req.body.documentPassageirosNome
         const passageirosLimpo = clearPassageiros.split(',');
 
-        const passageirosNome = req.body.saidaPassageirosNome
-        const passageirosNascimento = req.body.saidaPassageirosNascimento
-        const passageirosSexo = req.body.saidaPassageirosSexos
+        const passageirosNome = req.body.documentPassageirosNome
+        const passageirosNascimento = req.body.documentPassageirosNascimento
+        const passageirosSexo = req.body.documentPassageirosSexos
 
         const passageirosNomes = passageirosNome.split(',')
         const passageirosNascimentos = passageirosNascimento.split(',')
@@ -381,6 +406,47 @@ router.post('/admin/saidasValidate', Admin, async (req, res) => {
             saidaPassageiros.push(passageiros)
         }
 
+        const clearEmbNome = req.body.documentComboio.replace(/[\n' \[\]]/g, '');
+        const EmbNome = clearEmbNome.split(',');
+
+        const clearEmbIncricao = req.body.documentNIncricao.replace(/[\n' \[\]]/g, '');
+        const NIncricao = clearEmbIncricao.split(',');
+
+        const clearEmbCarga = req.body.documentComboiosCarga.replace(/[\n' \[\]]/g, '');
+        const EmbCarga = clearEmbCarga.split(',');
+
+        const clearEmbQuantidade = req.body.documentComboiosQuantidadeCarga.replace(/[\n' \[\]]/g, '');
+        const EmbQuantidade = clearEmbQuantidade.split(',');
+
+        const clearArqueacao = req.body.documentComboiosArqueacaoBruta.replace(/[\n' \[\]]/g, '');
+        const EmbArqueacao = clearArqueacao.split(',');
+
+        const comboioEmbarcacoes = [];
+    
+        if(EmbNome.length === 1){
+            for (var i = 0; i < EmbNome.length; i++) {
+                const comboioEmbarcacao = {
+                embarcacaoNome: EmbNome[i],
+                NInscricao: NIncricao[i],
+                carga: EmbCarga[i],
+                quantidade: EmbQuantidade[i],
+                arqueacaoBruta: EmbArqueacao[i]
+                };
+                comboioEmbarcacoes.push(comboioEmbarcacao);
+            }
+        }else{
+            for (var i = 0; i < EmbNome.length; i++) {
+                const comboioEmbarcacao = {
+                    embarcacaoNome: EmbNome[i],
+                    NInscricao: NIncricao[i],
+                    carga: EmbCarga[i],
+                    quantidade: EmbQuantidade[i],
+                    arqueacaoBruta: EmbArqueacao[i]
+                };
+                comboioEmbarcacoes.push(comboioEmbarcacao);
+            }
+        }
+
         await AvisoSaida.updateOne({ _id: req.body.id }, {
             saidaDespacho: req.body.saidaDespacho,
             saidaNprocesso: req.body.saidaNprocesso,
@@ -390,7 +456,7 @@ router.post('/admin/saidasValidate', Admin, async (req, res) => {
             saidaPortoDestino: req.body.saidaPortoDestino,
             saidaOutroPortoDestino: req.body.saidaOutroPortoDestino,
             saidaDataHoraChegada: req.body.saidaDataHoraChegada,
-            embarcacaoNome: req.body.embarcacaoNome,
+            embarcacaoNome: req.body.saidaEmbarcacaoNome,
             embarcacaoTipo: req.body.embarcacaoTipo,
             embarcacaoBandeira: req.body.embarcacaoBandeira,
             embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,
@@ -409,8 +475,7 @@ router.post('/admin/saidasValidate', Admin, async (req, res) => {
             saidaSomaPassageiros: req.body.saidaSomaPassageiros,
             saidaTripulantes: saidaTripulantesArray,
             saidaPassageiros: saidaPassageiros,
-            saidaComboios: req.body.saidaComboios,
-            embarcacao: req.body.embarcacao
+            saidaComboios: comboioEmbarcacoes,
 
         })
         req.flash('success_msg', 'Aviso de saida enviado com sucesso')
