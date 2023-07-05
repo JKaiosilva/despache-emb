@@ -1,150 +1,149 @@
-<div class="card" {{agenciaHidden}}>
-    <div class="card-body">
-        <div class="text-center">
-            <h2>Realizar nova Requisição</h2>
-        </div>
-        <br>
-        <h6>Recomendações: </h6>
-        <ul>
-            <li>Confirme suas infomações antes de enviar.</li>
-            <li>Não passe as suas informações pessoais para outra pessoa.</li>
-            <li>confira se os seus documentos estão atualizados no banco de dados.</li>
-            <br>
-            <div class="container text-center">
-                <label class=" bg-warning text-center" {{alertHidden}}>Os campos de solicitação de formulário serão liberados após confirmação dos dados por parte do despachante</label>
-
-            <div class="row justify-content-around">
-                    <div class="card mt-4" style="max-width: 15rem">
-                        <a href="/formulario/despacho" style="text-decoration:none">
-                        <div class="card-body text-center" style="max-width: 15rem; padding: 3rem">
-                            <img src="/img/despacho.svg" class="img-fluid rounded-center"  alt="...">
-                            <h6 class="mt-4">Novo Despacho</h6>
-                        </div>
-                        </a>
-                    </div>
-
-                    <div class="card mt-4" style="max-width: 15rem" {{docHidden}}>
-                        <a href="/formulario/avisoEntrada" style="text-decoration:none">
-                        <div class="card-body text-center" style="max-width: 15rem; padding: 3rem">
-                            <img src="/img/docEntrada.svg" class="img-fluid rounded-center"  alt="...">
-                            <h6 class="mt-4">Novo Aviso Entrada</h6>
-                        </div>
-                        </a>
-                    </div>
-
-
-                    <div class="card mt-4" style="max-width: 15rem" {{docHidden}}>
-                        <a href="/formulario/avisoSaida" style="text-decoration:none">
-                        <div class="card-body text-center" style="max-width: 15rem; padding: 3rem">
-                            <img src="/img/docSaida.svg" class="img-fluid rounded-center"  alt="...">
-                            <h6 class="mt-4">Novo Aviso Saida</h6>
-                        </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </ul>
-    </div>
-</div>
-<div class="container" {{despachanteHidden}}>
-    <h4 class="text-center">Despachantes Nesta Agencia.</h4>
-<div class="card">
-    <div class="card-body">
-        {{#each usuarios}}
-            <div class="card">
-                <div class="card-body">
-                    <div class="input-group">
-                        <label class="input-group-text">Nome:</label>
-                        <input value="{{nome}}" class="form-control" disabled>
-                    </div>
-                    <div class="input-group">
-                        <label class="input-group-text">CPF:</label>
-                        <input value="{{CPF}}" class="form-control" disabled>
-                    </div>
-                    <div class="input-group">
-                        <label class="input-group-text">Período do contrato:</label>
-                        <input value="{{periodoContrato}}" class="form-control" disabled>
-                    </div>
-                </div>
+    <div class="card" {{agenciaHidden}} >
+        <div class="card-body">
+            <div class="text-center">
+                <h2>Realizar nova Requisição</h2>
             </div>
             <br>
-        {{else}}
+            <h6>Recomendações: </h6>
+            <ul>
+                <li>Confirme suas infomações antes de enviar.</li>
+                <li>Não passe as suas informações pessoais para outra pessoa.</li>
+                <li>confira se os seus documentos estão atualizados no banco de dados.</li>
+                <br>
+                <div class="container text-center">
+                    <label class=" bg-warning text-center" {{alertHidden}}>Os campos de solicitação de formulário serão liberados após confirmação dos dados por parte do despachante</label>
 
-        {{/each}}
-        <a class="btn btn-success" href="/usuarios/cadastroUser">Cadastrar Despachante</a>
-    </div>
-</div>
-</div>
-<br>
-<br>
-<div class="container text-center">
-<br>
-    <div class="row">
-        <div class="col">
-            <h5>Minhas ultimas requisições de despacho.</h5>
-                {{#each despachos}}
-                    <div class="card mt-4" >
-                        <div class="card-body">
-                            <p>Despacho: {{NprocessoDespacho}}</p>
-                                <p>Data de pedido: {{despachoDataPedido}}</p>
-                            <a href="/formulario/despachoVizu/{{_id}}"><button class="btn btn-success mt-3">Visualizar</button></a>
+                <div class="row justify-content-around">
+                        <div class="card mt-4" style="max-width: 15rem" {{blockHidden}}>
+                            <a href="/formulario/despacho" style="text-decoration:none">
+                            <div class="card-body text-center" style="max-width: 15rem; padding: 3rem">
+                                <img src="/img/despacho.svg" class="img-fluid rounded-center"  alt="...">
+                                <h6 class="mt-4">Novo Despacho</h6>
+                            </div>
+                            </a>
+                        </div>
+
+                        <div class="card mt-4" style="max-width: 15rem" {{docHidden}} {{blockHidden}}>
+                            <a href="/formulario/avisoEntrada" style="text-decoration:none">
+                            <div class="card-body text-center" style="max-width: 15rem; padding: 3rem">
+                                <img src="/img/docEntrada.svg" class="img-fluid rounded-center"  alt="...">
+                                <h6 class="mt-4">Novo Aviso Entrada</h6>
+                            </div>
+                            </a>
+                        </div>
+
+
+                        <div class="card mt-4" style="max-width: 15rem" {{docHidden}} {{blockHidden}}>
+                            <a href="/formulario/avisoSaida" style="text-decoration:none">
+                            <div class="card-body text-center" style="max-width: 15rem; padding: 3rem">
+                                <img src="/img/docSaida.svg" class="img-fluid rounded-center"  alt="...">
+                                <h6 class="mt-4">Novo Aviso Saida</h6>
+                            </div>
+                            </a>
                         </div>
                     </div>
-
-                {{else}}
-                    <div class="card mt-4" >
-                        <div class="card-body">
-                            <p>Nenhum despacho</p>
-                        </div>
-                    </div>
-                {{/each}}
-            <a href="/despachos"><button class="btn btn-primary mt-3">Ver Mais</button></a>
-        </div>
-
-        <div class="col">
-            <h5>Minhas ultimas requisições de entrada.</h5>
-                {{#each avisoEntradas}}
-                    <div class="card mt-4" >
-                        <div class="card-body">
-                            <p>Entrada: {{entradaNprocesso}}</p>
-                                <p>Data de pedido: {{entradaDataPedido}}</p>
-                            <a href="/formulario/avisoEntradavizu/{{_id}}"><button class="btn btn-success mt-3">Visualizar</button></a>
-                        </div>
-                    </div>
-
-                {{else}}
-                    <div class="card mt-4" >
-                        <div class="card-body">
-                            <p>Nenhum aviso de entrada</p>
-                        </div>
-                    </div>
-                {{/each}}
-            <a href="/entradas"><button class="btn btn-primary mt-3">Ver Mais</button></a>
-        </div>
-
-        <div class="col">
-            <h5>Minhas ultimas requisições de saída.</h5>
-                {{#each avisoSaidas}}
-                    <div class="card mt-4" >
-                        <div class="card-body">
-                            <p>Saída: {{saidaNprocesso}}</p>
-                                <p>Data de pedido: {{saidaDataPedido}}</p>
-                            <a href="/formulario/avisoSaidaVizu/{{_id}}"><button class="btn btn-success mt-3">Visualizar</button></a>
-                        </div>
-                    </div>
-
-                {{else}}
-                    <div class="card mt-4" >
-                        <div class="card-body">
-                            <p>Nenhum aviso de saída</p>
-                        </div>
-                    </div>
-                {{/each}}
-            <a href="/saidas"><button class="btn btn-primary mt-3">Ver Mais</button></a>
+                </div>
+                </div>
+            </ul>
         </div>
     </div>
-</div>
-</div>
+    <div class="container" {{despachanteHidden}}>
+        <h4 class="text-center">Despachantes Nesta Agencia.</h4>
+    <div class="card">
+        <div class="card-body">
+            {{#each usuarios}}
+                <div class="card">
+                    <div class="card-body">
+                        <div class="input-group">
+                            <label class="input-group-text">Nome:</label>
+                            <input value="{{nome}}" class="form-control" disabled>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-group-text">CPF:</label>
+                            <input value="{{CPF}}" class="form-control" disabled>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-group-text">Período do contrato:</label>
+                            <input value="{{periodoContrato}}" class="form-control" disabled>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            {{else}}
 
+            {{/each}}
+            <a class="btn btn-success" href="/usuarios/cadastroUser">Cadastrar Despachante</a>
+        </div>
+    </div>
+    </div>
+    <br>
+    <br>
+    <div class="container text-center" {{blockHidden}}>
+    <br>
+        <div class="row">
+            <div class="col">
+                <h5>Minhas ultimas requisições de despacho.</h5>
+                    {{#each despachos}}
+                        <div class="card mt-4" >
+                            <div class="card-body">
+                                <p>Despacho: {{NprocessoDespacho}}</p>
+                                    <p>Data de pedido: {{despachoDataPedido}}</p>
+                                <a href="/formulario/despachoVizu/{{_id}}"><button class="btn btn-success mt-3">Visualizar</button></a>
+                            </div>
+                        </div>
+
+                    {{else}}
+                        <div class="card mt-4" >
+                            <div class="card-body">
+                                <p>Nenhum despacho</p>
+                            </div>
+                        </div>
+                    {{/each}}
+                <a href="/despachos"><button class="btn btn-primary mt-3">Ver Mais</button></a>
+            </div>
+
+            <div class="col">
+                <h5>Minhas ultimas requisições de entrada.</h5>
+                    {{#each avisoEntradas}}
+                        <div class="card mt-4" >
+                            <div class="card-body">
+                                <p>Entrada: {{entradaNprocesso}}</p>
+                                    <p>Data de pedido: {{entradaDataPedido}}</p>
+                                <a href="/formulario/avisoEntradavizu/{{_id}}"><button class="btn btn-success mt-3">Visualizar</button></a>
+                            </div>
+                        </div>
+
+                    {{else}}
+                        <div class="card mt-4" >
+                            <div class="card-body">
+                                <p>Nenhum aviso de entrada</p>
+                            </div>
+                        </div>
+                    {{/each}}
+                <a href="/entradas"><button class="btn btn-primary mt-3">Ver Mais</button></a>
+            </div>
+
+            <div class="col">
+                <h5>Minhas ultimas requisições de saída.</h5>
+                    {{#each avisoSaidas}}
+                        <div class="card mt-4" >
+                            <div class="card-body">
+                                <p>Saída: {{saidaNprocesso}}</p>
+                                    <p>Data de pedido: {{saidaDataPedido}}</p>
+                                <a href="/formulario/avisoSaidaVizu/{{_id}}"><button class="btn btn-success mt-3">Visualizar</button></a>
+                            </div>
+                        </div>
+
+                    {{else}}
+                        <div class="card mt-4" >
+                            <div class="card-body">
+                                <p>Nenhum aviso de saída</p>
+                            </div>
+                        </div>
+                    {{/each}}
+                <a href="/saidas"><button class="btn btn-primary mt-3">Ver Mais</button></a>
+            </div>
+        </div>
+    </div>
+    </div>
 

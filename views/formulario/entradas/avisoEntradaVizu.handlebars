@@ -21,7 +21,7 @@
                         <label class="input-group-text">Porto de chegada</label>
                         <input name="entradaPortoChegada" class="form-control" type="text" value="{{portoChegada.portoNome}}" disabled>
                         <label class="input-group-text">Data/Hora de chegada</label>
-                        <input name="entradaDataHoraChegada" class="form-control" type="date" value="{{avisoEntradas.entradaDataHoraChegada}}" disabled>
+                        <input name="entradaDataHoraChegada" class="form-control" type="datetime-local" value="{{avisoEntradas.entradaDataHoraChegada}}" disabled>
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Posição no Porto Atual</label>
@@ -35,7 +35,7 @@
                         <label class="input-group-text">Porto de Destino</label>
                         <input name="entradaPortoDestino" class="form-control" type="text" value="{{portoDestino.portoNome}}" disabled>
                         <label class="input-group-text">Data/Hora Estimada de Saída para Porto de destino</label>
-                        <input name="entradaDataHoraEstimadaSaida" class="form-control" type="date" value="{{avisoEntradas.entradaDataHoraEstimadaSaida}}" disabled>
+                        <input name="entradaDataHoraEstimadaSaida" class="form-control" type="datetime-local" value="{{avisoEntradas.entradaDataHoraEstimadaSaida}}" disabled>
                     </div>
                 <div>
                     <h4 class="text-center">Dados da Embarcação</h4>

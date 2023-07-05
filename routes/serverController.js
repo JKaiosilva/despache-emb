@@ -237,6 +237,14 @@ router.get('/formulario', async (req, res) => {
                 docHidden = 'hidden'
                 alertHidden = ''
             }
+            const periodoContrato = Date.parse(req.user.periodoContrato)
+            blockHidden = ''
+            if(periodoContrato < dataHoje){
+                blockHidden = 'hidden'
+            }
+            
+
+            
             console.log('despachante')
 
             despachanteHidden = 'hidden'
@@ -248,7 +256,8 @@ router.get('/formulario', async (req, res) => {
                 avisoSaidas: avisoSaidas,
                 despachanteHidden: despachanteHidden, 
                 alertHidden: alertHidden,
-                docHidden: docHidden,                
+                docHidden: docHidden,
+                blockHidden: blockHidden                
             })
         }else{
             const despachosValid = await Despacho.find({usuarioID: req.user._id}).lean().sort({despachoData: 'desc'})

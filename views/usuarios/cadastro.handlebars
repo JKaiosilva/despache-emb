@@ -26,8 +26,8 @@
                 <input type="text" name="nome" class="form-control" required>
             <label for="email">Email: </label>
                 <input type="email" name="email" class="form-control" required>
-            <label type="CPF">CPF/CNPJ: </label>
-                <input type="number" name="CPF" class="form-control" required>
+            <label>CPF: </label>
+                <input maxlength="11" type="text" name="CPF" class="form-control" required>
             <br>
                 </div>
                 <div class="container">
@@ -51,9 +51,9 @@
                         <br>
                     </div>
                     <label type="senha">Senha: </label>
-                        <input type="password" name="senha" class="form-control" required>
+                        <input minlength="6" placeholder="A senha precisa ter no mínimo 6 dígitos" type="password" name="senha" class="form-control" required>
                     <label for="senha2">Repita sua senha: </label>
-                        <input type="password" name="senha2" class="form-control" required>
+                        <input minlength="6" type="password" name="senha2" class="form-control" required>
                 </div>
             <button type="submit" class="btn btn-success mt-4">Criar conta</button>
         </form>

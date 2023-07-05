@@ -46,7 +46,7 @@
                             <input value="{{portoChegada.portoNome}}" name="entradaOutroPortoChegada" class="form-control" type="text">
                         </div>
                         <label class="input-group-text">Data/Hora de chegada</label>
-                        <input value="{{avisoEntradas.entradaDataHoraChegada}}" name="entradaDataHoraChegada" class="form-control" type="date">
+                        <input value="{{avisoEntradas.entradaDataHoraChegada}}" name="entradaDataHoraChegada" class="form-control" type="datetime-local">
                     </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Posição no Porto Atual</label>
@@ -101,42 +101,42 @@
                         }
                         </script>
                         <label class="input-group-text">Data/Hora Saída para Porto de destino</label>
-                        <input value="{{avisoEntradas.entradaDataHoraEstimadaSaida}}" name="entradaDataHoraEstimadaSaida" class="form-control" type="date">
+                        <input value="{{avisoEntradas.entradaDataHoraEstimadaSaida}}" name="entradaDataHoraEstimadaSaida" class="form-control" type="datetime-local">
                     </div>
             <div>
                 <h4 class="text-center">Dados da Embarcação</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Nome da Embarcação</label>
-                        <input name="entradaEmbarcacaoNome" class="form-control" type="text" value="{{avisoEntradas.entradaEmbarcacaoNome}}" disabled>
+                        <input name="entradaEmbarcacaoNome" class="form-control" type="text" value="{{avisoEntradas.entradaEmbarcacaoNome}}">
                         <label class="input-group-text">Tipo da Embarcação</label>
-                        <input name="embarcacaoTipo" class="form-control" type="text" value="{{avisoEntradas.embarcacaoTipo}}" disabled>
+                        <input name="embarcacaoTipo" class="form-control" type="text" value="{{avisoEntradas.embarcacaoTipo}}">
                     </div>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Bandeira</label>
-                <input name="embarcacaoBandeira" class="form-control" type="text" value="{{avisoEntradas.embarcacaoBandeira}}" disabled>
+                <input name="embarcacaoBandeira" class="form-control" type="text" value="{{avisoEntradas.embarcacaoBandeira}}">
                 <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-                <input name="embarcacaoNInscricaoautoridadeMB" class="form-control" type="text" value="{{avisoEntradas.embarcacaoNInscricaoautoridadeMB}}" disabled>
+                <input name="embarcacaoNInscricaoautoridadeMB" class="form-control" type="text" value="{{avisoEntradas.embarcacaoNInscricaoautoridadeMB}}">
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Arqueação Bruta</label>
-                <input name="embarcacaoArqueacaoBruta" class="form-control" type="text" value="{{avisoEntradas.embarcacaoArqueacaoBruta}}" disabled>
+                <input name="embarcacaoArqueacaoBruta" class="form-control" type="text" value="{{avisoEntradas.embarcacaoArqueacaoBruta}}">
                 <label class="input-group-text">Comprimento Total</label>
-                <input name="embarcacaoComprimentoTotal" class="form-control" type="text" value="{{avisoEntradas.embarcacaoComprimentoTotal}}" disabled>
+                <input name="embarcacaoComprimentoTotal" class="form-control" type="text" value="{{avisoEntradas.embarcacaoComprimentoTotal}}">
                 <label class="input-group-text">Tonelagem Porte Bruto</label>
-                <input name="embarcacaoTonelagemPorteBruto" class="form-control" type="text" value="{{avisoEntradas.embarcacaoTonelagemPorteBruto}}" disabled>
+                <input name="embarcacaoTonelagemPorteBruto" class="form-control" type="text" value="{{avisoEntradas.embarcacaoTonelagemPorteBruto}}">
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Certificado de Registro do Amador(CRA)</label>
-                <input name="embarcacaoCertificadoRegistroAmador" class="form-control" type="text" value="{{avisoEntradas.embarcacaoCertificadoRegistroAmador}}" disabled>
+                <input name="embarcacaoCertificadoRegistroAmador" class="form-control" type="text" value="{{avisoEntradas.embarcacaoCertificadoRegistroAmador}}">
                 <label class="input-group-text">Armador</label>
-                <input name="embarcacaoArmador" class="form-control" type="text" value="{{avisoEntradas.embarcacaoArmador}}" disabled>
+                <input name="embarcacaoArmador" class="form-control" type="text" value="{{avisoEntradas.embarcacaoArmador}}">
             </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">N° do CRA</label>
-                        <input name="embarcacaoNCRA" class="form-control" type="text" value="{{avisoEntradas.embarcacaoNCRA}}" disabled>
+                        <input name="embarcacaoNCRA" class="form-control" type="text" value="{{avisoEntradas.embarcacaoNCRA}}">
                         <label class="input-group-text">Validade</label>
-                        <input name="embarcacaoValidade" class="form-control" type="text" value="{{avisoEntradas.embarcacaoValidade}}" disabled>
+                        <input name="embarcacaoValidade" class="form-control" type="text" value="{{avisoEntradas.embarcacaoValidade}}">
                     </div>
 
                 <br>

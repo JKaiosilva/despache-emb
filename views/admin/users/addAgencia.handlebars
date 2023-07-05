@@ -7,8 +7,8 @@
                 <input name="nome" type="text" value="{{usuario.nome}}" class="form-control">
             <label for="email">Email: </label>
                 <input name="email" type="email" value="{{usuario.email}}" class="form-control">
-            <label  type="CPF">CNPJ: </label>
-                <input name="CPF" type="number" value="{{usuario.CPF}}" class="form-control">
+            <label>CNPJ: </label>
+                <input name="CPF" maxlength="14" type="text"  class="form-control" placeholder="Coloque os 14 dígitos sem pontos ou espaços">
             <br>
             <br>
                 <div id="infosAgencia">
@@ -25,9 +25,9 @@
                         <br>
                 </div>
                     <label type="senha">Senha: </label>
-                        <input type="password" name="senha" class="form-control" required>
+                        <input minlength="6" placeholder="A senha precisa ter no mínimo 6 dígitos" type="password" name="senha" class="form-control" required>
                     <label for="senha2">Repita sua senha: </label>
-                        <input type="password" name="senha2" class="form-control" required>
+                        <input minlength="6" type="password" name="senha2" class="form-control" required>
             <button type="submit" class="btn btn-success mt-4">Cadastrar</button>
         </form>
     </div>

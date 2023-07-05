@@ -7,9 +7,16 @@
     <a class="nav-link" href="/edFluvial">Ed. Fluvial</a>
   </li>
   {{#if user}}
+
+  {{#ifAgencia user}}
   <li class="nav-item">
-    <a class="nav-link" href="/formulario">Formulários</a>
+    <a class="nav-link" href="/formulario">Painel Agencia</a>
   </li>
+  {{else}}
+  <li class="nav-item">
+    <a class="nav-link" href="/formulario">Painel Despachante</a>
+  </li>
+  {{/ifAgencia}}
   <li class="nav-item">
     <a class="nav-link" href="/usuarios/perfil">Minha conta</a>
   </li>
@@ -18,7 +25,6 @@
           <a class="nav-link" href="/admin/painel">Painel ADM</a>
       </li>
     {{/ifAdmin}}
-
     <li class="nav-item">
     <a class="nav-link" href="/usuarios/logout">Sair</a>
   </li>
