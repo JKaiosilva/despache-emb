@@ -77,6 +77,10 @@ const createScene = function () {
         camera.target = newMeshes[0];
         });
 
+        
+        var box = BABYLON.Mesh.CreateBox('SkyBox', 1000, scene, false, BABYLON.Mesh.BACKSIDE);
+        box.material = new BABYLON.SkyMaterial('sky', scene);
+        box.material.inclination = -0.35;
 
     const light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
     light.intensity = 0.9;

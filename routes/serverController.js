@@ -82,8 +82,7 @@ router.get('/admin/painel', Admin, async (req, res) => {
         const dataHoje = moment(Date.now()).format('DD/MM/YYYY HH:mm');
 
         var avisos = await Aviso.find().count();
-        var usuarios = await Usuario.find().count();
-        var embarcacoes = await Embarcacao.find().count();
+        var usuarios = await Usuario.find({eAgencia: 1}).count();
         var despachos = await Despacho.find().count();
         var avisoEntradas = await AvisoEntrada.find().count();
         var avisoSaidas = await AvisoSaida.find().count();
@@ -95,7 +94,6 @@ router.get('/admin/painel', Admin, async (req, res) => {
                 avisos: avisos,
                 usuariosOperador: usuariosOperador,
                 usuarios: usuarios,
-                embarcacoes: embarcacoes,
                 despachos: despachos,
                 avisoEntradas: avisoEntradas,
                 avisoSaidas: avisoSaidas,

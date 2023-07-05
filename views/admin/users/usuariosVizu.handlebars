@@ -1,18 +1,50 @@
-{{#each usuario}}
 <div class="card">
     <div class="card-body">
         <form action="" method="POST">
             <label for="nome"> Nome </label>
-                <input type="text" value="{{nome}}" class="form-control" disabled>
+                <input type="text" value="{{usuario.nome}}" class="form-control" disabled>
             <label for="email">Email: </label>
-                <input type="email" value="{{email}}" class="form-control" disabled>
+                <input type="email" value="{{usuario.email}}" class="form-control" disabled>
             <label type="CPF">CPF/CNPJ: </label>
-                <input type="number" value="{{CPF}}" class="form-control" disabled>
+                <input type="number" value="{{usuario.CPF}}" class="form-control" disabled>
+            <label type="CPF" {{despHidden}}>Proprietário </label>
+                <input type="text" value="{{usuario.proprietario}}" class="form-control" disabled {{despHidden}}>            
+            <label type="CPF" {{despHidden}}>Sócios Proprietários</label>
+                <input type="text" value="{{usuario.sociosProprietarios}}" class="form-control" disabled {{despHidden}}>
         </form>
     </div>
 </div>
+<br>
+<div {{despHidden}}>
+{{#each despachantes}}
+    <div class="card">
+        <div class="card-body">
+            <label for="nome"> Nome </label>
+                <input type="text" value="{{nome}}" class="form-control" disabled>
+                <br>
+            <div class="input-group">
+                <label for="email" class="input-group-text">Email: </label>
+                    <input type="email" value="{{email}}" class="form-control" disabled>
+                <label type="CPF" class="input-group-text">CPF/CNPJ: </label>
+                    <input type="number" value="{{CPF}}" class="form-control" disabled>
+            </div>
+            <div class="input-group">
+                <label type="CPF" class="input-group-text">Agencia </label>
+                    <input type="text" value="{{../usuario.nome}}" class="form-control" disabled>            
+                <label type="CPF" class="input-group-text">Período de contrato</label>
+                    <input type="text" value="{{periodoContrato}}" class="form-control" disabled>
+            </div>
+        </div>
+        <div class="mb-1">
+            <a class="btn btn-success float-end" href="/admin/users/usuariosVizu/{{_id}}">Visualizar</a>
+            <a class="btn btn-warning float-end mx-1" href="/admin/users/usuariosEdit/{{_id}}">Editar</a>
+        </div>
+    </div>
+    <br>
 {{else}}
-    <h4>Nenhum Usuário cadastrado</h4>
+<h6>Nenhum Despachante Cadastrado</h6>
+        <a class="btn btn-success" href="/usuarios/cadastroUser">Cadastrar Despachante</a>
 {{/each}}
+</div>
     <br>
     <input class="btn btn-success" type="button" value="Voltar" style="float: left" onClick="history.go(-1)"> 

@@ -32,12 +32,12 @@
                     <span>Informações Necessárias para conta de Agencia</span>
                         <div class="input-group">
                             <label class="input-group-text">Proprietário</label>
-                            <input class="form-control" value="{{usuário.proprietario}}">
+                            <input class="form-control" name="proprietario" value="{{usuario.proprietario}}">
                         </div>
                         <br>
                         <div class="input-group">
                             <label class="input-group-text">Sócios Proprietários</label>
-                            <input class="form-control" value="{{usuário.sociosProprietarios}}">
+                            <input class="form-control" name="sociosProprietarios" value="{{usuario.sociosProprietarios}}">
                         </div>
                         <br>
                 </div>
@@ -45,17 +45,19 @@
                     <span>Informações Necessárias para conta de Despachante</span>
                         <div class="input-group">
                             <label class="input-group-text">Período de contrato</label>
-                            <input name="periodoContrato" class="form-control" type="date" value="">
+                            <input name="periodoContrato" class="form-control" type="date" value="{{usuario.periodoContrato}}">
                         </div>
                         <br>
                         <div class="input-group">
                             <label class="input-group-text">Agencia</label>
                         <select name="agencia" class="form-select" >
+                            <option value="{{usuario.agencia}}">Já Selecionado:</option>
                             {{#each agencias}}
                             <option value="{{_id}}">
                                 {{nome}}
                             </option>
                             {{/each}}
+                            <option value="">Em Branco</option>
                         </select>
                         </div>
                         <br>

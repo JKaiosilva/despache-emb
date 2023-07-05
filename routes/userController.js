@@ -38,7 +38,7 @@ const cheerio = require('cheerio')
 //----    Rota para formulário de cadastro de Usuário    ----//
 
 
-router.get('/usuarios/cadastroUser', async (req, res) => {
+router.get('/usuarios/cadastroUser', eUser, async (req, res) => {
     try{
         const agencias = await Usuario.find({eAgencia: 1}).lean()
         res.render('usuarios/cadastro', 
@@ -87,6 +87,7 @@ router.post('/usuarios/cadastroUser', (req, res) => {
                     eAgencia: 0,
                     agencia: req.body.agencia,
                     eUser: 1,
+                    periodoContrato: req.body.periodoContrato,
                     senha: req.body.senha,
                     dataCadastro: Date.now(),
                     usuarioMesAnoAtual: moment(Date.now()).format('MM/YYYY')
@@ -97,7 +98,7 @@ router.post('/usuarios/cadastroUser', (req, res) => {
                         if(erro) {
                             console.log(erro)
                             req.flash('error_msg', 'Houve um erro ao salvar usuario')
-                            res.redirect('/usuarios/cadastro')
+                            res.redirect('/formulario')
                         }
                         novoUsuario.senha = hash
                         novoUsuario.save().then(() => {
@@ -106,7 +107,7 @@ router.post('/usuarios/cadastroUser', (req, res) => {
                         }).catch((err) => {
                             console.log(err)
                             req.flash('error_msg', 'Houve um erro ao salvar usuario')
-                            res.redirect('/usuarios/cadastro')
+                            res.redirect('/formulario')
                         })
                     })
                 })
@@ -125,11 +126,23 @@ router.post('/usuarios/cadastroUser', (req, res) => {
 
 router.get('/admin/users/usuariosVizu/:id', Admin, async (req, res) => {
     try{
-        const usuario = await Usuario.find({ _id: req.params.id }).lean()
+        const checarUser = await Usuario.findOne({_id: req.params.id}).lean()
+        if(checarUser.eAgencia == 1){
+            const usuario = await Usuario.findOne({ _id: req.params.id }).lean()
+            const despachantes = await Usuario.find({agencia: usuario._id}).lean()
             res.render('admin/users/usuariosVizu', 
                 { 
-                    usuario: usuario 
+                    usuario: usuario,
+                    despachantes: despachantes
                 })
+        }
+        const usuario = await Usuario.findOne({_id: req.params.id}).lean()
+        despHidden = 'hidden'
+        res.render('admin/users/usuariosVizu', 
+        { 
+            usuario: usuario,
+            despHidden: despHidden
+        })
     }catch(err){
         req.flash('error_msg', `Erro ao mostrar Usuário (${err})`)
         res.redirect('/admin/painel')
@@ -320,7 +333,7 @@ router.post('/admin/users/addAgencia', (req, res) => {
 
 router.get('/admin/listaUsers', Admin, async (req, res) => {
     try{
-        const usuarios = await Usuario.find().lean().sort({ nome: 'asc' })
+        const usuarios = await Usuario.find({eAgencia: 1}).limit(5).lean().sort({ nome: 'asc' })
             res.render('admin/users/users', 
                 { 
                     usuarios: usuarios 
@@ -340,7 +353,7 @@ router.get('/admin/listaUsers/:page', Admin, async (req, res) => {
     const limit = 5;
     const skip = (page - 1) * limit;
     try {
-        const contagem = await Usuario.count()
+        const contagem = await Usuario.count({eAgencia: 1})
         if (parseInt(page) * limit >= contagem) {
             nextPage = ''
             hidden = 'hidden'
@@ -354,7 +367,7 @@ router.get('/admin/listaUsers/:page', Admin, async (req, res) => {
         } else {
             previousPage = parseInt(page) - 1
         }
-        const usuarios = await Usuario.find().skip(skip).limit(limit).lean().sort({ nome: 'desc' })
+        const usuarios = await Usuario.find({eAgencia: 1}).skip(skip).limit(limit).lean().sort({ nome: 'desc' })
             res.render('admin/users/usersPage',
                 {
                     usuarios: usuarios,
