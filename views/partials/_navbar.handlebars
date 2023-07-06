@@ -3,18 +3,18 @@
   <li class="nav-item">
     <a class="nav-link active" aria-current="page" href="/">Início</a>
   </li>
-  <li class="nav-item">
+{{!--   <li class="nav-item">
     <a class="nav-link" href="/edFluvial">Ed. Fluvial</a>
-  </li>
+  </li> --}}
   {{#if user}}
 
   {{#ifAgencia user}}
   <li class="nav-item">
-    <a class="nav-link" href="/formulario">Painel Agencia</a>
+    <a class="nav-link" href="/formulario">Painel Agência</a>
   </li>
   {{else}}
   <li class="nav-item">
-    <a class="nav-link" href="/formulario">Painel Despachante</a>
+    <a class="nav-link" href="/formulario">Despacho</a>
   </li>
   {{/ifAgencia}}
   <li class="nav-item">

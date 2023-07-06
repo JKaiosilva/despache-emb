@@ -7,40 +7,40 @@ const Relatorio = new Schema ({
         
     },
     mesEmbarcacaoInternacionalEmp: {
-        type: Number
+        type: String
     },
     mesEmbarcacaoBarcaca: {
-        type: Number
+        type: String
     },
     totalExtrangeiro: {
-        type: Number
+        type: String
     },
     mesEmbarcacaoRebocadorEmpurador: {
-        type: Number
+        type: String
     },
     mesEmbarcacaoBalsa: {
-        type: Number
+        type: String
     },
     mesEmbarcacaoCargaGeral: {
-        type: Number
+        type: String
     },
     mesEmbarcacaoDraga: {
-        type: Number
+        type: String
     },
     mesEmbarcacaoNacionalEmp: {
-        type: Number
+        type: String
     },
     mesEmbarcacaoLancha: {
-        type: Number
+        type: String
     },
     mesEmbarcacaoPassageiros: {
-        type: Number
+        type: String
     },
     totalNacional: {
-        type: Number
+        type: String
     },
     mesPassageiros: {
-        type: Number
+        type: String
     },
     mesAnoAtual: {
         type: String,
@@ -51,7 +51,7 @@ const Relatorio = new Schema ({
         default: []
     },
     relatorioDataNumber: {
-        type: Number,
+        type: String,
         default: []
     },
     relatorioDataString: {
@@ -59,22 +59,22 @@ const Relatorio = new Schema ({
         default: []
     },
     mesDespachosCount: {
-        type: Number
+        type: String
     },
     mesAvisoEntradasCount: {
-        type: Number
+        type: String
     },
     mesAvisoSaidasCount: {
-        type: Number
+        type: String
     },
     mesEmbarcacoesCount: {
-        type: Number
+        type: String
     },
     mesAvisosCount: {
-        type: Number
+        type: String
     },
     mesUsuariosCount: {
-        type: Number 
+        type: String 
     }
 })
 

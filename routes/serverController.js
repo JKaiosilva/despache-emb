@@ -305,4 +305,14 @@ router.get('/edFluvial', async(req, res) => {
 })
 
 
+router.get('/teste', async (req, res) => {
+    try{
+        res.render('teste')
+    }catch(err){
+        req.flash('error_msg', `Erro ao mostrar página de Educação Fluvial (${err})`)
+        res.redirect('/')
+    }
+})
+
+
 module.exports = router

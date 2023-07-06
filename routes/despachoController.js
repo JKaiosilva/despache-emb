@@ -62,16 +62,15 @@ router.get('/formulario/despacho', eUser, async(req, res) => {
 router.post('/formulario/despacho', eUser, async (req, res) => {
     try{
         const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
-        const tripulantes = cleanString.split(',');
-        const despachoTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+        const despachoTripulantes = cleanString.split(',');
 
         const cleanStringFuncao = req.body.documentTripulantesFuncao.replace(/[\n' \[\]]/g, '');
         const despachoTripulantesFuncao = cleanStringFuncao.split(',');
 
         const despachoTripulantesArray = []
 
-        if(tripulantes.length === 1){
-            for(var i = 0; i < tripulantes.length; i++){
+        if(despachoTripulantes.length === 1){
+            for(var i = 0; i < despachoTripulantes.length; i++){
             const tripulante = {
                 id: despachoTripulantes[i],
                 despachoTripulanteFuncao: despachoTripulantesFuncao[i]
@@ -80,7 +79,7 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
             despachoTripulantesArray.push(tripulante)
         }
         }else{
-            for(var i = 0; i < tripulantes.length; i++){
+            for(var i = 0; i < despachoTripulantes.length; i++){
                 const tripulante = {
                     id: despachoTripulantes[i],
                     despachoTripulanteFuncao: despachoTripulantesFuncao[i]
@@ -341,16 +340,15 @@ router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
 router.post('/admin/despachoValidate', Admin, async(req, res) => {
     try{
         const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
-        const tripulantes = cleanString.split(',');
-        const despachoTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+        const despachoTripulantes = cleanString.split(',');
 
         const cleanStringFuncao = req.body.documentTripulantesFuncao.replace(/[\n' \[\]]/g, '');
         const despachoTripulantesFuncao = cleanStringFuncao.split(',');
 
         const despachoTripulantesArray = []
 
-        if(tripulantes.length === 1){
-            for(var i = 0; i < tripulantes.length; i++){
+        if(despachoTripulantes.length === 1){
+            for(var i = 0; i < despachoTripulantes.length; i++){
             const tripulante = {
                 id: despachoTripulantes[i],
                 despachoTripulanteFuncao: despachoTripulantesFuncao[i]
@@ -359,7 +357,7 @@ router.post('/admin/despachoValidate', Admin, async(req, res) => {
             despachoTripulantesArray.push(tripulante)
         }
         }else{
-            for(var i = 0; i < tripulantes.length; i++){
+            for(var i = 0; i < despachoTripulantes.length; i++){
                 const tripulante = {
                     id: despachoTripulantes[i],
                     despachoTripulanteFuncao: despachoTripulantesFuncao[i]

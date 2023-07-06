@@ -102,7 +102,7 @@
                 <br>
                 <div>
                         <h4 class="text-center">Lista de Passageiros</h4>
-                        {{#each avisoSaidas.saidaPassageiros}}
+                        {{#each passageiros}}
                                 <div id="passageiros" class="card bg-secondary mt-4">
                                     <span>Passageiro: {{add @index 1}}</span>
                                         <div class="input-group">
@@ -124,7 +124,7 @@
                 <div>
                     <h4 class="text-center">Comboios</h4>
                 </div>
-                {{#each avisoSaidas.saidaComboios}}
+                {{#each comboios}}
                 <div class="bg-secondary">
                     <span>Embarcacão: {{add @index 1}}</span>
                     <div class="input-group">
