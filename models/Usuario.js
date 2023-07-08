@@ -11,6 +11,9 @@ const Usuario = new Schema({
     CPF: {
         type: Number
     },
+    oficial: {
+        type: Number
+    },
     eAdmin: {
         type: Number,
     },

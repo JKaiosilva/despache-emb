@@ -227,7 +227,8 @@ router.get('/formulario', async (req, res) => {
             const despachos = await Despacho.find({agenciaID: req.user.agencia}).limit(5).lean().sort({despachoData: 'desc'})
             const avisoEntradas = await AvisoEntrada.find({agenciaID: req.user.agencia}).limit(5).lean().sort({entradaData: 'desc'})
             const avisoSaidas = await AvisoSaida.find({agenciaID: req.user.agencia}).limit(5).lean().sort({saidaData: 'desc'})
-    
+
+
             if(despachosValid.find((el) => el.despachoDataValidadeNumber > dataHoje)){
                 console.log('encontrou um valido')
                 docHidden = ''
@@ -265,7 +266,8 @@ router.get('/formulario', async (req, res) => {
             const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
             const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
             const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
-    
+
+
             if(!despachosValid.find(el => el.despachoDataValidadeNumber > dataHoje)){
                 docHidden = 'hidden'
                 alertHidden = ''

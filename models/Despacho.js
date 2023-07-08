@@ -10,6 +10,9 @@ const Despacho = new Schema ({
     agenciaID:{
         type: String
     },
+    agenciaNome: {
+        type: String
+    },
     NprocessoDespacho: {
         type: String
     },
@@ -100,8 +103,7 @@ const Despacho = new Schema ({
     },
     despachoTripulantes: [{
         id: {
-            type: Schema.Types.Mixed,
-            ref: 'Tripulante',
+
         },
         despachoTripulanteFuncao: {
 

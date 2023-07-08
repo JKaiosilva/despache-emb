@@ -56,36 +56,51 @@
                 <h4 class="text-center">Dados da Embarcação</h4>
                     <div class="input-group mb-3">
                         <label class="input-group-text">Nome da Embarcação</label>
-                        <input class="form-control" type="text" value="{{despachos.embarcacaoNome}}" disabled>
+                        <input name="despachosEmbarcacaoNome" class="form-control" type="text" value="{{despachos.despachosEmbarcacaoNome}}">
                         <label class="input-group-text">Tipo da Embarcação</label>
-                        <input class="form-control" type="text" value="{{despachos.embarcacaoTipo}}" disabled>
-                    </div>
+                        <select name="embarcacaoTipo" class="form-control" type="text">
+                            <option value="{{despachos.embarcacaoTipo}}">Já selecionado: {{despachos.embarcacaoTipo}}</option>
+                            <option value="empurrador">Empurrador</option>
+                            <option value="barcaça">Barcaça</option>
+                            <option value="rebocadorEmpurrador">Rebocador/Empurrador</option>
+                            <option value="balsa">Balsa</option>
+                            <option value="cargaGeral">Carga Geral</option>
+                            <option value="draga">Draga</option>
+                            <option value="lancha">Lancha</option>
+                            <option value="embarcacaoPassageiros">Embarcação de Passageiros</option>
+                        </select>                    </div>
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Bandeira</label>
-                <input class="form-control" type="text" value="{{despachos.embarcacaoBandeira}}">
-                <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
-                <input class="form-control" type="text" value="{{despachos.embarcacaoNInscricaoautoridadeMB}}">
+                <select name="embarcacaoBandeira" class="form-control" type="text">
+                    <option value="{{despachos.embarcacaoBandeira}}" >Já Selecionado: {{despachos.embarcacaoBandeira}}</option>
+                    <option value="Brasileiro">Brasileiro</option>
+                    <option value="Paraguaio">Paraguaio</option>
+                    <option value="Argentino">Argentino</option>
+                    <option value="Uruguaio">Uruguaio</option>
+                    <option value="Boliviano">Boliviano</option>
+                </select>                <label class="input-group-text">N° Inscrição na Autoridade Marítima do Brasil</label>
+                <input name="embarcacaoNInscricaoautoridadeMB" class="form-control" type="text" value="{{despachos.embarcacaoNInscricaoautoridadeMB}}">
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Arqueação Bruta</label>
-                <input class="form-control" type="text" value="{{despachos.embarcacaoArqueacaoBruta}}">
+                <input name="embarcacaoArqueacaoBruta" class="form-control" type="text" value="{{despachos.embarcacaoArqueacaoBruta}}">
                 <label class="input-group-text">Comprimento Total</label>
-                <input class="form-control" type="text" value="{{despachos.embarcacaoComprimentoTotal}}">
+                <input name="embarcacaoComprimentoTotal" class="form-control" type="text" value="{{despachos.embarcacaoComprimentoTotal}}">
                 <label class="input-group-text">Tonelagem Porte Bruto</label>
-                <input class="form-control" type="text" value="{{despachos.embarcacaoTonelagemPorteBruto}}">
+                <input name="embarcacaoTonelagemPorteBruto" class="form-control" type="text" value="{{despachos.embarcacaoTonelagemPorteBruto}}">
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text">Certificado de Registro do Amador(CRA)</label>
-                <input class="form-control" type="text" value="{{despachos.embarcacaoCertificadoRegistroAmador}}">
+                <input name="embarcacaoCertificadoRegistroAmador" class="form-control" type="text" value="{{despachos.embarcacaoCertificadoRegistroAmador}}">
                 <label class="input-group-text">Armador</label>
-                <input class="form-control" type="text" value="{{despachos.embarcacaoArmador}}">
+                <input name="embarcacaoArmador" class="form-control" type="text" value="{{despachos.embarcacaoArmador}}">
             </div>
                     <div class="input-group mb-3">
                         <label class="input-group-text">N° do CRA</label>
-                        <input class="form-control" type="text" value="{{despachos.embarcacaoNCRA}}">
+                        <input name="embarcacaoNCRA" class="form-control" type="text" value="{{despachos.embarcacaoNCRA}}">
                         <label class="input-group-text">Validade</label>
-                        <input class="form-control" type="text" value="{{despachos.embarcacaoValidade}}">
+                        <input name="embarcacaoValidade" class="form-control" type="text" value="{{despachos.embarcacaoValidade}}">
                     </div>
 
                 <h4 class="text-center">Dados de Representante da Embarcação</h4>

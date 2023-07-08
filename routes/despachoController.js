@@ -130,10 +130,13 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
             }
         }
 
+        const agencia = await Usuario.findOne({_id: req.user.agencia}).lean()
+
         console.log(despachoTripulantesFuncao)
     const novoDespacho = {
         usuarioID: req.user._id,
         agenciaID: req.user.agencia,
+        agenciaNome: agencia.nome,
         NprocessoDespacho: req.body.NprocessoDespacho,
         despachoPortoEstadia: req.body.despachoPortoEstadia,
         despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
@@ -243,7 +246,7 @@ router.get('/despachos', eUser, async (req, res) => {
             res.render('formulario/despachos/despachos', 
             {
                 despachos: despachos,
-                admin: admin
+                admin: admin,
             })
     }catch(err){
         req.flash('error_msg', `Erro ao listar Despachos (${err})`)
@@ -365,6 +368,8 @@ router.post('/admin/despachoValidate', Admin, async(req, res) => {
                 despachoTripulantesArray.push(tripulante)
             }
         }
+
+
   
          await Despacho.updateOne({_id: req.body.id}, {
              NprocessoDespacho: req.body.NprocessoDespacho,
@@ -372,7 +377,7 @@ router.post('/admin/despachoValidate', Admin, async(req, res) => {
              despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
              despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
              despachoDataHoraPartida: req.body.despachoDataHoraPartida,
-             embarcacaoNome: req.body.embarcacaoNome,
+             embarcacaoNome: req.body.despachosEmbarcacaoNome,
              embarcacaoTipo: req.body.embarcacaoTipo,
              embarcacaoBandeira: req.body.embarcacaoBandeira,
              embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,

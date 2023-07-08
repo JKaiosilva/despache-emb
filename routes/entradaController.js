@@ -64,16 +64,15 @@ router.get('/formulario/avisoEntrada', eUser, async (req, res) => {
 router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
     try {
         const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
-        const tripulantes = cleanString.split(',');
-        const entradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+        const entradaTripulantes = cleanString.split(',');
 
         const cleanStringFuncao = req.body.documentTripulantesFuncao.replace(/[\n' \[\]]/g, '');
         const entradaTripulantesFuncao = cleanStringFuncao.split(',');
 
         const entradaTripulantesArray = []
 
-        if(tripulantes.length === 1){
-            for(var i = 0; i < tripulantes.length; i++){
+        if(entradaTripulantes.length === 1){
+            for(var i = 0; i < entradaTripulantes.length; i++){
             const tripulante = {
                 id: entradaTripulantes,
                 entradaTripulanteFuncao: entradaTripulantesFuncao
@@ -82,7 +81,7 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
             entradaTripulantesArray.push(tripulante)
         }
         }else{
-            for(var i = 0; i < tripulantes.length; i++){
+            for(var i = 0; i < entradaTripulantes.length; i++){
                 const tripulante = {
                     id: entradaTripulantes[i],
                     entradaTripulanteFuncao: entradaTripulantesFuncao[i]
@@ -154,10 +153,14 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
             }
         }
 
+
+        const agencia = await Usuario.findOne({_id: req.user.agencia}).lean()
+
         console.log(entradaPassageiros)
         const novoAvisoEntrada = {
             usuarioID: req.user._id,
             agenciaID: req.user.agencia,
+            agenciaNome: agencia.nome,
             entradaDespacho: req.body.entradaDespacho,
             entradaNprocesso: req.body.entradaNprocesso,
             entradaPortoChegada: req.body.entradaPortoChegada,
@@ -387,16 +390,15 @@ router.get('/admin/entradasValidate/:id', Admin, async (req, res) => {
 router.post('/admin/entradasValidate', Admin, async (req, res) => {
     try {
         const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
-        const tripulantes = cleanString.split(',');
-        const entradaTripulantes = tripulantes.map((id) => mongoose.Types.ObjectId(id));
+        const entradaTripulantes = cleanString.split(',');
 
         const cleanStringFuncao = req.body.documentTripulantesFuncao.replace(/[\n' \[\]]/g, '');
         const entradaTripulantesFuncao = cleanStringFuncao.split(',');
 
         const entradaTripulantesArray = []
 
-        if(tripulantes.length === 1){
-            for(var i = 0; i < tripulantes.length; i++){
+        if(entradaTripulantes.length === 1){
+            for(var i = 0; i < entradaTripulantes.length; i++){
             const tripulante = {
                 id: entradaTripulantes,
                 entradaTripulanteFuncao: entradaTripulantesFuncao
@@ -405,7 +407,7 @@ router.post('/admin/entradasValidate', Admin, async (req, res) => {
             entradaTripulantesArray.push(tripulante)
         }
         }else{
-            for(var i = 0; i < tripulantes.length; i++){
+            for(var i = 0; i < entradaTripulantes.length; i++){
                 const tripulante = {
                     id: entradaTripulantes[i],
                     entradaTripulanteFuncao: entradaTripulantesFuncao[i]

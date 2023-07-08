@@ -8,7 +8,10 @@ const AvisoEntrada = new Schema ({
     },
     agenciaID:{
         type: String
-    },  
+    },
+    agenciaNome: {
+        type: String
+    },
     entradaDespacho: {
         type: Schema.Types.ObjectId,
         ref: 'despachos'
@@ -111,8 +114,7 @@ const AvisoEntrada = new Schema ({
     },
     entradaTripulantes: [{
         id: {
-            type: Schema.Types.Mixed,
-            ref: 'Tripulante',
+
         },
         entradaTripulanteFuncao: {
 

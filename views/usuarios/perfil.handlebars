@@ -22,23 +22,6 @@
 {{else}}
  <h1>err</h1>
 {{/each}}
-
-<hr>
-<h4 class="mt-4">Minhas Embarcações</h4>
-
-{{#each embarcacoes}}
-    <div class="card mt-4">
-            <div class="card-header">
-                <h6>Nome: {{embarcacaoNome}}</h6>
-            </div>
-            <div class="card-body">
-                 <label>Numero de Inscrição: {{embarcacaoNInscricaoautoridadeMB}}</label>
-                 <a class="btn btn-success float-end" href="/formulario/embarcacaoVizu/{{_id}}">Visualizar</a>
-            </div>
-    </div>
-{{else}}
-    <p>Nenhuma Embarcação cadastrada</p>
-{{/each}}
 <br>
 
 <a href="/embarcacoes/2" class="btn btn-primary" style="float: right" {{hidden}}>Próximo</a>

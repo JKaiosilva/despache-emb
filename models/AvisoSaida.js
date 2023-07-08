@@ -9,6 +9,9 @@ const AvisoSaida = new Schema({
     agenciaID:{
         type: String
     },
+    agenciaNome: {
+        type: String
+    },
     saidaDespacho:{
         type: Schema.Types.ObjectId,
         ref: 'despachos'
@@ -95,8 +98,7 @@ const AvisoSaida = new Schema({
     },
     saidaTripulantes: [{
         id: {
-            type: Schema.Types.Mixed,
-            ref: 'Tripulante',
+
         },
         saidaTripulanteFuncao: {
 
