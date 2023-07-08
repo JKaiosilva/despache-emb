@@ -16,6 +16,7 @@ const Add = require('./helpers/AddIndex')
 const eUser = require('./helpers/eUser')
 const Admin = require('./helpers/eAdmin')
 const ifAdmin = require('./helpers/barAdmin')
+const ifDespachante = require('./helpers/barDespachante')
 
 const path = require('path');
 const session = require('express-session');

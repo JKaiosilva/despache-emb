@@ -6,32 +6,32 @@
 {{!--   <li class="nav-item">
     <a class="nav-link" href="/edFluvial">Ed. Fluvial</a>
   </li> --}}
-  {{#if user}}
-
-  {{#ifAgencia user}}
-  <li class="nav-item">
-    <a class="nav-link" href="/formulario">Painel Agência</a>
-  </li>
-  {{else}}
-  <li class="nav-item">
-    <a class="nav-link" href="/formulario">Despacho</a>
-  </li>
-  {{/ifAgencia}}
-  <li class="nav-item">
-    <a class="nav-link" href="/usuarios/perfil">Minha conta</a>
-  </li>
-     {{#ifAdmin user}}
-      <li class="nav-item">
-          <a class="nav-link" href="/admin/painel">Painel ADM</a>
-      </li>
-    {{/ifAdmin}}
+{{#if user}}
+  {{#ifAdmin user}}
     <li class="nav-item">
-    <a class="nav-link" href="/usuarios/logout">Sair</a>
-  </li>
-  {{else}}
+        <a class="nav-link" href="/admin/painel">Painel ADM</a>
+    </li>
+      {{/ifAdmin}}
+      {{#ifAgencia user}}
+      <li class="nav-item">
+        <a class="nav-link" href="/formulario">Painel Agência</a>
+      </li>
+      {{/ifAgencia}}
+      {{#ifDespachante user}}
+      <li class="nav-item">
+        <a class="nav-link" href="/formulario">Painel Despachante</a>
+      </li>
+      {{/ifDespachante}}
+      <li class="nav-item">
+        <a class="nav-link" href="/usuarios/perfil">Minha conta</a>
+      </li>
+        <li class="nav-item">
+        <a class="nav-link" href="/usuarios/logout">Sair</a>
+      </li>
+      {{else}}
   <li class="nav-item">
     <a class="nav-link" href="/usuarios/login">Login</a>
   </li>
-  {{/if}}
+ {{/if}}
 
 </ul>

@@ -11,6 +11,8 @@
                 <input type="text" value="{{usuario.proprietario}}" class="form-control" disabled {{despHidden}}>            
             <label type="CPF" {{despHidden}}>Sócios Proprietários</label>
                 <input type="text" value="{{usuario.sociosProprietarios}}" class="form-control" disabled {{despHidden}}>
+            <label class="input-group-text" {{agenciaHidden}}>Período do contrato:</label>
+                <input value="{{periodoContrato}}" class="form-control" disabled {{agenciaHidden}}>
         </form>
     </div>
 </div>
@@ -36,7 +38,7 @@
             </div>
         </div>
         <div class="mb-1">
-            <a class="btn btn-success float-end" href="/admin/users/usuariosVizu/{{_id}}">Visualizar</a>
+            <a class="btn btn-success float-end" href="/users/usuariosVizu/{{_id}}">Visualizar</a>
             <a class="btn btn-warning float-end mx-1" href="/admin/users/usuariosEdit/{{_id}}">Editar</a>
         </div>
     </div>

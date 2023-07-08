@@ -22,6 +22,8 @@ const Relatorio = mongoose.model('relatorios')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
+const { eAgencia } = require('../helpers/eAgencia')
+
 
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
@@ -124,16 +126,18 @@ router.post('/usuarios/cadastroUser', (req, res) => {
 //----    Rota de visualização de Usuário(admin)   ----//
 
 
-router.get('/admin/users/usuariosVizu/:id', Admin, async (req, res) => {
+router.get('/users/usuariosVizu/:id', eUser, async (req, res) => {
     try{
         const checarUser = await Usuario.findOne({_id: req.params.id}).lean()
         if(checarUser.eAgencia == 1){
             const usuario = await Usuario.findOne({ _id: req.params.id }).lean()
             const despachantes = await Usuario.find({agencia: usuario._id}).lean()
+            agenciaHidden = 'hidden'
             res.render('admin/users/usuariosVizu', 
                 { 
                     usuario: usuario,
-                    despachantes: despachantes
+                    despachantes: despachantes,
+                    agenciaHidden: agenciaHidden
                 })
         }
         const usuario = await Usuario.findOne({_id: req.params.id}).lean()
@@ -241,6 +245,66 @@ router.post('/admin/users/usuarioEdit', Admin, async(req, res) => {
         console.log(err)
         req.flash('error_msg', `Erro ao editar Usuário (${err})`)
         res.redirect('/admin/painel')
+    }
+})
+
+
+//----      Rota para agencia editar Despachante        ----// 
+
+
+router.get('/users/usuariosEdit/:id', eAgencia, async (req, res) => {
+    try{
+        const usuario = await Usuario.findOne({_id: req.params.id}).lean()
+        const agencias = await Usuario.find({eAgencia: 1}).lean()
+            res.render('admin/users/usuariosEdit', 
+                {
+                    usuario: usuario,
+                    agencias: agencias
+                })
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', `Erro ao mostrar página de edição de Usuário (${err})`)
+        res.redirect('/admin/painel')
+    }
+})
+
+
+//----    Rota para postagem de edição de Usuário   ----//
+
+
+router.post('/users/usuarioEdit', eAgencia, async(req, res) => {
+    try{
+        const id = req.body.id
+        const usuario = await Usuario.find({ _id: id }).lean();
+
+        if (!usuario) {
+          req.flash('error_msg', 'Usuário não encontrado.');
+          return res.redirect('/formulario');
+        }
+
+        bcrypt.genSalt(10, (err, salt)  =>  {
+            bcrypt.hash(req.body.senha, salt, async (err, hash)  =>  {
+                if(err){
+                    console.log(err)
+                    req.flash('error_msg', `Erro ao editar Usuário (${err})`)
+                }
+                await Usuario.updateOne({_id: id},{
+                    nome: req.body.nome,
+                    email:req.body.email,
+                    CPF: req.body.CPF,
+                    agencia: req.body.agencia,
+                    periodoContrato: req.body.periodoContrato,
+                    senha: hash
+                })
+            })
+        })
+
+        req.flash('success_msg', 'Usuario editado com sucesso')
+        res.redirect('/formulario')
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', `Erro ao editar Usuário (${err})`)
+        res.redirect('/formulario')
     }
 })
 

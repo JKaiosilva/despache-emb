@@ -10,38 +10,7 @@
             <label  type="CPF">CPF/CNPJ: </label>
                 <input name="CPF" type="number" value="{{usuario.CPF}}" class="form-control">
             <br>
-            <label type="radio" >Conta Admin</label>
-                <input id="contaAdmin" name="eAdmin" type="range" value="{{usuario.eAdmin}}" min="0" max="1" onchange="mostrarCampo('contaAdmin', 'infosAdmin')">
-            <br>
-            <label  type="radio">Conta Agencia</label>
-                <input id="contaAgencia" name="eAgencia" type="range" value="{{usuario.eAgencia}}" min="0" max="1" onchange="mostrarCampo('contaAgencia', 'infosAgencia')">
-            <br>
-            <label  type="radio">Conta Despachante</label>
-                <input id="contaUser" name="eUser" type="range" value="{{usuario.eUser}}" min="0" max="1" onchange="mostrarCampo('contaUser', 'infosUser')">
-            <br>
-            <br>
-                <div id="infosAdmin" hidden>
-                    <span>Informações Necessárias para conta Administrativa</span>
-                        <div class="input-group">
-                            <label class="input-group-text">Organização Militar</label>
-                            <input class="form-control" value="">
-                        </div>
-                        <br>
-                </div>
-                <div id="infosAgencia" hidden>
-                    <span>Informações Necessárias para conta de Agencia</span>
-                        <div class="input-group">
-                            <label class="input-group-text">Proprietário</label>
-                            <input class="form-control" name="proprietario" value="{{usuario.proprietario}}">
-                        </div>
-                        <br>
-                        <div class="input-group">
-                            <label class="input-group-text">Sócios Proprietários</label>
-                            <input class="form-control" name="sociosProprietarios" value="{{usuario.sociosProprietarios}}">
-                        </div>
-                        <br>
-                </div>
-                <div id="infosUser" hidden>
+                <div id="infosUser">
                     <span>Informações Necessárias para conta de Despachante</span>
                         <div class="input-group">
                             <label class="input-group-text">Período de contrato</label>
