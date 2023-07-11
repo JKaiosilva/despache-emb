@@ -23,6 +23,7 @@ const Relatorio = mongoose.model('relatorios')
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
 const { eAgencia } = require('../helpers/eAgencia')
+const { eOficial } = require('../helpers/eOficial')
 
 
 const passport = require('passport')
@@ -475,6 +476,87 @@ router.get('/usuarios/perfil', eUser, async (req, res) => {
     }catch(err){
         req.flash('error_msg', `Erro ao mostrar perfil de Usuário (${err})`)
         res.redirect('/')
+    }
+})
+
+
+//----      Rota de formulário Adm      ----//
+
+
+router.get('/admin/addAdmin', async(req, res) => {
+    try{
+        res.render('admin/cadastro/addAdmin')
+    }catch(err){
+        req.flash('error_msg', `Erro ao mostrar formulário de cadastro (${err})`)
+        res.redirect('painel')
+    }
+})
+
+
+
+//----      Rota para adicionar administrador     ----//
+
+
+router.post('/admin/users/addAdm', (req, res) => {
+    var erros = []
+
+    if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
+        erros.push({texto: 'Nome inválido'})
+    }if(!req.body.email || typeof req.body.email == undefined || req.body.email == null) {
+        erros.push({texto: 'Email inválido'})
+    }if(!req.body.CPF || typeof req.body.CPF == undefined || req.body.CPF == null || req.body.CPF.length < 11) {
+        erros.push({texto: 'CPF inválido'})
+    }if(!req.body.senha || typeof req.body.senha == undefined || req.body.senha == null) {
+        erros.push({texto: "Senha inválida"})
+    }if(req.body.senha.length < 6) {
+        erros.push({texto: 'Senha muito curta'})
+    }if(req.body.senha != req.body.senha2) { 
+        erros.push({texto: 'Senhas diferentes'})
+    }if(erros.length > 0) {
+        res.render('painel', {erros: erros})
+    }else {
+        Usuario.findOne({email: req.body.email}).then((usuario) => {
+            if(usuario) {
+                req.flash('error_msg', 'Email já cadastrado')
+                res.redirect('/admin/painel')
+            }else{
+                const novoUsuario = new Usuario({
+                    nome: req.body.nome,
+                    email:req.body.email,
+                    CPF: req.body.CPF,
+                    oficial: req.body.oficial,
+                    eAdmin: req.body.eAdmin,
+                    eAgencia: 0,
+                    eUser: 0,
+                    senha: req.body.senha,
+                    dataCadastro: Date.now(),
+                    usuarioMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+                })
+
+                bcrypt.genSalt(10, (erro, salt) => {
+                    bcrypt.hash(novoUsuario.senha, salt, (erro, hash) => {
+                        if(erro) {
+                            console.log(erro)
+                            req.flash('error_msg', 'Houve um erro ao salvar usuario')
+                            res.redirect('/admin/painel')
+                        }
+                        novoUsuario.senha = hash
+                        novoUsuario.save().then(() => {
+                            req.flash('success_msg', 'Usuario criado com sucesso')
+                            res.redirect('/admin/painel')
+                        }).catch((err) => {
+                            console.log(err)
+                            req.flash('error_msg', 'Houve um erro ao salvar usuario')
+                            res.redirect('/admin/painel')
+                        })
+                    })
+                })
+            }
+        }).catch((err) => {
+            console.log(err)
+            req.flash('error_msg', `Erro ao cadastrar usuário (${err})`)
+            res.redirect('painel')
+        })
     }
 })
 

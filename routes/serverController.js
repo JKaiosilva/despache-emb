@@ -79,8 +79,14 @@ router.get('/admin/painel', Admin, async (req, res) => {
             }
         })
 
+        admHidden = 'hidden'
+        if(req.user.oficial == 1){
+            admHidden = ''
+        }
+
         const dataHoje = moment(Date.now()).format('DD/MM/YYYY HH:mm');
 
+        var adms = await Usuario.find({eAdmin: 1}).count()
         var avisos = await Aviso.find().count();
         var usuarios = await Usuario.find({eAgencia: 1}).count();
         var despachos = await Despacho.find().count();
@@ -102,7 +108,9 @@ router.get('/admin/painel', Admin, async (req, res) => {
                 portos: portos,
                 tempo: tempo,
                 medidaRio: medidaRio,
-                dataHoje: dataHoje
+                dataHoje: dataHoje,
+                adms: adms,
+                admHidden: admHidden
             });
     } catch (err) {
         console.log(err);
