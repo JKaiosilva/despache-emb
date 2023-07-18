@@ -23,11 +23,9 @@
             segundos = 20000
 
             if(horaLocal > {{despachoData}} + dezHoras) {
-                console.log('a')
-                const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-danger')
+                const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-danger bg-opacity-60')
             }else if(horaLocal > {{despachoData}} + segundos) {
-                console.log('b')
-                const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-warning')
+                const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-warning bg-opacity-60')
             } else {
 
             }

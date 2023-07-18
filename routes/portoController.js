@@ -78,15 +78,7 @@ router.get('/admin/portoVizu/:id', Admin, async(req, res) => {
         const despachos = await Despacho.find({despachoPortoEstadia: portos._id, }).lean()
         const avisoSaidas = await AvisoSaida.find({saidaDataHoraSaida: dataHoje}).lean()
 
-        for await(var saida of avisoSaidas){
-            var embarcacoes = await Embarcacao.findById(saida.embarcacao).lean()
-            saida.embarcacao = embarcacoes.embarcacaoNome
-        }
 
-         for await(var despacho of despachos){
-            var embarcacoes = await Embarcacao.findById(despacho.embarcacao).lean()
-            despacho.embarcacao = embarcacoes.embarcacaoNome
-        }
 
             res.render('admin/portos/portoVizu', 
                 {
@@ -209,11 +201,10 @@ router.get('/portoInfo', Admin, async (req, res) => {
 
         for await (const saida of avisoSaidas) {
             var portoEmb = {}
-            var procurar = await Embarcacao.findOne({ _id: saida.embarcacao }).lean()
-            if(procurar.embarcacaoTipo != 'barcaça'){
-                portoEmb = { nome: procurar.embarcacaoNome, id: procurar._id.toString(), portoEstadia: saida.saidaPortoSaida.toString() }
+            if(saida.embarcacaoTipo != 'barcaça'){
+                portoEmb = { nome: saida.embarcacaoNome, id: saida._id.toString(), portoEstadia: saida.saidaPortoSaida.toString() }
             }else{
-                portoEmb = { nomeBarcaca: procurar.embarcacaoNome, id: procurar._id.toString(), portoEstadia: saida.saidaPortoSaida.toString() }
+                portoEmb = { nomeBarcaca: saida.embarcacaoNome, id: saida._id.toString(), portoEstadia: saida.saidaPortoSaida.toString() }
             }
             
 

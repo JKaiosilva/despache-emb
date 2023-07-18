@@ -71,7 +71,7 @@ router.get('/admin/painel', Admin, async (req, res) => {
                     medidaRio.data = medida_ladario;
                 });
         }).catch((err)=> {
-            if (err.code === 'ENOTFOUND') {
+            if (err) {
                 console.log('Erro de conexão com a API OpenWeatherMap');
                 medidaRio.data = null;
             } else {

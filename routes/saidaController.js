@@ -354,9 +354,14 @@ router.get('/admin/saidasValidate/:id', Admin, async (req, res) => {
         const avisoSaidas = await AvisoSaida.findOne({ _id: req.params.id }).lean()
         const tripulantesValid = []
         for await (var saida of avisoSaidas.saidaTripulantes){
-            const tripulante = await Tripulante.findOne({_id: saida.id}).lean()
-            tripulante.funcao = saida.saidaTripulanteFuncao
-            tripulantesValid.push(tripulante)
+            const tripulante = await Tripulante.findOne({_id: saida.id}).lean().catch((err) => {
+                if(err){
+                    throw err
+                }
+                tripulante.funcao = saida.saidaTripulanteFuncao
+                tripulantesValid.push(tripulante)
+            })
+
         }                
         const portoSaida = await Porto.findOne({ _id: avisoSaidas.saidaPortoSaida }).lean().catch((err) => {
             if(err){
