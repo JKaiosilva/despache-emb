@@ -19,8 +19,6 @@ fetch('/portoInfo')
         porto.position.z = parseInt(portos.positionZ) * -2.5;
         porto.position.y = 25;
 
-
-        
         porto.material = textura_pontos;
 
       porto.actionManager = new BABYLON.ActionManager(scene);
