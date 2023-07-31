@@ -1,0 +1,18 @@
+<br>
+<h2 class="text-center mb-4">Solicitar Correção de documento</h2>
+<div class="card">
+    <div class="card-body">
+        <form class="row gx-3 gy-2 align-items-center" action="addCorrecao" method="POST">
+            <input type="hidden" name="usuarioID" value="%= req.user._id %">
+            <h6 calss="text-center">Informe os campos que devem ser alterados detalhadamente</h6>
+            <div class="input-group">
+
+            </div>
+                <div class="input-group">
+                    <label class="input-group-text"></label>
+                    <input name="correcaoConteudo" class="form-control" type="text">
+                </div>
+            <button type="submit" class="btn btn-success" required>Enviar</button>
+        </form>
+    </div>
+</div>

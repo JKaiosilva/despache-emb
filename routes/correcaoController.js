@@ -42,18 +42,23 @@ const bcrypt = require('bcryptjs')
 //-----     Rota para visualização de solicitação de correção       ----//
 
 
-router.get('/correcao', eUser, async(req, res) => {
+router.post('/addCorrecao', eUser, async(req, res) => {
     try{
-        const usuarioAgencia = req.user.agencia
-        const despachos = await Despacho.find({agencia: usuarioAgencia}).lean()
-        const avisoSaidas = await AvisoSaida.find({agencia: usuarioAgencia}).lean()
-        const avisoEntradas = await AvisoEntrada.find({agencia: usuarioAgencia}).lean()
-
-        res.render()
+        const novaCorrecao = {
+            usuarioID: req.user._id,
+            documentoReferente: req.body.documentId,
+            conteudo: req.body.conteudoCorrecao,
+            dataPedido: Date.now(),
+            revisado: false
+        }
+        new Correcao(novaCorrecao).save()
+        req.flash('success_msg', 'Correção enviado com sucesso')
+        res.redirect('/formulario')
     }catch(err){
-
+        console.log(err)
+        req.flash('error_msg', `Erro ao enviar formulário de Despacho (${err})`)
+        res.redirect('/formulario')
     }
 })
-
 
 module.exports = router

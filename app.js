@@ -39,6 +39,7 @@ const tripulanteController = require('./routes/tripulanteController')
 const userController = require('./routes/userController')
 const comboioController = require('./routes/comboioController')
 const relatorioController = require('./routes/relatorioController')
+const correcaoController = require('./routes/correcaoController')
 
 
 
@@ -121,6 +122,7 @@ const relatorioController = require('./routes/relatorioController')
         app.use(userController)
         app.use(comboioController)
         app.use(relatorioController)
+        app.use(correcaoController)
 
 
 // Conectar com Db

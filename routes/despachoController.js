@@ -10,6 +10,7 @@ require('../models/Tripulante')
 require('../models/Porto');
 require('../models/Relatorio');
 require('../models/Comboio')
+require('../models/Correcao')
 
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
@@ -21,6 +22,7 @@ const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
 const Relatorio = mongoose.model('relatorios')
 const Comboio = mongoose.model('comboios')
+const Correcao = mongoose.model('correcoes')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
@@ -216,8 +218,8 @@ router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
         });        
         const avisoEntradas = await AvisoEntrada.find({entradaDespacho: despachos._id}).lean()
         const avisoSaidas = await AvisoSaida.find({saidaDespacho: despachos._id}).lean()
+        const correcoes = await Correcao.find({documentoReferente: despachos._id}).lean()
 
-        console.log(tripulantes)
             res.render('formulario/despachos/despachoVizu',
                 {
                     despachos: despachos,
@@ -225,6 +227,7 @@ router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
                     portos: portos,
                     avisoEntradas: avisoEntradas,
                     avisoSaidas: avisoSaidas,
+                    correcoes: correcoes,
                     hidden: hidden
                 })
     }catch(err){

@@ -6,13 +6,16 @@ const Correcao = new Schema({
         type: String
     },
     documentoReferente: {
-        type: Schema.Types.Mixed
+        type: Schema.Types.ObjectId
     },
     conteudo: {
         type: String
     },
     dataPedido: {
         default: []
+    },
+    revisado: {
+        type: Boolean
     }
 })
 
