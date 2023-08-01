@@ -10,6 +10,7 @@ require('../models/Tripulante')
 require('../models/Porto');
 require('../models/Relatorio');
 require('../models/Comboio')
+require('../models/Correcao')
 
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
@@ -21,6 +22,7 @@ const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
 const Relatorio = mongoose.model('relatorios')
 const Comboio = mongoose.model('comboios')
+const Correcao = mongoose.model('correcoes')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
@@ -221,11 +223,20 @@ router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
         }
         const avisoEntradas = await AvisoEntrada.findOne({ _id: req.params.id }).lean()
         const tripulantes = []
-        for await (var entrada of avisoEntradas.entradaTripulantes){
-            const tripulante = await Tripulante.findOne({_id: entrada.id}).lean()
-            tripulante.funcao = entrada.entradaTripulanteFuncao
-            tripulantes.push(tripulante)
+        
+            for await (var entrada of avisoEntradas.entradaTripulantes){
+                try{
+                    const tripulante = await Tripulante.findOne({_id: entrada.id}).lean()
+                    if(tripulante){
+                        tripulante.funcao = entrada.entradaTripulanteFuncao
+                        tripulantes.push(tripulante)
+                    }
+                }catch(err){
+                    console.log(err)
+                }
+
         }
+    
         const embarcacoes = await Embarcacao.findOne({ _id: avisoEntradas.embarcacao }).lean()
         const portoChegada = await Porto.findOne({ _id: avisoEntradas.entradaPortoChegada}).lean().catch((err) => {
                 if(err){
@@ -244,6 +255,8 @@ router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
         })
         const despacho = await Despacho.findOne({ _id: avisoEntradas.entradaDespacho }).lean()
         const comboios = await Comboio.findOne({ _id: avisoEntradas.entradaComboios }).lean()
+        const correcoes = await Correcao.find({documentoReferente: avisoEntradas._id}).lean()
+
             res.render('formulario/entradas/avisoEntradaVizu', 
                 {
                     avisoEntradas: avisoEntradas,
@@ -254,6 +267,7 @@ router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
                     portoChegada: portoChegada,
                     portoOrigem: portoOrigem,
                     portoDestino: portoDestino,
+                    correcoes: correcoes,
                     hidden: hidden
                 })
     } catch (err) {
@@ -332,9 +346,15 @@ router.get('/admin/entradasValidate/:id', Admin, async (req, res) => {
         const avisoEntradas = await AvisoEntrada.findOne({ _id: req.params.id }).lean()
         const tripulantesValid = []
         for await (var entrada of avisoEntradas.entradaTripulantes){
-            const tripulante = await Tripulante.findOne({_id: entrada.id}).lean()
-            tripulante.funcao = entrada.entradaTripulanteFuncao
-            tripulantesValid.push(tripulante)
+            try{
+                const tripulante = await Tripulante.findOne({_id: entrada.id}).lean()
+                if(tripulante){
+                    tripulante.funcao = entrada.entradaTripulanteFuncao
+                    tripulantesValid.push(tripulante)
+                }
+            }catch(err){
+
+            }
         }
         const embarcacoesValid = await Embarcacao.findOne({ _id: avisoEntradas.embarcacao }).lean()
         const portoChegada = await Porto.findOne({ _id: avisoEntradas.entradaPortoChegada}).lean().catch((err) => {
@@ -360,6 +380,8 @@ router.get('/admin/entradasValidate/:id', Admin, async (req, res) => {
         const portos = await Porto.find().lean()
         const despachos = await Despacho.find().lean()
         const comboios = await Comboio.find().lean()
+        const correcoes = await Correcao.find({documentoReferente: avisoEntradas._id}).lean()
+
             res.render('admin/entradas/avisoEntradaValidate', 
                 {
                     avisoEntradas: avisoEntradas,
@@ -374,7 +396,8 @@ router.get('/admin/entradasValidate/:id', Admin, async (req, res) => {
                     embarcacoes: embarcacoes,
                     portos: portos,
                     despachos: despachos,
-                    comboios: comboios
+                    comboios: comboios,
+                    correcoes: correcoes
                 })
     } catch (err) {
         console.log(err)

@@ -324,12 +324,15 @@ router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
             }
           }
         const tripulantes = await Tripulante.find().lean();
+        const correcoes = await Correcao.find({documentoReferente: despachos._id}).lean()
+
             res.render('admin/despachos/despachoValidate', {
                 despachos: despachos,
                 portos: portos,
                 portoDespacho: portoDespacho,
                 tripDespacho: tripDespacho,
                 tripulantes: tripulantes,
+                correcoes: correcoes
 
             })
     }catch(err){

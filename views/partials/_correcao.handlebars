@@ -8,36 +8,27 @@
                 <label for="floatingTextarea2">Informe o conteúdo para ser corrigido.</label>
             </div>
             <br>
-            <button type="submit" class="btn btn-success" required>Solicitar</button>
+            <div>
+                <button type="submit" class="btn btn-success" required>Solicitar</button>
+            </div>
         </form>
     </div>
 </div>
 <br>
 {{#each correcoes}}
+<br>
 <div class="card">
     <div class="card-body">
         <form>
-            <h4 class="text-center">Correcao Solicitada</h4>
+            <h4 class="text-center">Correção Solicitada em {{dataPedido}}</h4>
             <div class="form-floating">
-                <input type="text" class="form-control" id="floatingTextarea2" style="height: 100px" value="{{conteudo}}">
+                <input type="text" class="form-control" id="floatingTextarea2" style="height: 100px" value="{{conteudo}}" disabled>
                 <label for="floatingTextarea2"></label>
             </div>
             <br>
         </form>
     </div>
 </div>
+<br>
 {{else}}
-<h1>ta dando erro</h1>
 {{/each}}
-
-{{!-- <script>
-
-    document.addEventListener("keydown", function(e) {
-  if(e.keyCode === 13) {
-        
-    e.preventDefault();
-      
-  }
-});
-
-</script> --}}

@@ -208,7 +208,7 @@ router.get('/admin/users/usuariosEdit/:id', Admin, async (req, res) => {
 //----    Rota para postagem de edição de Usuário   ----//
 
 
-router.post('/admin/users/usuarioEdit', Admin, async(req, res) => {
+router.post('/admin/users/usuarioEdit', eAgencia, async(req, res) => {
     try{
         const id = req.body.id
         const usuario = await Usuario.find({ _id: id }).lean();
@@ -280,7 +280,7 @@ router.post('/users/usuarioEdit', eAgencia, async(req, res) => {
 
         if (!usuario) {
           req.flash('error_msg', 'Usuário não encontrado.');
-          return res.redirect('/formulario');
+          return res.redirect('/');
         }
 
         bcrypt.genSalt(10, (err, salt)  =>  {
@@ -301,11 +301,11 @@ router.post('/users/usuarioEdit', eAgencia, async(req, res) => {
         })
 
         req.flash('success_msg', 'Usuario editado com sucesso')
-        res.redirect('/formulario')
+        res.redirect('/')
     }catch(err){
         console.log(err)
         req.flash('error_msg', `Erro ao editar Usuário (${err})`)
-        res.redirect('/formulario')
+        res.redirect('/')
     }
 })
 

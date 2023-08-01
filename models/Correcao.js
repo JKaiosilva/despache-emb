@@ -11,8 +11,11 @@ const Correcao = new Schema({
     conteudo: {
         type: String
     },
+    data:{
+        
+    },
     dataPedido: {
-        default: []
+        
     },
     revisado: {
         type: Boolean

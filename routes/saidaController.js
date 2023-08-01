@@ -10,6 +10,7 @@ require('../models/Tripulante')
 require('../models/Porto');
 require('../models/Relatorio');
 require('../models/Comboio')
+require('../models/Correcao')
 
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
@@ -21,6 +22,7 @@ const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
 const Relatorio = mongoose.model('relatorios')
 const Comboio = mongoose.model('comboios')
+const Correcao = mongoose.model('correcoes')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
@@ -267,6 +269,7 @@ router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
         })
 
         const despacho = await Despacho.findOne({ _id: avisoSaidas.saidaDespacho }).lean()
+        const correcoes = await Correcao.find({documentoReferente: avisoSaidas._id}).lean()
             res.render('formulario/saidas/avisoSaidaVizu',
                 {
                     avisoSaidas: avisoSaidas,
@@ -276,6 +279,7 @@ router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
                     portoDestino: portoDestino,
                     passageiros: passageiros,
                     comboios: comboios,
+                    correcoes: correcoes,
                     hidden: hidden
                 })
     } catch (err) {
@@ -378,6 +382,8 @@ router.get('/admin/saidasValidate/:id', Admin, async (req, res) => {
         const tripulantes = await Tripulante.find().lean()
         const portos = await Porto.find().lean()
         const despachos = await Despacho.find().lean()
+        const correcoes = await Correcao.find({documentoReferente: avisoSaidas._id}).lean()
+
             res.render('admin/saidas/avisoSaidaValidate',
                 {
                     avisoSaidas: avisoSaidas,
@@ -388,6 +394,7 @@ router.get('/admin/saidasValidate/:id', Admin, async (req, res) => {
                     tripulantes: tripulantes,
                     portos: portos,
                     despachos: despachos,
+                    correcoes: correcoes
                 })
     } catch (err) {
         console.log(err)

@@ -48,7 +48,8 @@ router.post('/addCorrecao', eUser, async(req, res) => {
             usuarioID: req.user._id,
             documentoReferente: req.body.documentId,
             conteudo: req.body.conteudoCorrecao,
-            dataPedido: Date.now(),
+            data: Date.now(),
+            dataPedido: moment(Date.now()).format('DD/MM/YYYY'),
             revisado: false
         }
         new Correcao(novaCorrecao).save()
