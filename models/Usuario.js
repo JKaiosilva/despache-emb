@@ -17,6 +17,12 @@ const Usuario = new Schema({
     eAdmin: {
         type: Number,
     },
+    oficial:{
+        type: Number
+    },
+    operador: {
+        type: Number
+    },
     eAgencia: {
         type: Number
     },

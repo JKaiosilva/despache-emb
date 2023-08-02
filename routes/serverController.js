@@ -24,6 +24,7 @@ const Comboio = mongoose.model('comboios')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
+const {eOperador} = require('../helpers/eOperador')
 
 const moment = require('moment')
 const fs = require('fs')
@@ -79,14 +80,19 @@ router.get('/admin/painel', Admin, async (req, res) => {
             }
         })
 
-        admHidden = 'hidden'
+        operadorHidden = ''
+        oficialHidden = ''
         if(req.user.oficial == 1){
-            admHidden = ''
+            oficialHidden = 'hidden'
+        }
+        if(req.user.operador == 1){
+            operadorHidden = 'hidden'
         }
 
         const dataHoje = moment(Date.now()).format('DD/MM/YYYY HH:mm');
 
-        var adms = await Usuario.find({eAdmin: 1}).count()
+        var oficiais = await Usuario.find({oficial: 1}).count()
+        var operadores = await Usuario.find({operador: 1}).count()
         var avisos = await Aviso.find().count();
         var usuarios = await Usuario.find({eAgencia: 1}).count();
         var despachos = await Despacho.find().count();
@@ -109,8 +115,10 @@ router.get('/admin/painel', Admin, async (req, res) => {
                 tempo: tempo,
                 medidaRio: medidaRio,
                 dataHoje: dataHoje,
-                adms: adms,
-                admHidden: admHidden
+                operadorHidden: operadorHidden,
+                oficialHidden: oficialHidden,
+                oficiais: oficiais,
+                operadores: operadores
             });
     } catch (err) {
         console.log(err);
@@ -315,14 +323,17 @@ router.get('/edFluvial', async(req, res) => {
 })
 
 
-router.get('/teste', async (req, res) => {
+//----  Rota de testes      ----//
+
+router.get('/testeAPI', async (req, res) => {
     try{
-        res.render('teste')
+        const avisos = await Aviso.find().lean()
+        res.json(avisos)
     }catch(err){
-        req.flash('error_msg', `Erro ao mostrar página de Educação Fluvial (${err})`)
-        res.redirect('/')
+
     }
 })
+
 
 
 module.exports = router

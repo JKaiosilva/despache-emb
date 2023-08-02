@@ -24,7 +24,7 @@ const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
 const { eAgencia } = require('../helpers/eAgencia')
 const { eOficial } = require('../helpers/eOficial')
-
+const { eOperador } = require('../helpers/eOperador')
 
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
@@ -306,6 +306,174 @@ router.post('/users/usuarioEdit', eAgencia, async(req, res) => {
         console.log(err)
         req.flash('error_msg', `Erro ao editar Usuário (${err})`)
         res.redirect('/')
+    }
+})
+
+
+//----      Rota de visualização de formulario de oficial       ----//
+
+
+router.get('/admin/addOficial', Admin, async(req, res) => {
+    try{
+        res.render('admin/users/addOficial')
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', `Erro ao mostrar página de adição de Oficial: (${err})`)
+        res.redirect('/admin/painel')
+    }
+})
+
+
+//----      Rota para adicionar Agencia
+
+
+router.post('/admin/users/addOficial', (req, res) => {
+    var erros = []
+
+    if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
+        erros.push({texto: 'Nome inválido'})
+    }if(!req.body.email || typeof req.body.email == undefined || req.body.email == null) {
+        erros.push({texto: 'Email inválido'})
+    }if(!req.body.CPF || typeof req.body.CPF == undefined || req.body.CPF == null || req.body.CPF.length < 11) {
+        erros.push({texto: 'CPF inválido'})
+    }if(!req.body.senha || typeof req.body.senha == undefined || req.body.senha == null) {
+        erros.push({texto: "Senha inválida"})
+    }if(req.body.senha.length < 6) {
+        erros.push({texto: 'Senha muito curta'})
+    }if(req.body.senha != req.body.senha2) { 
+        erros.push({texto: 'Senhas diferentes'})
+    }if(erros.length > 0) {
+        res.render('usuarios/cadastro', {erros: erros})
+    }else {
+        Usuario.findOne({email: req.body.email}).then((usuario) => {
+            if(usuario) {
+                req.flash('error_msg', 'Email já cadastrado')
+                res.redirect('/usuarios/cadastroUser')
+            }else{
+                const novoUsuario = new Usuario({
+                    nome: req.body.nome,
+                    email:req.body.email,
+                    CPF: req.body.CPF,
+                    eAdmin: 0,
+                    oficial: 1,
+                    operador: 0,
+                    eAgencia: 0,
+                    proprietario: req.body.proprietario,
+                    sociosProprietarios: req.body.sociosProprietarios,
+                    eUser: 0,
+                    senha: req.body.senha,
+                    dataCadastro: Date.now(),
+                    usuarioMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+                })
+
+                bcrypt.genSalt(10, (erro, salt) => {
+                    bcrypt.hash(novoUsuario.senha, salt, (erro, hash) => {
+                        if(erro) {
+                            console.log(erro)
+                            req.flash('error_msg', 'Houve um erro ao salvar usuario')
+                            res.redirect('/usuarios/cadastro')
+                        }
+                        novoUsuario.senha = hash
+                        novoUsuario.save().then(() => {
+                            req.flash('success_msg', 'Usuario criado com sucesso')
+                            res.redirect('/usuarios/login')
+                        }).catch((err) => {
+                            console.log(err)
+                            req.flash('error_msg', 'Houve um erro ao salvar usuario')
+                            res.redirect('/usuarios/cadastro')
+                        })
+                    })
+                })
+            }
+        }).catch((err) => {
+            console.log(err)
+            req.flash('error_msg', `Erro ao cadastrar usuário (${err})`)
+            res.redirect('/')
+        })
+    }
+})
+
+
+//----      Rota de visualização de formulario de operador       ----//
+
+
+router.get('/admin/addOperador', eOficial, async(req, res) => {
+    try{
+        res.render('admin/users/addOperador')
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', `Erro ao mostrar página de adição de Operador: (${err})`)
+        res.redirect('/admin/painel')
+    }
+})
+
+
+//----      Rota para adicionar operador        ----//
+
+
+router.post('/admin/users/addOperador', (req, res) => {
+    var erros = []
+
+    if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
+        erros.push({texto: 'Nome inválido'})
+    }if(!req.body.email || typeof req.body.email == undefined || req.body.email == null) {
+        erros.push({texto: 'Email inválido'})
+    }if(!req.body.CPF || typeof req.body.CPF == undefined || req.body.CPF == null || req.body.CPF.length < 11) {
+        erros.push({texto: 'CPF inválido'})
+    }if(!req.body.senha || typeof req.body.senha == undefined || req.body.senha == null) {
+        erros.push({texto: "Senha inválida"})
+    }if(req.body.senha.length < 6) {
+        erros.push({texto: 'Senha muito curta'})
+    }if(req.body.senha != req.body.senha2) { 
+        erros.push({texto: 'Senhas diferentes'})
+    }if(erros.length > 0) {
+        res.render('usuarios/cadastro', {erros: erros})
+    }else {
+        Usuario.findOne({email: req.body.email}).then((usuario) => {
+            if(usuario) {
+                req.flash('error_msg', 'Email já cadastrado')
+                res.redirect('/usuarios/cadastroUser')
+            }else{
+                const novoUsuario = new Usuario({
+                    nome: req.body.nome,
+                    email:req.body.email,
+                    CPF: req.body.CPF,
+                    eAdmin: 0,
+                    oficial: 0,
+                    operador: 1,
+                    eAgencia: 0,
+                    proprietario: req.body.proprietario,
+                    sociosProprietarios: req.body.sociosProprietarios,
+                    eUser: 0,
+                    senha: req.body.senha,
+                    dataCadastro: Date.now(),
+                    usuarioMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+                })
+
+                bcrypt.genSalt(10, (erro, salt) => {
+                    bcrypt.hash(novoUsuario.senha, salt, (erro, hash) => {
+                        if(erro) {
+                            console.log(erro)
+                            req.flash('error_msg', 'Houve um erro ao salvar usuario')
+                            res.redirect('/usuarios/cadastro')
+                        }
+                        novoUsuario.senha = hash
+                        novoUsuario.save().then(() => {
+                            req.flash('success_msg', 'Usuario criado com sucesso')
+                            res.redirect('/usuarios/login')
+                        }).catch((err) => {
+                            console.log(err)
+                            req.flash('error_msg', 'Houve um erro ao salvar usuario')
+                            res.redirect('/usuarios/cadastro')
+                        })
+                    })
+                })
+            }
+        }).catch((err) => {
+            console.log(err)
+            req.flash('error_msg', `Erro ao cadastrar usuário (${err})`)
+            res.redirect('/')
+        })
     }
 })
 
