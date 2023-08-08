@@ -158,7 +158,10 @@ const AvisoEntrada = new Schema ({
     },
     entradaNovo: {
         type: Boolean
-    }
+    },
+    entradaNaoEditado: {
+        type: Number
+    },
 })
 
 mongoose.model('avisoEntradas', AvisoEntrada)

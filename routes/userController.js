@@ -188,7 +188,7 @@ router.post('/usuarios/login', async (req, res, next) => {
 //----    Rota para formulário de edição de Usuário    ----//
 
 
-router.get('/admin/users/usuariosEdit/:id', Admin, async (req, res) => {
+router.get('/admin/users/usuariosEdit/:id', eOperador, async (req, res) => {
     try{
         const usuario = await Usuario.findOne({_id: req.params.id}).lean()
         const agencias = await Usuario.find({eAgencia: 1}).lean()
@@ -327,7 +327,7 @@ router.get('/admin/addOficial', Admin, async(req, res) => {
 //----      Rota para adicionar Agencia
 
 
-router.post('/admin/users/addOficial', (req, res) => {
+router.post('/admin/users/addOficial', Admin, (req, res) => {
     var erros = []
 
     if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
@@ -411,7 +411,7 @@ router.get('/admin/addOperador', eOficial, async(req, res) => {
 //----      Rota para adicionar operador        ----//
 
 
-router.post('/admin/users/addOperador', (req, res) => {
+router.post('/admin/users/addOperador', eOficial, (req, res) => {
     var erros = []
 
     if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
@@ -481,7 +481,7 @@ router.post('/admin/users/addOperador', (req, res) => {
 //----      Rota de visualização de formulario de Agencia       ----//
 
 
-router.get('/admin/addAgencia', Admin, async(req, res) => {
+router.get('/admin/addAgencia', eOperador, async(req, res) => {
     try{
         res.render('admin/users/addAgencia')
     }catch(err){
@@ -495,7 +495,7 @@ router.get('/admin/addAgencia', Admin, async(req, res) => {
 //----      Rota para adicionar Agencia
 
 
-router.post('/admin/users/addAgencia', (req, res) => {
+router.post('/admin/users/addAgencia', eOperador, (req, res) => {
     var erros = []
 
     if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
@@ -561,10 +561,10 @@ router.post('/admin/users/addAgencia', (req, res) => {
 
 
 
-//----    Rota de listagem de Usuários    ----//
+//----    Rota de listagem de Agencias    ----//
 
 
-router.get('/admin/listaUsers', Admin, async (req, res) => {
+router.get('/admin/listaUsers', eOperador, async (req, res) => {
     try{
         const usuarios = await Usuario.find({eAgencia: 1}).limit(5).lean().sort({ nome: 'asc' })
             res.render('admin/users/users', 
@@ -578,10 +578,10 @@ router.get('/admin/listaUsers', Admin, async (req, res) => {
 })
 
 
-//----    Rota de paginação de Usuários     ----//
+//----    Rota de paginação de Agencias     ----//
 
 
-router.get('/admin/listaUsers/:page', Admin, async (req, res) => {
+router.get('/admin/listaUsers/:page', eOperador, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
@@ -644,87 +644,6 @@ router.get('/usuarios/perfil', eUser, async (req, res) => {
     }catch(err){
         req.flash('error_msg', `Erro ao mostrar perfil de Usuário (${err})`)
         res.redirect('/')
-    }
-})
-
-
-//----      Rota de formulário Adm      ----//
-
-
-router.get('/admin/addAdmin', async(req, res) => {
-    try{
-        res.render('admin/cadastro/addAdmin')
-    }catch(err){
-        req.flash('error_msg', `Erro ao mostrar formulário de cadastro (${err})`)
-        res.redirect('painel')
-    }
-})
-
-
-
-//----      Rota para adicionar administrador     ----//
-
-
-router.post('/admin/users/addAdm', (req, res) => {
-    var erros = []
-
-    if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
-        erros.push({texto: 'Nome inválido'})
-    }if(!req.body.email || typeof req.body.email == undefined || req.body.email == null) {
-        erros.push({texto: 'Email inválido'})
-    }if(!req.body.CPF || typeof req.body.CPF == undefined || req.body.CPF == null || req.body.CPF.length < 11) {
-        erros.push({texto: 'CPF inválido'})
-    }if(!req.body.senha || typeof req.body.senha == undefined || req.body.senha == null) {
-        erros.push({texto: "Senha inválida"})
-    }if(req.body.senha.length < 6) {
-        erros.push({texto: 'Senha muito curta'})
-    }if(req.body.senha != req.body.senha2) { 
-        erros.push({texto: 'Senhas diferentes'})
-    }if(erros.length > 0) {
-        res.render('painel', {erros: erros})
-    }else {
-        Usuario.findOne({email: req.body.email}).then((usuario) => {
-            if(usuario) {
-                req.flash('error_msg', 'Email já cadastrado')
-                res.redirect('/admin/painel')
-            }else{
-                const novoUsuario = new Usuario({
-                    nome: req.body.nome,
-                    email:req.body.email,
-                    CPF: req.body.CPF,
-                    oficial: req.body.oficial,
-                    eAdmin: req.body.eAdmin,
-                    eAgencia: 0,
-                    eUser: 0,
-                    senha: req.body.senha,
-                    dataCadastro: Date.now(),
-                    usuarioMesAnoAtual: moment(Date.now()).format('MM/YYYY')
-                })
-
-                bcrypt.genSalt(10, (erro, salt) => {
-                    bcrypt.hash(novoUsuario.senha, salt, (erro, hash) => {
-                        if(erro) {
-                            console.log(erro)
-                            req.flash('error_msg', 'Houve um erro ao salvar usuario')
-                            res.redirect('/admin/painel')
-                        }
-                        novoUsuario.senha = hash
-                        novoUsuario.save().then(() => {
-                            req.flash('success_msg', 'Usuario criado com sucesso')
-                            res.redirect('/admin/painel')
-                        }).catch((err) => {
-                            console.log(err)
-                            req.flash('error_msg', 'Houve um erro ao salvar usuario')
-                            res.redirect('/admin/painel')
-                        })
-                    })
-                })
-            }
-        }).catch((err) => {
-            console.log(err)
-            req.flash('error_msg', `Erro ao cadastrar usuário (${err})`)
-            res.redirect('painel')
-        })
     }
 })
 

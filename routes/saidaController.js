@@ -26,6 +26,7 @@ const Correcao = mongoose.model('correcoes')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
+const { eOperador } = require('../helpers/eOperador')
 
 const moment = require('moment')
 const fs = require('fs')
@@ -209,7 +210,8 @@ router.post('/formulario/avisoSaida', eUser, async (req, res) => {
             saidaComboios: comboioEmbarcacoes,
             saidaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
             saidaData: Date.now(),
-            saidaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+            saidaMesAnoAtual: moment(Date.now()).format('MM/YYYY'),
+            saidaNaoEditado: 1,
         }
         new AvisoSaida(novoAvisoSaida).save()
         req.flash('success_msg', 'Aviso de saida enviado com sucesso')
@@ -267,9 +269,15 @@ router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
         avisoSaidas.saidaComboios.forEach((el) => {
             comboios.push(el)
         })
-
+ 
         const despacho = await Despacho.findOne({ _id: avisoSaidas.saidaDespacho }).lean()
         const correcoes = await Correcao.find({documentoReferente: avisoSaidas._id}).lean()
+
+        if(avisoSaidas.saidaNaoEditado != 1 && despacho.despachoDataValidadeNumber >= Date.now()){
+            editado = 'Validado'
+          }else{
+            editado = 'Não validado'
+          }
             res.render('formulario/saidas/avisoSaidaVizu',
                 {
                     avisoSaidas: avisoSaidas,
@@ -280,6 +288,7 @@ router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
                     passageiros: passageiros,
                     comboios: comboios,
                     correcoes: correcoes,
+                    editado: editado,
                     hidden: hidden
                 })
     } catch (err) {
@@ -353,7 +362,7 @@ router.get('/saidas/:page', eUser, async (req, res) => {
 //----    Rota para formulário de edição de Saída    ----//
 
 
-router.get('/admin/saidasValidate/:id', Admin, async (req, res) => {
+router.get('/admin/saidasValidate/:id', eOperador, async (req, res) => {
     try {
         const avisoSaidas = await AvisoSaida.findOne({ _id: req.params.id }).lean()
         const tripulantesValid = []
@@ -407,7 +416,7 @@ router.get('/admin/saidasValidate/:id', Admin, async (req, res) => {
 //----    Rota para postagem de formulário de Saída   ----//
 
 
-router.post('/admin/saidasValidate', Admin, async (req, res) => {
+router.post('/admin/saidasValidate', eOperador, async (req, res) => {
     try {
         const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
         const saidaTripulantes = cleanString.split(',');
@@ -531,6 +540,7 @@ router.post('/admin/saidasValidate', Admin, async (req, res) => {
             saidaTripulantes: saidaTripulantesArray,
             saidaPassageiros: saidaPassageiros,
             saidaComboios: comboioEmbarcacoes,
+            saidaNaoEditado: 0,
 
         })
         req.flash('success_msg', 'Aviso de saida enviado com sucesso')
@@ -546,7 +556,7 @@ router.post('/admin/saidasValidate', Admin, async (req, res) => {
 //----    Rota para listagem de Saídas(user)    ----//
 
 
-router.get('/admin/saidas', Admin, (req, res) => {
+router.get('/admin/saidas', eOperador, (req, res) => {
     AvisoSaida.find().limit(5).lean().sort({ saidaData: 'desc' }).then((avisoSaidas) => {
         res.render('admin/saidas/saidas', 
             { 
@@ -562,7 +572,7 @@ router.get('/admin/saidas', Admin, (req, res) => {
 //----    Rota para paginação de Saídas     ----//
 
 
-router.get('/admin/saidasPage/:page', Admin, async (req, res) => {
+router.get('/admin/saidasPage/:page', eOperador, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
@@ -599,7 +609,7 @@ router.get('/admin/saidasPage/:page', Admin, async (req, res) => {
 //----    Rota para formular PDF de Saída   ----//
 
 
-router.get('/avisoSaida/:id/pdf', Admin, async (req, res) => {
+router.get('/avisoSaida/:id/pdf', eOperador, async (req, res) => {
     try {
         const avisoSaidas = await AvisoSaida.findById(req.params.id).lean()
         const embarcacoes = await Embarcacao.findOne({ _id: avisoSaidas.embarcacao }).lean()

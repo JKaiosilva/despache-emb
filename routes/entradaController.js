@@ -26,6 +26,7 @@ const Correcao = mongoose.model('correcoes')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
+const { eOperador } = require('../helpers/eOperador')
 
 const moment = require('moment')
 const fs = require('fs')
@@ -198,7 +199,8 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
             entradaComboios: comboioEmbarcacoes,
             entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
             entradaData: Date.now(),
-            entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+            entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY'),
+            entradaNaoEditado: 1,
         }
         new AvisoEntrada(novoAvisoEntrada).save()
         req.flash('success_msg', 'Aviso de entrada enviado com sucesso')
@@ -253,10 +255,16 @@ router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
                 return {portoNome: avisoEntradas.entradaOutroPortoDestino}
             }
         })
+  
         const despacho = await Despacho.findOne({ _id: avisoEntradas.entradaDespacho }).lean()
         const comboios = await Comboio.findOne({ _id: avisoEntradas.entradaComboios }).lean()
         const correcoes = await Correcao.find({documentoReferente: avisoEntradas._id}).lean()
 
+        if(avisoEntradas.entradaNaoEditado != 1 && despacho.despachoDataValidadeNumber >= Date.now()){
+            editado = 'Validado'
+          }else{
+            editado = 'Não validado'
+          }  
             res.render('formulario/entradas/avisoEntradaVizu', 
                 {
                     avisoEntradas: avisoEntradas,
@@ -268,6 +276,7 @@ router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
                     portoOrigem: portoOrigem,
                     portoDestino: portoDestino,
                     correcoes: correcoes,
+                    editado: editado,
                     hidden: hidden
                 })
     } catch (err) {
@@ -341,7 +350,7 @@ router.get('/entradas/:page', eUser, async (req, res) => {
 //----    Rota para validação de formulário de validação de Entrada    ----//
 
 
-router.get('/admin/entradasValidate/:id', Admin, async (req, res) => {
+router.get('/admin/entradasValidate/:id', eOperador, async (req, res) => {
     try {
         const avisoEntradas = await AvisoEntrada.findOne({ _id: req.params.id }).lean()
         const tripulantesValid = []
@@ -410,7 +419,7 @@ router.get('/admin/entradasValidate/:id', Admin, async (req, res) => {
 //----    Rota para postagem de validação de Entrada   ----//
 
 
-router.post('/admin/entradasValidate', Admin, async (req, res) => {
+router.post('/admin/entradasValidate', eOperador, async (req, res) => {
     try {
         const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
         const entradaTripulantes = cleanString.split(',');
@@ -539,7 +548,8 @@ router.post('/admin/entradasValidate', Admin, async (req, res) => {
             entradaComboios: comboioEmbarcacoes,
             entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
             entradaData: Date.now(),
-            entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+            entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY'),
+            entradaNaoEditado: 0,
 
         })
         req.flash('success_msg', 'Aviso de entrada validado com sucesso')
@@ -555,7 +565,7 @@ router.post('/admin/entradasValidate', Admin, async (req, res) => {
 //----    Rota de listagem de Entradas(admin)    ----//
 
 
-router.get('/admin/entradas', Admin, async (req, res) => {
+router.get('/admin/entradas', eOperador, async (req, res) => {
     try{
         const avisoEntradas = await AvisoEntrada.find().limit(5).lean().sort({ entradaData: 'desc' })
             res.render('admin/entradas/entradas', 
@@ -572,7 +582,7 @@ router.get('/admin/entradas', Admin, async (req, res) => {
 //----    Rota de paginação de Entradas(admin)     ----//
 
 
-router.get('/admin/entradasPage/:page', Admin, async (req, res) => {
+router.get('/admin/entradasPage/:page', eOperador, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
@@ -609,7 +619,7 @@ router.get('/admin/entradasPage/:page', Admin, async (req, res) => {
 //----   Rota de formulação de PDF da Entrada   ----//
 
 
-router.get('/avisoEntrada/:id/pdf', Admin, async (req, res) => {
+router.get('/avisoEntrada/:id/pdf', eOperador, async (req, res) => {
     try {
         const avisoEntradas = await AvisoEntrada.findById(req.params.id).lean()
         const embarcacoes = await Embarcacao.findOne({ _id: avisoEntradas.embarcacao }).lean()

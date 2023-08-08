@@ -23,6 +23,7 @@ const Relatorio = mongoose.model('relatorios')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
+const { eOperador } = require('../helpers/eOperador')
 
 const moment = require('moment')
 const fs = require('fs')
@@ -52,7 +53,7 @@ const upload = multer({
 //----  Rota para formulario de adição de aviso    ----//
 
 
-router.get('/admin/addaviso', Admin, async (req, res) => {
+router.get('/admin/addaviso', eOperador, async (req, res) => {
     try{
         res.render('admin/avisos/addaviso')
     } catch(err){
@@ -65,7 +66,7 @@ router.get('/admin/addaviso', Admin, async (req, res) => {
 //----  Rota para postar aviso   ----//
 
 
-router.post('/admin/avisos/novo', upload.single('foto'), async (req, res) => {
+router.post('/admin/avisos/novo', eOperador, upload.single('foto'), async (req, res) => {
     try {
         const novoAviso = {
             titulo: req.body.titulo,
@@ -99,7 +100,7 @@ router.post('/admin/avisos/novo', upload.single('foto'), async (req, res) => {
 //----  Rota para deletar aviso   ----//
 
 
-router.post('/admin/avisos/deletar', Admin, (req, res) => {
+router.post('/admin/avisos/deletar', eOperador, (req, res) => {
     Aviso.deleteOne({ _id: req.body.id }).then(() => {
         req.flash('success_msg', 'Aviso deletado com sucesso!')
         res.redirect('/admin/avisos')
@@ -113,7 +114,7 @@ router.post('/admin/avisos/deletar', Admin, (req, res) => {
 //----  Rota de listagem de avisos    ----//
 
 
-router.get('/admin/avisos', Admin, async (req, res) => {
+router.get('/admin/avisos', eOperador, async (req, res) => {
     try {
         const avisos = await Aviso.find().limit(5).lean().sort({ avisoData: 'desc' })
         res.render('admin/avisos/avisos', { 
@@ -129,7 +130,7 @@ router.get('/admin/avisos', Admin, async (req, res) => {
 //----  Rota de paginação de avisos    ----//
 
 
-router.get('/admin/avisos/:page', Admin, async (req, res) => {
+router.get('/admin/avisos/:page', eOperador, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;

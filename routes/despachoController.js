@@ -26,6 +26,7 @@ const Correcao = mongoose.model('correcoes')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
+const { eOperador } = require('../helpers/eOperador')
 
 const moment = require('moment')
 const fs = require('fs')
@@ -173,6 +174,7 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
         despachoData: Date.now(),
         depachoMesAnoAtual: moment(Date.now()).format('MM/YYYY'),
         despachoDataValidadeNumber: 0,
+        despachoNaoEditado: 1
 
     }
     new Despacho(novoDespacho).save()
@@ -215,7 +217,12 @@ router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
             if(err){
                 return {portoNome: despachos.despachoOutroPortoEstadia}
             }
-        });        
+        });
+        if(despachos.despachoNaoEditado != 1 && despachos.despachoDataValidadeNumber >= Date.now()){
+            editado = 'Validado'
+          }else{
+            editado = 'Não validado'
+          }        
         const avisoEntradas = await AvisoEntrada.find({entradaDespacho: despachos._id}).lean()
         const avisoSaidas = await AvisoSaida.find({saidaDespacho: despachos._id}).lean()
         const correcoes = await Correcao.find({documentoReferente: despachos._id}).lean()
@@ -228,7 +235,8 @@ router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
                     avisoEntradas: avisoEntradas,
                     avisoSaidas: avisoSaidas,
                     correcoes: correcoes,
-                    hidden: hidden
+                    hidden: hidden,
+                    editado: editado
                 })
     }catch(err){
         console.log(err)
@@ -301,7 +309,7 @@ router.get('/despachos/:page', eUser, async (req, res) => {
 //----  Rota para formulário de validação de Despacho    ----//
 
 
-router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
+router.get('/admin/despachosValidate/:id', eOperador, async(req, res) => {
     try{
         const despachos = await Despacho.findOne({_id: req.params.id}).lean();
         const portos = await Porto.find().lean();
@@ -323,6 +331,13 @@ router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
               console.error(err);
             }
           }
+
+          if(despachos.despachoNaoEditado == 1){
+            editado = 'Não Validado'
+          }else{
+            editado = 'Validado'
+          }
+
         const tripulantes = await Tripulante.find().lean();
         const correcoes = await Correcao.find({documentoReferente: despachos._id}).lean()
 
@@ -332,7 +347,8 @@ router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
                 portoDespacho: portoDespacho,
                 tripDespacho: tripDespacho,
                 tripulantes: tripulantes,
-                correcoes: correcoes
+                correcoes: correcoes,
+                editado: editado
 
             })
     }catch(err){
@@ -346,7 +362,7 @@ router.get('/admin/despachosValidate/:id', Admin, async(req, res) => {
 //----  Rota para postagem de validação do Despacho   ----//
 
 
-router.post('/admin/despachoValidate', Admin, async(req, res) => {
+router.post('/admin/despachoValidate', eOperador, async(req, res) => {
     try{
         const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
         const despachoTripulantes = cleanString.split(',');
@@ -414,7 +430,8 @@ router.post('/admin/despachoValidate', Admin, async(req, res) => {
              despachoDataSolicitada: req.body.despachoDataSolicitada,
              despachoDataValidade: req.body.despachoDataValidade,
              despachoDataValidadeNumber: Date.parse(req.body.despachoDataValidade),
-             despachoValidade: Date.parse(req.body.despachoDataValidade)
+             despachoValidade: Date.parse(req.body.despachoDataValidade),
+             despachoNaoEditado: 0
          })
          req.flash('success_msg', 'Despacho Validade com sucesso!')
          res.redirect('/admin/painel')
@@ -429,7 +446,7 @@ router.post('/admin/despachoValidate', Admin, async(req, res) => {
 //----  Rota de listagem de Despacho(admin)    ----//
 
 
-router.get('/admin/despachos', Admin, (req, res) => {
+router.get('/admin/despachos', eOperador, (req, res) => {
     Despacho.find().limit(5).lean().sort({ despachoData: 'desc' }).then((despachos) => {
         res.render('admin/despachos/listaDespacho', 
         { 
@@ -445,7 +462,7 @@ router.get('/admin/despachos', Admin, (req, res) => {
 //----  Rota de paginação de Despacho(admin)     ----//
 
 
-router.get('/admin/despachos/:page', Admin, async (req, res) => {
+router.get('/admin/despachos/:page', eOperador, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
@@ -482,7 +499,7 @@ router.get('/admin/despachos/:page', Admin, async (req, res) => {
 //---- Rota de formulação de PDF do Despacho   ----//
 
 
-router.get('/despacho/:id/pdf', Admin, async (req, res) => {
+router.get('/despacho/:id/pdf', eOperador, async (req, res) => {
     try{
         const despachos = await Despacho.findById(req.params.id).lean()
         const tripulantes = await Tripulante.find({_id: despachos.despachoTripulantes}).lean()

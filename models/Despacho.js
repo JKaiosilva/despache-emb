@@ -149,9 +149,10 @@ const Despacho = new Schema ({
         type: String,
         default: []
     },
-    despachoNovo: {
-        type: Boolean
-    }
+    despachoNaoEditado: {
+        type: Number
+    },
+    
 
 })
 

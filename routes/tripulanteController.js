@@ -22,6 +22,7 @@ const Relatorio = mongoose.model('relatorios')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
+const { eOperador } = require('../helpers/eOperador')
 
 const moment = require('moment')
 const fs = require('fs')
@@ -37,7 +38,7 @@ const bcrypt = require('bcryptjs')
 //----  Rota para formulário de cadastro de Tripulante    ----//
 
 
-router.get('/admin/addTripulante', Admin, async (req, res) => {
+router.get('/admin/addTripulante', eOperador, async (req, res) => {
     try{
         res.render('admin/tripulantes/addTripulante')
     }catch(err){
@@ -50,7 +51,7 @@ router.get('/admin/addTripulante', Admin, async (req, res) => {
 //----  Rota de postagem de Tripulante   ----//
 
 
-router.post('/admin/addTripulante', Admin, async (req, res) => {
+router.post('/admin/addTripulante', eOperador, async (req, res) => {
     try {
         const novoTripulante = {
             usuarioID: req.user._id,
@@ -77,7 +78,7 @@ router.post('/admin/addTripulante', Admin, async (req, res) => {
 //----  Rota de visualização de Tripulante   ----//
 
 
-router.get('/admin/tripulantesVizu/:id', Admin, async(req, res) => {
+router.get('/admin/tripulantesVizu/:id', eOperador, async(req, res) => {
     try{
         const tripulantes = await Tripulante.findOne({_id: req.params.id}).lean()
             res.render('admin/tripulantes/tripulantesVizu', 
@@ -94,7 +95,7 @@ router.get('/admin/tripulantesVizu/:id', Admin, async(req, res) => {
 //----    Rota de formulário de edição de Tripulante    ----//
 
 
-router.get('/admin/tripulantesEdit/:id', Admin, async(req, res) => {
+router.get('/admin/tripulantesEdit/:id', eOperador, async(req, res) => {
     try{
         const tripulante = await Tripulante.findOne({_id: req.params.id}).lean()
             res.render('admin/tripulantes/tripulantesEdit', 
@@ -111,7 +112,7 @@ router.get('/admin/tripulantesEdit/:id', Admin, async(req, res) => {
 //----  Rota de postagem para edição de Tripulante   ----//
 
 
-router.post('/admin/tripulantesEdit', Admin, async(req, res) => {
+router.post('/admin/tripulantesEdit', eOperador, async(req, res) => {
     try{
         await Tripulante.updateOne({_id: req.body.id}, {
             tripulanteNome: req.body.tripulanteNome,
@@ -133,7 +134,7 @@ router.post('/admin/tripulantesEdit', Admin, async(req, res) => {
 //----    Rota de listagem de Tripulantes    ----//
 
 
-router.get('/admin/tripulantes', Admin, async (req, res) => {
+router.get('/admin/tripulantes', eOperador, async (req, res) => {
     try {
         const tripulantes = await Tripulante.find().lean().sort({ tripulanteNome: 'asc' })
             res.render('admin/tripulantes/tripulantes',
@@ -150,7 +151,7 @@ router.get('/admin/tripulantes', Admin, async (req, res) => {
 //----    Rota de paginação de Tripulantes     ----//
 
 
-router.get('/admin/tripulantes/:page', Admin, async(req, res) => {
+router.get('/admin/tripulantes/:page', eOperador, async(req, res) => {
 
     const page = req.params.page || 1;
     const limit = 5;
@@ -188,7 +189,7 @@ router.get('/admin/tripulantes/:page', Admin, async(req, res) => {
 //----    Rota de formulação de PDF de Tripulante   ----//
 
 
-router.get('/tripulantes/:id/pdf', Admin, async (req, res) => {
+router.get('/tripulantes/:id/pdf', eOperador, async (req, res) => {
     try{
         const tripulantes = await Tripulante.findOne({_id: req.params.id}).lean()
 

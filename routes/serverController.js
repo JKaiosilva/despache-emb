@@ -24,7 +24,7 @@ const Comboio = mongoose.model('comboios')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
-const {eOperador} = require('../helpers/eOperador')
+const { eOperador } = require('../helpers/eOperador')
 
 const moment = require('moment')
 const fs = require('fs')
@@ -40,7 +40,7 @@ const bcrypt = require('bcryptjs')
 //----    Rota do Painel admin     ----//
 
 
-router.get('/admin/painel', Admin, async (req, res) => {
+router.get('/admin/painel', eOperador, async (req, res) => {
     try {
         const API_KEY = process.env.API_KEY
 
@@ -211,7 +211,7 @@ router.get('/aviso/:id', async(req, res) => {
 //----    Rota do painel de Formulários do usuário    ----//
 
 
-router.get('/formulario', async (req, res) => {
+router.get('/formulario', eUser, async (req, res) => {
     try{
 
         const despachante = req.user.eUser

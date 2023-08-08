@@ -22,6 +22,7 @@ const Relatorio = mongoose.model('relatorios')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
+const { eOperador } = require('../helpers/eOperador')
 
 const moment = require('moment')
 const fs = require('fs')
@@ -37,7 +38,7 @@ const bcrypt = require('bcryptjs')
 //----    Rota para formular Porto    ----//
 
 
-router.get('/admin/addPorto', Admin, async (req, res) => {
+router.get('/admin/addPorto', eOperador, async (req, res) => {
     try {
         res.render('admin/portos/addPorto')
     } catch (err) {
@@ -50,7 +51,7 @@ router.get('/admin/addPorto', Admin, async (req, res) => {
 //----    Rota para postagem de Porto   ----//
 
 
-router.post('/admin/addPorto', Admin, async (req, res) => {
+router.post('/admin/addPorto', eOperador, async (req, res) => {
     try {
         const novoPorto = {
             usuarioID: req.user._id,
@@ -71,7 +72,7 @@ router.post('/admin/addPorto', Admin, async (req, res) => {
 //----    Rota de visualização de Porto   ----//
 
 
-router.get('/admin/portoVizu/:id', Admin, async(req, res) => {
+router.get('/admin/portoVizu/:id', eOperador, async(req, res) => {
     try{
         const dataHoje = moment(Date.now()).format('YYYY-MM-DD')
         const portos = await Porto.findOne({_id: req.params.id}).lean()
@@ -96,7 +97,7 @@ router.get('/admin/portoVizu/:id', Admin, async(req, res) => {
 //----    Rota de formulário para edição de Porto    ----//
 
 
-router.get('/admin/portoEdit/:id', Admin, async(req, res) => {
+router.get('/admin/portoEdit/:id', eOperador, async(req, res) => {
     try{
         const portos = await Porto.findOne({_id: req.params.id}).lean()
             res.render('admin/portos/portoEdit', 
@@ -114,7 +115,7 @@ router.get('/admin/portoEdit/:id', Admin, async(req, res) => {
 //----    Rota de postagem de edição do Porto   ----//
 
 
-router.post('/admin/portoEdit', Admin, async(req, res) => {
+router.post('/admin/portoEdit', eOperador, async(req, res) => {
     try{
         await Porto.updateOne({_id: req.body.id}, {
             portoNome: req.body.portoNome,
@@ -134,7 +135,7 @@ router.post('/admin/portoEdit', Admin, async(req, res) => {
 //----    Rota de listagem de Porto(admin)    ----//
 
 
-router.get('/admin/portos', Admin, async (req, res) => {
+router.get('/admin/portos', eOperador, async (req, res) => {
     try {
         const portos = await Porto.find().limit(5).lean().sort({ portoNome: 'asc' })
             res.render('admin/portos/portos',
@@ -151,7 +152,7 @@ router.get('/admin/portos', Admin, async (req, res) => {
 //----    Rota para paginação de Porto(admin)   ----//
 
 
-router.get('/admin/portos/:page', Admin, async (req, res) => {
+router.get('/admin/portos/:page', eOperador, async (req, res) => {
     try{
         const page = req.params.page || 1;
         const limit = 5;
@@ -191,7 +192,7 @@ router.get('/admin/portos/:page', Admin, async (req, res) => {
 //----    Rota para infos usadas no modelo 3d(BABYLONJS no Painel admin)   ----//
 
 
-router.get('/portoInfo', Admin, async (req, res) => {
+router.get('/portoInfo', eOperador, async (req, res) => {
     try {
         const dataHoje = moment(Date.now()).format('YYYY-MM-DD')
         const despachos = await Despacho.find({ depachoMesAnoAtual: dataHoje }).lean()

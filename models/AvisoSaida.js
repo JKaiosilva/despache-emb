@@ -144,7 +144,10 @@ const AvisoSaida = new Schema({
     },
     saidaNovo: {
         type: Boolean
-    }
+    },
+    saidaNaoEditado: {
+        type: Number
+    },
 
 })
 

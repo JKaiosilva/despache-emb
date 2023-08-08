@@ -24,6 +24,7 @@ const Comboio = mongoose.model('comboios')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
+const { eOperador } = require('../helpers/eOperador')
 
 const moment = require('moment')
 const fs = require('fs')
@@ -39,7 +40,7 @@ const bcrypt = require('bcryptjs')
 //----    Rota para gerar Relatório    ----//
 
 
-router.get('/admin/relatorioSaidas', Admin, async (req, res) => {
+router.get('/admin/relatorioSaidas', eOperador, async (req, res) => {
     try {
         const despachos = await Despacho.find().lean();
         const avisoEntradas = await AvisoEntrada.find().lean();
@@ -526,7 +527,7 @@ router.get('/admin/relatorioSaidas', Admin, async (req, res) => {
 //----     Rota para lista de Relatórios      ----//
 
 
-router.get('/admin/relatorios', Admin, async (req, res) => {
+router.get('/admin/relatorios', eOperador, async (req, res) => {
     try{
         const relatorios = await Relatorio.find().lean().sort({mesAtual: 'asc'})
             res.render('admin/relatorios/relatorios', 
@@ -543,7 +544,7 @@ router.get('/admin/relatorios', Admin, async (req, res) => {
 //----    Rota para visualização de Relatório      ----//
 
 
-router.get('/admin/relatorios/:id', Admin, async (req, res) => {
+router.get('/admin/relatorios/:id', eOperador, async (req, res) => {
     try{
         const relatorios = await Relatorio.findOne({_id: req.params.id}).lean()
             res.render('admin/relatorios/relatoriosVizu', 
