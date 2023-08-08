@@ -253,7 +253,17 @@ router.get('/despachos', eUser, async (req, res) => {
 
     const admin = req.user.eAdmin ? true : false;
     try{
-        const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
+        const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'});
+
+        for await(const despacho of despachos){
+            if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
+                despacho.condicao = 1;
+            }else if(despacho.despachoNaoEditado == 1){
+                despacho.condicao = 2;
+            }else{
+                despacho.condicao = 3
+            }
+        }
             res.render('formulario/despachos/despachos', 
             {
                 despachos: despachos,
