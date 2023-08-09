@@ -346,6 +346,16 @@ router.get('/entradas/:page', eUser, async (req, res) => {
             previousPage = parseInt(page) - 1
         }
         const avisoEntradas = await AvisoEntrada.find({ usuarioID: req.user._id }).skip(skip).limit(limit).lean().sort({ entradaData: 'desc' })
+
+        for await(const avisoEntrada of avisoEntradas){
+            if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+                avisoEntrada.condicao = 1;
+            }else if(avisoEntrada.entradaNaoEditado == 1){
+                avisoEntrada.condicao = 2;
+            }else{
+                avisoEntrada.condicao = 3
+            }
+        }
             res.render('formulario/entradas/entradasPage',
                 {
                     avisoEntradas: avisoEntradas,
@@ -582,6 +592,17 @@ router.post('/admin/entradasValidate', eOperador, async (req, res) => {
 router.get('/admin/entradas', eOperador, async (req, res) => {
     try{
         const avisoEntradas = await AvisoEntrada.find().limit(5).lean().sort({ entradaData: 'desc' })
+        
+        for await(const avisoEntrada of avisoEntradas){
+            if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+                avisoEntrada.condicao = 1;
+            }else if(avisoEntrada.entradaNaoEditado == 1){
+                avisoEntrada.condicao = 2;
+            }else{
+                avisoEntrada.condicao = 3
+            }
+        }
+        
             res.render('admin/entradas/entradas', 
                 { 
                     avisoEntradas: avisoEntradas 
@@ -616,6 +637,16 @@ router.get('/admin/entradasPage/:page', eOperador, async (req, res) => {
             previousPage = parseInt(page) - 1
         }
         const avisoEntradas = await AvisoEntrada.find().skip(skip).limit(limit).lean().sort({ entradaData: 'desc' })
+        
+            for await(const avisoEntrada of avisoEntradas){
+                if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+                    avisoEntrada.condicao = 1;
+                }else if(avisoEntrada.entradaNaoEditado == 1){
+                    avisoEntrada.condicao = 2;
+                }else{
+                    avisoEntrada.condicao = 3
+                }
+            }
             res.render('admin/entradas/entradasPage',
                 {
                     avisoEntradas: avisoEntradas,

@@ -311,6 +311,16 @@ router.get('/saidas', eUser, async (req, res) => {
     const admin = req.user.eAdmin ? true : false;
     try {
         const avisoSaidas = await AvisoSaida.find({ usuarioID: req.user._id }).limit(5).lean().sort({ saidaData: 'desc' })
+        for await(const avisoSaida of avisoSaidas){
+            if(avisoSaida.saidaNaoEditado == 0 && avisoSaida.saidaDataValidadeNumber >= Date.now()){
+                avisoSaida.condicao = 1;
+            }else if(avisoSaida.saidaNaoEditado == 1){
+                avisoSaida.condicao = 2;
+            }else{
+                avisoSaida.condicao = 3
+            }
+        }
+        
             res.render('formulario/saidas/saidas',
                 {
                     avisoSaidas: avisoSaidas,
@@ -348,6 +358,17 @@ router.get('/saidas/:page', eUser, async (req, res) => {
             previousPage = parseInt(page) - 1
         }
         const avisoSaidas = await AvisoSaida.find({ usuarioID: req.user._id }).skip(skip).limit(limit).lean().sort({ saidaData: 'desc' })
+        
+        for await(const avisoSaida of avisoSaidas){
+            if(avisoSaida.saidaNaoEditado == 0 && avisoSaida.saidaDataValidadeNumber >= Date.now()){
+                avisoSaida.condicao = 1;
+            }else if(avisoSaida.saidaNaoEditado == 1){
+                avisoSaida.condicao = 2;
+            }else{
+                avisoSaida.condicao = 3
+            }
+        }
+        
             res.render('formulario/saidas/saidasPage',
                 {
                     avisoSaidas: avisoSaidas,
@@ -561,16 +582,26 @@ router.post('/admin/saidasValidate', eOperador, async (req, res) => {
 //----    Rota para listagem de Saídas(user)    ----//
 
 
-router.get('/admin/saidas', eOperador, (req, res) => {
-    AvisoSaida.find().limit(5).lean().sort({ saidaData: 'desc' }).then((avisoSaidas) => {
+router.get('/admin/saidas', eOperador, async (req, res) => {
+    try {
+    const avisoSaidas = await AvisoSaida.find().limit(5).lean().sort({ saidaData: 'desc' })
+        for await(const avisoSaida of avisoSaidas){
+            if(avisoSaida.saidaNaoEditado == 0 && avisoSaida.saidaDataValidadeNumber >= Date.now()){
+                avisoSaida.condicao = 1;
+            }else if(avisoSaida.saidaNaoEditado == 1){
+                avisoSaida.condicao = 2;
+            }else{
+                avisoSaida.condicao = 3
+            }
+        }
         res.render('admin/saidas/saidas', 
             { 
                 avisoSaidas: avisoSaidas 
             })
-    }).catch((err) => {
+    }catch(err){
         req.flash('error_msg', `Erro ao listar Avisos de Saída (${err})`)
         res.redirect('/admin/painel')
-    })
+    }
 })
 
 
@@ -597,6 +628,15 @@ router.get('/admin/saidasPage/:page', eOperador, async (req, res) => {
             previousPage = parseInt(page) - 1
         }
         const avisoSaidas = await AvisoSaida.find().skip(skip).limit(limit).lean().sort({ saidaData: 'desc' })
+            for await(const avisoSaida of avisoSaidas){
+                if(avisoSaida.saidaNaoEditado == 0 && avisoSaida.saidaDataValidadeNumber >= Date.now()){
+                    avisoSaida.condicao = 1;
+                }else if(avisoSaida.saidaNaoEditado == 1){
+                    avisoSaida.condicao = 2;
+                }else{
+                    avisoSaida.condicao = 3
+                }
+            }
             res.render('admin/saidas/saidasPage',
                 {
                     avisoSaidas: avisoSaidas,
