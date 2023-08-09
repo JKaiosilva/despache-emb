@@ -156,6 +156,7 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
             }
         }
 
+        const despacho = await Despacho.findOne({_id: req.body.entradaDespacho}).lean()
 
         const agencia = await Usuario.findOne({_id: req.user.agencia}).lean()
 
@@ -200,6 +201,7 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
             entradaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
             entradaData: Date.now(),
             entradaMesAnoAtual: moment(Date.now()).format('MM/YYYY'),
+            entradaDataValidadeNumber: despacho.despachoDataValidadeNumber,
             entradaNaoEditado: 1,
         }
         new AvisoEntrada(novoAvisoEntrada).save()
@@ -260,6 +262,8 @@ router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
         const comboios = await Comboio.findOne({ _id: avisoEntradas.entradaComboios }).lean()
         const correcoes = await Correcao.find({documentoReferente: avisoEntradas._id}).lean()
 
+        avisoEntradas.entradaDataValidadeNumber = moment(parseInt(avisoEntradas.entradaDataValidadeNumber)).format('DD/MM/YYYY')
+
         if(avisoEntradas.entradaNaoEditado != 1 && despacho.despachoDataValidadeNumber >= Date.now()){
             editado = 'Validado'
           }else{
@@ -291,11 +295,21 @@ router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
 
 
 router.get('/entradas', eUser, async (req, res) => {
-
-    const admin = req.user.eAdmin ? true : false;
     try {
+        const admin = req.user.eAdmin ? true : false;
+
         const avisoEntradas = await AvisoEntrada.find({ usuarioID: req.user._id }).limit(5).lean().sort({ entradaData: 'desc' })
-            res.render('formulario/entradas/entradas',
+        for await(const avisoEntrada of avisoEntradas){
+            if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+                avisoEntrada.condicao = 1;
+            }else if(avisoEntrada.entradaNaoEditado == 1){
+                avisoEntrada.condicao = 2;
+            }else{
+                avisoEntrada.condicao = 3
+            }
+        }
+        
+        res.render('formulario/entradas/entradas',
                 {
                     avisoEntradas: avisoEntradas,
                     admin: admin

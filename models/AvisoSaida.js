@@ -145,6 +145,9 @@ const AvisoSaida = new Schema({
     saidaNovo: {
         type: Boolean
     },
+    saidaDataValidadeNumber: {
+        type: String
+    },
     saidaNaoEditado: {
         type: Number
     },

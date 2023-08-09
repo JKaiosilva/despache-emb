@@ -174,6 +174,7 @@ router.post('/formulario/avisoSaida', eUser, async (req, res) => {
             }
         }
 
+        const despacho = await Despacho.findOne({_id: req.body.saidaDespacho}).lean()
         const agencia = await Usuario.findOne({_id: req.user.agencia}).lean()
 
         const novoAvisoSaida = {
@@ -211,6 +212,7 @@ router.post('/formulario/avisoSaida', eUser, async (req, res) => {
             saidaDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
             saidaData: Date.now(),
             saidaMesAnoAtual: moment(Date.now()).format('MM/YYYY'),
+            saidaDataValidadeNumber: despacho.despachoDataValidadeNumber,
             saidaNaoEditado: 1,
         }
         new AvisoSaida(novoAvisoSaida).save()
@@ -278,6 +280,8 @@ router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
           }else{
             editado = 'Não validado'
           }
+
+          avisoSaidas.saidaDataValidadeNumber = moment(parseInt(avisoSaidas.saidaDataValidadeNumber)).format('DD/MM/YYYY')
             res.render('formulario/saidas/avisoSaidaVizu',
                 {
                     avisoSaidas: avisoSaidas,
@@ -508,7 +512,8 @@ router.post('/admin/saidasValidate', eOperador, async (req, res) => {
             }
         }
 
-        const somaPassageiros = saidaPassageiros.length
+        const somaPassageiros = saidaPassageiros.length;
+
 
 
         await AvisoSaida.updateOne({ _id: req.body.id }, {

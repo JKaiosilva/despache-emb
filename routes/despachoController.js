@@ -301,7 +301,17 @@ router.get('/despachos/:page', eUser, async (req, res) => {
                 previousPage = parseInt(page) - 1
             }
             const despachos = await Despacho.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({despachoData: 'desc'})
-                res.render('formulario/despachos/despachosPage', 
+            for await(const despacho of despachos){
+                if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
+                    despacho.condicao = 1;
+                }else if(despacho.despachoNaoEditado == 1){
+                    despacho.condicao = 2;
+                }else{
+                    despacho.condicao = 3
+                }
+            }
+            
+            res.render('formulario/despachos/despachosPage', 
                 {
                     despachos: despachos,
                     nextPage: nextPage,
@@ -456,16 +466,26 @@ router.post('/admin/despachoValidate', eOperador, async(req, res) => {
 //----  Rota de listagem de Despacho(admin)    ----//
 
 
-router.get('/admin/despachos', eOperador, (req, res) => {
-    Despacho.find().limit(5).lean().sort({ despachoData: 'desc' }).then((despachos) => {
+router.get('/admin/despachos', eOperador, async (req, res) => {
+   try{
+    const despachos = await Despacho.find().limit(5).lean().sort({ despachoData: 'desc' })
+        for await(const despacho of despachos){
+            if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
+                despacho.condicao = 1;
+            }else if(despacho.despachoNaoEditado == 1){
+                despacho.condicao = 2;
+            }else{
+                despacho.condicao = 3
+            }
+        }
         res.render('admin/despachos/listaDespacho', 
         { 
             despachos: despachos 
         })
-    }).catch((err) => {
+    }catch(err){
         req.flash('error_msg', `Erro ao listar Despachos (${err})`)
         res.redirect('/admin/painel')
-    })
+    }
 })
 
 
@@ -492,6 +512,15 @@ router.get('/admin/despachos/:page', eOperador, async (req, res) => {
             previousPage = parseInt(page) - 1
         }
         const despachos = await Despacho.find().skip(skip).limit(limit).lean().sort({ despachoData: 'desc' })
+        for await(const despacho of despachos){
+            if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
+                despacho.condicao = 1;
+            }else if(despacho.despachoNaoEditado == 1){
+                despacho.condicao = 2;
+            }else{
+                despacho.condicao = 3
+            }
+        }
         res.render('admin/despachos/despachosPage',
             {
                 despachos: despachos,

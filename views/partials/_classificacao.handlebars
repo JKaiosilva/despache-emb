@@ -1,11 +1,13 @@
-<script>
-    function confere(condicao){
+    <script>
+        condicao = '{{condicao}}'
+        id = '{{_id}}'
+
         if(condicao == 1){
-
+            const pegar = document.getElementById(id).setAttribute('class', 'card mt-4 bg-success bg-opacity-50')
         }else if(condicao == 2){
-
+            const pegar = document.getElementById(id).setAttribute('class', 'card mt-4 bg-warning bg-opacity-50')
         }else{
-            
+            const pegar = document.getElementById(id).setAttribute('class', 'card mt-4 bg-danger bg-opacity-50')
         }
-    }
+    
 </script>

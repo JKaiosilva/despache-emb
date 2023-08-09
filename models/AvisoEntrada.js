@@ -159,6 +159,9 @@ const AvisoEntrada = new Schema ({
     entradaNovo: {
         type: Boolean
     },
+    entradaDataValidadeNumber: {
+        type: String
+    },
     entradaNaoEditado: {
         type: Number
     },

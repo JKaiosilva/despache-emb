@@ -17,19 +17,6 @@
             </div>
         </div>
     </div>
-    <script>
-            horaLocal = Date.now()
-            dezHoras = 36000000
-            segundos = 20000
-
-            if(horaLocal > {{despachoData}} + dezHoras) {
-                const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-danger bg-opacity-60')
-            }else if(horaLocal > {{despachoData}} + segundos) {
-                const pegar = document.getElementById('{{_id}}').setAttribute('class', 'card mt-4 bg-warning bg-opacity-60')
-            } else {
-
-            }
-</script>
 {{else}}
 <h6>Nenhum despaho</h6>
 {{/each}}
