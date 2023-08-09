@@ -11,6 +11,8 @@ require('../models/Porto');
 require('../models/Relatorio');
 require('../models/Embarcacao')
 
+require('../models/bin/avisoBin');
+
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
 const AvisoEntrada = mongoose.model('avisoEntradas')
@@ -20,6 +22,8 @@ const Embarcacao = mongoose.model('embarcacoes')
 const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
 const Relatorio = mongoose.model('relatorios')
+
+const AvisoBin = mongoose.model('avisosBin');
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
@@ -100,14 +104,19 @@ router.post('/admin/avisos/novo', eOperador, upload.single('foto'), async (req, 
 //----  Rota para deletar aviso   ----//
 
 
-router.post('/admin/avisos/deletar', eOperador, (req, res) => {
-    Aviso.deleteOne({ _id: req.body.id }).then(() => {
-        req.flash('success_msg', 'Aviso deletado com sucesso!')
+router.post('/admin/avisos/deletar', eOperador, async(req, res) => {
+    try{
+        const id = req.body.id;
+        const aviso = await Aviso.findOne({_id: id}).lean();
+        new AvisoBin(aviso).save();
+        const deletarAviso = await Aviso.deleteOne({_id: id});
+            req.flash('success_msg', 'Aviso Deletado com sucesso!');
+            res.redirect('/admin/avisos');
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', `Erro ao deletar aviso (${err})`)
         res.redirect('/admin/avisos')
-    }).catch((err) => {
-        req.flash('error_msg', `Erro ao excluir aviso (${err})`)
-        res.redirect('/admin/avisos')
-    })
+    }
 })
 
 
