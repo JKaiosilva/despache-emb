@@ -1,0 +1,82 @@
+
+<div>
+    <div id="socios">
+        <script>
+            var divCounter = 0
+                function addsocios(divName) {
+                var newdiv = document.createElement('div');
+                var divId = "div" + divCounter
+                newdiv.setAttribute('id', divId)
+                newdiv.innerHTML += '<button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divId + '\')">Excluir</button>'
+                newdiv.innerHTML += '<label class="input-group-text">Nome</label>'
+                newdiv.innerHTML += '<input name="socioNome" class="form-control" type="text">'
+                document.getElementById(divName).appendChild(newdiv);
+                document.getElementById('selecaoSocios').setAttribute('class', 'bg')
+                var submiteButton = document.getElementById('submitButton')
+                submiteButton.disabled = true
+                divCounter++;
+                document.getElementById('selecaoSocios').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
+                }
+
+                function deleteBranco(divId){
+                    sociosNome = []
+                    var emBranco = document.getElementById(divId)
+                    emBranco.remove()
+                    document.getElementById('selecaoSocios').setAttribute('class', 'bg')
+                    var submiteButton = document.getElementById('submitButton')
+                    submiteButton.disabled = true
+                    document.getElementById('selecaoSocios').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
+                }
+
+                addsocios('lines');
+
+                function getSocios(){
+                
+                var submiteButton = document.getElementById('submitButton')
+                submiteButton.disabled = false
+
+                var sociosNomeArray = []
+                
+
+                var sociosNome = document.querySelectorAll("[name='socioNome']")
+
+
+                            for (var i = 0; i < sociosNome.length; i++) {
+                                if(sociosNome[i].value == 'emBranco'){
+                                    var submiteButton = document.getElementById('submitButton')
+                                    submiteButton.disabled = true
+                                    
+                                }
+                        sociosNomeArray.push(sociosNome[i].value)
+
+                    }
+                    document.getElementById('sociosInput').setAttribute('value', `${sociosNomeArray}`)
+
+                if(sociosNomeArray.length == 0 ){
+                    var submiteButton = document.getElementById('submitButton')
+                    submiteButton.disabled = true
+                    document.getElementById('selecaoSocios').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
+                }
+                if(sociosNomeArray.find(el => el == 'emBranco')){
+                    document.getElementById('selecaoSocios').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
+                }else{
+                    document.getElementById('selecaoSocios').setAttribute('class', 'form-control bg-success bg-opacity-50 border-success')
+                }
+            
+                
+            }
+            function deleteSocio(id){
+                var submiteButton = document.getElementById('submitButton')
+                submiteButton.disabled = true
+                sociosNome = []
+                document.getElementById(id).remove()
+                document.getElementById('selecaoSocios').setAttribute('class', 'bg')
+                document.getElementById('selecaoSocios').setAttribute('class', 'form-control bg-danger bg-opacity-50 border-danger')
+            }     
+        </script>
+    </div>
+    <button class="btn btn-primary mb-4" type="button" onclick="addsocios('socios')">Adicionar sócio</button>
+    <button class="btn btn-success" type="button" onclick="getSocios()" style="float: right">Fechar Relação</button>
+    <input name="documentSociosNome" value="" id="sociosInput" hidden>
+
+</div>

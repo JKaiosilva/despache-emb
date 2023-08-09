@@ -496,6 +496,9 @@ router.get('/admin/addAgencia', eOperador, async(req, res) => {
 
 
 router.post('/admin/users/addAgencia', eOperador, (req, res) => {
+    const clearSocios = req.body.documentSociosNome.replace(/[\n' \[\]]/g, '');
+    const socioNome = clearSocios.split(',');
+    
     var erros = []
 
     if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
@@ -525,7 +528,7 @@ router.post('/admin/users/addAgencia', eOperador, (req, res) => {
                     eAdmin: 0,
                     eAgencia: 1,
                     proprietario: req.body.proprietario,
-                    sociosProprietarios: req.body.sociosProprietarios,
+                    sociosProprietarios: socioNome,
                     eUser: 0,
                     senha: req.body.senha,
                     dataCadastro: Date.now(),
@@ -560,6 +563,20 @@ router.post('/admin/users/addAgencia', eOperador, (req, res) => {
 })
 
 
+
+router.get('/admin/agenciaVizu/:id', eOperador, async(req, res) => {
+    try{
+        const agencia = await Usuario.findOne({_id: req.params.id}).lean()
+            res.render('admin/users/agenciaVizu', 
+            {
+                agencia: agencia
+            })
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', `Erro ao mostrar agencia (${err})`)
+        res.redirect('/painel')
+    }
+})
 
 //----    Rota de listagem de Agencias    ----//
 

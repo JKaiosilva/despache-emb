@@ -1,0 +1,34 @@
+
+<div class="card">
+    <div class="card-body">
+        <form>
+            <label for="nome">Nome </label>
+                <input type="text" value="{{agencia.nome}}" class="form-control" disabled>
+            <label for="email">Email: </label>
+                <input type="email" value="{{agencia.email}}" class="form-control" disabled>
+            <label>CNPJ: </label>
+                <input maxlength="14" type="text" value="{{agencia.CPF}}" class="form-control" disabled>
+            <br>
+            <br>
+                <div id="infosAgencia">
+                    <span>Informações Necessárias para conta de Agencia</span>
+                        <div class="input-group">
+                            <label class="input-group-text">Proprietário</label>
+                            <input class="form-control" value="{{agencia.proprietario}}" disabled>
+                        </div>
+                        <br>
+                        <div class="card">
+                            {{#each agencia.sociosProprietarios}}
+                                <div class="input-group">
+                                    <label class="input-group-text">Sócio</label>
+                                    <input class="form-control "value="{{this}}" disabled>
+                                </div>
+                            {{/each}}
+                        </div>
+                        <br>
+                </div>
+        </form>
+    </div>
+</div>
+    <br>
+<input class="btn btn-success" type="button" value="Voltar" style="float: left" onClick="history.go(-1)"> 

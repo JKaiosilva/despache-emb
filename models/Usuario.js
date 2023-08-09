@@ -32,9 +32,9 @@ const Usuario = new Schema({
     proprietario: {
         type: String
     },
-    sociosProprietarios: {
+    sociosProprietarios: [{
         type: String
-    },
+    }],
     periodoContrato: {
         type: String
     },

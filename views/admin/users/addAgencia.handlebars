@@ -15,20 +15,25 @@
                     <span>Informações Necessárias para conta de Agencia</span>
                         <div class="input-group">
                             <label class="input-group-text">Proprietário</label>
-                            <input class="form-control" value="{{usuário.proprietario}}">
+                            <input name="proprietario" class="form-control" value="{{usuário.proprietario}}">
                         </div>
                         <br>
-                        <div class="input-group">
-                            <label class="input-group-text">Sócios Proprietários</label>
-                            <input class="form-control" value="{{usuário.sociosProprietarios}}">
+                        <div class="card">
+                            <div id="selecaoSocios" class="input-group">
+                                <div class="container">
+                                    <h4 class="text-center">Lista de sócios proprietários</h4>
+                                    {{>_socios}}
+                                </div>
+                            </div>
                         </div>
+
                         <br>
                 </div>
                     <label type="senha">Senha: </label>
                         <input minlength="6" placeholder="A senha precisa ter no mínimo 6 dígitos" type="password" name="senha" class="form-control" required>
                     <label for="senha2">Repita sua senha: </label>
                         <input minlength="6" type="password" name="senha2" class="form-control" required>
-            <button type="submit" class="btn btn-success mt-4">Cadastrar</button>
+            <button type="submit" id="submitButton" class="btn btn-success mt-4" disabled>Cadastrar</button>
         </form>
     </div>
 </div>
