@@ -108,6 +108,8 @@ router.post('/admin/avisos/deletar', eOperador, async(req, res) => {
     try{
         const id = req.body.id;
         const aviso = await Aviso.findOne({_id: id}).lean();
+        aviso.deletadoPor = req.user._id;
+        aviso.deletadoEm = Date.now();
         new AvisoBin(aviso).save();
         const deletarAviso = await Aviso.deleteOne({_id: id});
             req.flash('success_msg', 'Aviso Deletado com sucesso!');

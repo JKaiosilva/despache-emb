@@ -10,7 +10,8 @@ require('../models/Tripulante')
 require('../models/Porto');
 require('../models/Relatorio');
 require('../models/Comboio')
-require('../models/Correcao')
+require('../models/Correcao');
+require('../models/bin/despachoBin')
 
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
@@ -22,7 +23,8 @@ const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
 const Relatorio = mongoose.model('relatorios')
 const Comboio = mongoose.model('comboios')
-const Correcao = mongoose.model('correcoes')
+const Correcao = mongoose.model('correcoes');
+const DespachoBin = mongoose.model('despachosBin');
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
@@ -533,6 +535,27 @@ router.get('/admin/despachos/:page', eOperador, async (req, res) => {
         res.redirect('/admin/painel')
     }
 })
+
+
+//----   Rota para deletar despacho     ----//
+
+
+router.post('/admin/despachos/deletar', eOperador, async(req, res) => {
+    try{
+        const id = req.body.id;
+        const despacho = await Despacho.findOne({_id: id}).lean();
+        despacho.deletadoPor = req.user._id;
+        despacho.deletadoEm = Date.now();
+        new DespachoBin(despacho).save();
+        const deletarDespacho = await Despacho.deleteOne({_id: id});
+            req.flash('success_msg', 'Despacho deletado com sucesso.');
+            res.redirect('/admin/despachos');
+    }catch(err){
+        req.flash('error_msg', `Erro ao paginar Despachos (${err})`)
+        res.redirect('/admin/despachos')
+    }
+})
+
 
 
 //---- Rota de formulação de PDF do Despacho   ----//

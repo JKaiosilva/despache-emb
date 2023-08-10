@@ -11,6 +11,7 @@ require('../models/Porto');
 require('../models/Relatorio');
 require('../models/Comboio')
 require('../models/Correcao')
+require('../models/bin/entradaBin');
 
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
@@ -23,6 +24,7 @@ const Porto = mongoose.model('portos')
 const Relatorio = mongoose.model('relatorios')
 const Comboio = mongoose.model('comboios')
 const Correcao = mongoose.model('correcoes')
+const AvisoEntradaBin = mongoose.model('avisoEntradasBin');
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
@@ -657,6 +659,29 @@ router.get('/admin/entradasPage/:page', eOperador, async (req, res) => {
     } catch (err) {
         req.flash('error_msg', `Erro ao paginar Avisos de Entrada (${err})`)
         res.redirect('/admin/painel')
+    }
+})
+
+
+//----  Rota para deletar Entrada       ----//
+
+
+router.post('/admin/entradas/deletar', eOperador, async(req, res) => {
+    try{
+        const id = req.body.id;
+        const avisoEntrada = await AvisoEntrada.findOne({_id: id}).lean();
+        avisoEntrada.deletadoPor = req.user._id;
+        avisoEntrada.deletadoEm = Date.now();
+        new AvisoEntradaBin(avisoEntrada).save()
+
+        const deletarAvisoEntrada = await AvisoEntrada.deleteOne({_id: id})
+
+        req.flash('success_msg', 'Aviso de entrada deletado com sucesso');
+        res.redirect('/admin/entradas');
+
+    }catch(err){
+        req.flash('error_msg', `Erro ao deletar Avisos de Entrada (${err})`)
+        res.redirect('/admin/entradas')
     }
 })
 

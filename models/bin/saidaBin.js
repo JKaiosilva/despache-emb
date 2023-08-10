@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
-const AvisoSaida = new Schema({
+const AvisoSaidaBin = new Schema({
     usuarioID: {
         type: String,
         default: {}
@@ -151,6 +151,12 @@ const AvisoSaida = new Schema({
     saidaNaoEditado: {
         type: Number
     },
+    deletadoPor: {
+
+    },
+    deletadoEm: {
+
+    }
 
 })
 

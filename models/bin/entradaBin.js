@@ -165,6 +165,12 @@ const AvisoEntradaBin = new Schema ({
     entradaNaoEditado: {
         type: Number
     },
+    deletadoPor: {
+
+    },
+    deletadoEm: {
+        
+    }
 })
 
 mongoose.model('avisoEntradasBin', AvisoEntradaBin)

@@ -152,7 +152,12 @@ const DespachoBin = new Schema ({
     despachoNaoEditado: {
         type: Number
     },
-    
+    deletadoPor:{
+
+    },
+    deletadoEm: {
+        
+    }
 
 })
 

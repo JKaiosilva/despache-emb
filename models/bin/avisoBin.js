@@ -24,6 +24,12 @@ const AvisoBin = new Schema({
     avisoMesAnoAtual: {
         type: String,
         default: []
+    },
+    deletadoPor: {
+        
+    },
+    deletadoEm: {
+        
     }
 })
 
