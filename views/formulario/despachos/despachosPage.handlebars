@@ -1,26 +1,6 @@
 <h4>Lista de Despachos</h4>
 <br>
-{{#each despachos}}
-
-    <div id="{{_id}}" class="card mt-4">
-        <div class="card-body">
-            <div>
-                <h6>Despacho: {{NprocessoDespacho}}</h6>
-                <p>Agencia: {{agenciaNome}}</label>
-                <p>Embarcação: {{embarcacaoNome}}</label>
-                <br>
-            </div>
-            <div class="">
-                <label class="mt-2">Data: {{despachoDataPedido}}</label>
-                <a class="btn btn-success float-end" href="/formulario/despachoVizu/{{_id}}">Visualizar</a>
-            </div>
-        </div>
-    </div>
-{{>_classificacao}}
-
-{{else}}
-<h6>Nenhum despaho</h6>
-{{/each}}
+{{>_despachoCard}}
 <br>
 <a href="/despachos/{{previousPage}}" class="btn btn-primary">Anterior</a>
 <a href="/despachos/{{nextPage}}" class="btn btn-primary" style="float: right" {{hidden}}>Próximo</a>
