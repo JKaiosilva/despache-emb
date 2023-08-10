@@ -13,6 +13,12 @@ const PortoBin = new Schema({
     },
     positionZ: {
         type: String
+    },
+    deletadoPor: {
+
+    },
+    deletadoEm: {
+        
     }
 })
 

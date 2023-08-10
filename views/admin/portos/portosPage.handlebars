@@ -8,7 +8,10 @@
             <label>info </label>
                 <a class="btn btn-primary" href="/admin/portoVizu/{{_id}}" style="float: right">Visualizar</a>
                 <a class="btn btn-warning mx-4" href="/admin/portoEdit/{{_id}}" style="float: right">Editar</a>
-
+            <form class="float-end" action="/admin/portos/deletar" method="POST">
+                <input type="hidden" name="id" value="{{_id}}">
+                <button type="submit" class="btn btn-danger">Deletar</button>
+            </form>
         </div>
     </div>
 {{else}}

@@ -9,6 +9,7 @@ require('../models/AvisoSaida')
 require('../models/Tripulante')
 require('../models/Porto');
 require('../models/Relatorio');
+require('../models/bin/portoBin');
 
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
@@ -18,7 +19,8 @@ const AvisoSaida = mongoose.model('avisoSaidas')
 const Embarcacao = mongoose.model('embarcacoes')
 const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
-const Relatorio = mongoose.model('relatorios')
+const Relatorio = mongoose.model('relatorios');
+const PortoBin = mongoose.model('portosBin')
 
 const { Admin } = require('../helpers/eAdmin')
 const { eUser } = require('../helpers/eUser')
@@ -185,6 +187,31 @@ router.get('/admin/portos/:page', eOperador, async (req, res) => {
         console.log(err)
         req.flash('error_msg', `Erro ao paginar Portos (${err})`)
         res.redirect('/admin/painel')
+    }
+})
+
+
+//----  Rota para deletar Porto     ----//
+
+
+router.post('/admin/portos/deletar', eOperador, async(req, res) => {
+    try{
+        const id = req.body.id;
+        const porto = await Porto.findOne({_id: id}).lean();
+        porto.deletadoPor = req.user._id;
+        porto.deletadoEm = Date.now();
+
+        new PortoBin(porto).save();
+
+        const deletarPorto = await Porto.deleteOne({_id: id})
+
+        req.flash('success_msg', 'Porto deletado com sucesso!');
+        res.redirect('/admin/portos');
+
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', `Erro ao deletar Porto (${err})`)
+        res.redirect('/admin/portos')
     }
 })
 
