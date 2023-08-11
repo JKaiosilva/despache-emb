@@ -1,34 +1,24 @@
 <script>
-    // Armazene os valores do formulário no armazenamento local ao enviar o formulário
 document.querySelector('form').addEventListener('submit', function(event) {
-  event.preventDefault(); // Impede o envio normal do formulário
+  event.preventDefault();
   
-  // Obtém uma referência ao formulário
   var form = document.querySelector('form');
   
-  // Serializa os valores do formulário em formato de string
   var formData = new FormData(form);
   
-  // Armazena a string serializada no armazenamento local
   localStorage.setItem('formData', JSON.stringify(Object.fromEntries(formData)));
   
-  // Envie o formulário manualmente
   this.submit();
 });
 
-// Preencha os campos do formulário com os valores do armazenamento local ao carregar a página
 window.addEventListener('load', function() {
-  // Verifica se há dados armazenados no armazenamento local
   var formDataString = localStorage.getItem('formData');
   
   if (formDataString) {
-    // Converte a string armazenada de volta em objeto
     var formData = JSON.parse(formDataString);
     
-    // Obtém uma referência ao formulário
     var form = document.querySelector('form');
     
-    // Preenche os campos do formulário com os valores armazenados
     for (var field in formData) {
       if (formData.hasOwnProperty(field)) {
         var input = form.querySelector('[name="' + field + '"]');
@@ -39,7 +29,6 @@ window.addEventListener('load', function() {
     }
   }
   
-  // Limpa os dados do armazenamento local após preencher os campos
   localStorage.removeItem('formData');
 });
 
