@@ -419,7 +419,7 @@ router.post('/admin/despachoValidate', eOperador, async(req, res) => {
             }
         }
 
-
+        
   
          await Despacho.updateOne({_id: req.body.id}, {
              NprocessoDespacho: req.body.NprocessoDespacho,

@@ -226,7 +226,52 @@ router.get('/formulario', eUser, async (req, res) => {
             const avisoSaidas = await AvisoSaida.find({agenciaID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
             const usuarios = await Usuario.find({agencia: req.user._id}).limit(5).lean()
 
-            console.log('agencia')
+            for await(const despacho of despachos){
+                if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
+                    despacho.condicao = 1;
+                    despacho.editado = 'Validado';
+                }else if(despacho.despachoNaoEditado == 1){
+                    despacho.condicao = 2;
+                    despacho.editado = 'Em análise';
+                }else{
+                    despacho.condicao = 3
+                    despacho.editado = 'Não validado';
+                }   
+            }
+
+            for await(const avisoEntrada of avisoEntradas){
+                avisoEntrada.entradaDataValidade = moment(parseInt(avisoEntrada.entradaDataValidadeNumber)).format('DD/MM/YYYY');
+                if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+                    avisoEntrada.condicao = 1;
+                    avisoEntrada.editado = 'Validado'
+                }else if(avisoEntrada.entradaNaoEditado == 1){
+                    avisoEntrada.condicao = 2;
+                    avisoEntrada.editado = 'Em análise'
+                }else{
+                    avisoEntrada.condicao = 3
+                    avisoEntrada.editado = 'Não validado'
+                }
+ 
+            }
+
+            for await(const avisoSaida of avisoSaidas){
+                avisoSaida.saidaDataValidade = moment(parseInt(avisoSaida.saidaDataValidadeNumber)).format('DD/MM/YYYY');
+                if(avisoSaida.saidaNaoEditado == 0 && avisoSaida.saidaDataValidadeNumber >= Date.now()){
+                    avisoSaida.condicao = 1;
+                    avisoSaida.editado = 'Validado'
+
+                }else if(avisoSaida.saidaNaoEditado == 1){
+                    avisoSaida.condicao = 2;
+                    avisoSaida.editado = 'Em análise'
+                }else{
+                    avisoSaida.condicao = 3
+                    avisoSaida.editado = 'Não validado'
+
+                }
+            }
+
+
+
             agenciaHidden = 'hidden'
             res.render('formulario/preform', 
             {
@@ -243,14 +288,52 @@ router.get('/formulario', eUser, async (req, res) => {
             const despachos = await Despacho.find({agenciaID: req.user.agencia}).limit(5).lean().sort({despachoData: 'desc'})
             const avisoEntradas = await AvisoEntrada.find({agenciaID: req.user.agencia}).limit(5).lean().sort({entradaData: 'desc'})
             const avisoSaidas = await AvisoSaida.find({agenciaID: req.user.agencia}).limit(5).lean().sort({saidaData: 'desc'})
+            for await(const despacho of despachos){
+                if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
+                    despacho.condicao = 1;
+                    despacho.editado = 'Validado';
+                }else if(despacho.despachoNaoEditado == 1){
+                    despacho.condicao = 2;
+                    despacho.editado = 'Em análise';
+                }else{
+                    despacho.condicao = 3
+                    despacho.editado = 'Não validado';
+                }   
+            }
 
+            for await(const avisoEntrada of avisoEntradas){
+                avisoEntrada.entradaDataValidade = moment(parseInt(avisoEntrada.entradaDataValidadeNumber)).format('DD/MM/YYYY');
+                if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+                    avisoEntrada.condicao = 1;
+                    avisoEntrada.editado = 'Validado'
+                }else if(avisoEntrada.entradaNaoEditado == 1){
+                    avisoEntrada.condicao = 2;
+                    avisoEntrada.editado = 'Em análise'
+                }else{
+                    avisoEntrada.condicao = 3
+                    avisoEntrada.editado = 'Não validado'
+
+                }
+            }
+            
+            for await(const avisoSaida of avisoSaidas){
+                avisoSaida.saidaDataValidade = moment(parseInt(avisoSaida.saidaDataValidadeNumber)).format('DD/MM/YYYY');
+                if(avisoSaida.saidaNaoEditado == 0 && avisoSaida.saidaDataValidadeNumber >= Date.now()){
+                    avisoSaida.condicao = 1;
+                    avisoSaida.editado = 'Validado'
+                }else if(avisoSaida.saidaNaoEditado == 1){
+                    avisoSaida.condicao = 2;
+                    avisoSaida.editado = 'Em análise'
+                }else{
+                    avisoSaida.condicao = 3
+                    avisoSaida.editado = 'Não validado'
+                }
+            }
 
             if(despachosValid.find((el) => el.despachoDataValidadeNumber > dataHoje)){
-                console.log('encontrou um valido')
                 docHidden = ''
                 alertHidden = 'hidden'
             }else{
-                console.log('não encontrou valido')
                 docHidden = 'hidden'
                 alertHidden = ''
             }
@@ -260,10 +343,6 @@ router.get('/formulario', eUser, async (req, res) => {
                 blockHidden = 'hidden'
             }
             
-
-            
-            console.log('despachante')
-
             despachanteHidden = 'hidden'
 
             res.render('formulario/preform', 
@@ -277,30 +356,8 @@ router.get('/formulario', eUser, async (req, res) => {
                 blockHidden: blockHidden                
             })
         }else{
-            const despachosValid = await Despacho.find({usuarioID: req.user._id}).lean().sort({despachoData: 'desc'})
-        
-            const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
-            const avisoEntradas = await AvisoEntrada.find({usuarioID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
-            const avisoSaidas = await AvisoSaida.find({usuarioID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
-
-
-            if(!despachosValid.find(el => el.despachoDataValidadeNumber > dataHoje)){
-                docHidden = 'hidden'
-                alertHidden = ''
-            }else{
-                docHidden = ''
-                alertHidden = 'hidden'
-            }
-            console.log('admin')
-
-            res.render('formulario/preform', 
-            {
-                despachos: despachos, 
-                avisoEntradas: avisoEntradas, 
-                avisoSaidas: avisoSaidas, 
-                alertHidden: alertHidden,
-                docHidden: docHidden,                
-            })
+            req.flash('error_msg', 'Acesso não autorizado');
+            res.redirect('/');
  }
     }catch(err){
         console.log(err)
