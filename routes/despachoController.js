@@ -260,11 +260,14 @@ router.get('/despachos', eUser, async (req, res) => {
         for await(const despacho of despachos){
             if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
                 despacho.condicao = 1;
+                despacho.editado = 'Validado';
             }else if(despacho.despachoNaoEditado == 1){
                 despacho.condicao = 2;
+                despacho.editado = 'Não validado';
             }else{
                 despacho.condicao = 3
-            }
+                despacho.editado = 'Não validado';
+            }   
         }
             res.render('formulario/despachos/despachos', 
             {
@@ -306,11 +309,14 @@ router.get('/despachos/:page', eUser, async (req, res) => {
             for await(const despacho of despachos){
                 if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
                     despacho.condicao = 1;
+                    despacho.editado = 'Validado';
                 }else if(despacho.despachoNaoEditado == 1){
                     despacho.condicao = 2;
+                    despacho.editado = 'Não validado';
                 }else{
                     despacho.condicao = 3
-                }
+                    despacho.editado = 'Não validado';
+                }   
             }
             
             res.render('formulario/despachos/despachosPage', 

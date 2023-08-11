@@ -1,8 +1,8 @@
-{{#each despachos}}
+{{#each avisoEntradas}}
     <div id="{{_id}}" class="card mt-4">
         <div class="card-header">
-            <label class="float-end">Situação: {{condicao}}</label>
-            <h6>Despacho: {{NprocessoDespacho}}</h6>
+            <label class="float-end">Situação: {{editado}}</label>
+            <h6>Aviso de Entrada: {{entradaNprocesso}}</h6>
         </div>
         <div class="card-body">
             <div>
@@ -10,12 +10,12 @@
                 <br>
                 <label>Embarcação: {{embarcacaoNome}}</label>
                 <br>
-                <label>Data Solicitada: {{despachoData}}</label>
+                <label>Data Solicitada: {{entradaDataPedido}}</label>
                 <br>
             </div>
         </div>
         <div class="card-footer">
-            <label>Data Validade: {{despachoDataValidade}}</label>
+            <label>Data Validade: {{entradaDataValidade}}</label>
             <a class="btn btn-success float-end" href="/formulario/despachoVizu/{{_id}}">Visualizar</a>
         </div>
     </div>

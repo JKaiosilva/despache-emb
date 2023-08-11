@@ -302,6 +302,7 @@ router.get('/entradas', eUser, async (req, res) => {
 
         const avisoEntradas = await AvisoEntrada.find({ usuarioID: req.user._id }).limit(5).lean().sort({ entradaData: 'desc' })
         for await(const avisoEntrada of avisoEntradas){
+            avisoEntrada.entradaDataValidade = moment(parseInt(avisoEntrada.entradaDataValidadeNumber)).format('DD/MM/YYYY');
             if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
                 avisoEntrada.condicao = 1;
             }else if(avisoEntrada.entradaNaoEditado == 1){
@@ -309,6 +310,11 @@ router.get('/entradas', eUser, async (req, res) => {
             }else{
                 avisoEntrada.condicao = 3
             }
+            if(avisoEntrada.entradaNaoEditado != 1 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+                avisoEntrada.editado = 'Validado'
+              }else{
+                avisoEntrada.editado = 'Não validado'
+              }  
         }
         
         res.render('formulario/entradas/entradas',
@@ -350,6 +356,8 @@ router.get('/entradas/:page', eUser, async (req, res) => {
         const avisoEntradas = await AvisoEntrada.find({ usuarioID: req.user._id }).skip(skip).limit(limit).lean().sort({ entradaData: 'desc' })
 
         for await(const avisoEntrada of avisoEntradas){
+            avisoEntrada.entradaDataValidade = moment(parseInt(avisoEntrada.entradaDataValidadeNumber)).format('DD/MM/YYYY');
+
             if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
                 avisoEntrada.condicao = 1;
             }else if(avisoEntrada.entradaNaoEditado == 1){
@@ -357,6 +365,11 @@ router.get('/entradas/:page', eUser, async (req, res) => {
             }else{
                 avisoEntrada.condicao = 3
             }
+            if(avisoEntrada.entradaNaoEditado != 1 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+                avisoEntrada.editado = 'Validado'
+              }else{
+                avisoEntrada.editado = 'Não validado'
+              }  
         }
             res.render('formulario/entradas/entradasPage',
                 {
