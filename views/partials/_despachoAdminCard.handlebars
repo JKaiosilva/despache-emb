@@ -1,0 +1,30 @@
+{{#each despachos}}
+    <div id="{{_id}}" class="card mt-4">
+        <div class="card-header">
+            <label class="float-end">Situação: {{editado}}</label>
+            <h6>Despacho: {{NprocessoDespacho}}</h6>
+        </div>
+        <div class="card-body">
+            <div>
+                <label>Agencia: {{agenciaNome}}</label>
+                <br>
+                <label>Embarcação: {{embarcacaoNome}}</label>
+                <br>
+                <label>Data Solicitada: {{despachoDataPedido}}</label>
+                <br>
+            </div>
+        </div>
+        <div class="card-footer">
+            <label>Data Validade: {{despachoDataValidade}}</label>
+                <a class="btn btn-success float-end" href="/formulario/despachoVizu/{{_id}}">Visualizar</a>
+                <a class="btn btn-warning float-end mx-1" href="/admin/despachosValidate/{{_id}}">Editar</a>
+            <form class="float-end" action="/admin/despachos/deletar" method="POST">
+                <input type="hidden" name="id" value="{{_id}}">
+                <button type="submit" class="btn btn-danger">Deletar</button>
+            </form>
+        </div>
+    </div>
+{{>_classificacao}}
+{{else}}
+<h6>Nenhum despaho</h6>
+{{/each}}

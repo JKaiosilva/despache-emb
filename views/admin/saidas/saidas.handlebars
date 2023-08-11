@@ -1,30 +1,6 @@
 <h4>Lista de Avisos de Saida</h4>
 <br>
-{{#each avisoSaidas}}
-
-    <div id="{{_id}}" class="card mt-4">
-        <div class="card-body">
-            <div>
-                <h6>Saída: {{saidaNprocesso}}</h6>
-                <p>Agencia: {{agenciaNome}}</label>
-                <p>Embarcação: {{embarcacaoNome}}</label>
-                <br>
-            </div>
-            <div class="">
-                <label class="mt-2">Data: {{saidaDataPedido}}</label>
-                <a class="btn btn-success float-end" href="/formulario/avisosaidavizu/{{_id}}">Visualizar</a>
-                <a class="btn btn-warning float-end mx-1" href="/admin/saidasValidate/{{_id}}">Editar</a>
-            <form class="float-end" action="/admin/saidas/deletar" method="POST">
-                <input type="hidden" name="id" value="{{_id}}">
-                <button type="submit" class="btn btn-danger">Deletar</button>
-            </form>
-            </div>
-        </div>
-    </div>
-    {{>_classificacao}}
-{{else}}
-<h6>Nenhum Aviso de Saida</h6>
-{{/each}}
+{{>_saidaAdminCard}}
 <br>
 <a href="/admin/painel" class="btn btn-primary">Painel</a>
 <a href="/admin/saidasPage/2" class="btn btn-primary" style="float: right" {{hidden}}>Próximo</a>

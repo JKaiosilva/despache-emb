@@ -1,30 +1,6 @@
 <h4>Lista de Despachos</h4>
 <br>
-{{#each despachos}}
-
-    <div id="{{_id}}" class="card mt-4">
-        <div class="card-body">
-            <div>
-                <h6>Despacho: {{NprocessoDespacho}}</h6>
-                <p>Agencia: {{agenciaNome}}</label>
-                <p>Embarcação: {{embarcacaoNome}}</label>
-                <br>
-            </div>
-            <div class="">
-                <label class="mt-2">Data: {{despachoDataPedido}}</label>
-                <a class="btn btn-success float-end" href="/formulario/despachoVizu/{{_id}}">Visualizar</a>
-                <a class="btn btn-warning float-end mx-1" href="/admin/despachosValidate/{{_id}}">Editar</a>
-            <form class="float-end" action="/admin/despachos/deletar" method="POST">
-                <input type="hidden" name="id" value="{{_id}}">
-                <button type="submit" class="btn btn-danger">Deletar</button>
-            </form>
-            </div>
-        </div>
-    </div>
-    {{>_classificacao}}
-{{else}}
-<h6>Nenhum despaho</h6>
-{{/each}}
+{{>_despachoAdminCard}}
 <br>
 <a href="/admin/painel" class="btn btn-primary" {{hidden}}>Painel</a>
 <a href="/admin/despachos/2" class="btn btn-primary" style="float: right" {{hidden}}>Próximo</a>

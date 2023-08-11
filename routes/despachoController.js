@@ -477,15 +477,19 @@ router.post('/admin/despachoValidate', eOperador, async(req, res) => {
 router.get('/admin/despachos', eOperador, async (req, res) => {
    try{
     const despachos = await Despacho.find().limit(5).lean().sort({ despachoData: 'desc' })
-        for await(const despacho of despachos){
-            if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
-                despacho.condicao = 1;
-            }else if(despacho.despachoNaoEditado == 1){
-                despacho.condicao = 2;
-            }else{
-                despacho.condicao = 3
-            }
-        }
+
+    for await(const despacho of despachos){
+        if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
+            despacho.condicao = 1;
+            despacho.editado = 'Validado';
+        }else if(despacho.despachoNaoEditado == 1){
+            despacho.condicao = 2;
+            despacho.editado = 'Não validado';
+        }else{
+            despacho.condicao = 3
+            despacho.editado = 'Não validado';
+        }   
+    }
         res.render('admin/despachos/listaDespacho', 
         { 
             despachos: despachos 
@@ -523,11 +527,14 @@ router.get('/admin/despachos/:page', eOperador, async (req, res) => {
         for await(const despacho of despachos){
             if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
                 despacho.condicao = 1;
+                despacho.editado = 'Validado';
             }else if(despacho.despachoNaoEditado == 1){
                 despacho.condicao = 2;
+                despacho.editado = 'Não validado';
             }else{
                 despacho.condicao = 3
-            }
+                despacho.editado = 'Não validado';
+            }   
         }
         res.render('admin/despachos/despachosPage',
             {

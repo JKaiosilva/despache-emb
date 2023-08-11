@@ -609,6 +609,7 @@ router.get('/admin/entradas', eOperador, async (req, res) => {
         const avisoEntradas = await AvisoEntrada.find().limit(5).lean().sort({ entradaData: 'desc' })
         
         for await(const avisoEntrada of avisoEntradas){
+            avisoEntrada.entradaDataValidade = moment(parseInt(avisoEntrada.entradaDataValidadeNumber)).format('DD/MM/YYYY');
             if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
                 avisoEntrada.condicao = 1;
             }else if(avisoEntrada.entradaNaoEditado == 1){
@@ -616,6 +617,11 @@ router.get('/admin/entradas', eOperador, async (req, res) => {
             }else{
                 avisoEntrada.condicao = 3
             }
+            if(avisoEntrada.entradaNaoEditado != 1 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+                avisoEntrada.editado = 'Validado'
+              }else{
+                avisoEntrada.editado = 'Não validado'
+              }  
         }
         
             res.render('admin/entradas/entradas', 
@@ -653,15 +659,22 @@ router.get('/admin/entradasPage/:page', eOperador, async (req, res) => {
         }
         const avisoEntradas = await AvisoEntrada.find().skip(skip).limit(limit).lean().sort({ entradaData: 'desc' })
         
-            for await(const avisoEntrada of avisoEntradas){
-                if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
-                    avisoEntrada.condicao = 1;
-                }else if(avisoEntrada.entradaNaoEditado == 1){
-                    avisoEntrada.condicao = 2;
-                }else{
-                    avisoEntrada.condicao = 3
-                }
+        for await(const avisoEntrada of avisoEntradas){
+            avisoEntrada.entradaDataValidade = moment(parseInt(avisoEntrada.entradaDataValidadeNumber)).format('DD/MM/YYYY');
+
+            if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+                avisoEntrada.condicao = 1;
+            }else if(avisoEntrada.entradaNaoEditado == 1){
+                avisoEntrada.condicao = 2;
+            }else{
+                avisoEntrada.condicao = 3
             }
+            if(avisoEntrada.entradaNaoEditado != 1 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+                avisoEntrada.editado = 'Validado'
+              }else{
+                avisoEntrada.editado = 'Não validado'
+              }  
+        }
             res.render('admin/entradas/entradasPage',
                 {
                     avisoEntradas: avisoEntradas,
