@@ -1,26 +1,7 @@
 <h4>Lista de Avisos de Saida</h4>
 <br>
-{{#each avisoSaidas}}
+{{>_saidaUserCard}}
 
-    <div id="{{_id}}" class="card mt-4">
-        <div class="card-body">
-            <div>
-                <h6>Despacho: {{saidaNprocesso}}</h6>
-                <p>Agencia: {{agenciaNome}}</label>
-                <p>Embarcação: {{embarcacaoNome}}</label>
-                <br>
-            </div>
-            <div class="">
-                <label class="mt-2">Data: {{saidaDataPedido}}</label>
-                <a class="btn btn-success float-end" href="/formulario/avisosaidavizu/{{_id}}">Visualizar</a>
-            </div>
-        </div>
-    </div>
-{{>_classificacao}}
-
-{{else}}
-<h6>Nenhum Aviso de Saida</h6>
-{{/each}}
 <br>
 <a href="/saidas/{{previousPage}}" class="btn btn-primary">Anterior</a>
 <a href="/saidas/{{nextPage}}" class="btn btn-primary" style="float: right" {{hidden}}>Próximo</a>

@@ -314,6 +314,7 @@ router.get('/saidas', eUser, async (req, res) => {
     try {
         const avisoSaidas = await AvisoSaida.find({ usuarioID: req.user._id }).limit(5).lean().sort({ saidaData: 'desc' })
         for await(const avisoSaida of avisoSaidas){
+            avisoSaida.saidaDataValidade = moment(parseInt(avisoSaida.saidaDataValidadeNumber)).format('DD/MM/YYYY');
             if(avisoSaida.saidaNaoEditado == 0 && avisoSaida.saidaDataValidadeNumber >= Date.now()){
                 avisoSaida.condicao = 1;
             }else if(avisoSaida.saidaNaoEditado == 1){
@@ -321,6 +322,11 @@ router.get('/saidas', eUser, async (req, res) => {
             }else{
                 avisoSaida.condicao = 3
             }
+            if(avisoSaida.saidaNaoEditado != 1 && avisoSaida.saidaDataValidadeNumber >= Date.now()){
+                avisoSaida.editado = 'Validado'
+              }else{
+                avisoSaida.editado = 'Não validado'
+              }
         }
         
             res.render('formulario/saidas/saidas',
@@ -362,6 +368,7 @@ router.get('/saidas/:page', eUser, async (req, res) => {
         const avisoSaidas = await AvisoSaida.find({ usuarioID: req.user._id }).skip(skip).limit(limit).lean().sort({ saidaData: 'desc' })
         
         for await(const avisoSaida of avisoSaidas){
+            avisoSaida.saidaDataValidade = moment(parseInt(avisoSaida.saidaDataValidadeNumber)).format('DD/MM/YYYY');
             if(avisoSaida.saidaNaoEditado == 0 && avisoSaida.saidaDataValidadeNumber >= Date.now()){
                 avisoSaida.condicao = 1;
             }else if(avisoSaida.saidaNaoEditado == 1){
@@ -369,6 +376,11 @@ router.get('/saidas/:page', eUser, async (req, res) => {
             }else{
                 avisoSaida.condicao = 3
             }
+            if(avisoSaida.saidaNaoEditado != 1 && avisoSaida.saidaDataValidadeNumber >= Date.now()){
+                avisoSaida.editado = 'Validado'
+              }else{
+                avisoSaida.editado = 'Não validado'
+              }
         }
         
             res.render('formulario/saidas/saidasPage',
