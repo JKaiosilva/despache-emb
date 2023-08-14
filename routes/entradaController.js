@@ -26,9 +26,9 @@ const Comboio = mongoose.model('comboios')
 const Correcao = mongoose.model('correcoes')
 const AvisoEntradaBin = mongoose.model('avisoEntradasBin');
 
-const { Admin } = require('../helpers/eAdmin')
-const { eUser } = require('../helpers/eUser')
-const { eOperador } = require('../helpers/eOperador')
+const { Admin } = require('../helpers/perms/eAdmin')
+const { eUser } = require('../helpers/perms/euser')
+const { eOperador } = require('../helpers/perms/eOperador')
 
 const moment = require('moment')
 const fs = require('fs')
@@ -268,6 +268,8 @@ router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
 
         if(avisoEntradas.entradaNaoEditado != 1 && despacho.despachoDataValidadeNumber >= Date.now()){
             editado = 'Validado'
+        }else if(avisoEntradas.entradaNaoEditado == 1){
+            editado = 'Em análise'
           }else{
             editado = 'Não validado'
           }  

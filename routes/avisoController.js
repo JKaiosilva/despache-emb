@@ -25,9 +25,9 @@ const Relatorio = mongoose.model('relatorios')
 
 const AvisoBin = mongoose.model('avisosBin');
 
-const { Admin } = require('../helpers/eAdmin')
-const { eUser } = require('../helpers/eUser')
-const { eOperador } = require('../helpers/eOperador')
+const { Admin } = require('../helpers/perms/eAdmin')
+const { eUser } = require('../helpers/perms/euser')
+const { eOperador } = require('../helpers/perms/eOperador')
 
 const moment = require('moment')
 const fs = require('fs')

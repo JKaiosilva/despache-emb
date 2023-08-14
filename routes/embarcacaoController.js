@@ -20,8 +20,8 @@ const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
 const Relatorio = mongoose.model('relatorios')
 
-const { Admin } = require('../helpers/eAdmin')
-const { eUser } = require('../helpers/eUser')
+const { Admin } = require('../helpers/perms/eAdmin')
+const { eUser } = require('../helpers/perms/euser')
 
 const moment = require('moment')
 const fs = require('fs')

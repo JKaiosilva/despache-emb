@@ -12,6 +12,7 @@ require('../models/Relatorio');
 require('../models/Comboio')
 require('../models/Correcao');
 require('../models/bin/despachoBin')
+require('../models/PasseSaida')
 
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
@@ -25,10 +26,12 @@ const Relatorio = mongoose.model('relatorios')
 const Comboio = mongoose.model('comboios')
 const Correcao = mongoose.model('correcoes');
 const DespachoBin = mongoose.model('despachosBin');
+const PasseSaida = mongoose.model('passeSaidas')
 
-const { Admin } = require('../helpers/eAdmin')
-const { eUser } = require('../helpers/eUser')
-const { eOperador } = require('../helpers/eOperador')
+const { Admin } = require('../helpers/perms/eAdmin')
+const { eUser } = require('../helpers/perms/euser')
+const { eOperador } = require('../helpers/perms/eOperador')
+const condicaoDocumento = require('../helpers/conds/condicaoDocumento');
 
 const moment = require('moment')
 const fs = require('fs')
@@ -360,11 +363,13 @@ router.get('/admin/despachosValidate/:id', eOperador, async(req, res) => {
             }
           }
 
-          if(despachos.despachoNaoEditado == 1){
-            editado = 'Não Validado'
-          }else{
+          if(despachos.despachoNaoEditado != 1 && despachos.despachoDataValidadeNumber >= Date.now()){
             editado = 'Validado'
-          }
+        }else if(despachos.despachoNaoEditado == 1){
+            editado = 'Em análise'
+          }else{
+            editado = 'Não validado'
+          } 
 
         const tripulantes = await Tripulante.find().lean();
         const correcoes = await Correcao.find({documentoReferente: despachos._id}).lean()
@@ -460,7 +465,23 @@ router.post('/admin/despachoValidate', eOperador, async(req, res) => {
              despachoDataValidadeNumber: Date.parse(req.body.despachoDataValidade),
              despachoValidade: Date.parse(req.body.despachoDataValidade),
              despachoNaoEditado: 0
+         }).then( async () => {
+            const despacho = await Despacho.findOne({_id: req.body.id}).lean()
+            const novoPasseSaida = {
+               usuarioID: despacho.usuarioID,
+               agenciaID: despacho.agenciaID,
+               agenciaNome: despacho.agenciaNome,
+               NProcessoDespacho: despacho.NProcessoDespacho,
+               embarcacaoNome: despacho.embarcacaoNome,
+               embarcacaoBandeira: despacho.embarcacaoBandeira,
+               embarcacaoComandante: despacho.despachoNomeRepresentanteEmbarcacao,
+               CFM: despacho.despachoCPFCNPJRepresentanteEmbarcacao,
+               validade: despacho.despachoDataValidadeNumber,
+               destino: despacho.despachoPortoEstadia,
+            }
+            new PasseSaida(novoPasseSaida).save()
          })
+
          req.flash('success_msg', 'Despacho Validade com sucesso!')
          res.redirect('/admin/painel')
      }catch(err){

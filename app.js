@@ -8,15 +8,14 @@ require('./config/auth')(passport)
 require('dotenv/config');
 require('dotenv').config()
 
-require('./helpers/pagination')
 require('./helpers/AddIndex')
-require('./helpers/eUser')
-require('./helpers/barAgencia')
-const Add = require('./helpers/AddIndex')
-const eUser = require('./helpers/eUser')
-const Admin = require('./helpers/eAdmin')
-const ifAdmin = require('./helpers/barAdmin')
-const ifDespachante = require('./helpers/barDespachante')
+require('./helpers/perms/euser')
+require('./helpers/navBar/barAgencia')
+require('./helpers/AddIndex')
+require('./helpers/perms/euser')
+require('./helpers/perms/eAdmin')
+require('./helpers/navBar/barAdmin')
+require('./helpers/navBar/barDespachante')
 
 const path = require('path');
 const session = require('express-session');
@@ -40,6 +39,7 @@ const userController = require('./routes/userController')
 const comboioController = require('./routes/comboioController')
 const relatorioController = require('./routes/relatorioController')
 const correcaoController = require('./routes/correcaoController')
+const passeSaidaController = require('./routes/passeSaidaController')
 
 
 
@@ -123,6 +123,7 @@ const correcaoController = require('./routes/correcaoController')
         app.use(comboioController)
         app.use(relatorioController)
         app.use(correcaoController)
+        app.use(passeSaidaController)
 
 
 // Conectar com Db
