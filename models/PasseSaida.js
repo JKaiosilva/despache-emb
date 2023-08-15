@@ -11,7 +11,7 @@ const PasseSaida = new Schema({
     agenciaNome: {
 
     },
-    NProcessoDespacho: {
+    NprocessoDespacho: {
 
     },
     embarcacaoNome: {
@@ -32,6 +32,9 @@ const PasseSaida = new Schema({
     destino: {
 
     },
+    date: {
+
+    }
 
 })
 

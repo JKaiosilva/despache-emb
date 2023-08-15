@@ -432,7 +432,7 @@ router.post('/admin/despachoValidate', eOperador, async(req, res) => {
              despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
              despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
              despachoDataHoraPartida: req.body.despachoDataHoraPartida,
-             embarcacaoNome: req.body.despachosEmbarcacaoNome,
+             embarcacaoNome: req.body.despachoEmbarcacaoNome,
              embarcacaoTipo: req.body.embarcacaoTipo,
              embarcacaoBandeira: req.body.embarcacaoBandeira,
              embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,
@@ -471,13 +471,14 @@ router.post('/admin/despachoValidate', eOperador, async(req, res) => {
                usuarioID: despacho.usuarioID,
                agenciaID: despacho.agenciaID,
                agenciaNome: despacho.agenciaNome,
-               NProcessoDespacho: despacho.NProcessoDespacho,
+               NprocessoDespacho: despacho.NprocessoDespacho,
                embarcacaoNome: despacho.embarcacaoNome,
                embarcacaoBandeira: despacho.embarcacaoBandeira,
                embarcacaoComandante: despacho.despachoNomeRepresentanteEmbarcacao,
                CFM: despacho.despachoCPFCNPJRepresentanteEmbarcacao,
                validade: despacho.despachoDataValidadeNumber,
                destino: despacho.despachoPortoEstadia,
+               date: Date.now()
             }
             new PasseSaida(novoPasseSaida).save()
          })

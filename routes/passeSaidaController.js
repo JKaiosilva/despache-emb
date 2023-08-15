@@ -13,6 +13,7 @@ require('../models/Comboio')
 require('../models/Correcao')
 require('../models/bin/entradaBin');
 require('../models/PasseSaida');
+require('../models/bin/PasseSaidaBin')
 
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
@@ -27,6 +28,7 @@ const Comboio = mongoose.model('comboios')
 const Correcao = mongoose.model('correcoes')
 const AvisoEntradaBin = mongoose.model('avisoEntradasBin');
 const PasseSaida = mongoose.model('passeSaidas');
+const PasseSaidaBin = mongoose.model('passeSaidasBin')
 
 const { Admin } = require('../helpers/perms/eAdmin')
 const { eUser } = require('../helpers/perms/euser')
@@ -50,19 +52,22 @@ router.get('/formulario/passeSaidaVizu/:id', eOperador, async(req, res) => {
     try{
         const passeSaidas = await PasseSaida.findOne({_id: req.params.id}).lean()
         passeSaidas.destino = await Porto.findOne({_id: passeSaidas.destino}).lean()
-        passeSaidas.validade = moment(parseInt(validade)).format('DD/MM/YYYY');
+        passeSaidas.date = moment(parseInt(passeSaidas.date)).format('DD/MM/YYYY');
+        passeSaidas.validade = moment(parseInt(passeSaidas.validade)).format('DD/MM/YYYY');
+        
         res.render('formulario/passeSaidas/passeSaidasVizu', 
             {
                 passeSaidas: passeSaidas
             })
     }catch(err){
+        console.log(err)
         req.flash('error_msg', `Erro ao mostrar Passe de Saida: ${err}`);
         res.redirect('/painel')
     }
 })
 
 
-//----      Rota de listagem de passes      ----//
+//----      Rota de listagem de Passes de Saída      ----//
 
 
 router.get('/admin/passeSaidas', eOperador, async(req, res) => {
@@ -84,11 +89,77 @@ router.get('/admin/passeSaidas', eOperador, async(req, res) => {
                 passeSaidas: passeSaidas
             })
     }catch(err){
+        console.log(err)
         req.flash('error_msg', `Erro ao listar Passes de Saida: ${err}`);
-        res.redirect('/painel')
+        res.redirect('/admin/painel')
     }
 })
 
 
+//----      Rota de paginação de Passes de Saída        ----//
+
+
+router.get('/admin/passeSaidas/:page', eOperador, async (req, res) => {
+    try{
+        const page = req.params.page || 1;
+        const limit = 5;
+        const skip = (page - 1) * limit;
+        
+        const contagem = await PasseSaida.count();
+        if(parseInt(page) * limit >= contagem){
+            nextPage = '';
+            hidden = 'hidden';
+        } else {
+            nextPage = parseInt(page) + 1;
+            hidden = ''
+        }
+
+        if(parseInt(page) == 2) {
+            previousPage = ''
+        }else{
+            previousPage = parseInt(page) - 1
+        }
+
+        const passeSaidas = await PasseSaida.find().skip(skip).limit(limit).lean().sort({date: 'desc'})
+        for(const passeSaida of passeSaidas){
+            passeSaida.condicao = 3;
+            passeSaida.editado = 'Não Validado'
+            if(passeSaida.validade >= Date.now()){
+                passeSaida.condicao = 1;
+                passeSaida.editado = 'Validado'
+            }
+            passeSaida.validadeDate = moment(parseInt(passeSaida.validade)).format('DD/MM/YYYY');
+            res.render('formulario/passeSaidas/passeSaidasPage', 
+            {
+                passeSaidas: passeSaidas
+            })
+        }
+    }catch(err){
+        console.log(err)
+        req.flash('error_mg', `Erro ao paginas Passes de Saida: ${err}`);
+        res.redirect('/admin/painel');
+    }
+})
+
+
+//----      Rota para deletar Passe de Saída        ----//
+
+
+router.post('/admin/passeSaida/deletar', eOperador, async(req, res) =>{
+    try{
+        const id = req.body.id;
+        const passeSaida = await PasseSaida.findOne({_id: id});
+        passeSaida.deletadoPor = req.user._id;
+        passeSaida.deletadoEm = Date.now();
+        new PasseSaidaBin(passeSaida).save();
+        const deletarPasseSaida = await PasseSaida.deleteOne({_id: id});
+            req.flash('success_msg', 'Passe de Saida deletado com sucesso.')
+            res.redirect('/admin/passeSaidas')
+    }catch(err){
+        console.log(err)
+        req.flash('error_mg', `Erro ao deletar Passe de Saida: ${err}`);
+        res.redirect('/admin/painel');
+    }
+})
 
 module.exports = router;

@@ -1,0 +1,16 @@
+<div class="card">
+    <div class="card-body">
+        <form>
+            <div class="input-group">
+                <input type="text" class="form-control" value="{{passeSaidas.NprocessoDespacho}}" disabled>
+                <br>
+            </div>
+            <div class="mt-4">
+                    <p>De acordo com as Normas da Autoridade Marítima, concede-se Passe de Saída à embarcação, {{passeSaidas.embarcacaoNome}} de Bandeira - {{passeSaidas.embarcacaoBandeira}}</p>
+                    <p>tendo como Comandante o {{passeSaidas.embarcacaoComandante}} - CFM {{passeSaidas.CFM}}</p>
+                    <p>Válido de {{passeSaidas.date}} à {{passeSaidas.validade}}.</p>
+                    <p>Destino: {{passeSaidas.destino.portoNome}}</p>
+                </div>
+        </form>
+    </div>
+</div>

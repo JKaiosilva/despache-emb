@@ -11,7 +11,7 @@ const PasseSaidaBin = new Schema({
     agenciaNome: {
 
     },
-    NProcessoDespacho: {
+    NprocessoDespacho: {
 
     },
     embarcacaoNome: {
@@ -30,6 +30,9 @@ const PasseSaidaBin = new Schema({
 
     },
     destino: {
+
+    },
+    date: {
 
     },
     deletadoPor: {

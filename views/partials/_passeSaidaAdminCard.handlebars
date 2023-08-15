@@ -17,8 +17,7 @@
         <div class="card-footer">
             <label>Data Validade: {{validadeData}}</label>
                 <a class="btn btn-success float-end" href="/formulario/passeSaidaVizu/{{_id}}">Visualizar</a>
-                <a class="btn btn-warning float-end mx-1" href="">Editar</a>
-            <form class="float-end" action="/admin/passeSaida/deletar" method="POST">
+            <form class="float-end mx-1" action="/admin/passeSaida/deletar" method="POST">
                 <input type="hidden" name="id" value="{{_id}}">
                 <button type="submit" class="btn btn-danger">Deletar</button>
             </form>
