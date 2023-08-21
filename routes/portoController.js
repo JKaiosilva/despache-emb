@@ -79,7 +79,9 @@ router.get('/admin/portoVizu/:id', eOperador, async(req, res) => {
         const dataHoje = moment(Date.now()).format('YYYY-MM-DD')
         const portos = await Porto.findOne({_id: req.params.id}).lean()
         const despachos = await Despacho.find({despachoPortoEstadia: portos._id, }).lean()
-        const avisoSaidas = await AvisoSaida.find({saidaDataHoraSaida: dataHoje}).lean()
+        const avisoSaidas = await AvisoSaida.find({saidaPortoSaida: req.params.id}).lean()
+
+        
 
 
 

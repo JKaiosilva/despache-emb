@@ -44,8 +44,9 @@ const passeSaidaController = require('./routes/passeSaidaController')
 
 
 
-
 // Configurações
+
+    //Configuração CORS
 
 
     // Session

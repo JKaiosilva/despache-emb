@@ -10,6 +10,7 @@ require('../models/Tripulante')
 require('../models/Porto');
 require('../models/Relatorio');
 require('../models/Comboio')
+require('../models/PasseSaida')
 
 const Usuario = mongoose.model('usuarios')
 const Aviso = mongoose.model('avisos')
@@ -21,6 +22,7 @@ const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
 const Relatorio = mongoose.model('relatorios')
 const Comboio = mongoose.model('comboios')
+const PasseSaida = mongoose.model('passeSaidas')
 
 const { Admin } = require('../helpers/perms/eAdmin')
 const { eUser } = require('../helpers/perms/euser')
@@ -101,6 +103,7 @@ router.get('/admin/painel', eOperador, async (req, res) => {
         var tripulantes = await Tripulante.find().count()
         var relatorios = await Relatorio.find().count()
         var portos = await Porto.find().count()
+        var passeSaidas = await PasseSaida.find().count()
 
             res.render('admin/painel', {
                 avisos: avisos,
@@ -118,7 +121,8 @@ router.get('/admin/painel', eOperador, async (req, res) => {
                 operadorHidden: operadorHidden,
                 oficialHidden: oficialHidden,
                 oficiais: oficiais,
-                operadores: operadores
+                operadores: operadores,
+                passeSaidas: passeSaidas
             });
     } catch (err) {
         console.log(err);

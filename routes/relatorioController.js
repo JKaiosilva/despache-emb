@@ -25,6 +25,7 @@ const Comboio = mongoose.model('comboios')
 const { Admin } = require('../helpers/perms/eAdmin')
 const { eUser } = require('../helpers/perms/euser')
 const { eOperador } = require('../helpers/perms/eOperador')
+const Chart = require('chart.js')
 
 const moment = require('moment')
 const fs = require('fs')
@@ -57,7 +58,7 @@ router.get('/admin/relatorioSaidas', eOperador, async (req, res) => {
         let usuariosCount = usuarios.length;
         let tripulantesCount = tripulantes.length;
 
-
+        moment.locale('pt-br');
         mesAnoAtual = moment(Date.now()).format('MM/YYYY')
         mesAtualString = moment(Date.now()).format('MMMM')
 
@@ -220,8 +221,18 @@ router.get('/admin/relatorioSaidas', eOperador, async (req, res) => {
                 }
         }
 
-        
-        const html = `<h1>Relatório do Ultimo mês</h1><br>
+        const html = `
+        <style>
+        *{
+            font-size: 1.1em;
+            padding-left: 1.8rem
+        }
+        </style>
+        <br>
+        <br>
+        <br>
+        <h1 style="font-size: 1.8em">Controle do Tráfego Aquaviário</h1><br>
+
                             <table border="10">
                             <br>
                                 <caption>Relatório Mês ${mesAtualString}</caption>
@@ -282,15 +293,25 @@ router.get('/admin/relatorioSaidas', eOperador, async (req, res) => {
                                         <td>Total</td>
                                         <td>${mesEmbarcacaoNacionalEmp + mesEmbarcacaoRebocadorEmpurador + mesEmbarcacaoBalsa + mesEmbarcacaoCargaGeral + mesEmbarcacaoDraga + mesEmbarcacaoLancha + mesEmbarcacaoPassageiros}</td>
                                     </tr>
-                                    <tr>
-                                        <td>N° de passageiros</td>
-                                        <td>${mesPassageiros}</td>
-                                    </tr>
+
                                 </tbody>
                             </table>
                             <br>
                             <br>
-    
+                            <br>
+                            <br>                            
+                            <br>
+                            <br>                            
+                            <br>
+                            <br>  
+                            <br>
+                            <br>
+                            <br>
+                            <br>                            
+                            <br>
+                            <br>                            
+                            <br>
+                            <br>                          
     
     
     
@@ -353,122 +374,9 @@ router.get('/admin/relatorioSaidas', eOperador, async (req, res) => {
                                 <td>Total</td>
                                 <td>${saidaTotalEmbarcacaoNacionalEmp + saidaTotalEmbarcacaoRebocadorEmpurador + saidaTotalEmbarcacaoBalsa + saidaTotalEmbarcacaoCargaGeral + saidaTotalEmbarcacaoDraga + saidaTotalEmbarcacaoLancha + saidaTotalEmbarcacaoPassageiros}</td>
                             </tr>
-                            <tr>
-                                <td>N° de passageiros</td>
-                                <td>${totalPassageiros}</td>
-                            </tr>
                         </tbody>
-    
                         </table>
-    
-    
-    
-                        <br>
-                        <br>
-                        <br>
-    
-    
-    
-                            <br>
-                            <table>
-                                <thead>
-                                <tr>
-                                    <th>Quantidade de Embarcações Estrangeiras</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Empurrador:</td>
-                                    <td>${totalEmbarcacaoInternacionalEmp}</td>
-                                </tr>
-                                <tr>
-                                    <td>Barcaças:</td>
-                                    <td>${totalEmbarcacaoBarcaca}</td>
-                                </tr>
-                                <tr>
-                                    <td>Total</td>
-                                    <td>${totalEmbarcacaoInternacionalEmp + totalEmbarcacaoBarcaca}</td>
-                                </tr>
-                            </tbody>
-                            <thead>
-                            <tr>
-                                <th>Quantidade de Embarcações Nacionais</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Rebocado/Empurrador</td>
-                                    <td>${totalEmbarcacaoRebocadorEmpurador}</td>
-                                </tr>
-                                <tr>
-                                    <td>Balsa</td>
-                                    <td>${totalEmbarcacaoBalsa}</td>
-                                </tr>
-                                <tr>
-                                    <td>Carga Geral</td>
-                                    <td>${totalEmbarcacaoCargaGeral}</td>
-                                </tr>
-                                <tr>
-                                    <td>Draga</td>
-                                    <td>${totalEmbarcacaoDraga}</td>
-                                </tr>
-                                <tr>
-                                    <td>Empurrador</td>
-                                    <td>${totalEmbarcacaoNacionalEmp}</td>
-                                </tr>
-                                <tr>
-                                    <td>Lancha</td>
-                                    <td>${totalEmbarcacaoLancha}</td>
-                                </tr>
-                                <tr>
-                                    <td>Embarcação de passageiros</td>
-                                    <td>${totalEmbarcacaoPassageiros}</td>
-                                </tr>
-                                <tr>
-                                    <td>Total</td>
-                                    <td></td>
-                                </tr>
-                                </tbody>
-                            <thead>
-                                <tr>
-                                    <th>Informações Gerais</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>N° de passageiros</td>
-                                    <td>${totalPassageiros}</td>
-                                </tr>
-                                <tr>
-                                    <td>Despachos</td>
-                                    <td>${despachosCount}</td>
-                                </tr>
-                                <tr>
-                                    <td>Avisos de Entrada</td>
-                                    <td>${avisoEntradasCount}</td>
-                                </tr>
-                                <tr>
-                                    <td>Avisos de Saída</td>
-                                    <td>${avisoSaidasCount}</td>
-                                </tr> 
-                                <tr>
-                                    <td>Embarcações</td>
-                                    <td></td>
-                                </tr> 
-                                <tr>
-                                    <td>Avisos</td>
-                                    <td>${avisosCount}</td>
-                                </tr>
-                                <tr>
-                                    <td>Usuários</td>
-                                    <td>${usuariosCount}</td>
-                                </tr>
-                                <tr>
-                                    <td>Tripulantes</td>
-                                    <td>${tripulantesCount}</td>
-                                </tr>                                                                                                                                                                                                                            
-                            </tbody>
-                            </table>
+
                             `
 
         pdf.create(html).toStream((err, stream) => {
