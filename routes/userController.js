@@ -41,7 +41,7 @@ const cheerio = require('cheerio')
 //----    Rota para formulário de cadastro de Usuário    ----//
 
 
-router.get('/usuarios/cadastroUser', eUser, async (req, res) => {
+router.get('/usuarios/cadastroUser', async (req, res) => {
     try{
         const agencias = await Usuario.find({eAgencia: 1}).lean()
         res.render('usuarios/cadastro', 

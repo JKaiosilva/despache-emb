@@ -45,10 +45,85 @@ const cheerio = require('cheerio')
 const bcrypt = require('bcryptjs')
 
 
-//----      Rota para visualizar Passe de Saída     ----//
+//----      Rota para listar Passe de Saída (User)    ----//
 
 
-router.get('/formulario/passeSaidaVizu/:id', eOperador, async(req, res) => {
+router.get('/passeSaidas', eUser, async(req, res) => {
+    try{
+        const passeSaidas = await PasseSaida.find({_id: req.user._id}).limit(5).lean().sort({date: 'desc'})
+
+        for await(const passeSaida of passeSaidas){
+            if(passeSaida.passeSaidaDataValidadeNumber >= Date.now()){
+                passeSaida.condicao = 1;
+                passeSaida.editado = 'Validado';
+            }else if(passeSaida.passeSaidaNaoEditado == 1){
+                passeSaida.condicao = 2;
+                passeSaida.editado = 'Não validado';
+            }else{
+                passeSaida.condicao = 3
+                passeSaida.editado = 'Não validado';
+            }   
+        }
+        res.render('formulario/passeSaidas/passeSaidas',
+        {
+            passeSaidas: passeSaidas
+        })
+    }catch(err){
+        req.flash('error_msg', `Erro ao listar passe de saida (${err})`)
+        res.redirect('/formulario')
+    }
+})
+
+
+//----      Rota para paginar Passe de Saída (User)    ----//
+
+
+router.get('/passeSaidas/:page', eUser, async (req, res) => {
+    try{
+        const page = req.params.page || 1;
+        const limit = 5;
+        const skip = (page - 1) * limit;
+        
+        const contagem = await PasseSaida.count();
+        if(parseInt(page) * limit >= contagem){
+            nextPage = '';
+            hidden = 'hidden';
+        } else {
+            nextPage = parseInt(page) + 1;
+            hidden = ''
+        }
+
+        if(parseInt(page) == 2) {
+            previousPage = ''
+        }else{
+            previousPage = parseInt(page) - 1
+        }
+
+        const passeSaidas = await PasseSaida.find({_id: req.user._id}).skip(skip).limit(limit).lean().sort({date: 'desc'})
+        for(const passeSaida of passeSaidas){
+            passeSaida.condicao = 3;
+            passeSaida.editado = 'Não Validado'
+            if(passeSaida.validade >= Date.now()){
+                passeSaida.condicao = 1;
+                passeSaida.editado = 'Validado'
+            }
+            passeSaida.validadeDate = moment(parseInt(passeSaida.validade)).format('DD/MM/YYYY');
+            res.render('formulario/passeSaidas/passeSaidasPage', 
+            {
+                passeSaidas: passeSaidas
+            })
+        }
+    }catch(err){
+        console.log(err)
+        req.flash('error_mg', `Erro ao paginas Passes de Saida: ${err}`);
+        res.redirect('/admin/painel');
+    }
+})
+
+//----      Rota para visualizar Passe de Saída    ----//
+
+
+router.get('/formulario/passeSaidaVizu/:id', eUser, async(req, res) => {
     try{
         const passeSaidas = await PasseSaida.findOne({_id: req.params.id}).lean()
         passeSaidas.destino = await Porto.findOne({_id: passeSaidas.destino}).lean()

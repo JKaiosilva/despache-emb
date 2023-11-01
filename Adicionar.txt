@@ -1,0 +1,4 @@
+alterar visualização de documentos de cada usuário para cada agencia 
+
+req.user -> req.agenciaID
+find({user}) -> find({agenciaID})

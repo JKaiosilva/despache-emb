@@ -1,0 +1,28 @@
+{{#each passeSaidas}}
+    <div id="{{_id}}" class="card mt-4">
+        <div class="card-header">
+            <label class="float-end">Situação: {{editado}}</label>
+            <h6>Passe de Saída: {{NprocessoDespacho}}</h6>
+        </div>
+        <div class="card-body">
+            <div>
+                <label>Agência: {{agenciaNome}}</label>
+                <br>
+                <label>Embarcação: {{embarcacaoNome}}</label>
+                <br>
+                <label>Comandante: {{embarcacaoComandante}}</label>
+                <br>
+            </div>
+        </div>
+        <div class="card-footer">
+            <label>Data Validade: {{validadeData}}</label>
+                <a class="btn btn-success float-end" href="/formulario/passeSaidaVizu/{{_id}}">Visualizar</a>
+                <input type="hidden" name="id" value="{{_id}}">
+                <button type="submit" class="btn btn-danger">Deletar</button>
+            </form>
+        </div>
+    </div>
+{{>_classificacao}}
+{{else}}
+<h6>Nenhum Passe de Saída</h6>
+{{/each}}

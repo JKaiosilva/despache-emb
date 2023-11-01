@@ -140,7 +140,6 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
 
         const agencia = await Usuario.findOne({_id: req.user.agencia}).lean()
 
-        console.log(despachoTripulantesFuncao)
     const novoDespacho = {
         usuarioID: req.user._id,
         agenciaID: req.user.agencia,
@@ -208,7 +207,8 @@ router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
         const tripulantes = []
         for await (var despacho of despachos.despachoTripulantes) {
             try {
-              const tripulante = await Tripulante.findOne({_id: despacho.id}).lean();
+              const tripulante = await Tripulante.findOne({_id: despacho.id}).lean()
+              
               if (despacho.despachoTripulanteFuncao != null && despacho.despachoTripulanteFuncao != undefined) {
                 const funcao = despacho.despachoTripulanteFuncao;
                 tripulante.funcao = funcao;
