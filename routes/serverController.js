@@ -229,6 +229,18 @@ router.get('/formulario', eUser, async (req, res) => {
             const avisoEntradas = await AvisoEntrada.find({agenciaID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
             const avisoSaidas = await AvisoSaida.find({agenciaID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
             const usuarios = await Usuario.find({agencia: req.user._id}).limit(5).lean()
+            const passeSaidas = await PasseSaida.find({agenciaID: req.user._id}).limit(5).lean()
+
+            for await(const passeSaida of passeSaidas){
+                if(passeSaida.validade >= Date.now()){
+                    passeSaida.condicao = 1;
+                    passeSaida.editado = 'Validado';
+                }else{
+                    passeSaida.condicao = 1;
+                    passeSaida.editado = 'Não validado';
+                }
+            }
+
 
             for await(const despacho of despachos){
                 if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
@@ -283,7 +295,8 @@ router.get('/formulario', eUser, async (req, res) => {
                 avisoEntradas: avisoEntradas,
                 usuarios: usuarios, 
                 avisoSaidas: avisoSaidas, 
-                agenciaHidden: agenciaHidden
+                agenciaHidden: agenciaHidden,
+                passeSaidas: passeSaidas
             })
 
         }else if(despachante == 1){
@@ -292,6 +305,19 @@ router.get('/formulario', eUser, async (req, res) => {
             const despachos = await Despacho.find({agenciaID: req.user.agencia}).limit(5).lean().sort({despachoData: 'desc'})
             const avisoEntradas = await AvisoEntrada.find({agenciaID: req.user.agencia}).limit(5).lean().sort({entradaData: 'desc'})
             const avisoSaidas = await AvisoSaida.find({agenciaID: req.user.agencia}).limit(5).lean().sort({saidaData: 'desc'})
+            const passeSaidas = await PasseSaida.find({agenciaID: req.user.agencia}).limit(5).lean()
+
+            for await(const passeSaida of passeSaidas){
+                if(passeSaida.validade >= Date.now()){
+                    passeSaida.condicao = 1;
+                    passeSaida.editado = 'Validado';
+                }else{
+                    passeSaida.condicao = 1;
+                    passeSaida.editado = 'Não validado';
+                }
+            }
+            
+            
             for await(const despacho of despachos){
                 if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
                     despacho.condicao = 1;
@@ -357,7 +383,8 @@ router.get('/formulario', eUser, async (req, res) => {
                 despachanteHidden: despachanteHidden, 
                 alertHidden: alertHidden,
                 docHidden: docHidden,
-                blockHidden: blockHidden                
+                blockHidden: blockHidden,
+                passeSaidas: passeSaidas                
             })
         }else{
             req.flash('error_msg', 'Acesso não autorizado');

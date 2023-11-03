@@ -50,15 +50,12 @@ const bcrypt = require('bcryptjs')
 
 router.get('/passeSaidas', eUser, async(req, res) => {
     try{
-        const passeSaidas = await PasseSaida.find({_id: req.user._id}).limit(5).lean().sort({date: 'desc'})
+        const passeSaidas = await PasseSaida.find({agenciaID: req.user.agencia}).limit(5).lean().sort({date: 'desc'})
 
         for await(const passeSaida of passeSaidas){
-            if(passeSaida.passeSaidaDataValidadeNumber >= Date.now()){
+            if(passeSaida.validade >= Date.now()){
                 passeSaida.condicao = 1;
                 passeSaida.editado = 'Validado';
-            }else if(passeSaida.passeSaidaNaoEditado == 1){
-                passeSaida.condicao = 2;
-                passeSaida.editado = 'Não validado';
             }else{
                 passeSaida.condicao = 3
                 passeSaida.editado = 'Não validado';
@@ -108,11 +105,12 @@ router.get('/passeSaidas/:page', eUser, async (req, res) => {
                 passeSaida.editado = 'Validado'
             }
             passeSaida.validadeDate = moment(parseInt(passeSaida.validade)).format('DD/MM/YYYY');
-            res.render('formulario/passeSaidas/passeSaidasPage', 
-            {
-                passeSaidas: passeSaidas
-            })
+
         }
+        res.render('formulario/passeSaidas/passeSaidasPage', 
+        {
+            passeSaidas: passeSaidas
+        })
     }catch(err){
         console.log(err)
         req.flash('error_mg', `Erro ao paginas Passes de Saida: ${err}`);
@@ -204,11 +202,11 @@ router.get('/admin/passeSaidas/:page', eOperador, async (req, res) => {
                 passeSaida.editado = 'Validado'
             }
             passeSaida.validadeDate = moment(parseInt(passeSaida.validade)).format('DD/MM/YYYY');
-            res.render('formulario/passeSaidas/passeSaidasPage', 
-            {
-                passeSaidas: passeSaidas
-            })
         }
+        res.render('formulario/passeSaidas/passeSaidasPage', 
+        {
+            passeSaidas: passeSaidas
+        })
     }catch(err){
         console.log(err)
         req.flash('error_mg', `Erro ao paginas Passes de Saida: ${err}`);
