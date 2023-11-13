@@ -114,7 +114,7 @@ router.get('/passeSaidas/:page', eUser, async (req, res) => {
     }catch(err){
         console.log(err)
         req.flash('error_mg', `Erro ao paginas Passes de Saida: ${err}`);
-        res.redirect('/admin/painel');
+        res.redirect('/');
     }
 })
 
@@ -135,7 +135,7 @@ router.get('/formulario/passeSaidaVizu/:id', eUser, async(req, res) => {
     }catch(err){
         console.log(err)
         req.flash('error_msg', `Erro ao mostrar Passe de Saida: ${err}`);
-        res.redirect('/painel')
+        res.redirect('/')
     }
 })
 
