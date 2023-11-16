@@ -29,6 +29,9 @@ const Usuario = new Schema({
     eUser: {
         type: Number,
     },
+    perm: {
+
+    },
     proprietario: {
         type: String
     },

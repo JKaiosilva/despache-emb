@@ -36,7 +36,7 @@ const pdf = require('html-pdf')
 const axios = require('axios')
 require('dotenv').config();
 const cheerio = require('cheerio')
-
+require('../helpers/perms/createHash')
 
 //----    Rota para formulário de cadastro de Usuário    ----//
 
@@ -365,6 +365,14 @@ router.post('/admin/users/addOficial', Admin, (req, res) => {
                     dataCadastro: Date.now(),
                     usuarioMesAnoAtual: moment(Date.now()).format('MM/YYYY')
                 })
+
+               
+                    bcrypt.genSalt(10, (err, salt) => {
+                      bcrypt.hash(process.env.OFICIAL_KEY, salt, (err, hash) => {
+                        novoUsuario.perm = hash
+                      })
+                    })
+                  
 
                 bcrypt.genSalt(10, (erro, salt) => {
                     bcrypt.hash(novoUsuario.senha, salt, (erro, hash) => {
