@@ -37,12 +37,13 @@ const axios = require('axios')
 require('dotenv').config();
 const cheerio = require('cheerio')
 const bcrypt = require('bcryptjs')
+const {eOficial} = require('../helpers/perms/eOficial')
 
 
 //----    Rota do Painel admin     ----//
 
 
-router.get('/admin/painel', eOperador, async (req, res) => {
+router.get('/admin/painel', eOficial, async (req, res) => {
     try {
         const API_KEY = process.env.API_KEY
 
