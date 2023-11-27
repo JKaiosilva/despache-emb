@@ -28,10 +28,8 @@ const Correcao = mongoose.model('correcoes');
 const DespachoBin = mongoose.model('despachosBin');
 const PasseSaida = mongoose.model('passeSaidas')
 
-const { Admin } = require('../helpers/perms/eAdmin')
-const { eUser } = require('../helpers/perms/euser')
-const { eOperador } = require('../helpers/perms/eOperador')
-const condicaoDocumento = require('../helpers/conds/condicaoDocumento');
+const {eOficial, eAdmin, eOperador, eAgencia, eDespachante} = require('../helpers/perms/permHash')
+
 
 const moment = require('moment')
 const fs = require('fs')
@@ -47,7 +45,7 @@ const bcrypt = require('bcryptjs')
 //----  Rota para formulário de adição de Despacho    ----//
 
 
-router.get('/formulario/despacho', eUser, async(req, res) => {
+router.get('/formulario/despacho', eDespachante, async(req, res) => {
     try{
         const dataHoje = Date.now()
         const tripulantes = await Tripulante.find({tripulanteValidadeCIRNumber: {$gte: dataHoje}}).lean()
@@ -67,7 +65,7 @@ router.get('/formulario/despacho', eUser, async(req, res) => {
 //----  Rota de postagem de Despacho   ----//
 
 
-router.post('/formulario/despacho', eUser, async (req, res) => {
+router.post('/formulario/despacho', eDespachante, async (req, res) => {
     try{
         const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
         const despachoTripulantes = cleanString.split(',');
@@ -196,7 +194,7 @@ router.post('/formulario/despacho', eUser, async (req, res) => {
 //----  Rota de visualização de Despacho   ----//
 
 
-router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
+router.get('/formulario/despachoVizu/:id', eDespachante, async (req, res) => {
     try{
         if(req.user.eAdmin){
             hidden = ''
@@ -254,7 +252,7 @@ router.get('/formulario/despachoVizu/:id', eUser, async (req, res) => {
 //----  Rota de listagem de Despacho(user)   ----//
 
 
-router.get('/despachos', eUser, async (req, res) => {
+router.get('/despachos', eDespachante, async (req, res) => {
 
     const admin = req.user.eAdmin ? true : false;
     try{
@@ -287,7 +285,7 @@ router.get('/despachos', eUser, async (req, res) => {
 //----  Rota de paginação de Despacho(user)   ----//
 
 
-router.get('/despachos/:page', eUser, async (req, res) => {
+router.get('/despachos/:page', eDespachante, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;

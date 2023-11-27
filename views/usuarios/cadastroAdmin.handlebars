@@ -1,0 +1,33 @@
+{{#each erros}}
+    <div class="alert alert-danger">{{texto}}</div>
+{{else}}
+
+{{/each}}
+
+
+<h3>Crie sua conta:</h3>
+<div class="card">
+    <div class="card-body">
+        <form action="/cadastroAdmin" method="POST">
+        <label for="nome">Passe </label>
+                <input type="text" name="passe" class="form-control" required>
+                <br>
+                <br>
+            <label for="nome"> Nome </label>
+                <input type="text" name="nome" class="form-control" required>
+            <label for="email">Email: </label>
+                <input type="email" name="email" class="form-control" required>
+            <label>CPF: </label>
+                <input maxlength="11" type="text" name="CPF" class="form-control" required>
+            <br>
+                </div>
+                    <label type="senha">Senha: </label>
+                        <input minlength="6" placeholder="A senha precisa ter no mínimo 6 dígitos" type="password" name="senha" class="form-control" required>
+                    <label for="senha2">Repita sua senha: </label>
+                        <input minlength="6" type="password" name="senha2" class="form-control" required>
+                </div>
+            <button type="submit" class="btn btn-success mt-4">Criar conta</button>
+        </form>
+    </div>
+</div>
+{{>_saveLocalForm}}

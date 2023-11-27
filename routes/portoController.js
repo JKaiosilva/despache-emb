@@ -22,9 +22,8 @@ const Porto = mongoose.model('portos')
 const Relatorio = mongoose.model('relatorios');
 const PortoBin = mongoose.model('portosBin')
 
-const { Admin } = require('../helpers/perms/eAdmin')
-const { eUser } = require('../helpers/perms/euser')
-const { eOperador } = require('../helpers/perms/eOperador')
+const {eOficial, eAdmin, eOperador, eAgencia, eDespachante} = require('../helpers/perms/permHash')
+
 
 const moment = require('moment')
 const fs = require('fs')

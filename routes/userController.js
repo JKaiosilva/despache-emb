@@ -20,11 +20,7 @@ const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
 const Relatorio = mongoose.model('relatorios')
 
-const { Admin } = require('../helpers/perms/eAdmin')
-const { eUser } = require('../helpers/perms/euser')
-const { eAgencia } = require('../helpers/perms/eAgencia')
-const { eOficial } = require('../helpers/perms/eOficial')
-const { eOperador } = require('../helpers/perms/eOperador')
+const {eOficial, eAdmin, eOperador, eAgencia, eDespachante} = require('../helpers/perms/permHash')
 
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
@@ -38,10 +34,12 @@ require('dotenv').config();
 const cheerio = require('cheerio')
 require('../helpers/perms/createHash')
 
+
+
 //----    Rota para formulário de cadastro de Usuário    ----//
 
 
-router.get('/usuarios/cadastroUser', async (req, res) => {
+router.get('/usuarios/cadastroUser', eAgencia, async (req, res) => {
     try{
         const agencias = await Usuario.find({eAgencia: 1}).lean()
         res.render('usuarios/cadastro', 
@@ -56,10 +54,10 @@ router.get('/usuarios/cadastroUser', async (req, res) => {
 })
 
 
-//----    Rota de postagem de cadastro de Usuário   ----//
+//----    Rota de postagem de cadastro de Despachante   ----//
 
 
-router.post('/usuarios/cadastroUser', (req, res) => {
+router.post('/usuarios/cadastroUser', eAgencia, (req, res) => {
     var erros = []
 
     if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
@@ -96,6 +94,12 @@ router.post('/usuarios/cadastroUser', (req, res) => {
                     usuarioMesAnoAtual: moment(Date.now()).format('MM/YYYY')
                 })
 
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(process.env.DESPACHANTE_KEY, salt, (err, hash) => {
+                      novoUsuario.perm = hash
+                    })
+                  })
+
                 bcrypt.genSalt(10, (erro, salt) => {
                     bcrypt.hash(novoUsuario.senha, salt, (erro, hash) => {
                         if(erro) {
@@ -127,7 +131,7 @@ router.post('/usuarios/cadastroUser', (req, res) => {
 //----    Rota de visualização de Usuário(admin)   ----//
 
 
-router.get('/users/usuariosVizu/:id', eUser, async (req, res) => {
+router.get('/users/usuariosVizu/:id', eDespachante, async (req, res) => {
     try{
         const checarUser = await Usuario.findOne({_id: req.params.id}).lean()
         if(checarUser.eAgencia == 1){
@@ -188,7 +192,7 @@ router.post('/usuarios/login', async (req, res, next) => {
 //----    Rota para formulário de edição de Usuário    ----//
 
 
-router.get('/admin/users/usuariosEdit/:id', eOperador, async (req, res) => {
+router.get('/admin/users/usuariosEdit/:id', eAgencia, async (req, res) => {
     try{
         const usuario = await Usuario.findOne({_id: req.params.id}).lean()
         const agencias = await Usuario.find({eAgencia: 1}).lean()
@@ -313,7 +317,7 @@ router.post('/users/usuarioEdit', eAgencia, async(req, res) => {
 //----      Rota de visualização de formulario de oficial       ----//
 
 
-router.get('/admin/addOficial', Admin, async(req, res) => {
+router.get('/admin/addOficial', eAdmin, async(req, res) => {
     try{
         res.render('admin/users/addOficial')
     }catch(err){
@@ -324,10 +328,10 @@ router.get('/admin/addOficial', Admin, async(req, res) => {
 })
 
 
-//----      Rota para adicionar Agencia
+//----      Rota para adicionar Oficial     ----//
 
 
-router.post('/admin/users/addOficial', Admin, (req, res) => {
+router.post('/admin/users/addOficial', eAdmin, (req, res) => {
     var erros = []
 
     if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
@@ -458,6 +462,12 @@ router.post('/admin/users/addOperador', eOficial, (req, res) => {
                     usuarioMesAnoAtual: moment(Date.now()).format('MM/YYYY')
                 })
 
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(process.env.OPERADOR_KEY, salt, (err, hash) => {
+                      novoUsuario.perm = hash
+                    })
+                  })
+
                 bcrypt.genSalt(10, (erro, salt) => {
                     bcrypt.hash(novoUsuario.senha, salt, (erro, hash) => {
                         if(erro) {
@@ -500,7 +510,7 @@ router.get('/admin/addAgencia', eOperador, async(req, res) => {
 })
 
 
-//----      Rota para adicionar Agencia
+//----      Rota para adicionar Agencia     ----//
 
 
 router.post('/admin/users/addAgencia', eOperador, (req, res) => {
@@ -542,6 +552,12 @@ router.post('/admin/users/addAgencia', eOperador, (req, res) => {
                     dataCadastro: Date.now(),
                     usuarioMesAnoAtual: moment(Date.now()).format('MM/YYYY')
                 })
+
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(process.env.AGENCIA_KEY, salt, (err, hash) => {
+                      novoUsuario.perm = hash
+                    })
+                  })
 
                 bcrypt.genSalt(10, (erro, salt) => {
                     bcrypt.hash(novoUsuario.senha, salt, (erro, hash) => {
@@ -657,7 +673,7 @@ router.get('/usuarios/logout', (req, res) => {
 //----    Rota de visualização de perfil de Usuário(user)     ----//
 
 
-router.get('/usuarios/perfil', eUser, async (req, res) => {
+router.get('/usuarios/perfil', eDespachante, async (req, res) => {
     try{
         const usuarios = await Usuario.find({_id: req.user._id}).lean().sort()
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({embarcacaoDataCadastro: 'asc'})
@@ -672,5 +688,100 @@ router.get('/usuarios/perfil', eUser, async (req, res) => {
     }
 })
 
+
+//----      Rota para cadastro de Admin       ----//
+
+
+router.get('/cadastroAdmin', async (req, res) => {
+    try{
+        res.render('usuarios/cadastroAdmin')
+    }catch(err){
+        req.flash('error_msg', `Erro ao mostrar página (${err})`)
+        res.redirect('/')
+    }
+})
+
+
+router.post('/cadastroAdmin', async (req, res) => {
+    try{
+        const passe = process.env.PASSE_KEY
+        if(req.body.passe == passe){
+            var erros = []
+        
+            if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
+                erros.push({texto: 'Nome inválido'})
+            }if(!req.body.email || typeof req.body.email == undefined || req.body.email == null) {
+                erros.push({texto: 'Email inválido'})
+            }if(!req.body.CPF || typeof req.body.CPF == undefined || req.body.CPF == null || req.body.CPF.length < 11) {
+                erros.push({texto: 'CPF inválido'})
+            }if(!req.body.senha || typeof req.body.senha == undefined || req.body.senha == null) {
+                erros.push({texto: "Senha inválida"})
+            }if(req.body.senha.length < 6) {
+                erros.push({texto: 'Senha muito curta'})
+            }if(req.body.senha != req.body.senha2) { 
+                erros.push({texto: 'Senhas diferentes'})
+            }if(erros.length > 0) {
+                res.render('usuarios/cadastro', {erros: erros})
+            }else {
+                Usuario.findOne({email: req.body.email}).then((usuario) => {
+                    if(usuario) {
+                        req.flash('error_msg', 'Email já cadastrado')
+                        res.redirect('/usuarios/cadastroUser')
+                    }else{
+                        const novoUsuario = new Usuario({
+                            nome: req.body.nome,
+                            email:req.body.email,
+                            CPF: req.body.CPF,
+                            eAdmin: 1,
+                            oficial: 0,
+                            operador: 0,
+                            eAgencia: 0,
+                            proprietario: req.body.proprietario,
+                            sociosProprietarios: req.body.sociosProprietarios,
+                            eUser: 0,
+                            senha: req.body.senha,
+                            dataCadastro: Date.now(),
+                            usuarioMesAnoAtual: moment(Date.now()).format('MM/YYYY')
+                        })
+        
+                       
+                            bcrypt.genSalt(10, (err, salt) => {
+                              bcrypt.hash(process.env.ADMIN_KEY, salt, (err, hash) => {
+                                novoUsuario.perm = hash
+                              })
+                            })
+                          
+        
+                        bcrypt.genSalt(10, (erro, salt) => {
+                            bcrypt.hash(novoUsuario.senha, salt, (erro, hash) => {
+                                if(erro) {
+                                    console.log(erro)
+                                    req.flash('error_msg', 'Houve um erro ao salvar usuario')
+                                    res.redirect('/usuarios/cadastro')
+                                }
+                                novoUsuario.senha = hash
+                                novoUsuario.save().then(() => {
+                                    req.flash('success_msg', 'Usuario criado com sucesso')
+                                    res.redirect('/usuarios/login')
+                                }).catch((err) => {
+                                    console.log(err)
+                                    req.flash('error_msg', 'Houve um erro ao salvar usuario')
+                                    res.redirect('/usuarios/cadastro')
+                                })
+                            })
+                        })
+                    }
+                })
+            }
+        }else{
+            req.flash('error_msg', 'Houve um erro ao salvar usuario')
+            res.redirect('/cadastroAdmin')
+        }
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', 'Houve um erro ao salvar usuario')
+        res.redirect('/cadastroAdmin')
+    } 
+})
 
 module.exports = router

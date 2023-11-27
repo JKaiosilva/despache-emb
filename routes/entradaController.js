@@ -26,9 +26,8 @@ const Comboio = mongoose.model('comboios')
 const Correcao = mongoose.model('correcoes')
 const AvisoEntradaBin = mongoose.model('avisoEntradasBin');
 
-const { Admin } = require('../helpers/perms/eAdmin')
-const { eUser } = require('../helpers/perms/euser')
-const { eOperador } = require('../helpers/perms/eOperador')
+const {eOficial, eAdmin, eOperador, eAgencia, eDespachante} = require('../helpers/perms/permHash')
+
 
 const moment = require('moment')
 const fs = require('fs')
@@ -44,7 +43,7 @@ const bcrypt = require('bcryptjs')
 //----    Rota para formular Entrada    ----//
 
 
-router.get('/formulario/avisoEntrada', eUser, async (req, res) => {
+router.get('/formulario/avisoEntrada', eDespachante, async (req, res) => {
     try {
         const dataHoje = Date.now()
         const despachos = await Despacho.find({ agenciaID: req.user.agencia, despachoDataValidadeNumber: { $gte: dataHoje } }).lean()
@@ -66,7 +65,7 @@ router.get('/formulario/avisoEntrada', eUser, async (req, res) => {
 //----    Rota para postagem de Entrada   ----//
 
 
-router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
+router.post('/formulario/avisoEntrada', eDespachante, async (req, res) => {
     try {
         const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
         const entradaTripulantes = cleanString.split(',');
@@ -220,7 +219,7 @@ router.post('/formulario/avisoEntrada', eUser, async (req, res) => {
 //----    Rota para visualização da Entrada   ----//
 
 
-router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
+router.get('/formulario/avisoEntradavizu/:id', eDespachante, async (req, res) => {
     try {
         if (req.user.eAdmin) {
             hidden = ''
@@ -298,7 +297,7 @@ router.get('/formulario/avisoEntradavizu/:id', eUser, async (req, res) => {
 //----    Rota para listagem de Entradas(user)   ----//
 
 
-router.get('/entradas', eUser, async (req, res) => {
+router.get('/entradas', eDespachante, async (req, res) => {
     try {
         const admin = req.user.eAdmin ? true : false;
 
@@ -334,7 +333,7 @@ router.get('/entradas', eUser, async (req, res) => {
 //----    Rota para paginação de Entradas(user)   ----//
 
 
-router.get('/entradas/:page', eUser, async (req, res) => {
+router.get('/entradas/:page', eDespachante, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;

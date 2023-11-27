@@ -24,9 +24,6 @@ const Relatorio = mongoose.model('relatorios')
 const Comboio = mongoose.model('comboios')
 const PasseSaida = mongoose.model('passeSaidas')
 
-const { Admin } = require('../helpers/perms/eAdmin')
-const { eUser } = require('../helpers/perms/euser')
-const { eOperador } = require('../helpers/perms/eOperador')
 
 const moment = require('moment')
 const fs = require('fs')
@@ -37,13 +34,13 @@ const axios = require('axios')
 require('dotenv').config();
 const cheerio = require('cheerio')
 const bcrypt = require('bcryptjs')
-const {eOficial} = require('../helpers/perms/eOficial')
+const {eOficial, eAdmin, eOperador, eAgencia, eDespachante} = require('../helpers/perms/permHash')
 
 
 //----    Rota do Painel admin     ----//
 
 
-router.get('/admin/painel', eOficial, async (req, res) => {
+router.get('/admin/painel', eOperador, async (req, res) => {
     try {
         const API_KEY = process.env.API_KEY
 
@@ -216,7 +213,7 @@ router.get('/aviso/:id', async(req, res) => {
 //----    Rota do painel de Formulários do usuário    ----//
 
 
-router.get('/formulario', eUser, async (req, res) => {
+router.get('/formulario', eDespachante, async (req, res) => {
     try{
 
         const despachante = req.user.eUser
@@ -397,32 +394,6 @@ router.get('/formulario', eUser, async (req, res) => {
         res.redirect('/')
     }
 })
-
-
-//----     Rota de educação Fluvial     ----//
-
-
-router.get('/edFluvial', async(req, res) => {
-    try{
-        res.render('pages/edFluvial')
-    }catch(err){
-        req.flash('error_msg', `Erro ao mostrar página de Educação Fluvial (${err})`)
-        res.redirect('/')
-    }
-})
-
-
-//----  Rota de testes      ----//
-
-router.get('/testeAPI', async (req, res) => {
-    try{
-        const avisos = await Aviso.find().lean()
-        res.json(avisos)
-    }catch(err){
-
-    }
-})
-
 
 
 module.exports = router

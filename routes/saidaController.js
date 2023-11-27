@@ -26,9 +26,8 @@ const Comboio = mongoose.model('comboios')
 const Correcao = mongoose.model('correcoes')
 const AvisoSaidaBin = mongoose.model('avisoSaidasBin')
 
-const { Admin } = require('../helpers/perms/eAdmin')
-const { eUser } = require('../helpers/perms/euser')
-const { eOperador } = require('../helpers/perms/eOperador')
+const {eOficial, eAdmin, eOperador, eAgencia, eDespachante} = require('../helpers/perms/permHash')
+
 
 const moment = require('moment')
 const fs = require('fs')
@@ -44,7 +43,7 @@ const bcrypt = require('bcryptjs')
 //----    Rota para formulário de Saída    ----//
 
 
-router.get('/formulario/avisoSaida', eUser, async (req, res) => {
+router.get('/formulario/avisoSaida', eDespachante, async (req, res) => {
     try {
         const dataHoje = Date.now()
         const despachos = await Despacho.find({ agenciaID: req.user.agencia, despachoDataValidadeNumber: { $gte: dataHoje } }).lean()
@@ -66,7 +65,7 @@ router.get('/formulario/avisoSaida', eUser, async (req, res) => {
 //----    Rota de postagem para formulário de Saída    ----//
 
 
-router.post('/formulario/avisoSaida', eUser, async (req, res) => {
+router.post('/formulario/avisoSaida', eDespachante, async (req, res) => {
 
     try {
 
@@ -231,7 +230,7 @@ router.post('/formulario/avisoSaida', eUser, async (req, res) => {
 //----    Rota para visualização de Saída    ----//
 
 
-router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
+router.get('/formulario/avisoSaidaVizu/:id', eDespachante, async (req, res) => {
     try {
         if (req.user.eAdmin) {
             hidden = ''
@@ -308,7 +307,7 @@ router.get('/formulario/avisoSaidaVizu/:id', eUser, async (req, res) => {
 //----    Rota de listagem de Saídas(user)    ----//
 
 
-router.get('/saidas', eUser, async (req, res) => {
+router.get('/saidas', eDespachante, async (req, res) => {
 
     const admin = req.user.eAdmin ? true : false;
     try {
@@ -344,7 +343,7 @@ router.get('/saidas', eUser, async (req, res) => {
 //----    Rota de paginação de Saídas     ----//
 
 
-router.get('/saidas/:page', eUser, async (req, res) => {
+router.get('/saidas/:page', eDespachante, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;

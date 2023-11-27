@@ -30,9 +30,8 @@ const AvisoEntradaBin = mongoose.model('avisoEntradasBin');
 const PasseSaida = mongoose.model('passeSaidas');
 const PasseSaidaBin = mongoose.model('passeSaidasBin')
 
-const { Admin } = require('../helpers/perms/eAdmin')
-const { eUser } = require('../helpers/perms/euser')
-const { eOperador } = require('../helpers/perms/eOperador')
+const {eOficial, eAdmin, eOperador, eAgencia, eDespachante} = require('../helpers/perms/permHash')
+
 
 const moment = require('moment')
 const fs = require('fs')
@@ -48,7 +47,7 @@ const bcrypt = require('bcryptjs')
 //----      Rota para listar Passe de Saída (User)    ----//
 
 
-router.get('/passeSaidas', eUser, async(req, res) => {
+router.get('/passeSaidas', eDespachante, async(req, res) => {
     try{
         const passeSaidas = await PasseSaida.find({agenciaID: req.user.agencia}).limit(5).lean().sort({date: 'desc'})
 
@@ -75,7 +74,7 @@ router.get('/passeSaidas', eUser, async(req, res) => {
 //----      Rota para paginar Passe de Saída (User)    ----//
 
 
-router.get('/passeSaidas/:page', eUser, async (req, res) => {
+router.get('/passeSaidas/:page', eDespachante, async (req, res) => {
     try{
         const page = req.params.page || 1;
         const limit = 5;
@@ -121,7 +120,7 @@ router.get('/passeSaidas/:page', eUser, async (req, res) => {
 //----      Rota para visualizar Passe de Saída    ----//
 
 
-router.get('/formulario/passeSaidaVizu/:id', eUser, async(req, res) => {
+router.get('/formulario/passeSaidaVizu/:id', eDespachante, async(req, res) => {
     try{
         const passeSaidas = await PasseSaida.findOne({_id: req.params.id}).lean()
         passeSaidas.destino = await Porto.findOne({_id: passeSaidas.destino}).lean()

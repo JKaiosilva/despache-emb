@@ -25,8 +25,8 @@ const Relatorio = mongoose.model('relatorios')
 const Comboio = mongoose.model('comboios')
 const Correcao = mongoose.model('correcoes')
 
-const { Admin } = require('../helpers/perms/eAdmin')
-const { eUser } = require('../helpers/perms/euser')
+const {eOficial, eAdmin, eOperador, eAgencia, eDespachante} = require('../helpers/perms/permHash')
+
 
 const moment = require('moment')
 const fs = require('fs')
@@ -42,7 +42,7 @@ const bcrypt = require('bcryptjs')
 //-----     Rota para visualização de solicitação de correção       ----//
 
 
-router.post('/addCorrecao', eUser, async(req, res) => {
+router.post('/addCorrecao', eDespachante, async(req, res) => {
     try{
         const novaCorrecao = {
             usuarioID: req.user._id,

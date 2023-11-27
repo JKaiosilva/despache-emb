@@ -1,3 +1,5 @@
+/*
+
 const express = require('express')
 const mongoose = require('mongoose')
 const router = express.Router()
@@ -20,8 +22,8 @@ const Tripulante = mongoose.model('tripulantes')
 const Porto = mongoose.model('portos')
 const Relatorio = mongoose.model('relatorios')
 
-const { Admin } = require('../helpers/perms/eAdmin')
-const { eUser } = require('../helpers/perms/euser')
+const {eOficial, eAdmin, eOperador, eAgencia, eDespachante} = require('../helpers/perms/permHash')
+
 
 const moment = require('moment')
 const fs = require('fs')
@@ -37,7 +39,7 @@ const bcrypt = require('bcryptjs')
 //----  Rota para formulário de Embarcação    ----//
 
 
-router.get('/formulario/addEmbarcacao', eUser, async (req, res) => {
+router.get('/formulario/addEmbarcacao', eDespachante, async (req, res) => {
     try{
         res.render('formulario/embarcacoes/addEmbarcacao')
     }catch(err){
@@ -50,7 +52,7 @@ router.get('/formulario/addEmbarcacao', eUser, async (req, res) => {
 //----  Rota de Postagem de formulário de Embarcação   ----//
 
 
-router.post('/formulario/addEmbarcacao', eUser, (req, res) => {
+router.post('/formulario/addEmbarcacao', eDespachante, (req, res) => {
     const novaEmbarcacao = {
         usuarioID: req.user._id,
         embarcacaoNome: req.body.embarcacaoNome,
@@ -81,7 +83,7 @@ router.post('/formulario/addEmbarcacao', eUser, (req, res) => {
 //----  Rota de visualização de Embarcação   ----//
 
 
-router.get('/formulario/embarcacaoVizu/:id', eUser, async(req, res) => {
+router.get('/formulario/embarcacaoVizu/:id', eDespachante, async(req, res) => {
     try{
         if(req.user.eAdmin){
             hidden = ''
@@ -110,7 +112,7 @@ router.get('/formulario/embarcacaoVizu/:id', eUser, async(req, res) => {
 //----  Rota de listagem de Embarcação(user)   ----//
 
 
-router.get('/embarcacoes', eUser, async (req, res) => {
+router.get('/embarcacoes', eDespachante, async (req, res) => {
     try{
         const embarcacoes = await Embarcacao.find({usuarioID: req.user._id}).limit(5).lean().sort({embarcacaoNome: 'asc'})
             res.render('formulario/embarcacoes/embarcacoes', 
@@ -127,7 +129,7 @@ router.get('/embarcacoes', eUser, async (req, res) => {
 //----  Rota de paginação de Embarcação(user)   ----//
 
 
-router.get('/embarcacoes/:page', eUser, async (req, res) => {
+router.get('/embarcacoes/:page', eDespachante, async (req, res) => {
     const page = req.params.page || 1;
     const limit = 5;
     const skip = (page - 1) * limit;
@@ -164,7 +166,7 @@ router.get('/embarcacoes/:page', eUser, async (req, res) => {
 //----  Rota para formulário de editar Embarcação    ----//
 
 
-router.get('/admin/embarcacoesEdit/:id', Admin, async(req, res) => {
+router.get('/admin/embarcacoesEdit/:id', eAdmin, async(req, res) => {
     try{
         const embarcacao = await Embarcacao.findOne({_id: req.params.id}).lean()
             res.render('admin/embarcacoes/embarcacaoEdit', 
@@ -327,3 +329,6 @@ router.get('/embarcacao/:id/pdf', Admin, async (req, res) => {
 
 
 module.exports = router
+
+
+*/
