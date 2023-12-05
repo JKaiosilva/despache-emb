@@ -1,0 +1,28 @@
+version: "3"
+services:
+  db:
+    image: mongo
+    container_name: db
+    restart: always
+    volumes:
+      - ./mongo_data:/data/db     
+      
+  node:
+    container_name: node
+    image: node
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - 8081:8081
+    command: sh -c "npm i && npm run start"
+    depends_on:
+      - db
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: 5
+
+volumes:
+  db:
