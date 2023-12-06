@@ -12,9 +12,10 @@ require('./helpers/AddIndex')
 require('./helpers/navBar/barAgencia')
 require('./helpers/AddIndex')
 require('./helpers/navBar/barDespachante')
+require('./helpers/navBar/barAdmin')
 
 
-console.log('foi bb')
+
 
 const path = require('path');
 const session = require('express-session');
@@ -38,8 +39,9 @@ const comboioController = require('./routes/comboioController')
 const relatorioController = require('./routes/relatorioController')
 const correcaoController = require('./routes/correcaoController')
 const passeSaidaController = require('./routes/passeSaidaController')
+const moment = require('moment');
 
-
+console.log(moment(Date.now()).format())
 
 
 // Configurações

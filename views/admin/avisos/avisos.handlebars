@@ -1,8 +1,8 @@
 <h1>Avisos</h1>
 <a href="/admin/addaviso"><button class="btn btn-success mt-4">Novo aviso</button></a>
-
+<br>
 {{#each avisos}}
-    <div class="card mt-4">
+{{!--     <div class="card mt-4">
         <img src="data:{{contentType}};base64,{{data}}" style="width: 10rem;">
         <div class="card-body">
             <h4>{{titulo}}</h4>
@@ -16,6 +16,35 @@
             </form>
         </div>
     </div>
+ --}}
+<div class="card m-4">
+  <div class="row g-0">
+    <div class="col-md-4">
+
+        <img class="m-4" src="data:{{contentType}};base64,{{data}}" style="max-width: 20rem; max-height: 20rem">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <br>
+                <form action="/admin/avisos/deletar" method="POST">
+            <input type="hidden" name="id" value="{{_id}}">
+            <button type="submit" class="btn btn-danger m-2 float-end">Deletar aviso</button>
+        </form>
+        <h4 class="card-title">{{titulo}}</h4>
+        <h6 class="card-text">{{descricao}}</h6>
+      </div>
+    </div>
+  </div>
+    <div class="mx-4">
+      <smal>{{avisoData}}</smal>
+      <a class="btn btn-primary float-end" href="/aviso/{{_id}}">Ler mais</a>
+    </div>
+
+    <br>
+</div>
+
+
+
 {{else}}
     <div class="mt-4">
         <h3>Nenhum aviso postado</h3>
