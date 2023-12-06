@@ -1,0 +1,32 @@
+version: "3"
+services:
+  db:
+    image: mongo:2
+    container_name: db
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./mongo_data:/data/db  
+    environment:
+      MONGO_INITDB_DATABASE: despache-emb   
+      
+  node:
+    container_name: node
+    image: node:18.13.0-alpine
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - '8081:8081'
+    command: sh -c "npm i && npm run start"
+    depends_on:
+      - db
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: 5
+
+volumes:
+  mongo_data:
