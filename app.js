@@ -9,13 +9,12 @@ require('dotenv/config');
 require('dotenv').config()
 
 require('./helpers/AddIndex')
-require('./helpers/perms/euser')
 require('./helpers/navBar/barAgencia')
 require('./helpers/AddIndex')
-require('./helpers/perms/euser')
-require('./helpers/perms/eAdmin')
-require('./helpers/navBar/barAdmin')
 require('./helpers/navBar/barDespachante')
+
+
+console.log('foi bb')
 
 const path = require('path');
 const session = require('express-session');

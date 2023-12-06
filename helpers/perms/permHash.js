@@ -9,7 +9,6 @@ function eAdmin (req, res, next) {
             if(batem){
                 return next()
             }else{
-                console.log('verificação no admin')
                 req.flash('error_msg', 'Você não tem autorização para acessar esta página!')
                 res.redirect('/')
             }
@@ -25,7 +24,6 @@ function eOficial(req, res, next) {
         if(batem){
             return next()
         }else{
-            console.log("verificação no oficial")
             eAdmin(req, res, next)
         }
     })
@@ -40,7 +38,6 @@ function eOperador(req, res, next) {
         if(batem){
             return next()
         }else{
-            console.log('Verificação no operador')
             eOficial(req, res, next)
         }
     
@@ -56,7 +53,6 @@ function eAgencia(req, res, next) {
         if(batem){
             return next()
         }else{
-            console.log('Verificação no operador')
             eOficial(req, res, next)
         }
     
@@ -72,7 +68,6 @@ function eDespachante(req, res, next) {
         if(batem){
             return next()
         }else{
-            console.log('Verificação no despachante')
             eAgencia(req, res, next)
         }
     })

@@ -32,7 +32,6 @@ const pdf = require('html-pdf')
 const axios = require('axios')
 require('dotenv').config();
 const cheerio = require('cheerio')
-require('../helpers/perms/createHash')
 
 
 
