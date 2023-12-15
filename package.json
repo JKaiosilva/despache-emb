@@ -7,13 +7,12 @@
     "dev": "nodemon app.js",
     "docker": "docker compose up --build -d",
     "start-app": "npm i && nodemon -L --inspect=0.0.0.0 ./app.js"
-
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.4.0",
-    "babylonjs": "^6.1.0",
+    "babylonjs": "^6.34.1",
     "bcryptjs": "^2.4.3",
     "chart.js": "^4.3.3",
     "cheerio": "^1.0.0-rc.12",

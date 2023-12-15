@@ -9,7 +9,7 @@
       </div>
     </div>
         <div class="col">
-        <img class="m-4" src="/img/mascoteCFPN.png" style="max-width: 20rem; max-height: 20rem">
+        <img class="m-4" src="/img/mascote.png" style="max-width: 20rem; max-height: 20rem">
     </div>
   </div>
   <br>
@@ -39,7 +39,17 @@
     </div>
   </div>
     <div class="mx-4">
-      <smal>{{avisoData}}</smal>
+      <small script=""><script>function converteData({{avisoData}}){
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+const dataFormatada = new Intl.DateTimeFormat('pt-BR', {
+    dateStyle: 'full',
+    timeStyle: 'full',
+    timeZone: timeZone,
+
+}).format(date)
+return dataFormatada
+}</script></small>
       <a class="btn btn-primary float-end" href="/aviso/{{_id}}">Ler mais</a>
     </div>
     <br>
@@ -55,3 +65,18 @@
 {{else}}
 
 {{/if}}
+<script>
+function converteData(date){
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+const dataFormatada = new Intl.DateTimeFormat('pt-BR', {
+    dateStyle: 'full',
+    timeStyle: 'full',
+    timeZone: timeZone,
+
+}).format(date)
+return dataFormatada
+}
+
+console.log(converteData({{avisoData}}))
+</script>

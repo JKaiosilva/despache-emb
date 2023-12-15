@@ -41,7 +41,7 @@ const correcaoController = require('./routes/correcaoController')
 const passeSaidaController = require('./routes/passeSaidaController')
 const moment = require('moment');
 
-console.log(moment(Date.now()).format())
+console.log(moment(Date.now()).toLocaleString("pt-BR"))
 
 
 // Configurações

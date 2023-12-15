@@ -1,0 +1,11 @@
+
+function converteData(date){
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+return new Intl.DateTimeFormat('pt-BR', {
+    dateStyle: 'full',
+    timeStyle: 'full',
+    timeZone: timeZone,
+
+}).format(date)
+}
