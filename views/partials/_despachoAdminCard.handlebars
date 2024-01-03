@@ -17,8 +17,8 @@
         <div class="card-footer">
             <label>Data Validade: {{despachoDataValidade}}</label>
                 <a class="btn btn-success float-end" href="/formulario/despachoVizu/{{_id}}">Visualizar</a>
-                <a class="btn btn-warning float-end mx-1" href="/admin/despachosValidate/{{_id}}">Editar</a>
-            <form class="float-end" action="/admin/despachos/deletar" method="POST">
+                <a id="validacao{{_id}}" class="btn btn-warning float-end mx-1" href="/admin/despachosValidate/{{_id}}">Validar</a>
+            <form class="float-end mx-1" action="/admin/despachos/deletar" method="POST">
                 <input type="hidden" name="id" value="{{_id}}">
                 <button type="submit" class="btn btn-danger">Deletar</button>
             </form>

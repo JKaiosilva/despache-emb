@@ -171,7 +171,7 @@ router.post('/formulario/despacho', eDespachante, async (req, res) => {
         despachoNomeComandante: req.body.despachoNomeComandante,
         despachoTripulantes: despachoTripulantesArray,
         despachoComboios: comboioEmbarcacoes,
-        despachoDataSolicitada: req.body.despachoDataSolicitada,
+        despachoDataSolicitada: moment(req.body.despachoDataSolicitada).format('DD/MM/YYYY'),
         despachoDataPedido: moment(Date.now()).format('DD/MM/YYYY HH:mm'),
         despachoData: Date.now(),
         depachoMesAnoAtual: moment(Date.now()).format('MM/YYYY'),
@@ -398,70 +398,10 @@ router.get('/admin/despachosValidate/:id', eOperador, async(req, res) => {
 
 router.post('/admin/despachoValidate', eOperador, async(req, res) => {
     try{
-        const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
-        const despachoTripulantes = cleanString.split(',');
-
-        const cleanStringFuncao = req.body.documentTripulantesFuncao.replace(/[\n' \[\]]/g, '');
-        const despachoTripulantesFuncao = cleanStringFuncao.split(',');
-
-        const despachoTripulantesArray = []
-
-        if(despachoTripulantes.length === 1){
-            for(var i = 0; i < despachoTripulantes.length; i++){
-            const tripulante = {
-                id: despachoTripulantes[i],
-                despachoTripulanteFuncao: despachoTripulantesFuncao[i]
-            }
-        
-            despachoTripulantesArray.push(tripulante)
-        }
-        }else{
-            for(var i = 0; i < despachoTripulantes.length; i++){
-                const tripulante = {
-                    id: despachoTripulantes[i],
-                    despachoTripulanteFuncao: despachoTripulantesFuncao[i]
-                }
-                despachoTripulantesArray.push(tripulante)
-            }
-        }
 
         
-  
          await Despacho.updateOne({_id: req.body.id}, {
              NprocessoDespacho: req.body.NprocessoDespacho,
-             despachoPortoEstadia: req.body.despachoPortoEstadia,
-             despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
-             despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
-             despachoDataHoraPartida: req.body.despachoDataHoraPartida,
-             embarcacaoNome: req.body.despachoEmbarcacaoNome,
-             embarcacaoTipo: req.body.embarcacaoTipo,
-             embarcacaoBandeira: req.body.embarcacaoBandeira,
-             embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,
-             embarcacaoArqueacaoBruta: req.body.embarcacaoArqueacaoBruta,
-             embarcacaoComprimentoTotal: req.body.embarcacaoComprimentoTotal,
-             embarcacaoTonelagemPorteBruto: req.body.embarcacaoTonelagemPorteBruto,
-             embarcacaoCertificadoRegistroAmador: req.body.embarcacaoCertificadoRegistroAmador,
-             embarcacaoArmador: req.body.embarcacaoArmador,
-             embarcacaoNCRA: req.body.embarcacaoNCRA,
-             despachoNomeRepresentanteEmbarcacao: req.body.despachoNomeRepresentanteEmbarcacao,
-             despachoCPFCNPJRepresentanteEmbarcacao: req.body.despachoCPFCNPJRepresentanteEmbarcacao,
-             despachoTelefoneRepresentanteEmbarcacao: req.body.despachoTelefoneRepresentanteEmbarcacao,
-             despachoEnderecoRepresentanteEmbarcacao: req.body.despachoEnderecoRepresentanteEmbarcacao,
-             despachoEmailRepresentanteEmbarcacao: req.body.despachoEmailRepresentanteEmbarcacao,
-             despachoDataUltimaInspecaoNaval: req.body.despachoDataUltimaInspecaoNaval,
-             despachoDeficiencias: req.body.despachoDeficiencias,
-             despachoTransportaCargaPerigosa: req.body.despachoTransportaCargaPerigosa,
-             despachoCertificadoTemporario90dias: req.body.despachoCertificadoTemporario90dias,
-             despachoCasoDocumentoExpirado: req.body.despachoCasoDocumentoExpirado,
-             despachoOBS: req.body.despachoOBS,
-             despachoNTripulantes: req.body.despachoNTripulantes,
-             despachoNomeComandante: req.body.despachoNomeComandante,
-             despachoTripulantes: despachoTripulantesArray,
-             despachoNomeEmbarcacao: req.body.despachoNomeEmbarcacao,
-             despachoNEmbN: req.body.despachoNEmbN,
-             despachoComboios: req.body.despachoComboio,
-             embarcacao: req.body.embarcacao,
-             despachoDataSolicitada: req.body.despachoDataSolicitada,
              despachoDataValidade: req.body.despachoDataValidade,
              despachoDataValidadeNumber: Date.parse(req.body.despachoDataValidade),
              despachoValidade: Date.parse(req.body.despachoDataValidade),
@@ -492,6 +432,167 @@ router.post('/admin/despachoValidate', eOperador, async(req, res) => {
          res.redirect('/admin/painel')
      }
  })
+
+ 
+
+ router.get('/despachoCorrecao/:id', eDespachante, async(req, res) => {
+    try{
+        const despachos = await Despacho.findOne({_id: req.params.id}).lean();
+        const portos = await Porto.find().lean();
+        const portoDespacho = await Porto.findOne({_id: despachos.despachoPortoEstadia}).lean().catch((err) => {
+            if(err){
+                return {portoNome: despachos.despachoOutroPortoEstadia}
+            }
+        });
+        const tripDespacho = []
+        for await (var despacho of despachos.despachoTripulantes) {
+            try {
+              const tripulante = await Tripulante.findOne({_id: despacho.id}).lean();
+              if (despacho.despachoTripulanteFuncao != null && despacho.despachoTripulanteFuncao != undefined) {
+                const funcao = despacho.despachoTripulanteFuncao;
+                tripulante.funcao = funcao;
+                tripDespacho.push(tripulante);
+              }
+            } catch (err) {
+              console.error(err);
+            }
+          }
+
+          if(despachos.despachoNaoEditado != 1 && despachos.despachoDataValidadeNumber >= Date.now()){
+            editado = 'Validado'
+        }else if(despachos.despachoNaoEditado == 1){
+            editado = 'Em análise'
+          }else{
+            editado = 'Não validado'
+          } 
+
+        const tripulantes = await Tripulante.find().lean();
+        const correcoes = await Correcao.find({documentoReferente: despachos._id}).lean()
+
+            res.render('formulario/despachos/despachoCorrecao', {
+                despachos: despachos,
+                portos: portos,
+                portoDespacho: portoDespacho,
+                tripDespacho: tripDespacho,
+                tripulantes: tripulantes,
+                correcoes: correcoes,
+                editado: editado
+
+            })
+    }catch(err){
+        console.log(err)
+        req.flash('error_msg', `Erro ao mostrar página de validação de Despacho (${err})`)
+        res.redirect('/admin/painel')
+    }
+})
+
+
+
+
+ router.post('/despachoCorrecao', eDespachante, async(req, res) => {
+    try{
+        if(req.body.condicao != 1){
+            const cleanString = req.body.documentTripulantes.replace(/[\n' \[\]]/g, '');
+            const despachoTripulantes = cleanString.split(',');
+           
+            const cleanStringFuncao = req.body.documentTripulantesFuncao.replace(/[\n' \[\]]/g, '');
+            const despachoTripulantesFuncao = cleanStringFuncao.split(',');
+           
+            const despachoTripulantesArray = []
+           
+            if(despachoTripulantes.length === 1){
+                for(var i = 0; i < despachoTripulantes.length; i++){
+                const tripulante = {
+                    id: despachoTripulantes[i],
+                    despachoTripulanteFuncao: despachoTripulantesFuncao[i]
+                }
+            
+                despachoTripulantesArray.push(tripulante)
+            }
+            }else{
+                for(var i = 0; i < despachoTripulantes.length; i++){
+                    const tripulante = {
+                        id: despachoTripulantes[i],
+                        despachoTripulanteFuncao: despachoTripulantesFuncao[i]
+                    }
+                    despachoTripulantesArray.push(tripulante)
+                }
+            }
+            
+             await Despacho.updateOne({_id: req.body.id}, {
+                 NprocessoDespacho: req.body.NprocessoDespacho,
+                 despachoPortoEstadia: req.body.despachoPortoEstadia,
+                 despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
+                 despachoOutroPortoEstadia: req.body.despachoOutroPortoEstadia,
+                 despachoDataHoraPartida: req.body.despachoDataHoraPartida,
+                 embarcacaoNome: req.body.despachoEmbarcacaoNome,
+                 embarcacaoTipo: req.body.embarcacaoTipo,
+                 embarcacaoBandeira: req.body.embarcacaoBandeira,
+                 embarcacaoNInscricaoautoridadeMB: req.body.embarcacaoNInscricaoautoridadeMB,
+                 embarcacaoArqueacaoBruta: req.body.embarcacaoArqueacaoBruta,
+                 embarcacaoComprimentoTotal: req.body.embarcacaoComprimentoTotal,
+                 embarcacaoTonelagemPorteBruto: req.body.embarcacaoTonelagemPorteBruto,
+                 embarcacaoCertificadoRegistroAmador: req.body.embarcacaoCertificadoRegistroAmador,
+                 embarcacaoArmador: req.body.embarcacaoArmador,
+                 embarcacaoNCRA: req.body.embarcacaoNCRA,
+                 despachoNomeRepresentanteEmbarcacao: req.body.despachoNomeRepresentanteEmbarcacao,
+                 despachoCPFCNPJRepresentanteEmbarcacao: req.body.despachoCPFCNPJRepresentanteEmbarcacao,
+                 despachoTelefoneRepresentanteEmbarcacao: req.body.despachoTelefoneRepresentanteEmbarcacao,
+                 despachoEnderecoRepresentanteEmbarcacao: req.body.despachoEnderecoRepresentanteEmbarcacao,
+                 despachoEmailRepresentanteEmbarcacao: req.body.despachoEmailRepresentanteEmbarcacao,
+                 despachoDataUltimaInspecaoNaval: req.body.despachoDataUltimaInspecaoNaval,
+                 despachoDeficiencias: req.body.despachoDeficiencias,
+                 despachoTransportaCargaPerigosa: req.body.despachoTransportaCargaPerigosa,
+                 despachoCertificadoTemporario90dias: req.body.despachoCertificadoTemporario90dias,
+                 despachoCasoDocumentoExpirado: req.body.despachoCasoDocumentoExpirado,
+                 despachoOBS: req.body.despachoOBS,
+                 despachoNTripulantes: req.body.despachoNTripulantes,
+                 despachoNomeComandante: req.body.despachoNomeComandante,
+                 despachoTripulantes: despachoTripulantesArray,
+                 despachoNomeEmbarcacao: req.body.despachoNomeEmbarcacao,
+                 despachoNEmbN: req.body.despachoNEmbN,
+                 despachoComboios: req.body.despachoComboio,
+                 embarcacao: req.body.embarcacao,
+                 despachoDataSolicitada: moment(req.body.despachoDataSolicitada).format('DD/MM/YYYY'),
+                 despachoDataValidade: req.body.despachoDataValidade,
+                 despachoDataValidadeNumber: Date.parse(req.body.despachoDataValidade),
+                 despachoValidade: Date.parse(req.body.despachoDataValidade),
+             }).then( async () => {
+                const despacho = await Despacho.findOne({_id: req.body.id}).lean()
+                const novoPasseSaida = {
+                   usuarioID: despacho.usuarioID,
+                   agenciaID: despacho.agenciaID,
+                   agenciaNome: despacho.agenciaNome,
+                   NprocessoDespacho: despacho.NprocessoDespacho,
+                   embarcacaoNome: despacho.embarcacaoNome,
+                   embarcacaoBandeira: despacho.embarcacaoBandeira,
+                   embarcacaoComandante: despacho.despachoNomeRepresentanteEmbarcacao,
+                   CFM: despacho.despachoCPFCNPJRepresentanteEmbarcacao,
+                   validade: despacho.despachoDataValidadeNumber,
+                   destino: despacho.despachoPortoEstadia,
+                   date: Date.now()
+                }
+                new PasseSaida(novoPasseSaida).save()
+             })
+    
+             req.flash('success_msg', 'Despacho Editado com sucesso!')
+             res.redirect('/formulario')
+        }else{
+            req.flash('error_msg', `Não é possível editar este Despacho`)
+            res.redirect('/formulario')
+        }
+        
+     }catch(err){
+         console.log(err)
+         req.flash('error_msg', `Erro ao validar este Despacho (${err})`)
+         res.redirect('/formulario')
+     }
+ })
+
+
+
+
+
 
 
 //----  Rota de listagem de Despacho(admin)    ----//

@@ -1,4 +1,4 @@
-<div class="card m-4">
+<div class="card m-4 border border-dark-subtle border-2">
   <div class="row g-0">
     <div class="col-md-8">
       <div class="card-body m-4">
@@ -25,15 +25,16 @@
 <hr>
 {{#each avisos}}
 
-<div class="card m-4">
-  <div class="row g-0">
-    <div class="col-md-4">
-        <img class="m-4" src="data:{{contentType}};base64,{{data}}" style="max-width: 20rem; max-height: 20rem">
+<div class="card border border-dark-subtle border-1 m-4">
+  <div class="row g-0 ">
+    <div class="col-md-4 ">
+        <img class="m-4 " src="data:{{contentType}};base64,{{data}}" style="max-width: 20rem; max-height: 20rem">
     </div>
     <div class="col-md-8">
       <div class="card-body">
         <br>
-        <h4 class="card-title">{{titulo}}</h4>
+        <h4 class="card-title text-center">{{titulo}}</h4>
+        <hr>
         <h6 class="card-text">{{descricao}}</h6>
       </div>
     </div>
