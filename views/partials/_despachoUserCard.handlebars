@@ -1,8 +1,9 @@
 {{#each despachos}}
     <div id="{{_id}}" class="card mt-4">
         <div class="card-header">
-            <label class="float-end">Situação: {{editado}}</label>
             <h6>Despacho: {{NprocessoDespacho}}</h6>
+            <label >Situação: {{editado}}</label>
+
         </div>
         <div class="card-body">
             <div>
@@ -15,9 +16,9 @@
             </div>
         </div>
         <div class="card-footer">
-            <label>Validade: {{despachoDataValidade}}</label>
+            <label>Validade: {{despachoDataValidade}}</label><br>
             <a id="validacao{{_id}}" class="btn btn-warning float-end mx-1" href="/despachoCorrecao/{{_id}}">Corrigir</a>
-            <a class="btn btn-success float-end" href="/formulario/despachoVizu/{{_id}}">Visualizar</a>
+            <a class="btn btn-success" href="/formulario/despachoVizu/{{_id}}">Visualizar</a>
         </div>
     </div>
 {{>_classificacao}}

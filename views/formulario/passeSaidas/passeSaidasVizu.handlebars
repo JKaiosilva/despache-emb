@@ -1,16 +1,25 @@
-<div class="card">
+<h4 class="text-center">PASSE DE SAÍDA POR PERÍODO</h4>
+<br>
+
+<div class="card" style="white-space: normal">
     <div class="card-body">
         <form>
             <div class="input-group">
+                <label class="input-group-text">Nº Processo de Despacho</label>
                 <input type="text" class="form-control" value="{{passeSaidas.NprocessoDespacho}}" disabled>
                 <br>
             </div>
             <div class="mt-4">
                     <p class="card-text" style="white-space: pre-wrap;">De acordo com as Normas da Autoridade Marítima, concede-se Passe de Saída à embarcação, {{passeSaidas.embarcacaoNome}} de Bandeira - {{passeSaidas.embarcacaoBandeira}}</p>
                     <p>tendo como Comandante o {{passeSaidas.embarcacaoComandante}} - CFM {{passeSaidas.CFM}}</p>
-                    <p>Válido de {{passeSaidas.date}} à {{passeSaidas.validade}}.</p>
+                    <p>Válido de {{passeSaidas.date}} até {{passeSaidas.validade}}.</p>
                     <p>Destino: {{passeSaidas.destino.portoNome}}</p>
                 </div>
+                <hr>
+                <p>1) A embarcação empregada na navegação de cabotagem, cruzeiro marítimo, apoio marítimo e pesca está autorizada a trafegar em qualquer porto ou terainal aquaviário nacional, durante a validade do Passe de Saída por Período, desde que na sua chegadar saída, sejam encaminhados ao OD da jurisdição onde a embarcação estiver, os respectivos Avisos de Entrada e de Saída.</p>
+                <br>
+                <p>2) A embarcação empregada na navegação interior está autorizada a trafegar em qualquer porto ou terminal aquaviário, dentro dos limites da navegação interior e da lotação de passageiros, durante a validade do Passe de Saída por Período, desde que na chegada e saída destes, sejam encaminhados ao OD da jurisdição onde a embarcação estiver, os respectivos Avisos de Entrada e de Saída.
+</p>
         </form>
     </div>
 </div>

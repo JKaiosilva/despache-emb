@@ -1,6 +1,3 @@
-
-
-
 <div>
     <div id="comboios">
         <script>
@@ -9,17 +6,7 @@
             var newdiv = document.createElement('div');
             var divId = "div" + divCounter
             newdiv.setAttribute('id', divId)
-            newdiv.innerHTML = '<button class="btn btn-danger btn-sm m-4" style="float: end" type="button" onclick="deleteBranco(\'' + divId + '\')">Excluir</button>';                            
-            newdiv.innerHTML += '<label class="input-group-text">Nome da Embarcação</label>'
-            newdiv.innerHTML += '<input name="embarcacaoNome" class="form-control" type="text">'
-            newdiv.innerHTML += '<label class="input-group-text">Número de Inscrição</label>'
-            newdiv.innerHTML += '<input name="NIncricao" class="form-control" type="text">'                        
-            newdiv.innerHTML += '<label class="input-group-text">carga</label>'
-            newdiv.innerHTML += '<input name="comboiosCarga" class="form-control" type="text">'
-            newdiv.innerHTML += '<label class="input-group-text">quantidade e unidade de carga</label>'
-            newdiv.innerHTML += '<input name="comboiosQuantidadeCarga" class="form-control" type="text">'
-            newdiv.innerHTML += '<label class="input-group-text">Arqueação Bruta</label>'
-            newdiv.innerHTML += '<input name="comboiosarqueacaoBruta" class="form-control" type="text">'
+            newdiv.innerHTML += '<label class="input-group-text">Nome da Embarcação</label><input name="embarcacaoNome" class="form-control" type="text"><label class="input-group-text">Número de Inscrição</label><input name="NIncricao" class="form-control" type="text"><label class="input-group-text">carga</label><input name="comboiosCarga" class="form-control" type="text"><label class="input-group-text">quantidade e unidade de carga</label><input name="comboiosQuantidadeCarga" class="form-control" type="text"><label class="input-group-text">Arqueação Bruta</label><input name="comboiosarqueacaoBruta" class="form-control" type="text"><button class="btn btn-danger btn-sm" style="float: end" type="button" onclick="deleteBranco(\'' + divId + '\')">Excluir</button>';                            
             document.getElementById(divName).appendChild(newdiv);
             document.getElementById('selecaoComboio').setAttribute('class', 'bg')
             var submiteButton = document.getElementById('submitButton')
