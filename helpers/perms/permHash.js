@@ -69,7 +69,7 @@ function eAgencia(req, res, next) {
             if(batem){
                 return next()
             }else{
-                eOficial(req, res, next)
+                eOperador(req, res, next)
             }
         
         })

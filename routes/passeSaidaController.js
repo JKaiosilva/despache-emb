@@ -156,7 +156,7 @@ router.get('/admin/passeSaidas', eOperador, async(req, res) => {
             passeSaida.validadeData = moment(parseInt(passeSaida.validade)).format('DD/MM/YYYY');
         }
         
-        res.render('formulario/passeSaidas/passeSaidas', 
+        res.render('admin/passeSaidas/passeSaidas', 
             {
                 passeSaidas: passeSaidas
             })
@@ -202,7 +202,7 @@ router.get('/admin/passeSaidas/:page', eOperador, async (req, res) => {
             }
             passeSaida.validadeDate = moment(parseInt(passeSaida.validade)).format('DD/MM/YYYY');
         }
-        res.render('formulario/passeSaidas/passeSaidasPage', 
+        res.render('admin/passeSaidas/passeSaidasPage', 
         {
             passeSaidas: passeSaidas
         })

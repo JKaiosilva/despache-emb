@@ -219,6 +219,13 @@ router.get('/formulario/despachoVizu/:id', eDespachante, async (req, res) => {
               console.error(err);
             }
           }
+
+          const comboios = []
+
+          for await(var comboio of despachos.despachoComboios){
+            comboios.push(comboio)
+        }
+
         const portos = await Porto.findOne({ _id: despachos.despachoPortoEstadia}).lean().catch((err) => {
             if(err){
                 return {portoNome: despachos.despachoOutroPortoEstadia}
@@ -232,7 +239,7 @@ router.get('/formulario/despachoVizu/:id', eDespachante, async (req, res) => {
         const avisoEntradas = await AvisoEntrada.find({entradaDespacho: despachos._id}).lean()
         const avisoSaidas = await AvisoSaida.find({saidaDespacho: despachos._id}).lean()
         const correcoes = await Correcao.find({documentoReferente: despachos._id}).lean()
-
+        console.log(tripulantes, comboios)
             res.render('formulario/despachos/despachoVizu',
                 {
                     despachos: despachos,
@@ -242,7 +249,8 @@ router.get('/formulario/despachoVizu/:id', eDespachante, async (req, res) => {
                     avisoSaidas: avisoSaidas,
                     correcoes: correcoes,
                     hidden: hidden,
-                    editado: editado
+                    editado: editado,
+                    comboios: comboios
                 })
     }catch(err){
         console.log(err)
@@ -572,7 +580,7 @@ router.post('/admin/despachoValidate', eOperador, async(req, res) => {
                    destino: despacho.despachoPortoEstadia,
                    date: Date.now()
                 }
-                new PasseSaida(novoPasseSaida).save()
+                //new PasseSaida(novoPasseSaida).save()
              })
     
              req.flash('success_msg', 'Despacho Editado com sucesso!')

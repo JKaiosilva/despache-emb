@@ -164,32 +164,36 @@
                 <div>
                     <h4 class="text-center mt-4">Comboios</h4>
                 </div>
-                {{#each despachos.despachoComboios}}
-                <div class="bg-secondary">
-                    <span>Embarcacão: {{add @index 1}}</span>
-                    <div class="input-group">
-                        <label class="input-group-text">Nome da Embarcação</label>
-                        <input value="{{embarcacaoNome}}" class="form-control" disabled>
+                
+                    {{#each comboios}}
+                    <div>
+                    <div class="bg-secondary">
+                        <span>Embarcacão: {{add @index 1}}</span>
+                        <div class="input-group">
+                            <label class="input-group-text">Nome da Embarcação</label>
+                            <input value="{{embarcacaoNome}}" class="form-control" disabled>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-group-text">Número de Inscrição</label>
+                            <input value="{{NInscricao}}" class="form-control" type="text" disabled>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-group-text">carga</label>
+                            <input value="{{carga}}" class="form-control" type="text" disabled>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-group-text">quantidade e unidade de carga</label>
+                            <input value="{{quantidade}}" class="form-control" type="text" disabled>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-group-text">Arqueação Bruta</label>
+                            <input value="{{arqueacaoBruta}}" class="form-control" type="text" disabled>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label class="input-group-text">Número de Inscrição</label>
-                        <input value="{{NInscricao}}" class="form-control" type="text" disabled>
                     </div>
-                    <div class="input-group">
-                        <label class="input-group-text">carga</label>
-                        <input value="{{carga}}" class="form-control" type="text" disabled>
-                    </div>
-                    <div class="input-group">
-                        <label class="input-group-text">quantidade e unidade de carga</label>
-                        <input value="{{quantidade}}" class="form-control" type="text" disabled>
-                    </div>
-                    <div class="input-group">
-                        <label class="input-group-text">Arqueação Bruta</label>
-                        <input value="{{arqueacaoBruta}}" class="form-control" type="text" disabled>
-                    </div>
-                </div>
-                <br>
-                {{/each}}
+                    <br>
+                    {{/each}}
+
                 
                 <br>
 

@@ -19,7 +19,7 @@
                 <h4 class="text-center">Dados de Despacho (data off Clearence)</h4>
                 <div class="input-group mb-3">
                     <label class="input-group-text">Porto de Estadia</label>
-                    <input name="despachoPortoEstadia" class="form-control" type="text" value="{{portos.portoNome}}"disabled>
+                    <input name="despachoPortoEstadia" class="form-control" type="text" value="{{portoDespacho.portoNome}}"disabled>
                     <label class="input-group-text">Data/Hora Estimada de Partida</label>
                     <input name="despachoDataHoraPartida" class="form-control" type="datetime-local"
                         value="{{despachos.despachoDataHoraPartida}}" disabled>
@@ -139,7 +139,7 @@
                             value="{{despachos.despachoNomeComandante}}" disabled>
                     </div>
                 </div>
-                {{#each tripulantes}}
+                {{#each tripDespacho}}
                 <div>
                     <div id="tripulantes" class="card bg-secondary mt-4">
                         <span>Tripulante: {{add @index 1}}</span>
