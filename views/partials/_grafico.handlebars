@@ -1,0 +1,48 @@
+
+<script>
+const ctx1 = document.getElementById('grafico');
+
+  new Chart(ctx1, {
+    type: 'bar',
+    data: {
+      labels: ['Empurrador', 'Barcaça', 'Total'],
+      datasets: [{
+        label: 'Embarcações Estrangeiras',
+        data: [{{relatorios.somaEmbarcacaoInternacionalEmp}}, {{relatorios.somaEmbarcacaoBarcaca}}, {{relatorios.totalExtrangeiro}}],
+        borderWidth: 1
+      }],
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+
+
+  const ctx2 = document.getElementById('grafico2');
+
+  new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: ['Rebocador-Empurrador', 'Balsa', 'Carga Geral', 'Draga', 'Empurrador' 'Lancha', 'Barcaça', 'Total'],
+      datasets: [{
+        label: 'Embarcações Nacionais',
+        data: [{{relatorios.somaEmbarcacaoRebocadorEmpurador}}, {{relatorios.somaEmbarcacaoBalsa}}, {{relatorios.somaEmbarcacaoCargaGeral}}, {{relatorios.somaEmbarcacaoDraga}}, {{relatorios.somaEmbarcacaoNacionalEmp}}, {{relatorios.somaEmbarcacaoLancha}}, {{relatorios.somaEmbarcacaoBarcaca}}, {{relatorios.totalNacional}}],
+        borderWidth: 1
+      }],
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+  
+</script>
+

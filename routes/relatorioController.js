@@ -376,14 +376,14 @@ router.get('/admin/relatorioSaidas', eOperador, async (req, res) => {
                         </table>
 
                             `
-
+/*
         pdf.create(html).toStream((err, stream) => {
-            if (err) return res.send(err);
+            if (err) return res.send(err, console.log(err));
             res.attachment(`Relatorio.pdf`);
             res.setHeader('Content-Type', 'application/pdf');
             stream.pipe(res);
         })
-
+*/
         const novoRelatorio = {
             usuarioID: req.user_id,
             mesEmbarcacaoInternacionalEmp: mesEmbarcacaoInternacionalEmp,
@@ -421,7 +421,8 @@ router.get('/admin/relatorioSaidas', eOperador, async (req, res) => {
                 await Relatorio(novoRelatorio).save()
             }
         }
-
+        req.flash('success_msg', `Relatório criado com sucesso`)
+        res.redirect('/admin/relatorios');
     } catch (err) {
         console.log(err)
         req.flash('error_msg', `Erro ao gerar Relatório (${err})`)

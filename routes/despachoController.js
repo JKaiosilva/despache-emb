@@ -223,6 +223,7 @@ router.get('/formulario/despachoVizu/:id', eDespachante, async (req, res) => {
           const comboios = []
 
           for await(var comboio of despachos.despachoComboios){
+            
             comboios.push(comboio)
         }
 
@@ -562,7 +563,7 @@ router.post('/admin/despachoValidate', eOperador, async(req, res) => {
                  despachoComboios: req.body.despachoComboio,
                  embarcacao: req.body.embarcacao,
                  despachoDataSolicitada: moment(req.body.despachoDataSolicitada).format('DD/MM/YYYY'),
-                 despachoDataValidade: req.body.despachoDataValidade,
+                 despachoDataValidade: moment(req.body.despachoDataValidade).format('DD/MM/YYYY'),
                  despachoDataValidadeNumber: Date.parse(req.body.despachoDataValidade),
                  despachoValidade: Date.parse(req.body.despachoDataValidade),
              }).then( async () => {
