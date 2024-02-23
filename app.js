@@ -102,7 +102,7 @@ console.log(moment(Date.now()).toLocaleString("pt-BR"))
     
 
 // Rota
-        app.get('/', (req, res) => {
+        app.get('/',  (req, res) => {
             Aviso.find().limit(5).lean().sort({_id: 'desc'}).then((avisos) => {
                 avisos.forEach((aviso) => {
                     aviso.data = aviso.data.toString('base64')

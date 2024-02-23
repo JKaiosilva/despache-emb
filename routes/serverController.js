@@ -131,6 +131,16 @@ router.get('/admin/painel', eOperador, async (req, res) => {
 });
 
 
+
+router.get('/admin/contagemDocs', eOperador, async(req, res) => {
+    try{
+        const despachos = await Despacho.find({despachoNaoEditado: 1}).count();
+        res.json(despachos);
+    }catch(err){
+        console.log(err)
+    }
+})
+
 //----    Rota da página de informações da plataforma     ----//
 
 router.get('/pages/sobrenos', async (req, res) => {

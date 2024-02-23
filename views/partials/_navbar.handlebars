@@ -26,7 +26,7 @@
 {{#if user}}
   {{#ifAdmin user}}
     <li class="nav-item">
-        <a class="nav-link" href="/admin/painel">Painel ADM<span class="notification-badge mt-1 mx-1">{{notificado}}</span></a>
+        <a class="nav-link" href="/admin/painel">Painel ADM<span id="barraDeNav" class="notification-badge mt-1 mx-1"></span></a>
     </li>
       {{/ifAdmin}}
       {{#ifAgencia user}}
@@ -51,3 +51,4 @@
   </li>
  {{/if}}
 </ul>
+<script src="/js/contarDocs.js"></script>
