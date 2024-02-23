@@ -2,9 +2,19 @@
 <style>
   .custom-nav {
     font-size: 1.5rem;
-    color: white; /* Altera a cor do texto para branco */
-    border-bottom: 4px solid white; /* Aumenta a grossura da barra de navegação */
-    height: 60px; /* Ajusta a altura da barra de navegação */
+    color: white; 
+    border-bottom: 4px solid white; 
+    height: 60px; 
+    position: relative;
+  }
+
+  .notification-badge {
+    position: absolute;
+    background-color: rgb(24, 34, 170);
+    color: white;
+    border-radius: 50%;
+    padding: 4px 10px;
+    font-size: 0.8rem;
   }
 </style>
 
@@ -16,7 +26,7 @@
 {{#if user}}
   {{#ifAdmin user}}
     <li class="nav-item">
-        <a class="nav-link" href="/admin/painel">Painel ADM</a>
+        <a class="nav-link" href="/admin/painel">Painel ADM<span class="notification-badge mt-1 mx-1">{{notificado}}</span></a>
     </li>
       {{/ifAdmin}}
       {{#ifAgencia user}}

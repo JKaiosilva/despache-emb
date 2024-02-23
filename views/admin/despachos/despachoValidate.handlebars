@@ -10,7 +10,7 @@
             <input type="hidden" name="usuarioID" value="%= req.user._id %">
             <div class="input-group mb-3">
                 <label class="input-group-text">N° Processo de Despacho</label>
-                <input name="NprocessoDespacho" class="form-control" type="text" value="{{despachos.NprocessoDespacho}}">
+                <input name="NprocessoDespacho" class="form-control" type="text" value="{{despachos.NprocessoDespacho}}" required>
                 <label class="input-group-text">Situação do processo</label>
                 <input name="NprocessoDespacho" class="form-control" type="text" value="{{editado}}"disabled>
             </div>
@@ -203,7 +203,7 @@
             <div class="input-group mb-3">
                 <label class="input-group-text">Vencimento do despacho</label>
                 <input name="despachoDataValidade" class="form-control" type="date"
-                    placeholder="Este campo será preenchido após verificação do despachante">
+                    placeholder="Este campo será preenchido após verificação do despachante" required>
             </div>
             <button type="submit" class="btn btn-success">Validar</button>
         </form>

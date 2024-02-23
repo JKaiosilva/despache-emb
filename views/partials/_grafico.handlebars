@@ -20,15 +20,15 @@ const ctx1 = document.getElementById('grafico');
       }
     }
   });
+</script>
 
-
-
+<script>
   const ctx2 = document.getElementById('grafico2');
 
   new Chart(ctx2, {
     type: 'bar',
     data: {
-      labels: ['Rebocador-Empurrador', 'Balsa', 'Carga Geral', 'Draga', 'Empurrador' 'Lancha', 'Barcaça', 'Total'],
+      labels: ['Rebocador', 'Balsa', 'Carga Geral', 'Draga', 'Empurrador', 'Lancha', 'Barcaça', 'Total'],
       datasets: [{
         label: 'Embarcações Nacionais',
         data: [{{relatorios.somaEmbarcacaoRebocadorEmpurador}}, {{relatorios.somaEmbarcacaoBalsa}}, {{relatorios.somaEmbarcacaoCargaGeral}}, {{relatorios.somaEmbarcacaoDraga}}, {{relatorios.somaEmbarcacaoNacionalEmp}}, {{relatorios.somaEmbarcacaoLancha}}, {{relatorios.somaEmbarcacaoBarcaca}}, {{relatorios.totalNacional}}],

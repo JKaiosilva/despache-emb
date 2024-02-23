@@ -35,6 +35,7 @@ require('dotenv').config();
 const cheerio = require('cheerio')
 const bcrypt = require('bcryptjs')
 const {eOficial, eAdmin, eOperador, eAgencia, eDespachante} = require('../helpers/perms/permHash')
+const notifiCheck = require('../helpers/conds/notificacaoAdmin');
 
 
 //----    Rota do Painel admin     ----//
@@ -59,8 +60,7 @@ router.get('/admin/painel', eOperador, async (req, res) => {
                 throw err;
             }
         })
-
-
+        const notificado = await notifiCheck();
         const medidaRio = {};
 
         const RioParaguai = await axios.get('https://www.marinha.mil.br/chn-6/')
@@ -120,7 +120,8 @@ router.get('/admin/painel', eOperador, async (req, res) => {
                 oficialHidden: oficialHidden,
                 oficiais: oficiais,
                 operadores: operadores,
-                passeSaidas: passeSaidas
+                passeSaidas: passeSaidas,
+                notificado: notificado
             });
     } catch (err) {
         console.log(err);

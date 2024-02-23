@@ -1,70 +1,16 @@
-<h3>Relatório: {{relatorios.relatorioDataString}}</h3>
+<h3 class="text-center">Relatório: {{relatorios.relatorioDataString}}</h3>
 <br>
 
-    <table border="1">
-        <thead>
-            <tr><th>Embarcações Estrangeiras</th></tr>
-        </thead>
-        <tr>
-            <td>Empurrador</td>
-            <td>{{relatorios.somaEmbarcacaoInternacionalEmp}}</td>
-        </tr>
-        <tr>
-            <td>Barcaça</td>
-            <td>{{relatorios.somaEmbarcacaoBarcaca}}</td>
-        </tr>
-        <tr>
-            <td>Total</td>
-            <td>{{relatorios.totalExtrangeiro}}</td>
-        </tr>
-        <thead>
-            <tr><th>Embarcações Nacionais</th></tr>
-        </thead>
-        <tr>
-            <td>Rebocador/Empurrador</td>
-            <td>{{relatorios.somaEmbarcacaoRebocadorEmpurador}}</td>
-        </tr>
-        <tr>
-            <td>Balsa</td>
-            <td>{{relatorios.somaEmbarcacaoBalsa}}</td>
-        </tr>        
-        <tr>
-            <td>Carga Geral</td>
-            <td>{{relatorios.somaEmbarcacaoCargaGeral}}</td>
-        </tr>        
-        <tr>
-            <td>Draga</td>
-            <td>{{relatorios.somaEmbarcacaoDraga}}</td>
-        </tr>        
-        <tr>
-            <td>Empurrador</td>
-            <td>{{relatorios.somaEmbarcacaoNacionalEmp}}</td>
-        </tr>
-        <tr>
-            <td>Lancha</td>
-            <td>{{relatorios.somaEmbarcacaoLancha}}</td>
-        </tr>
-        <tr>
-            <td>Embarcação de Passageiros</td>
-            <td>{{relatorios.somaEmbarcacaoPassageiros}}</td>
-        </tr>
-        <tr>
-            <td>Total</td>
-            <td>{{relatorios.totalNacional}}</td>
-        </tr>
-        <tr>
-            <td>Total de Passageiros</td>
-            <td>{{relatorios.somaPassageiros}}</td>
-        </tr>
-    </table>
-<br>
-
-
-<div>
-    <canvas id="grafico"></canvas>
+<div class="card m-4" style="width: 50rem;">
+    <div class="card-body ">
+        <canvas id="grafico"></canvas>
+    </div>
 </div>
-<div>
-    <canvas id="grafico2"></canvas>
+
+<div class="card m-4" style="width: 50rem;">
+    <div class="card-body ">
+        <canvas id="grafico2"></canvas>
+    </div>
 </div>
 <a class="btn btn-primary" href="/admin/relatorios">Relatórios</a>
 
