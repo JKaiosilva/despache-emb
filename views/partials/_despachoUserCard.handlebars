@@ -16,10 +16,9 @@
             </div>
         </div>
         <div class="card-footer">
-            <label>Validade: {{despachoDataValidade}}</label><br>
-            <a id="validacao{{_id}}" class="btn btn-warning float-end mx-1" href="/despachoCorrecao/{{_id}}">Corrigir</a>
-            <a class="btn btn-success" href="/formulario/despachoVizu/{{_id}}">Visualizar</a>
+            <label>Validade: {{despachoDataValidade}}</label><a id="validacao{{_id}}" class="btn btn-warning float-end" href="/despachoCorrecao/{{_id}}">Corrigir</a>
         </div>
+        <a class="btn btn-success" href="/formulario/despachoVizu/{{_id}}">Visualizar</a>
     </div>
 {{>_classificacao}}
 {{else}}

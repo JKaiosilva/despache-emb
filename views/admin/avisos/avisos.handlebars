@@ -2,53 +2,45 @@
 <a href="/admin/addaviso"><button class="btn btn-success mt-4">Novo aviso</button></a>
 <br>
 {{#each avisos}}
-{{!--     <div class="card mt-4">
-        <img src="data:{{contentType}};base64,{{data}}" style="width: 10rem;">
-        <div class="card-body">
-            <h4>{{titulo}}</h4>
-            <h4>{{descricao}}</h4>
-            <h4>{{conteudo}}</h4>
-            <h4>{{avisoData}}</h4>
-            <br>
-            <form action="/admin/avisos/deletar" method="POST">
-                <input type="hidden" name="id" value="{{_id}}">
-                <button type="submit" class="btn btn-danger mt-2">Deletar aviso</button>
-            </form>
-        </div>
-    </div>
- --}}
-<div class="card m-4">
-  <div class="row g-0">
-    <div class="col-md-4">
 
-        <img class="m-4" src="data:{{contentType}};base64,{{data}}" style="max-width: 20rem; max-height: 20rem">
+<div class="card border border-dark-subtle border-1 m-4">
+  <div class="row g-0 ">
+    <div class="col-md-4 ">
+        <img class="m-4 " src="data:{{contentType}};base64,{{data}}" style="max-width: 20rem; max-height: 20rem">
     </div>
     <div class="col-md-8">
       <div class="card-body">
         <br>
-                <form action="/admin/avisos/deletar" method="POST">
-            <input type="hidden" name="id" value="{{_id}}">
-            <button type="submit" class="btn btn-danger m-2 float-end">Deletar aviso</button>
-        </form>
-        <h4 class="card-title">{{titulo}}</h4>
+        <div class="card-header">
+        <h4 class="text-center" style="white-space: pre-wrap;">{{titulo}}</h4>
+
+        </div>
+        <hr>
         <h6 class="card-text">{{descricao}}</h6>
       </div>
     </div>
   </div>
     <div class="mx-4">
-      <smal>{{avisoData}}</smal>
-      <a class="btn btn-primary float-end" href="/aviso/{{_id}}">Ler mais</a>
+      <small script=""><script>function converteData({{avisoData}}){
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+const dataFormatada = new Intl.DateTimeFormat('pt-BR', {
+    dateStyle: 'full',
+    timeStyle: 'full',
+    timeZone: timeZone,
+
+}).format(date)
+return dataFormatada
+}</script></small>
+      <a class="btn btn-primary float-end" href="/aviso/{{_id}}">Ler mais</a><form action="/admin/avisos/deletar" method="POST"><input type="hidden" name="id" value="{{_id}}"><button type="submit" class="btn btn-danger">Deletar aviso</button>
+        </form>
     </div>
 
     <br>
 </div>
 
-
-
 {{else}}
-    <div class="mt-4">
-        <h3>Nenhum aviso postado</h3>
-    </div>
+      <h5>Nenhuma aviso postado</h5>
 {{/each}}
 <br>
 <a href="/admin/painel" class="btn btn-primary">Painel</a>

@@ -16,12 +16,12 @@
         </div>
         <div class="card-footer">
                 <label class="mt-2">Data: {{entradaDataPedido}}</label>
-                <a class="btn btn-success float-end mx-2" href="/formulario/avisoEntradavizu/{{_id}}">Visualizar</a>
             <form class="float-end" action="/admin/entradas/deletar" method="POST">
                 <input type="hidden" name="id" value="{{_id}}">
                 <button type="submit" class="btn btn-danger">Deletar</button>
             </form>
         </div>
+        <a class="btn btn-success" href="/formulario/avisoEntradavizu/{{_id}}">Visualizar</a>
     </div>
 {{>_classificacao}}
 {{else}}
