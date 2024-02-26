@@ -219,7 +219,7 @@ router.get('/admin/passeSaidas/:page', eOperador, async (req, res) => {
 
 router.post('/admin/passeSaida/deletar', eOperador, async(req, res) =>{
     try{
-        const id = req.body.id;
+        const id = parseInt(req.body.id);
         const passeSaida = await PasseSaida.findOne({_id: id});
         passeSaida.deletadoPor = req.user._id;
         passeSaida.deletadoEm = Date.now();

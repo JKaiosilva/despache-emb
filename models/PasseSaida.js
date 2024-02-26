@@ -14,6 +14,9 @@ const PasseSaida = new Schema({
     NprocessoDespacho: {
 
     },
+    despachoId:{
+
+    },
     embarcacaoNome: {
 
     },

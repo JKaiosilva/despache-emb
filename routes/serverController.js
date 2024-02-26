@@ -228,19 +228,20 @@ router.get('/formulario', eDespachante, async (req, res) => {
     try{
 
         const despachante = req.user.eUser
-        const agencia = req.user.eAgencia
+        const eAgencia = req.user.eAgencia
 
         const dataHoje = Date.now()
 
-        if(agencia == 1){
+        if(eAgencia == 1){
         
             const despachos = await Despacho.find({agenciaID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'})
             const avisoEntradas = await AvisoEntrada.find({agenciaID: req.user._id}).limit(5).lean().sort({entradaData: 'desc'})
             const avisoSaidas = await AvisoSaida.find({agenciaID: req.user._id}).limit(5).lean().sort({saidaData: 'desc'})
-            const usuarios = await Usuario.find({agencia: req.user._id}).limit(5).lean()
-            const passeSaidas = await PasseSaida.find({agenciaID: req.user._id}).limit(5).lean()
-
+            const usuarios = await Usuario.find({agencia: req.user.id}).limit(5).lean().sort({nome: 'desc'})
+            const passeSaidas = await PasseSaida.find({agenciaID: req.user.id}).limit(5).lean().sort({date: 'desc'})
+            console.log(usuarios, passeSaidas)
             for await(const passeSaida of passeSaidas){
+                passeSaida.dataValidade = moment(parseInt(passeSaida.validade)).format('DD/MM/YYYY');
                 if(passeSaida.validade >= Date.now()){
                     passeSaida.condicao = 1;
                     passeSaida.editado = 'Validado';
@@ -252,6 +253,8 @@ router.get('/formulario', eDespachante, async (req, res) => {
 
 
             for await(const despacho of despachos){
+                despacho.despachoDataValidade = moment(parseInt(despacho.despachoDataValidadeNumber)).format('DD/MM/YYYY')
+
                 if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
                     despacho.condicao = 1;
                     despacho.editado = 'Validado';
@@ -266,12 +269,9 @@ router.get('/formulario', eDespachante, async (req, res) => {
 
             for await(const avisoEntrada of avisoEntradas){
                 avisoEntrada.entradaDataValidade = moment(parseInt(avisoEntrada.entradaDataValidadeNumber)).format('DD/MM/YYYY');
-                if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+                if(avisoEntrada.entradaDataValidadeNumber >= Date.now()){
                     avisoEntrada.condicao = 1;
                     avisoEntrada.editado = 'Validado'
-                }else if(avisoEntrada.entradaNaoEditado == 1){
-                    avisoEntrada.condicao = 2;
-                    avisoEntrada.editado = 'Em análise'
                 }else{
                     avisoEntrada.condicao = 3
                     avisoEntrada.editado = 'Não validado'
@@ -281,13 +281,10 @@ router.get('/formulario', eDespachante, async (req, res) => {
 
             for await(const avisoSaida of avisoSaidas){
                 avisoSaida.saidaDataValidade = moment(parseInt(avisoSaida.saidaDataValidadeNumber)).format('DD/MM/YYYY');
-                if(avisoSaida.saidaNaoEditado == 0 && avisoSaida.saidaDataValidadeNumber >= Date.now()){
+                if(avisoSaida.saidaDataValidadeNumber >= Date.now()){
                     avisoSaida.condicao = 1;
                     avisoSaida.editado = 'Validado'
 
-                }else if(avisoSaida.saidaNaoEditado == 1){
-                    avisoSaida.condicao = 2;
-                    avisoSaida.editado = 'Em análise'
                 }else{
                     avisoSaida.condicao = 3
                     avisoSaida.editado = 'Não validado'
@@ -317,6 +314,8 @@ router.get('/formulario', eDespachante, async (req, res) => {
             const passeSaidas = await PasseSaida.find({agenciaID: req.user.agencia}).limit(5).lean()
 
             for await(const passeSaida of passeSaidas){
+                passeSaida.dataValidade = moment(parseInt(passeSaida.validade)).format('DD/MM/YYYY');
+
                 if(passeSaida.validade >= Date.now()){
                     passeSaida.condicao = 1;
                     passeSaida.editado = 'Validado';
@@ -328,6 +327,8 @@ router.get('/formulario', eDespachante, async (req, res) => {
             
             
             for await(const despacho of despachos){
+                despacho.despachoDataValidade = moment(parseInt(despacho.despachoDataValidadeNumber)).format('DD/MM/YYYY')
+
                 if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
                     despacho.condicao = 1;
                     despacho.editado = 'Validado';
@@ -342,12 +343,9 @@ router.get('/formulario', eDespachante, async (req, res) => {
 
             for await(const avisoEntrada of avisoEntradas){
                 avisoEntrada.entradaDataValidade = moment(parseInt(avisoEntrada.entradaDataValidadeNumber)).format('DD/MM/YYYY');
-                if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+                if(avisoEntrada.entradaDataValidadeNumber >= Date.now()){
                     avisoEntrada.condicao = 1;
                     avisoEntrada.editado = 'Validado'
-                }else if(avisoEntrada.entradaNaoEditado == 1){
-                    avisoEntrada.condicao = 2;
-                    avisoEntrada.editado = 'Em análise'
                 }else{
                     avisoEntrada.condicao = 3
                     avisoEntrada.editado = 'Não validado'
@@ -357,12 +355,9 @@ router.get('/formulario', eDespachante, async (req, res) => {
             
             for await(const avisoSaida of avisoSaidas){
                 avisoSaida.saidaDataValidade = moment(parseInt(avisoSaida.saidaDataValidadeNumber)).format('DD/MM/YYYY');
-                if(avisoSaida.saidaNaoEditado == 0 && avisoSaida.saidaDataValidadeNumber >= Date.now()){
+                if(avisoSaida.saidaDataValidadeNumber >= Date.now()){
                     avisoSaida.condicao = 1;
                     avisoSaida.editado = 'Validado'
-                }else if(avisoSaida.saidaNaoEditado == 1){
-                    avisoSaida.condicao = 2;
-                    avisoSaida.editado = 'Em análise'
                 }else{
                     avisoSaida.condicao = 3
                     avisoSaida.editado = 'Não validado'

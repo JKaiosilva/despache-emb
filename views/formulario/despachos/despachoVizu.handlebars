@@ -204,7 +204,7 @@
             <div class="input-group mb-3">
                 <label class="input-group-text">Vencimento do despacho</label>
                 <input value="{{despachos.despachoDataValidade}}" class="form-control" type="text"
-                    placeholder="Este campo será preenchido após verificação do despachante" disabled>
+                    placeholder="Este campo será preenchido após verificação do Representante" disabled>
             </div>
         </form>
     </div>
@@ -217,6 +217,21 @@
 <br>
 <br>
 <div class="row">
+    <div class="col">
+        {{#each passeSaidas}}
+            <div class="card">
+                <div class="card-body">
+                    <h6>Numero do passe de saída: {{NprocessoDespacho}}</h6>
+                    <label>Data da validade: {{dataValidade}}</label>
+                    <a class="btn btn-success float-end" href="/formulario/passeSaidaVizu/{{_id}}">Visualizar</a>
+                </div>
+            </div>
+            <br>
+        {{else}}
+        <label>Nenhum passe de saída para este despacho</label>
+        {{/each}}
+    </div>
+    <br>
     <div class="col">
         {{#each avisoEntradas}}
             <div class="card">

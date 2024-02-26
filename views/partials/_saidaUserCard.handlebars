@@ -1,8 +1,8 @@
 {{#each avisoSaidas}}
     <div id="{{_id}}" class="card mt-4">
         <div class="card-header">
-            <label class="float-end">Situação: {{editado}}</label>
             <h6>Aviso de Saída: {{saidaNprocesso}}</h6>
+            <label>Situação: {{editado}}</label>
         </div>
         <div class="card-body">
             <div>
@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="card-footer">
-            <label>Data Validade: {{saidaDataValidade}}</label>
+            <label>Validade: {{saidaDataValidade}}</label>
             <a class="btn btn-success float-end" href="/formulario/avisoSaidaVizu/{{_id}}">Visualizar</a>
         </div>
     </div>

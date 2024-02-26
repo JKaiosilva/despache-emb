@@ -167,7 +167,7 @@ router.post('/formulario/avisoEntrada', eDespachante, async (req, res) => {
             agenciaID: req.user.agencia,
             agenciaNome: agencia.nome,
             entradaDespacho: req.body.entradaDespacho,
-            entradaNprocesso: req.body.entradaNprocesso,
+            entradaNprocesso: despacho.NprocessoDespacho,
             entradaPortoChegada: req.body.entradaPortoChegada,
             entradaOutroPortoChegada: req.body.entradaOutroPortoChegada,
             entradaDataHoraChegada: req.body.entradaDataHoraChegada,
@@ -265,11 +265,9 @@ router.get('/formulario/avisoEntradavizu/:id', eDespachante, async (req, res) =>
 
         avisoEntradas.entradaDataValidadeNumber = moment(parseInt(avisoEntradas.entradaDataValidadeNumber)).format('DD/MM/YYYY')
 
-        if(avisoEntradas.entradaNaoEditado != 1 && despacho.despachoDataValidadeNumber >= Date.now()){
+        if(despacho.despachoDataValidadeNumber >= Date.now()){
             editado = 'Validado'
-        }else if(avisoEntradas.entradaNaoEditado == 1){
-            editado = 'Em análise'
-          }else{
+        }else{
             editado = 'Não validado'
           }  
             res.render('formulario/entradas/avisoEntradaVizu', 
@@ -304,14 +302,12 @@ router.get('/entradas', eDespachante, async (req, res) => {
         const avisoEntradas = await AvisoEntrada.find({ usuarioID: req.user._id }).limit(5).lean().sort({ entradaData: 'desc' })
         for await(const avisoEntrada of avisoEntradas){
             avisoEntrada.entradaDataValidade = moment(parseInt(avisoEntrada.entradaDataValidadeNumber)).format('DD/MM/YYYY');
-            if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+            if(avisoEntrada.entradaDataValidadeNumber >= Date.now()){
                 avisoEntrada.condicao = 1;
-            }else if(avisoEntrada.entradaNaoEditado == 1){
-                avisoEntrada.condicao = 2;
             }else{
                 avisoEntrada.condicao = 3
             }
-            if(avisoEntrada.entradaNaoEditado != 1 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+            if(avisoEntrada.entradaDataValidadeNumber >= Date.now()){
                 avisoEntrada.editado = 'Validado'
               }else{
                 avisoEntrada.editado = 'Não validado'
@@ -359,14 +355,12 @@ router.get('/entradas/:page', eDespachante, async (req, res) => {
         for await(const avisoEntrada of avisoEntradas){
             avisoEntrada.entradaDataValidade = moment(parseInt(avisoEntrada.entradaDataValidadeNumber)).format('DD/MM/YYYY');
 
-            if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+            if(avisoEntrada.entradaDataValidadeNumber >= Date.now()){
                 avisoEntrada.condicao = 1;
-            }else if(avisoEntrada.entradaNaoEditado == 1){
-                avisoEntrada.condicao = 2;
             }else{
                 avisoEntrada.condicao = 3
             }
-            if(avisoEntrada.entradaNaoEditado != 1 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+            if(avisoEntrada.entradaDataValidadeNumber >= Date.now()){
                 avisoEntrada.editado = 'Validado'
               }else{
                 avisoEntrada.editado = 'Não validado'
@@ -611,14 +605,12 @@ router.get('/admin/entradas', eOperador, async (req, res) => {
         
         for await(const avisoEntrada of avisoEntradas){
             avisoEntrada.entradaDataValidade = moment(parseInt(avisoEntrada.entradaDataValidadeNumber)).format('DD/MM/YYYY');
-            if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+            if(avisoEntrada.entradaDataValidadeNumber >= Date.now()){
                 avisoEntrada.condicao = 1;
-            }else if(avisoEntrada.entradaNaoEditado == 1){
-                avisoEntrada.condicao = 2;
             }else{
                 avisoEntrada.condicao = 3
             }
-            if(avisoEntrada.entradaNaoEditado != 1 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+            if(avisoEntrada.entradaDataValidadeNumber >= Date.now()){
                 avisoEntrada.editado = 'Validado'
               }else{
                 avisoEntrada.editado = 'Não validado'
@@ -663,14 +655,12 @@ router.get('/admin/entradasPage/:page', eOperador, async (req, res) => {
         for await(const avisoEntrada of avisoEntradas){
             avisoEntrada.entradaDataValidade = moment(parseInt(avisoEntrada.entradaDataValidadeNumber)).format('DD/MM/YYYY');
 
-            if(avisoEntrada.entradaNaoEditado == 0 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+            if(avisoEntrada.entradaDataValidadeNumber >= Date.now()){
                 avisoEntrada.condicao = 1;
-            }else if(avisoEntrada.entradaNaoEditado == 1){
-                avisoEntrada.condicao = 2;
             }else{
                 avisoEntrada.condicao = 3
             }
-            if(avisoEntrada.entradaNaoEditado != 1 && avisoEntrada.entradaDataValidadeNumber >= Date.now()){
+            if(avisoEntrada.entradaDataValidadeNumber >= Date.now()){
                 avisoEntrada.editado = 'Validado'
               }else{
                 avisoEntrada.editado = 'Não validado'

@@ -239,8 +239,13 @@ router.get('/formulario/despachoVizu/:id', eDespachante, async (req, res) => {
           }        
         const avisoEntradas = await AvisoEntrada.find({entradaDespacho: despachos._id}).lean()
         const avisoSaidas = await AvisoSaida.find({saidaDespacho: despachos._id}).lean()
+        const passeSaidas = await PasseSaida.find({despachoId: req.params.id}).lean()
+        passeSaidas.forEach((el) => {
+            el.dataValidade = moment(parseInt(el.validade)).format('DD/MM/YYYY');
+            console.log(el.validade)
+            console.log(el.dataValidade)
+        })
         const correcoes = await Correcao.find({documentoReferente: despachos._id}).lean()
-        console.log(tripulantes, comboios)
             res.render('formulario/despachos/despachoVizu',
                 {
                     despachos: despachos,
@@ -251,7 +256,8 @@ router.get('/formulario/despachoVizu/:id', eDespachante, async (req, res) => {
                     correcoes: correcoes,
                     hidden: hidden,
                     editado: editado,
-                    comboios: comboios
+                    comboios: comboios,
+                    passeSaidas: passeSaidas
                 })
     }catch(err){
         console.log(err)
@@ -271,6 +277,7 @@ router.get('/despachos', eDespachante, async (req, res) => {
         const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'});
 
         for await(const despacho of despachos){
+            despacho.despachoDataValidade = moment(parseInt(despacho.despachoDataValidadeNumber)).format('DD/MM/YYYY')
             if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
                 despacho.condicao = 1;
                 despacho.editado = 'Validado';
@@ -320,6 +327,7 @@ router.get('/despachos/:page', eDespachante, async (req, res) => {
             }
             const despachos = await Despacho.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({despachoData: 'desc'})
             for await(const despacho of despachos){
+                despacho.despachoDataValidade = moment(parseInt(despacho.despachoDataValidadeNumber)).format('DD/MM/YYYY')
                 if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
                     despacho.condicao = 1;
                     despacho.editado = 'Validado';
@@ -422,6 +430,7 @@ router.post('/admin/despachoValidate', eOperador, async(req, res) => {
                agenciaID: despacho.agenciaID,
                agenciaNome: despacho.agenciaNome,
                NprocessoDespacho: despacho.NprocessoDespacho,
+               despachoId: req.body.id,
                embarcacaoNome: despacho.embarcacaoNome,
                embarcacaoBandeira: despacho.embarcacaoBandeira,
                embarcacaoComandante: despacho.despachoNomeRepresentanteEmbarcacao,
@@ -612,6 +621,8 @@ router.get('/admin/despachos', eOperador, async (req, res) => {
     const despachos = await Despacho.find().limit(5).lean().sort({ despachoData: 'desc' })
 
     for await(const despacho of despachos){
+        despacho.despachoDataValidade = moment(parseInt(despacho.despachoDataValidadeNumber)).format('DD/MM/YYYY')
+
         if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
             despacho.condicao = 1;
             despacho.editado = 'Validado';
@@ -658,6 +669,8 @@ router.get('/admin/despachos/:page', eOperador, async (req, res) => {
         }
         const despachos = await Despacho.find().skip(skip).limit(limit).lean().sort({ despachoData: 'desc' })
         for await(const despacho of despachos){
+            despacho.despachoDataValidade = moment(parseInt(despacho.despachoDataValidadeNumber)).format('DD/MM/YYYY')
+
             if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
                 despacho.condicao = 1;
                 despacho.editado = 'Validado';
