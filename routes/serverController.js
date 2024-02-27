@@ -36,6 +36,7 @@ const cheerio = require('cheerio')
 const bcrypt = require('bcryptjs')
 const {eOficial, eAdmin, eOperador, eAgencia, eDespachante} = require('../helpers/perms/permHash')
 const notifiCheck = require('../helpers/conds/notificacaoAdmin');
+const checaData = require('../helpers/conds/condData')
 
 
 //----    Rota do Painel admin     ----//
@@ -253,7 +254,7 @@ router.get('/formulario', eDespachante, async (req, res) => {
 
 
             for await(const despacho of despachos){
-                despacho.despachoDataValidade = moment(parseInt(despacho.despachoDataValidadeNumber)).format('DD/MM/YYYY')
+                despacho.despachoDataValidade = checaData(despacho.despachoDataValidadeNumber)
 
                 if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
                     despacho.condicao = 1;
@@ -327,7 +328,7 @@ router.get('/formulario', eDespachante, async (req, res) => {
             
             
             for await(const despacho of despachos){
-                despacho.despachoDataValidade = moment(parseInt(despacho.despachoDataValidadeNumber)).format('DD/MM/YYYY')
+                despacho.despachoDataValidade = checaData(despacho.despachoDataValidadeNumber)
 
                 if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
                     despacho.condicao = 1;

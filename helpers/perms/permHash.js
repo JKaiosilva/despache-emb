@@ -10,7 +10,7 @@ function eAdmin (req, res, next) {
                 if(batem){
                     return next()
                 }else{
-                    req.flash('error_msg', 'Você não tem autorização para acessar esta página! aaaaaaaa')
+                    //req.flash('error_msg', 'Você não tem autorização para acessar esta página! aaaaaaaa')
                     console.log('aqui aaaaaaaaa')
                     res.redirect('/')
                 }

@@ -40,6 +40,7 @@ const axios = require('axios')
 require('dotenv').config();
 const cheerio = require('cheerio')
 const bcrypt = require('bcryptjs')
+const checaData = require('../helpers/conds/condData')
 
 
 //----  Rota para formulário de adição de Despacho    ----//
@@ -277,7 +278,7 @@ router.get('/despachos', eDespachante, async (req, res) => {
         const despachos = await Despacho.find({usuarioID: req.user._id}).limit(5).lean().sort({despachoData: 'desc'});
 
         for await(const despacho of despachos){
-            despacho.despachoDataValidade = moment(parseInt(despacho.despachoDataValidadeNumber)).format('DD/MM/YYYY')
+            despacho.despachoDataValidade = checaData(despacho.despachoDataValidadeNumber)
             if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
                 despacho.condicao = 1;
                 despacho.editado = 'Validado';
@@ -327,7 +328,7 @@ router.get('/despachos/:page', eDespachante, async (req, res) => {
             }
             const despachos = await Despacho.find({usuarioID: req.user._id}).skip(skip).limit(limit).lean().sort({despachoData: 'desc'})
             for await(const despacho of despachos){
-                despacho.despachoDataValidade = moment(parseInt(despacho.despachoDataValidadeNumber)).format('DD/MM/YYYY')
+                despacho.despachoDataValidade = checaData(despacho.despachoDataValidadeNumber);
                 if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
                     despacho.condicao = 1;
                     despacho.editado = 'Validado';
@@ -621,7 +622,7 @@ router.get('/admin/despachos', eOperador, async (req, res) => {
     const despachos = await Despacho.find().limit(5).lean().sort({ despachoData: 'desc' })
 
     for await(const despacho of despachos){
-        despacho.despachoDataValidade = moment(parseInt(despacho.despachoDataValidadeNumber)).format('DD/MM/YYYY')
+        despacho.despachoDataValidade = checaData(despacho.despachoDataValidadeNumber)
 
         if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
             despacho.condicao = 1;
@@ -669,7 +670,7 @@ router.get('/admin/despachos/:page', eOperador, async (req, res) => {
         }
         const despachos = await Despacho.find().skip(skip).limit(limit).lean().sort({ despachoData: 'desc' })
         for await(const despacho of despachos){
-            despacho.despachoDataValidade = moment(parseInt(despacho.despachoDataValidadeNumber)).format('DD/MM/YYYY')
+            despacho.despachoDataValidade = checaData(despacho.despachoDataValidadeNumber);
 
             if(despacho.despachoNaoEditado == 0 && despacho.despachoDataValidadeNumber >= Date.now()){
                 despacho.condicao = 1;
