@@ -250,6 +250,30 @@ router.get('/portoInfo', eOperador, async (req, res) => {
                 portos.push({ ...porto, embarcacaoNome: [porto.embarcacaoNome], barcaca: [porto.barcaca], embarcacaoId: [porto.embarcacaoId] })
             }
         }
+
+
+        for await (const entrada of avisoEntradas){
+            var portoEmb = {}
+                if(entrada.embarcacaoTipo != 'barcaça'){
+                    portoEmb = { nome: entrada.embarcacaoNome, id: entrada._id.toString(), portoEstadia: entrada.entradaPortoChegada.toString()}
+                }else{
+                    portoEmb = {nomeBarcaca: entrada.embarcacaoNome, id: entrada._id.toString(), portoEstadia: entrada.entradaPortoChegada.toString.toString()}
+                }
+
+                var porto = await Porto.findOne({ _id: portoEmb.portoEstadia}).lean()
+                porto.embarcacaoNome = portoEmb.nome
+                porto.barcaca = portoEmb.nomeBarcaca
+                porto.embarcacaoId = portoEmb.id
+                if(portos.some(portoLocal => portoLocal.portoNome == porto.portoNome)){
+                    const portoLocal = portos.find(portoLocal => portoLocal.portoNome == porto.portoNome)
+                    portoLocal.embarcacaoNome.push(porto.embarcacaoNome)
+                    portoLocal.barcaca.push(porto.barcaca)
+                    porto.ebarcacaoId.push(porto.embarcacaoId)
+                }else{
+                    portos.push({ ...porto, embarcacaoNome: [porto.embarcacaoNome], barcaca: [porto.barcaca], embarcacaoId: [porto.embarcacaoId]})
+                }
+            }
+
         const data = portos
         res.json(data)
     } catch (err) {
