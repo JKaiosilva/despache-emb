@@ -5,7 +5,7 @@ fetch('/portoInfo')
   .then(response => response.json())
   .then((data) => {
     const porto = data;
-
+    console.log(porto)
     const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
     advancedTexture.idealWidth = 600;
     advancedTexture.useInvalidateRectOptimization = false;

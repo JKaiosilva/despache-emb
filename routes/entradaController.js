@@ -161,7 +161,6 @@ router.post('/formulario/avisoEntrada', eDespachante, async (req, res) => {
 
         const agencia = await Usuario.findOne({_id: req.user.agencia}).lean()
 
-        console.log(entradaPassageiros)
         const novoAvisoEntrada = {
             usuarioID: req.user._id,
             agenciaID: req.user.agencia,

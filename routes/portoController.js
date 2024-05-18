@@ -225,7 +225,7 @@ router.get('/portoInfo', eOperador, async (req, res) => {
         const dataHoje = moment(Date.now()).format('YYYY-MM-DD')
         const despachos = await Despacho.find({ depachoMesAnoAtual: dataHoje }).lean()
         const avisoSaidas = await AvisoSaida.find({saidaDataHoraSaida: dataHoje}).lean()
-        const avisoEntradas = await AvisoEntrada.find({ entradaMesAnoAtual: dataHoje }).lean()
+        const avisoEntradas = await AvisoEntrada.find({ entradaDataHoraChegada: dataHoje }).lean()
         var portos = [];
 
         for await (const saida of avisoSaidas) {
@@ -235,7 +235,8 @@ router.get('/portoInfo', eOperador, async (req, res) => {
             }else{
                 portoEmb = { nomeBarcaca: saida.embarcacaoNome, id: saida._id.toString(), portoEstadia: saida.saidaPortoSaida.toString() }
             }
-            
+            console.log(portoEmb + 'porto encontrado na saida')
+
 
             var porto = await Porto.findOne({ _id: portoEmb.portoEstadia }).lean()
             porto.embarcacaoNome = portoEmb.nome 
@@ -253,6 +254,7 @@ router.get('/portoInfo', eOperador, async (req, res) => {
 
 
         for await (const entrada of avisoEntradas){
+            console.log('entrada' + entrada)
             var portoEmb = {}
                 if(entrada.embarcacaoTipo != 'barcaça'){
                     portoEmb = { nome: entrada.embarcacaoNome, id: entrada._id.toString(), portoEstadia: entrada.entradaPortoChegada.toString()}
@@ -260,6 +262,7 @@ router.get('/portoInfo', eOperador, async (req, res) => {
                     portoEmb = {nomeBarcaca: entrada.embarcacaoNome, id: entrada._id.toString(), portoEstadia: entrada.entradaPortoChegada.toString.toString()}
                 }
 
+                console.log(portoEmb + 'porto encontrado na entrada')
                 var porto = await Porto.findOne({ _id: portoEmb.portoEstadia}).lean()
                 porto.embarcacaoNome = portoEmb.nome
                 porto.barcaca = portoEmb.nomeBarcaca
